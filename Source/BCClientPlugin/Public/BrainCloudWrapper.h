@@ -102,7 +102,7 @@ class BCCLIENTPLUGIN_API UBrainCloudWrapper : public UObject, public IServerCall
      * @param callback The method to be invoked when the server response is received
      *
      */
-    void authenticateAnonymous(IServerCallback *callback = nullptr);
+    void authenticateAnonymous(IServerCallback *callback = nullptr, bool forceCreate = true);
 
     /*
      * Authenticate the user with a custom Email and Password.  Note that the client app
