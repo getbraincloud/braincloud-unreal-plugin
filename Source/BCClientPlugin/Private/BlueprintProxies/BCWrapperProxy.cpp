@@ -72,7 +72,7 @@ void UBCWrapperProxy::InitializeWithApps(UBrainCloudWrapper *brainCloudWrapper, 
 UBCWrapperProxy *UBCWrapperProxy::AuthenticateAnonymous(UBrainCloudWrapper *brainCloudWrapper)
 {
 	UBCWrapperProxy *Proxy = NewObject<UBCWrapperProxy>();
-	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->authenticateAnonymous(Proxy);
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->authenticateAnonymous(Proxy, true);
 	return Proxy;
 }
 
@@ -337,9 +337,21 @@ UBCWrapperProxy *UBCWrapperProxy::ResetUniversalIdPasswordAdvancedWithExpiry(UBr
 }
 /////////////////////////
 
+UBCWrapperProxy *UBCWrapperProxy::reconnect(UBrainCloudWrapper *brainCloudWrapper)
+{
+    UBCWrapperProxy *Proxy = NewObject<UBCWrapperProxy>();
+    UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->reconnect(Proxy);
+    return Proxy;
+}
+
 void UBCWrapperProxy::SetStoredProfileId(UBrainCloudWrapper *brainCloudWrapper, FString profileId)
 {
-	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->setStoredProfileId(profileId);
+    UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->setStoredProfileId(profileId);
+}
+
+void UBCWrapperProxy::ResetStoredProfileId(UBrainCloudWrapper *brainCloudWrapper)
+{
+    UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->resetStoredProfileId();
 }
 
 FString UBCWrapperProxy::GetStoredProfileId(UBrainCloudWrapper *brainCloudWrapper)
@@ -349,7 +361,12 @@ FString UBCWrapperProxy::GetStoredProfileId(UBrainCloudWrapper *brainCloudWrappe
 
 void UBCWrapperProxy::SetStoredAnonymousId(UBrainCloudWrapper *brainCloudWrapper, FString anonymousId)
 {
-	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->setStoredAnonymousId(anonymousId);
+    UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->setStoredAnonymousId(anonymousId);
+}
+
+void UBCWrapperProxy::ResetStoredAnonymousId(UBrainCloudWrapper *brainCloudWrapper)
+{
+    UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->resetStoredAnonymousId();
 }
 
 FString UBCWrapperProxy::GetStoredAnonymousId(UBrainCloudWrapper *brainCloudWrapper)
