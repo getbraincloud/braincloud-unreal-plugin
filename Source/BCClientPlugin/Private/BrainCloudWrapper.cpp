@@ -111,11 +111,11 @@ void UBrainCloudWrapper::reauthenticate()
 }
 
 // authenticate the player with an anonymous id
-void UBrainCloudWrapper::authenticateAnonymous(IServerCallback *callback)
+void UBrainCloudWrapper::authenticateAnonymous(IServerCallback *callback, bool forceCreate)
 {
     _authenticateCallback = callback;
     initializeIdentity(true);
-    _client->getAuthenticationService()->authenticateAnonymous(true, this);
+    _client->getAuthenticationService()->authenticateAnonymous(forceCreate, this);
 }
 
 void UBrainCloudWrapper::authenticateEmailPassword(FString email, FString password, bool forceCreate, IServerCallback *callback)
@@ -384,7 +384,7 @@ void UBrainCloudWrapper::resetUniversalIdPasswordAdvancedWithExpiry(const FStrin
 
 void UBrainCloudWrapper::reconnect(IServerCallback *callback)
 {
-    authenticateAnonymous(callback);
+    authenticateAnonymous(callback, false);
 }
 
 void UBrainCloudWrapper::runCallbacks()
