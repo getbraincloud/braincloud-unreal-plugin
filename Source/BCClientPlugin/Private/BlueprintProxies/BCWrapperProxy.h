@@ -727,13 +727,25 @@ public:
      UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Wrapper")
     static UBCWrapperProxy *ResetUniversalIdPasswordAdvancedWithExpiry(UBrainCloudWrapper *brainCloudWrapper, const FString &in_universalId, const FString &in_serviceParams, int32 in_tokenTtlInMinutes);
 
+    /**
+       * reconnects to existing anonymousID and profileID
+       */
+    UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Wrapper")
+    static UBCWrapperProxy* reconnect(UBrainCloudWrapper *brainCloudWrapper);
+ 
+    /**
+       * Sets the stored profile id, saves it as well
+       * @param profileId The profile id to set
+       */
+    UFUNCTION(BlueprintCallable, Category = "BrainCloud|Wrapper")
+    static void SetStoredProfileId(UBrainCloudWrapper *brainCloudWrapper, FString profileId);
 
-  /**
-     * Sets the stored profile id, saves it as well
-     * @param profileId The profile id to set
-     */
-  UFUNCTION(BlueprintCallable, Category = "BrainCloud|Wrapper")
-  static void SetStoredProfileId(UBrainCloudWrapper *brainCloudWrapper, FString profileId);
+    /**
+       * Resets the stored profile id, saves it as well
+       * @param profileId The profile id to set
+       */
+    UFUNCTION(BlueprintCallable, Category = "BrainCloud|Wrapper")
+    static void ResetStoredProfileId(UBrainCloudWrapper *brainCloudWrapper);
 
   /**
      * Returns the stored anonymous id
@@ -749,12 +761,19 @@ public:
   UFUNCTION(BlueprintCallable, Category = "BrainCloud|Wrapper")
   static void SetStoredAnonymousId(UBrainCloudWrapper *brainCloudWrapper, FString anonymousId);
 
-  /**
-     * Returns the stored anonymous id
-     * @return The stored anonymous id
-     */
-  UFUNCTION(BlueprintCallable, Category = "BrainCloud|Wrapper")
-  static FString GetStoredAnonymousId(UBrainCloudWrapper *brainCloudWrapper);
+    /**
+       * Returns the stored anonymous id
+       * @return The stored anonymous id
+       */
+    UFUNCTION(BlueprintCallable, Category = "BrainCloud|Wrapper")
+    static FString GetStoredAnonymousId(UBrainCloudWrapper *brainCloudWrapper);
+
+    /**
+       * Resets the stored anonymous id
+       * @return The stored anonymous id
+       */
+    UFUNCTION(BlueprintCallable, Category = "BrainCloud|Wrapper")
+    static void ResetStoredAnonymousId(UBrainCloudWrapper *brainCloudWrapper);
 
   /**
 	* Returns a non null reference to brainCloud
