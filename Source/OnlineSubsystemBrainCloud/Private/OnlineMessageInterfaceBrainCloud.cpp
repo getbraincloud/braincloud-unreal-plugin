@@ -193,8 +193,14 @@ void FOnlineMessageBrainCloud::EnumerateMessagesSuccess(const FString& jsonData)
         _cachedMessageHeaders.Add(header);
 
         //message
-        TSharedPtr<FOnlineMessage> message = MakeShareable(new FOnlineMessage(_cachedMessageHeaders[0]->MessageId));
-
+        // Unreal Engine Version is >= 4.27
+        #if (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 27) || ENGINE_MAJOR_VERSION == 5
+                 //message
+                 TSharedPtr<FOnlineMessage> message = MakeShareable(new FOnlineMessage(_cachedMessageHeaders[0]->MessageId));
+        #else
+                TSharedPtr<FOnlineMessage> message = MakeShareable(new FOnlineMessage(new FUniqueNetIdString(messageId)));
+        #endif
+        
         FString payloadStr = messageObj->GetObjectField("eventData")->GetStringField("payload");
         TArray<uint8> bytes;
         FBase64::Decode(payloadStr, bytes);
