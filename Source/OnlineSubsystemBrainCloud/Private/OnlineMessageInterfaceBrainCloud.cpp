@@ -193,7 +193,7 @@ void FOnlineMessageBrainCloud::EnumerateMessagesSuccess(const FString& jsonData)
         _cachedMessageHeaders.Add(header);
 
 // Unreal Engine Version is >= 4.27
-#if (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 27)
+#if (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 27) || ENGINE_MAJOR_VERSION == 5
         //message
         TSharedPtr<FOnlineMessage> message = MakeShareable(new FOnlineMessage(_cachedMessageHeaders[0]->MessageId));
 #else
