@@ -248,8 +248,6 @@ void FOnlineAchievementsBrainCloud::OnQueryAchievementsComplete(bool bWasSuccess
         {
             if (Achievements[j].Id == id) //achievement must be configured locally
             {
-                FString status = achievement->GetStringField(TEXT("status"));
-
                 FOnlineAchievementBrainCloud ach;
 
                 if (getAchievementFromJson(achievement, ach))
@@ -294,12 +292,6 @@ void FOnlineAchievementsBrainCloud::OnQueryAchievementDescComplete(bool bWasSucc
         {
             if (Achievements[j].Id == id)
             {
-                FString status = achievement->GetStringField(TEXT("status"));
-
-                bool invisibleUntilEarned = false;
-                if (achievement->HasField(TEXT("invisibleUntilEarned")))
-                    invisibleUntilEarned = achievement->GetBoolField(TEXT("invisibleUntilEarned"));
-
                 FOnlineAchievementBrainCloud ach;
 
                 if (getAchievementFromJson(achievement, ach))
