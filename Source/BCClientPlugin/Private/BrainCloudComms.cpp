@@ -429,7 +429,7 @@ void BrainCloudComms::RunCallbacks()
 						isError = true;
 				}
 			}
-			else if (_activeRequest->GetStatus() == EHttpRequestStatus::Processing && elapsedTime > GetRetryTimeoutSeconds(_retryCount)) //request timeout
+			else if (status == EHttpRequestStatus::Processing && elapsedTime > GetRetryTimeoutSeconds(_retryCount)) //request timeout
 			{
 				if (_isLoggingEnabled)
 					UE_LOG(LogBrainCloudComms, Warning, TEXT("Request timed out"));
@@ -439,6 +439,12 @@ void BrainCloudComms::RunCallbacks()
 			{
 				if (_isLoggingEnabled)
 					UE_LOG(LogBrainCloudComms, Warning, TEXT("Request failed"));
+				isError = true;
+			}
+			else if (!_waitingForRetry && status == EHttpRequestStatus::Failed_ConnectionError)
+			{
+				if (_isLoggingEnabled)
+					UE_LOG(LogBrainCloudComms, Warning, TEXT("Request failed due to a connection error"));
 				isError = true;
 			}
 
