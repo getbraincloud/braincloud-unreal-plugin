@@ -413,7 +413,7 @@ void BrainCloudComms::RunCallbacks()
 		else
 		{
 			EHttpRequestStatus::Type status = _activeRequest->GetStatus();
-			double elapsedTime = FPlatformTime::Seconds() - _requestSentTime;
+			double elapsedTime = FPlatformTime::Seconds()- _requestSentTime;
 			bool isError = false;
 
 			//request was successful
@@ -857,16 +857,6 @@ void BrainCloudComms::FilterIncomingMessages(TSharedRef<ServerCall> servercall, 
 
 		if (isDataValid)
 		{
-			if (_heartbeatInterval == 0)
-			{
-				int32 sessionTimeout = (*data)->GetIntegerField("playerSessionExpiry");
-				sessionTimeout = (int32)((double)sessionTimeout * 0.85);
-
-				// minimum 30 secs
-				_heartbeatInterval = sessionTimeout;
-				_heartbeatInterval *= 1000; //to ms
-			}
-
 			_maxBundleMessages = (*data)->GetNumberField("maxBundleMsgs");
 
 			if ((*data)->HasField("maxKillCount"))
@@ -973,7 +963,8 @@ void BrainCloudComms::ResetKillSwitch()
 
 void BrainCloudComms::Heartbeat()
 {
-	if (_isAuthenticated && FPlatformTime::Seconds() - _requestSentTime > _heartbeatInterval)
+	int32 lastRequestSent = FPlatformTime::Seconds() - _requestSentTime;
+	if (_isAuthenticated && lastRequestSent > _heartbeatInterval)
 	{
 		TSharedRef<FJsonObject> val = MakeShareable(new FJsonObject());
 		ServerCall *sc = new ServerCall(ServiceName::HeartBeat, ServiceOperation::Read, val, nullptr);
