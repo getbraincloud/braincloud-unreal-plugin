@@ -11,7 +11,7 @@ https://portal.braincloudservers.com/
 
 Package | Description
  ---- | ----
-[**brainCloudClient_Unreal_vX.X.X_X.X.X.zip**](https://github.com/getbraincloud/braincloud-unreal-plugin-src/releases) | C++, Blueprint, and OnlineSubSystem library for Unreal 4 (stable zip)
+[**brainCloudClient_Unreal_vX.X.X_X.X.X.zip**](https://github.com/getbraincloud/braincloud-unreal/releases) | C++, Blueprint, and OnlineSubSystem library for Unreal 4 (stable zip)
 [**braincloud-unreal-plugin-src**](https://github.com/getbraincloud/braincloud-unreal-plugin-src/) | C++, Blueprint, and OnlineSubSystem library for Unreal 4 (source)
 [**Unreal - Older Versions**](http://getbraincloud.com/apidocs/tutorials/unreal-tutorials/building-the-plugin-for-older-versions-of-unreal/) | Instructions for building brainCloud for older versions of Unreal (for Blueprint only projects)
 
@@ -32,9 +32,13 @@ then right click on your .uproject and generate visual studio files.
 BCClient plugin can be installed as a submodule of your git project.
 Open a terminal at your project's root folder and enter the command:
 
-$ git submodule add git@github.com:getbraincloud/braincloud-unreal-plugin-src.git Plugins/BCClient
+$ git submodule add https://github.com/getbraincloud/braincloud-unreal-plugin-src.git Plugins/BCClient
 
 Follow steps 4-10 above.
+
+### Unreal Engine 5.0
+
+The plugin will easily work with both UE4 and UE5. If switching, ensure that Intermediate files are cleaned up from previous build.
 
 ## Example Projects
 
