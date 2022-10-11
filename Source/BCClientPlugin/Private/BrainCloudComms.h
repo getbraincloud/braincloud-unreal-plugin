@@ -153,7 +153,7 @@ class BrainCloudComms
 
 	uint64 _packetId = 0;
 
-	int32 _heartbeatInterval = 30;
+	int32 _heartbeatInterval = 0;
 	float _idleTime = 0.0;
 	int32 _retryCount = 0;
 	TArray<int32> _packetTimeouts;
