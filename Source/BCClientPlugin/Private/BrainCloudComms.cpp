@@ -429,7 +429,7 @@ void BrainCloudComms::RunCallbacks()
 						isError = true;
 				}
 			}
-			else if (_activeRequest->GetStatus() == EHttpRequestStatus::Processing && elapsedTime > GetRetryTimeoutSeconds(_retryCount)) //request timeout
+			else if (status == EHttpRequestStatus::Processing && elapsedTime > GetRetryTimeoutSeconds(_retryCount)) //request timeout
 			{
 				if (_isLoggingEnabled)
 					UE_LOG(LogBrainCloudComms, Warning, TEXT("Request timed out"));
@@ -439,6 +439,12 @@ void BrainCloudComms::RunCallbacks()
 			{
 				if (_isLoggingEnabled)
 					UE_LOG(LogBrainCloudComms, Warning, TEXT("Request failed"));
+				isError = true;
+			}
+			else if (!_waitingForRetry && status == EHttpRequestStatus::Failed_ConnectionError)
+			{
+				if (_isLoggingEnabled)
+					UE_LOG(LogBrainCloudComms, Warning, TEXT("Request failed due to a connection error"));
 				isError = true;
 			}
 
@@ -858,9 +864,7 @@ void BrainCloudComms::FilterIncomingMessages(TSharedRef<ServerCall> servercall, 
 
 				// minimum 30 secs
 				_heartbeatInterval = sessionTimeout;
-				_heartbeatInterval *= 1000; //to ms
 			}
-
 			_maxBundleMessages = (*data)->GetNumberField("maxBundleMsgs");
 
 			if ((*data)->HasField("maxKillCount"))
@@ -967,7 +971,8 @@ void BrainCloudComms::ResetKillSwitch()
 
 void BrainCloudComms::Heartbeat()
 {
-	if (_isAuthenticated && FPlatformTime::Seconds() - _requestSentTime > _heartbeatInterval)
+	int32 lastRequestSent = FPlatformTime::Seconds() - _requestSentTime; 
+	if (_isAuthenticated && lastRequestSent > _heartbeatInterval)
 	{
 		TSharedRef<FJsonObject> val = MakeShareable(new FJsonObject());
 		ServerCall *sc = new ServerCall(ServiceName::HeartBeat, ServiceOperation::Read, val, nullptr);
