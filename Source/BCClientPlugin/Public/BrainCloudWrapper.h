@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BrainCloudBlockchain.h"
 #include "UObject/NoExportTypes.h"
 #include "IServerCallback.h"
 
@@ -852,7 +853,7 @@ class BCCLIENTPLUGIN_API UBrainCloudWrapper : public UObject, public IServerCall
     BrainCloudChat *getChatService() { return _client->getChatService(); }
     BrainCloudMessaging *getMessagingService() { return _client->getMessagingService(); }
     BrainCloudRelay *getRelayService() { return _client->getRelayService(); }
-
+    BrainCloudBlockchain *getBlockchainService() { return _client->getBlockchainService(); }
     /**
      * Returns the instance of the BrainCloudClient.
      * @return The instance of the BrainCloudClient.

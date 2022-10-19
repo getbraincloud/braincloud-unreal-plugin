@@ -423,6 +423,15 @@ BrainCloudTimeUtils *BrainCloudClient::getUtil()
 	return _brainCloudTimeUtils;
 }
 
+BrainCloudBlockchain* BrainCloudClient::getBlockchainService()
+{
+	if(_blockchainService == nullptr)
+	{
+		_blockchainService = new BrainCloudBlockchain(this);
+	}
+	return _blockchainService;
+}
+
 BrainCloudAuthentication *BrainCloudClient::getAuthenticationService()
 {
 	if (_authenticationService == nullptr)

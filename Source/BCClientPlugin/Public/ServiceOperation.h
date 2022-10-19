@@ -491,6 +491,9 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation PublishUserItemToBlackchain;
 	static const ServiceOperation RefreshBlockchainUserItems;
 
+	static const ServiceOperation GetBlockchainItems;
+	static const ServiceOperation GetUniqs;
+	
 	FString getValue() const { return _value; }
 
 	bool operator==(const ServiceOperation &s) const;

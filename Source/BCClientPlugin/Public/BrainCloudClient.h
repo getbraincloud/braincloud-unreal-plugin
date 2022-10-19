@@ -41,6 +41,7 @@
 #include "BrainCloudPresence.h"
 #include "BrainCloudVirtualCurrency.h"
 #include "BrainCloudAppStore.h"
+#include "BrainCloudBlockchain.h"
 #include "BrainCloudRelay.h"
 #include "BrainCloudTimeUtils.h"
 
@@ -325,6 +326,7 @@ class BCCLIENTPLUGIN_API BrainCloudClient
 	BrainCloudMessaging *getMessagingService();
 	BrainCloudRelay *getRelayService();
 	BrainCloudTimeUtils *getUtil();
+	BrainCloudBlockchain *getBlockchainService();
 	
 	const FString &getAppId() { return _appId; };
 	const FString &getSessionId();
@@ -573,6 +575,8 @@ class BCCLIENTPLUGIN_API BrainCloudClient
 	BrainCloudRelay *_relayService = nullptr;
 
 	BrainCloudTimeUtils *_brainCloudTimeUtils = nullptr;
+
+	BrainCloudBlockchain *_blockchainService = nullptr;
 
 	static FString s_brainCloudClientVersion;
 
