@@ -13,7 +13,7 @@ void BrainCloudBlockchain::GetBlockchainItems(FString in_integrationID, FString 
 	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
 	
 	message->SetStringField(OperationParam::BlockChainIntegrationId.getValue(), in_integrationID);
-	message->SetStringField(OperationParam::BlockChainContext.getValue(), in_contextJson);
+	message->SetObjectField(OperationParam::BlockChainContext.getValue(), JsonUtil::jsonStringToValue(in_contextJson));
 
 	ServerCall *sc = new ServerCall(ServiceName::Blockchain, ServiceOperation::GetBlockchainItems, message, in_callback);
 	_client->sendRequest(sc);
@@ -24,7 +24,7 @@ void BrainCloudBlockchain::GetUniqs(FString in_integrationID, FString in_context
 	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
 
 	message->SetStringField(OperationParam::BlockChainIntegrationId.getValue(), in_integrationID);
-	message->SetStringField(OperationParam::BlockChainContext.getValue(), in_contextJson);
+	message->SetObjectField(OperationParam::BlockChainContext.getValue(), JsonUtil::jsonStringToValue(in_contextJson));
 
 	ServerCall *sc = new ServerCall(ServiceName::Blockchain, ServiceOperation::GetUniqs, message, in_callback);
 	_client->sendRequest(sc);
