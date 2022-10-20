@@ -86,6 +86,16 @@ void BrainCloudCustomEntity::incrementData(const FString &entityType, const FStr
     _client->sendRequest(sc);
 }
 
+void BrainCloudCustomEntity::incrementSingletonData(const FString& entityType, const FString& fieldsJson, IServerCallback* callback)
+{
+    TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
+    message->SetStringField(OperationParam::CustomEntityServiceEntityType.getValue(), entityType);
+    message->SetObjectField(OperationParam::CustomEntityServiceFieldsJson.getValue(), JsonUtil::jsonStringToValue(fieldsJson));
+
+    ServerCall *sc = new ServerCall(ServiceName::CustomEntity, ServiceOperation::IncrementSingletonData, message, callback);
+    _client->sendRequest(sc);
+}
+
 void BrainCloudCustomEntity::getRandomEntitiesMatching(const FString &entityType, const FString &whereJson, const int64 &maxReturn, IServerCallback *callback)
 {
     TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());

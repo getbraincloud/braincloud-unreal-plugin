@@ -69,6 +69,13 @@ UBCCustomEntityProxy *UBCCustomEntityProxy::IncrementData(UBrainCloudWrapper *br
     return Proxy;
 }
 
+UBCCustomEntityProxy* UBCCustomEntityProxy::IncrementSingletonData(UBrainCloudWrapper* brainCloudWrapper, const FString& entityType, const FString& fieldsJson)
+{
+    UBCCustomEntityProxy *Proxy = NewObject<UBCCustomEntityProxy>();
+    UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getCustomEntityService()->incrementSingletonData(entityType, fieldsJson, Proxy);
+    return Proxy;
+}
+
 UBCCustomEntityProxy *UBCCustomEntityProxy::UpdateEntity(UBrainCloudWrapper *brainCloudWrapper, const FString &entityType, const FString &entityId, int version, const FString &dataJson, UBrainCloudACL *jsonEntityAcl, const FString &timeToLive)
 {
     UBCCustomEntityProxy *Proxy = NewObject<UBCCustomEntityProxy>();
