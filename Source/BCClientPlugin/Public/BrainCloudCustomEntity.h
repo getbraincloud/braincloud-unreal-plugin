@@ -102,6 +102,18 @@ public:
   void incrementData(const FString &entityType, const FString &entityId, const FString &fieldsJson, IServerCallback *callback);
 
     /**
+     * Increments the specified fields, of the singleton owned by the user, by the specified amount within the custom entity data on the server.
+     * 
+     * Service Name - CustomEntity
+     * Service Operation - IncrementSingletonData
+     *
+     * @param entityType The entity type as defined by the user
+     * @param fieldJson
+     * @param callback The method to be invoked when the server response is received
+     */
+   void incrementSingletonData(const FString &entityType, const FString &fieldsJson, IServerCallback *callback);
+
+    /**
      * Gets a list of up to maxReturn randomly selected custom entities from the server based on the entity type and where condition.
      *
      * Service Name - CustomEntity

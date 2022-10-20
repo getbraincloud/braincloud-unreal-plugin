@@ -390,6 +390,7 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation GetEntityPageOffset;
 	static const ServiceOperation ReadEntity;
 	static const ServiceOperation IncrementData;
+	static const ServiceOperation IncrementSingletonData;
 	static const ServiceOperation UpdateEntity;
 	static const ServiceOperation UpdateEntityFields;
 	static const ServiceOperation UpdateEntityFieldsSharded;

@@ -484,6 +484,7 @@ const ServiceOperation ServiceOperation::CustomEntityGetEntityPage = ServiceOper
 const ServiceOperation ServiceOperation::CustomEntityGetEntityPageOffset = ServiceOperation("GET_ENTITY_PAGE_OFFSET");
 const ServiceOperation ServiceOperation::ReadEntity = ServiceOperation("READ_ENTITY");
 const ServiceOperation ServiceOperation::IncrementData = ServiceOperation("INCREMENT_DATA");
+const ServiceOperation ServiceOperation::IncrementSingletonData = ServiceOperation("INCREMENT_SINGLETON_DATA");
 const ServiceOperation ServiceOperation::UpdateEntity = ServiceOperation("UPDATE_ENTITY");
 const ServiceOperation ServiceOperation::UpdateEntityFields = ServiceOperation("UPDATE_ENTITY_FIELDS");
 const ServiceOperation ServiceOperation::UpdateEntityFieldsSharded = ServiceOperation("UPDATE_ENTITY_FIELDS_SHARDED");
