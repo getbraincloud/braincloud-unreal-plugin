@@ -64,6 +64,8 @@ public:
   // RS
   static const ServiceName Relay;
 
+  static const ServiceName Blockchain;
+
   FString getValue() const { return _value; }
 
   bool operator==(const ServiceName &s) const;

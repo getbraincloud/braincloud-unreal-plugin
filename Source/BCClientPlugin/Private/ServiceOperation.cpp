@@ -491,6 +491,9 @@ const ServiceOperation ServiceOperation::UpdateEntityFieldsSharded = ServiceOper
 const ServiceOperation ServiceOperation::DeleteEntities = ServiceOperation("DELETE_ENTITIES");
 const ServiceOperation ServiceOperation::UpdateSingletonFields = ServiceOperation("UPDATE_SINGLETON_FIELDS");
 
+const ServiceOperation ServiceOperation::GetBlockchainItems = ServiceOperation("GET_BLOCKCHAIN_ITEMS");
+const ServiceOperation ServiceOperation::GetUniqs = ServiceOperation("GET_UNIQS");
+
 bool ServiceOperation::operator==(const ServiceOperation &s) const
 {
 	return _value == s.getValue();

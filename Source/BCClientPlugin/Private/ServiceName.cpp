@@ -67,6 +67,8 @@ const ServiceName ServiceName::Lobby = ServiceName("lobby");
 // Relay
 const ServiceName ServiceName::Relay = ServiceName("relay");
 
+const ServiceName ServiceName::Blockchain = ServiceName("blockchain");
+
 bool ServiceName::operator==(const ServiceName &s) const
 {
     return _value == s.getValue();
