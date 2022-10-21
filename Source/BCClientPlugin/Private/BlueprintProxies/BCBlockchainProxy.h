@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "BCBlueprintCallProxyBase.h"
 #include "BrainCloudWrapper.h"
-#include "Object.h"
 #include "BCBlockchainProxy.generated.h"
 
 /**
