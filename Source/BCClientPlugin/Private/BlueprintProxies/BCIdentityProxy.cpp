@@ -153,6 +153,30 @@ UBCIdentityProxy *UBCIdentityProxy::DetachPlaystationNetworkIdentity(UBrainCloud
 	return Proxy;
 }
 
+UBCIdentityProxy* UBCIdentityProxy::AttachPlaystation5Identity(UBrainCloudWrapper* brainCloudWrapper,
+	const FString& psnAccountId, const FString& authenticationToken)
+{
+	UBCIdentityProxy *Proxy = NewObject<UBCIdentityProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getIdentityService()->attachPlaystation5Identity(psnAccountId, authenticationToken, Proxy);
+	return Proxy;
+}
+
+UBCIdentityProxy* UBCIdentityProxy::MergePlaystation5Identity(UBrainCloudWrapper* brainCloudWrapper,
+	const FString& psnAccountId, const FString& authenticationToken)
+{
+	UBCIdentityProxy *Proxy = NewObject<UBCIdentityProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getIdentityService()->mergePlaystation5Identity(psnAccountId, authenticationToken, Proxy);
+	return Proxy;
+}
+
+UBCIdentityProxy* UBCIdentityProxy::DetachPlaystation5Identity(UBrainCloudWrapper* brainCloudWrapper,
+	const FString& psnAccountId, bool continueAnon)
+{
+	UBCIdentityProxy *Proxy = NewObject<UBCIdentityProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getIdentityService()->detachPlaystation5Identity(psnAccountId, continueAnon, Proxy);
+	return Proxy;
+}
+
 UBCIdentityProxy *UBCIdentityProxy::AttachGameCenterIdentity(UBrainCloudWrapper *brainCloudWrapper, const FString &gameCenterId)
 {
 	UBCIdentityProxy *Proxy = NewObject<UBCIdentityProxy>();
