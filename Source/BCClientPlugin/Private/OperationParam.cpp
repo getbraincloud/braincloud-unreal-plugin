@@ -539,6 +539,9 @@ const OperationParam OperationParam::LobbyCriteria = OperationParam("criteriaJso
 const OperationParam OperationParam::GlobalAppReadSelectedProperties = OperationParam("propertyNames");
 const OperationParam OperationParam::GlobalAppReadPropertiesInCategories = OperationParam("categories");
 
+const OperationParam OperationParam::BlockChainIntegrationId = OperationParam("integrationId");
+const OperationParam OperationParam::BlockChainContext = OperationParam("contextJson");
+
 bool OperationParam::operator==(const OperationParam &s) const
 {
 	return _value == s.getValue();

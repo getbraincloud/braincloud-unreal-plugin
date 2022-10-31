@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BrainCloudBlockchain.h"
 #include "UObject/NoExportTypes.h"
 #include "IServerCallback.h"
 
@@ -185,7 +186,7 @@ class BCCLIENTPLUGIN_API UBrainCloudWrapper : public UObject, public IServerCall
 
 
     /*
-     * Authenticate the user with brainCloud using their psn accountId and auth token
+     * Authenticate the user specifically for Playstation 4 with brainCloud using their psn account id and auth token
      *
      * Service Name - Authenticate
      * Service Operation - Authenticate
@@ -199,6 +200,21 @@ class BCCLIENTPLUGIN_API UBrainCloudWrapper : public UObject, public IServerCall
      */
     void authenticatePlaystationNetwork(FString psnAccountId, FString psnAuthToken, bool forceCreate, IServerCallback *callback = nullptr);
 
+     /*
+     * Authenticate the user specifically for Playstation 5 with brainCloud using their psn account id and auth token
+     *
+     * Service Name - Authenticate
+     * Service Operation - Authenticate
+     *
+     * @param psnAccountId The account id of the user
+     * @param psnAuthToken The validated token from the Playstation SDK
+     *   (that will be further validated when sent to the bC service)
+     * @param forceCreate Should a new profile be created for this user if the account does not exist?
+     * @param callback The method to be invoked when the server response is received
+     *
+     */
+     void authenticatePlaystation5(FString psnAccountId, FString psnAuthToken, bool forceCreate, IServerCallback *callback = nullptr);
+ 
     /*
      * Authenticate the user using their Game Center id
      *
@@ -852,7 +868,7 @@ class BCCLIENTPLUGIN_API UBrainCloudWrapper : public UObject, public IServerCall
     BrainCloudChat *getChatService() { return _client->getChatService(); }
     BrainCloudMessaging *getMessagingService() { return _client->getMessagingService(); }
     BrainCloudRelay *getRelayService() { return _client->getRelayService(); }
-
+    BrainCloudBlockchain *getBlockchainService() { return _client->getBlockchainService(); }
     /**
      * Returns the instance of the BrainCloudClient.
      * @return The instance of the BrainCloudClient.

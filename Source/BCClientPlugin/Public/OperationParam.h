@@ -533,6 +533,10 @@ class BCCLIENTPLUGIN_API OperationParam
 	static const OperationParam GlobalAppReadSelectedProperties;
 	static const OperationParam GlobalAppReadPropertiesInCategories;
 
+	static const OperationParam BlockChainIntegrationId;
+	static const OperationParam BlockChainContext;
+	
+
 	FString getValue() const { return _value; }
 
 	bool operator==(const OperationParam &s) const;

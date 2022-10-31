@@ -390,6 +390,7 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation GetEntityPageOffset;
 	static const ServiceOperation ReadEntity;
 	static const ServiceOperation IncrementData;
+	static const ServiceOperation IncrementSingletonData;
 	static const ServiceOperation UpdateEntity;
 	static const ServiceOperation UpdateEntityFields;
 	static const ServiceOperation UpdateEntityFieldsSharded;
@@ -491,6 +492,9 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation PublishUserItemToBlackchain;
 	static const ServiceOperation RefreshBlockchainUserItems;
 
+	static const ServiceOperation GetBlockchainItems;
+	static const ServiceOperation GetUniqs;
+	
 	FString getValue() const { return _value; }
 
 	bool operator==(const ServiceOperation &s) const;

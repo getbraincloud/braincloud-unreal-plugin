@@ -161,6 +161,21 @@ void BrainCloudIdentity::detachPlaystationNetworkIdentity(const FString &account
 	detachIdentity(accountId, EBCAuthType::PlaystationNetwork, continueAnon, callback);
 }
 
+void BrainCloudIdentity::attachPlaystation5Identity(const FString& psnAccountId, const FString& authenticationToken, IServerCallback* callback)
+{
+	attachIdentity(psnAccountId, authenticationToken, EBCAuthType::PlaystationNetwork5, callback);
+}
+
+void BrainCloudIdentity::mergePlaystation5Identity(const FString& psnAccountId, const FString& authenticationToken, IServerCallback* callback)
+{
+	mergeIdentity(psnAccountId, authenticationToken, EBCAuthType::PlaystationNetwork5, callback);
+}
+
+void BrainCloudIdentity::detachPlaystation5Identity(const FString& psnAccountId, bool continueAnon, IServerCallback* callback)
+{
+	detachIdentity(psnAccountId, EBCAuthType::PlaystationNetwork5, continueAnon, callback);
+}
+
 void BrainCloudIdentity::attachEmailIdentity(const FString &email, const FString &password, IServerCallback *callback)
 {
 	attachIdentity(email, password, EBCAuthType::Email, callback);

@@ -21,7 +21,7 @@
 #include "BCPlatform.h"
 
 // Define all static member variables.
-FString BrainCloudClient::s_brainCloudClientVersion = TEXT("4.12.2");
+FString BrainCloudClient::s_brainCloudClientVersion = TEXT("4.13.0");
 
 ////////////////////////////////////////////////////
 // (De)Constructors
@@ -421,6 +421,15 @@ BrainCloudTimeUtils *BrainCloudClient::getUtil()
 		_brainCloudTimeUtils = new BrainCloudTimeUtils(this);
 	}
 	return _brainCloudTimeUtils;
+}
+
+BrainCloudBlockchain* BrainCloudClient::getBlockchainService()
+{
+	if(_blockchainService == nullptr)
+	{
+		_blockchainService = new BrainCloudBlockchain(this);
+	}
+	return _blockchainService;
 }
 
 BrainCloudAuthentication *BrainCloudClient::getAuthenticationService()

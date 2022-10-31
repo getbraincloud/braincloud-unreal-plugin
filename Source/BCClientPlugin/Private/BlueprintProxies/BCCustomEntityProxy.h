@@ -6,6 +6,7 @@
 #include "BrainCloudACL.h"
 #include "BCCustomEntityProxy.generated.h"
 
+class UBrainCloudWrapper;
 UCLASS(MinimalAPI)
 class UBCCustomEntityProxy : public UBCBlueprintCallProxyBase
 {
@@ -113,19 +114,31 @@ class UBCCustomEntityProxy : public UBCBlueprintCallProxyBase
   static UBCCustomEntityProxy *ReadEntity(UBrainCloudWrapper *brainCloudWrapper, const FString &entityType, const FString &entityId);
 
     /**
-     * Reads a custom entity.
+     * Increments the specified fields by the specified amount within custom entity data on the server, enforcing ownership/ACL permissions.
      * 
      * Service Name - CustomEntity
-     * Service Operation - ReadEntity
+     * Service Operation - IncrementData
      *
      * @param entityType The entity type as defined by the user
      * @param entityId
-     * @param fieldsJson
+     * @param fieldsJson Specific fields, as JSON, within entity's custom data, with respective increment amount.
      * @param callback The method to be invoked when the server response is received
      */
   UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|CustomEntity")
   static UBCCustomEntityProxy *IncrementData(UBrainCloudWrapper *brainCloudWrapper, const FString &entityType, const FString &entityId, const FString &fieldsJson);
 
+	/**
+	 * Increments the specified fields, of the singleton owned by the user, by the specified amount within the custom entity data on the server.
+	 * 
+	 * Service Name - CustomEntity
+	 * Service Operation - IncrementSingletonData
+	 *
+	 * @param entityType The entity type as defined by the user
+	 * @param fieldsJson Specific fields, as JSON, within entity's custom data, with respective increment amount.
+	 * @param callback The method to be invoked when the server response is received
+	 */
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|CustomEntity")
+	static UBCCustomEntityProxy *IncrementSingletonData(UBrainCloudWrapper *brainCloudWrapper, const FString &entityType, const FString &fieldsJson);
 
     /**
      * Reads a custom entity.

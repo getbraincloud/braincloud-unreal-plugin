@@ -62,6 +62,13 @@ UBCAuthenticationProxy *UBCAuthenticationProxy::AuthenticatePlaystationNetwork(U
     return Proxy;
 }
 
+UBCAuthenticationProxy* UBCAuthenticationProxy::AuthenticatePlaystation5(UBrainCloudWrapper* brainCloudWrapper, FString psnAccountId, FString psnAuthToken, bool forceCreate)
+{
+    UBCAuthenticationProxy *Proxy = NewObject<UBCAuthenticationProxy>();
+    UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getClient()->getAuthenticationService()->authenticatePlaystation5(psnAccountId, psnAuthToken, forceCreate, Proxy);
+    return Proxy;
+}
+
 UBCAuthenticationProxy *UBCAuthenticationProxy::AuthenticateGameCenter(UBrainCloudWrapper *brainCloudWrapper, FString gameCenterId, bool forceCreate)
 {
     UBCAuthenticationProxy *Proxy = NewObject<UBCAuthenticationProxy>();

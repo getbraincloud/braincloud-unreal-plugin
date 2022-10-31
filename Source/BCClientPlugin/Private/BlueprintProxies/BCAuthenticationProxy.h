@@ -89,10 +89,9 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *AuthenticateOculus(UBrainCloudWrapper *brainCloudWrapper, FString oculusId, FString oculusNonce, bool forceCreate);
-
-
+	
     /*
-    * Authenticate the user with brainCloud using their psn account id and auth token
+    * Authenticate the user specifically for Playstation 4 with brainCloud using their psn account id and auth token
     *
     * Service Name - Authenticate
     * Service Operation - Authenticate
@@ -105,6 +104,20 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *AuthenticatePlaystationNetwork(UBrainCloudWrapper *brainCloudWrapper, FString psnAccountId, FString psnAuthToken, bool forceCreate);
 
+	/*
+	* Authenticate the user specifically for Playstation 5 with brainCloud using their psn account id and auth token
+	*
+	* Service Name - Authenticate
+	* Service Operation - Authenticate
+	*
+	* Param - psnAccountId The account id of the user
+	* Param - psnAuthToken The validated token from the playstation sdk
+	*   (that will be further validated when sent to the bC service)
+	* Param - forceCreate Should a new profile be created for this user if the account does not exist?
+	*/
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
+	static UBCAuthenticationProxy *AuthenticatePlaystation5(UBrainCloudWrapper *brainCloudWrapper, FString psnAccountId, FString psnAuthToken, bool forceCreate);
+	
     /*
     * Authenticate the user using their Game Center id
     *
