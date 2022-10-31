@@ -12,6 +12,7 @@ enum class EBCAuthType : uint8
 	FacebookLimited UMETA(DisplayName = "FacebookLimited"),
 	Oculus UMETA(DisplayName = "Oculus"),
 	PlaystationNetwork UMETA(DisplayName = "PlaystationNetwork"),
+	PlaystationNetwork5 UMETA(DisplayName = "PlaystationNetwork5"),
 	GameCenter UMETA(DisplayName = "GameCenter"),
 	Steam UMETA(DisplayName = "Steam"),
 	Google UMETA(DisplayName = "Google"),

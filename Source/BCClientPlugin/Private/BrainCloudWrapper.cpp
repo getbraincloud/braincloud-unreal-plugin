@@ -160,6 +160,13 @@ void UBrainCloudWrapper::authenticatePlaystationNetwork(FString psnAccountId, FS
     _client->getAuthenticationService()->authenticatePlaystationNetwork(psnAccountId, psnAuthToken, forceCreate, this);
 }
 
+void UBrainCloudWrapper::authenticatePlaystation5(FString psnAccountId, FString psnAuthToken, bool forceCreate, IServerCallback* callback)
+{
+    _authenticateCallback = callback;
+    initializeIdentity();
+    _client->getAuthenticationService()->authenticatePlaystation5(psnAccountId, psnAuthToken, forceCreate, this);
+}
+
 void UBrainCloudWrapper::authenticateGameCenter(FString gameCenterId, bool forceCreate, IServerCallback *callback)
 {
     _authenticateCallback = callback;
