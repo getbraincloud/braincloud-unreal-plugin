@@ -1009,3 +1009,4 @@ int16 BrainCloudComms::GetMaxRetryAttempts()
 {
 	return ShouldRetryPacket() ? (int16)_packetTimeouts.Num() - 1 : 0;
 }
+}
