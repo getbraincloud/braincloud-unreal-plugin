@@ -22,6 +22,8 @@ public class BCClientPlugin : ModuleRules
     {
         PrivatePCHHeaderFile = "Private/BCClientPluginPrivatePCH.h";
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+        //Uncomment this if you're developing on a confidential platform (IE: Playstation, Nintendo and Xbox)
+        //bAllowConfidentialPlatformDefines = true;
         PrivateIncludePaths.AddRange(
             new string[] {
                     Path.Combine(ModulePath,"Private"),
@@ -32,7 +34,9 @@ public class BCClientPlugin : ModuleRules
             new string[]
                 {
                     "JsonUtilities",
-                    "HTTP"
+                    "HTTP",
+                    "OnlineSubsystemUtils",
+                    "OnlineSubsystem"
                 });
 
         PublicDependencyModuleNames.AddRange(
@@ -70,6 +74,12 @@ public class BCClientPlugin : ModuleRules
         {
             PublicDependencyModuleNames.Add("libWebSockets");
         }
+        //Uncomment if you're developing for Playstation 5
+        /*else if (Target.Platform == UnrealTargetPlatform.PS5)
+        {
+            PublicDependencyModuleNames.Add("WebSockets_PS5");
+            PublicDependencyModuleNames.Add("libWebSockets");
+        }*/
     #if UE_4_24_OR_LATER
         else 
         {
