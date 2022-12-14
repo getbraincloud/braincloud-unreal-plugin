@@ -44,6 +44,7 @@
 #include "BrainCloudBlockchain.h"
 #include "BrainCloudRelay.h"
 #include "BrainCloudTimeUtils.h"
+#include "Kismet/GameplayStatics.h"
 
 class BrainCloudComms;
 class BrainCloudRTTComms;
