@@ -38,7 +38,7 @@ Follow steps 4-10 above.
 
 ### Unreal Engine 5.0
 
-The plugin will easily work with both UE4 and UE5. If switching, ensure that Intermediate files are cleaned up from previous build.
+The plugin will easily work with any version of UE4 and UE5. If switching, ensure that Intermediate files are cleaned up from previous build.
 
 ## Example Projects
 
