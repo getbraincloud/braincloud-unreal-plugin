@@ -1,6 +1,9 @@
 // Copyright 2018 bitHeads, Inc. All Rights Reserved.
 
 #pragma once
+#include "Interfaces/IHttpBase.h"
+#include "Interfaces/IHttpRequest.h"
+#include "Runtime/Launch/Resources/Version.h"
 
 class BCFileUploader
 {
