@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Engine.h"
+#include "CoreMinimal.h"
 #include "OnlineSubsystemBrainCloudModule.h"
 #include "OnlineSubsystemModule.h"
 #include "OnlineSubsystem.h"
