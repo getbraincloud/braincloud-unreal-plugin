@@ -90,10 +90,6 @@ IOnlineTitleFilePtr FOnlineSubsystemBrainCloud::GetTitleFileInterface() const
 	return TitleFileInterface;
 }
 
-IOnlineStorePtr FOnlineSubsystemBrainCloud::GetStoreInterface() const
-{
-	return nullptr;
-}
 
 #if (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 11) || ENGINE_MAJOR_VERSION == 5
 IOnlineStoreV2Ptr FOnlineSubsystemBrainCloud::GetStoreV2Interface() const
@@ -105,6 +101,13 @@ IOnlinePurchasePtr FOnlineSubsystemBrainCloud::GetPurchaseInterface() const
 {
 	return nullptr;
 }
+#if (ENGINE_MAJOR_VERSION <= 4) || (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION <= 0)
+// can no longer define this to work for UE 5.1
+IOnlineStorePtr FOnlineSubsystemBrainCloud::GetStoreInterface() const
+{
+    return nullptr;
+}
+#endif
 #endif
 
 IOnlineEventsPtr FOnlineSubsystemBrainCloud::GetEventsInterface() const

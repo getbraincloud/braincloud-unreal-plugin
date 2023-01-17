@@ -3,10 +3,10 @@
 #pragma once
 
 #include "CoreUObject.h"
-#include "Engine.h"
+#include "CoreMinimal.h"
 
 #include "Delegates/Delegate.h"
-#include "Http.h"
+//#include "Http.h"
 #include "Containers/Map.h"
 #include "Json.h"
 

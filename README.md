@@ -32,13 +32,15 @@ then right click on your .uproject and generate visual studio files.
 BCClient plugin can be installed as a submodule of your git project.
 Open a terminal at your project's root folder and enter the command:
 
+```
 $ git submodule add https://github.com/getbraincloud/braincloud-unreal-plugin-src.git Plugins/BCClient
+```
 
 Follow steps 4-10 above.
 
 ### Unreal Engine 5.0
 
-The plugin will easily work with both UE4 and UE5. If switching, ensure that Intermediate files are cleaned up from previous build.
+The plugin will easily work with any version of UE4 and UE5. If switching, ensure that Intermediate files are cleaned up from previous build.
 
 ## Example Projects
 
@@ -56,6 +58,8 @@ version of the plugin.  If you experience issues, roll back to to the previous v
 ensure you have not missed removal of these deprecated calls.
 
 Note there is a defect that UTCTimeZoneOffset will be off for one hour in case of daylight savings due to limitations of UE Core API regarding DateTime.
+
+There is a known Clang compiler issue when using Xcode 14 with UE 4. There will be errors of redifintions of HTTP_STATUS codes in thirdparty libraries used by Unreal and brainCloud. This issue is resolved in UE 5. In order to continue development in previous versions of Unreal, the file  Engine/Source/ThirdParty/libWebSockets/libwebsockets/include/Mac/libwebsockets.h can be overwritten by the updated one downloaded from [Epic Games' developer github](https://github.com/EpicGames/UnrealEngine/blob/2cd6352a6928d0ba38138a72d1aa8d1fdd882a68/Engine/Source/ThirdParty/libWebSockets/libwebsockets/include/Mac/libwebsockets.h). 
 
 ## Troubleshooting
 

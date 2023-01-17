@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Editor/BlueprintGraph/Classes/K2Node_BaseAsyncTask.h"
+#include "Runtime/Launch/Resources/Version.h"
 #include "K2Node_BrainCloudCall.generated.h"
 
 // This node is a latent brainCloud client call (handles scanning all UBCBlueprintCallProxyBase classes for static factory calls)

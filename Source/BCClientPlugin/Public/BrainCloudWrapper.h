@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Dom/JsonObject.h"
 #include "BrainCloudBlockchain.h"
 #include "UObject/NoExportTypes.h"
 #include "IServerCallback.h"

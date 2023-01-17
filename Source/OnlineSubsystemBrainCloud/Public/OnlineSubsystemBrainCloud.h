@@ -45,7 +45,6 @@ class ONLINESUBSYSTEMBRAINCLOUD_API FOnlineSubsystemBrainCloud : public FOnlineS
     virtual IOnlineTimePtr GetTimeInterface() const override;
     virtual IOnlineIdentityPtr GetIdentityInterface() const override;
     virtual IOnlineTitleFilePtr GetTitleFileInterface() const override;
-    virtual IOnlineStorePtr GetStoreInterface() const override;
 
     virtual IOnlineEventsPtr GetEventsInterface() const override;
     virtual IOnlineAchievementsPtr GetAchievementsInterface() const override;
@@ -75,6 +74,9 @@ class ONLINESUBSYSTEMBRAINCLOUD_API FOnlineSubsystemBrainCloud : public FOnlineS
 #if (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 11) || ENGINE_MAJOR_VERSION == 5
     virtual IOnlineStoreV2Ptr GetStoreV2Interface() const override;
     virtual IOnlinePurchasePtr GetPurchaseInterface() const override;
+#if (ENGINE_MAJOR_VERSION <= 4) || (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION <= 0)
+    virtual IOnlineStorePtr GetStoreInterface() const override;
+#endif
 #endif
     
     virtual bool Init() override;
