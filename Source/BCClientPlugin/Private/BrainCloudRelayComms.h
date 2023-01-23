@@ -38,6 +38,7 @@ public:
     void connect(BCRelayConnectionType in_connectionType, const FString& host, int port, const FString& passcode, const FString& lobbyId, IRelayConnectCallback* in_callback);
     void connect(BCRelayConnectionType in_connectionType, const FString& host, int port, const FString& passcode, const FString& lobbyId, UBCRelayProxy* in_callback);
     void disconnect();
+    void explicitDisconnect();
     bool isConnected() const;
     int getPing() const;
     void setPingInterval(int in_intervalMS);

@@ -213,7 +213,7 @@ namespace BrainCloud
 
     void RelayWebSocket::OnConnectError(const FString &error)
     {
-        UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebScoket OnConnectError: %s"), *error);
+        UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket OnConnectError: %s"), *error);
         close();
 
         FScopeLock Lock(&m_mutex);
@@ -223,13 +223,13 @@ namespace BrainCloud
 
     void RelayWebSocket::OnClosed()
     {
-        UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebScoket OnClosed"));
+        UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket OnClosed"));
         close();
     }
 
     void RelayWebSocket::OnConnectComplete()
     {
-        UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebScoket OnConnectComplete"));
+        UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket OnConnectComplete"));
         FScopeLock Lock(&m_mutex);
         if (!m_connectedSocket) return;
         m_isSocketConnected = true;
@@ -237,7 +237,7 @@ namespace BrainCloud
 
     void RelayWebSocket::OnReceiveData(const TArray<uint8> &data)
     {
-        UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebScoket OnReceiveData"));
+        UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket OnReceiveData"));
         FScopeLock Lock(&m_mutex);
         if (!m_connectedSocket) return;
         m_packetQueue.Add(data);

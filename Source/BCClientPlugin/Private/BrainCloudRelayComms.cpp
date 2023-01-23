@@ -224,6 +224,11 @@ void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, cons
     }
 }
 
+void BrainCloudRelayComms::explicitDisconnect() 
+{
+    send(CL2RS_DISCONNECT, "");
+}
+
 void BrainCloudRelayComms::disconnect()
 {
     m_isConnected = false;
@@ -231,9 +236,18 @@ void BrainCloudRelayComms::disconnect()
     m_resendConnectRequest = false;
 
     // Close socket
+    if (m_pSocket != NULL) {
+        UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket Closing Socket"));
+        m_pSocket->close();
+    }
+    else {
+        UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket Socket pointer is null"));
+    }
     delete m_pSocket;
     m_pSocket = nullptr;
-    
+    UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket Destroyed"));
+
+
     m_sendPacketId.Reset();
     m_recvPacketId.Reset();
 
@@ -241,6 +255,7 @@ void BrainCloudRelayComms::disconnect()
     m_reliables.Reset();
     m_orderedReliablePackets.Reset();
     m_packetPool.reclaim();
+    
 }
 
 bool BrainCloudRelayComms::isConnected() const

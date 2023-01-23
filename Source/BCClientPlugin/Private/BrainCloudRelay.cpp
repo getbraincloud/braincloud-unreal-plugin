@@ -19,6 +19,11 @@ void BrainCloudRelay::disconnect()
     _relayComms->disconnect();
 }
 
+void BrainCloudRelay::explicitDisconnect()
+{
+	_relayComms->explicitDisconnect();
+}
+
 bool BrainCloudRelay::isConnected() const
 {
     return _relayComms->isConnected();

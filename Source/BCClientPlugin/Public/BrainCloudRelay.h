@@ -40,6 +40,11 @@ public:
     void disconnect();
 
     /**
+    * Send explicit disconnect message to the relay server
+    */
+    void explicitDisconnect();
+
+    /**
      * Returns whether or not we have a successful connection with
      * the relay server.
      */
