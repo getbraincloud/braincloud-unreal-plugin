@@ -224,13 +224,12 @@ void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, cons
     }
 }
 
-void BrainCloudRelayComms::explicitDisconnect() 
-{
-    send(CL2RS_DISCONNECT, "");
-}
-
 void BrainCloudRelayComms::disconnect()
 {
+    if(m_isConnected)
+    {
+        send(CL2RS_DISCONNECT, "");
+    }
     m_isConnected = false;
     m_isSocketConnected = false;
     m_resendConnectRequest = false;

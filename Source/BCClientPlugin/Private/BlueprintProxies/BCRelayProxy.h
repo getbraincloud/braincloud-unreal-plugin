@@ -35,12 +35,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "BrainCloud|Relay")
 	static void Disconnect(UBrainCloudWrapper *brainCloudWrapper);
 
-	/**
-	* Explicitly sends disconnect message to relay server
-	*/
-	UFUNCTION(BlueprintCallable, Category = "BrainCloud|Relay")
-	static void ExplicitDisconnect(UBrainCloudWrapper* brainCloudWrapper);
-
 	/** 
 	* Is Connected
 	*/
