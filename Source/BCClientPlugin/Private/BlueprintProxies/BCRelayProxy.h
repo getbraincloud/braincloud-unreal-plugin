@@ -30,7 +30,7 @@ public:
 	static UBCRelayProxy *Connect(UBrainCloudWrapper *brainCloudWrapper, BCRelayConnectionType in_connectionType, const FString &host, int port, const FString &passcode, const FString &lobbyId);
 
 	/** 
-	* Disables relay event for this session.
+	* Disconnects from current relay session
 	*/
 	UFUNCTION(BlueprintCallable, Category = "BrainCloud|Relay")
 	static void Disconnect(UBrainCloudWrapper *brainCloudWrapper);

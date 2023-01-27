@@ -116,7 +116,7 @@ BrainCloudRelayComms::BrainCloudRelayComms(BrainCloudClient* in_client)
 
 BrainCloudRelayComms::~BrainCloudRelayComms()
 {
-    disconnect();
+    socketCleanup();
     
 	if (m_pRelayConnectCallbackBP != nullptr)
 	{
@@ -158,14 +158,14 @@ void BrainCloudRelayComms::shutdown()
 
 void BrainCloudRelayComms::resetCommunication()
 {
-    disconnect();
+    socketCleanup();
 }
 
 void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, const FString& host, int port, const FString& passcode, const FString& lobbyId, IRelayConnectCallback* in_callback)
 {
     if (m_isSocketConnected)
     {
-        disconnect();
+        socketCleanup();
     }
 
     m_pRelayConnectCallback = in_callback;
@@ -177,7 +177,7 @@ void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, cons
 {
     if (m_isSocketConnected)
     {
-        disconnect();
+        socketCleanup();
     }
 
     m_pRelayConnectCallbackBP = in_callback;
@@ -217,23 +217,40 @@ void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, cons
         }
         default:
         {
-            disconnect();
+            socketCleanup();
             queueErrorEvent("Protocol Unimplemented");
             break;
         }
     }
 }
 
-void BrainCloudRelayComms::disconnect()
+void BrainCloudRelayComms::disconnect() 
 {
+    if (!m_isSocketConnected) return;
+
+    send(CL2RS_DISCONNECT, "");
+}
+
+void BrainCloudRelayComms::socketCleanup()
+{
+    if (!m_isSocketConnected) return;
+
     m_isConnected = false;
     m_isSocketConnected = false;
     m_resendConnectRequest = false;
 
     // Close socket
+    if (m_pSocket != NULL) {
+        m_pSocket->close();
+    }
+    else {
+        UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket Socket pointer is null"));
+    }
     delete m_pSocket;
     m_pSocket = nullptr;
-    
+    UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket Destroyed"));
+
+
     m_sendPacketId.Reset();
     m_recvPacketId.Reset();
 
@@ -241,6 +258,7 @@ void BrainCloudRelayComms::disconnect()
     m_reliables.Reset();
     m_orderedReliablePackets.Reset();
     m_packetPool.reclaim();
+    
 }
 
 bool BrainCloudRelayComms::isConnected() const
@@ -369,7 +387,7 @@ void BrainCloudRelayComms::send(const TArray<uint8> &in_dataArr, uint64 in_playe
 
     if (in_size > RELAY_MAX_PACKET_SIZE)
     {
-        disconnect();
+        socketCleanup();
         queueErrorEvent("Relay Error: Packet is too big " + FString::FromInt(in_size) + " > max 1024");
         return;
     }
@@ -502,7 +520,7 @@ void BrainCloudRelayComms::onRecv(const uint8* in_data, int in_size)
 
     if (in_size < 3)
     {
-        disconnect();
+        socketCleanup();
         queueErrorEvent("Relay Recv Error: packet cannot be smaller than 3 bytes");
         return;
     }
@@ -512,7 +530,7 @@ void BrainCloudRelayComms::onRecv(const uint8* in_data, int in_size)
 
     if (size < in_size)
     {
-        disconnect();
+        socketCleanup();
         queueErrorEvent("Relay Recv Error: Packet is smaller than header's size");
         return;
     }
@@ -521,7 +539,7 @@ void BrainCloudRelayComms::onRecv(const uint8* in_data, int in_size)
     {
         if (size < 5)
         {
-            disconnect();
+            socketCleanup();
             queueErrorEvent("Relay Recv Error: RSMG cannot be smaller than 5 bytes");
             return;
         }
@@ -529,7 +547,7 @@ void BrainCloudRelayComms::onRecv(const uint8* in_data, int in_size)
     }
     else if (controlByte == RS2CL_DISCONNECT)
     {
-        disconnect();
+        socketCleanup();
         queueErrorEvent("Relay: Disconnected by server");
     }
     else if (controlByte == RS2CL_PONG)
@@ -540,7 +558,7 @@ void BrainCloudRelayComms::onRecv(const uint8* in_data, int in_size)
     {
         if (size < 11)
         {
-            disconnect();
+            socketCleanup();
             queueErrorEvent("Relay Recv Error: ack packet cannot be smaller than 5 bytes");
             return;
         }
@@ -553,7 +571,7 @@ void BrainCloudRelayComms::onRecv(const uint8* in_data, int in_size)
     {
         if (size < 11)
         {
-            disconnect();
+            socketCleanup();
             queueErrorEvent("Relay Recv Error: relay packet cannot be smaller than 5 bytes");
             return;
         }
@@ -561,7 +579,7 @@ void BrainCloudRelayComms::onRecv(const uint8* in_data, int in_size)
     }
     else
     {
-        disconnect();
+        socketCleanup();
         queueErrorEvent("Relay Recv Error: Unknown control byte: " + FString::FromInt(controlByte));
     }
 }
@@ -635,7 +653,7 @@ void BrainCloudRelayComms::onRSMG(const uint8* in_data, int in_size)
 	TSharedPtr<FJsonObject> json = MakeShareable(new FJsonObject());
     if (!FJsonSerializer::Deserialize(reader, json))
     {
-        disconnect();
+        socketCleanup();
         queueErrorEvent("Invalid Json in RSMG packet");
         return;
     }
@@ -687,7 +705,7 @@ void BrainCloudRelayComms::onRSMG(const uint8* in_data, int in_size)
         if (m_cxId == cxId)
         {
             // We are the one that got disconnected!
-            disconnect();
+            socketCleanup();
             queueErrorEvent("Disconnected by server");
             return;
         }
@@ -800,7 +818,7 @@ void BrainCloudRelayComms::onRelay(const uint8* in_data, int in_size)
                 {
                     if ((int)orderedReliablePackets.Num() > MAX_PACKET_ID_HISTORY)
                     {
-                        disconnect();
+                        socketCleanup();
                         queueErrorEvent("Relay disconnected, too many queued out of order packets.");
                         return;
                     }
@@ -929,7 +947,7 @@ void BrainCloudRelayComms::RunCallbacks()
                     auto pPacket = it.Value;
                     if (pPacket->timeSinceFirstSend - now > 10.0)
                     {
-                        disconnect();
+                        socketCleanup();
                         queueErrorEvent("Relay disconnected, too many packet lost");
                         break;
                     }
@@ -954,13 +972,13 @@ void BrainCloudRelayComms::RunCallbacks()
                 m_pSocket && 
                 now - m_lastRecvTime > (double)TIMEOUT_SECONDS)
             {
-                disconnect();
+                socketCleanup();
                 queueErrorEvent("Relay Socket Timeout");
             }
         }
         else if (!m_pSocket->isValid())
         {
-            disconnect();
+            socketCleanup();
             queueErrorEvent("Relay Socket Error: failed to connect");
         }
         else
