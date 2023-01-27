@@ -328,7 +328,7 @@ void BrainCloudClient::resetCommunication()
 {
 	_brainCloudComms->ResetCommunication();
 	_brainCloudRTTComms->disableRTT();
-	_brainCloudRelayComms->disconnect();
+	_brainCloudRelayComms->socketCleanup();
 
 	if (_authenticationService)
 		_authenticationService->clearSavedProfileId();

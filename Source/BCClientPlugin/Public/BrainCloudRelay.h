@@ -35,14 +35,9 @@ public:
     void connect(BCRelayConnectionType in_connectionType, const FString &host, int port, const FString &passcode, const FString &lobbyId, IRelayConnectCallback *in_callback);
 
     /** 
-     * Disables relay event for this session.
+     * Disconnects from relay session
      */
     void disconnect();
-
-    /**
-    * Send explicit disconnect message to the relay server
-    */
-    void explicitDisconnect();
 
     /**
      * Returns whether or not we have a successful connection with
