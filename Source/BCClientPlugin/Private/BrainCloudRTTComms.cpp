@@ -145,7 +145,8 @@ void BrainCloudRTTComms::RunCallbacks()
 #endif
 #endif
 #else
-	if (m_lwsContext != nullptr)
+    if((m_rttConnectionStatus == BCRTTConnectionStatus::CONNECTING || m_rttConnectionStatus == BCRTTConnectionStatus::CONNECTED)
+    && (m_lwsContext != nullptr))
 	{
 		lws_callback_on_writable_all_protocol(m_lwsContext, &protocols[0]);
 		lws_service(m_lwsContext, 0);
@@ -345,8 +346,6 @@ void BrainCloudRTTComms::disconnect()
 	m_cxId = TEXT("");
 	m_eventServer = TEXT("");
 
-	m_rttConnectionStatus = BCRTTConnectionStatus::DISCONNECTED;
-
 	m_appCallback = nullptr;
 
 	if (m_appCallbackBP != nullptr)
@@ -355,6 +354,8 @@ void BrainCloudRTTComms::disconnect()
         m_appCallbackBP->RemoveFromRoot();
         m_appCallbackBP->ConditionalBeginDestroy();
 	}
+    
+    m_rttConnectionStatus = BCRTTConnectionStatus::DISCONNECTED;
 }
 
 FString BrainCloudRTTComms::buildConnectionRequest()
@@ -490,6 +491,7 @@ void BrainCloudRTTComms::setupWebSocket(const FString &in_url)
 #endif
 #endif
 #else
+    m_rttConnectionStatus = BCRTTConnectionStatus::CONNECTING;
 	if (m_lwsContext == nullptr)
 	{
 		struct lws_context_creation_info info;
@@ -570,7 +572,6 @@ void BrainCloudRTTComms::webSocket_OnClose()
 void BrainCloudRTTComms::websocket_OnOpen()
 {
 	// first time connecting? send the server connection call
-	m_rttConnectionStatus = BCRTTConnectionStatus::CONNECTING;
 	m_websocketStatus = BCWebsocketStatus::OPEN;
 	send(buildConnectionRequest());
 }
