@@ -226,18 +226,21 @@ void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, cons
 
 void BrainCloudRelayComms::disconnect() 
 {
+    if (!m_isSocketConnected) return;
+
     send(CL2RS_DISCONNECT, "");
 }
 
 void BrainCloudRelayComms::socketCleanup()
 {
+    if (!m_isSocketConnected) return;
+
     m_isConnected = false;
     m_isSocketConnected = false;
     m_resendConnectRequest = false;
 
     // Close socket
     if (m_pSocket != NULL) {
-        UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket Closing Socket"));
         m_pSocket->close();
     }
     else {
