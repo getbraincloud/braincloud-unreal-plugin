@@ -3,6 +3,7 @@
 #include "BrainCloudRelayComms.h"
 #include "ConvertUtilities.h"
 #include "RelayWebSocket.h"
+#include "RelayUDPSocket.h"
 
 #include "BCClientPluginPrivatePCH.h"
 #include "Serialization/JsonTypes.h"
@@ -215,10 +216,16 @@ void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, cons
             m_pSocket = new BrainCloud::RelayWebSocket(host, port, false);
             break;
         }
+        case BCRelayConnectionType::UDP:
+        {
+            UE_LOG(LogBrainCloudRelayComms, Log, TEXT("Creating UDP Socket Connection"));
+            m_pSocket = new BrainCloud::RelayUDPSocket(host, port);
+            break;
+        }
         default:
         {
             socketCleanup();
-            queueErrorEvent("Protocol Unimplemented");
+            queueErrorEvent(FString::Printf(TEXT("Protocol Unimplemented %s"), m_connectionType));
             break;
         }
     }
@@ -486,12 +493,11 @@ void BrainCloudRelayComms::send(int netId, const TSharedRef<FJsonObject>& json)
 
 void BrainCloudRelayComms::send(int netId, const FString& text)
 {
-#if VERBOSE_LOG
     if (m_client->isLoggingEnabled())
     {
         UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RELAY SEND: %s"), *text);
     }
-#endif
+
 
     uint8 bytes[1024];
     int32 bytesLen = ConvertUtilities::BCStringToBytes(text, bytes, 1024);
@@ -914,6 +920,7 @@ void BrainCloudRelayComms::RunCallbacks()
 
         if (m_pSocket->isConnected())
         {
+            UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayComms Socket Connected - Checking messages"));
             // Peek messages
             int packetSize;
             const uint8* pPacketData;
@@ -926,9 +933,10 @@ void BrainCloudRelayComms::RunCallbacks()
 
             // Check for connect request resend
             if (m_connectionType == BCRelayConnectionType::UDP &&
-                m_resendConnectRequest &&
+                //m_resendConnectRequest &&
                 now - m_lastConnectResendTime > ((double)CONNECT_RESEND_INTERVAL_MS / 1000.0))
             {
+                UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayComms Resending connect request"));
                 m_lastConnectResendTime = now;
                 send(CL2RS_CONNECT, buildConnectionRequest());
             }
@@ -983,6 +991,7 @@ void BrainCloudRelayComms::RunCallbacks()
         }
         else
         {
+            UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayComms Socket valid but not connected - updating connection"));
             m_pSocket->updateConnection();
             if (m_pSocket->isConnected())
             {
