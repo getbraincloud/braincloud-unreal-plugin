@@ -19,6 +19,11 @@ void BrainCloudRelay::disconnect()
     _relayComms->disconnect();
 }
 
+void BrainCloudRelay::endMatch(FString jsonPayload)
+{
+	_relayComms->endMatch(jsonPayload);
+}
+
 bool BrainCloudRelay::isConnected() const
 {
     return _relayComms->isConnected();

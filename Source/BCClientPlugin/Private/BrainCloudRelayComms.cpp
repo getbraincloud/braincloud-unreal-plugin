@@ -46,6 +46,7 @@ static const int CL2RS_RELAY = 2;
 static const int CL2RS_ACK = 3;
 static const int CL2RS_PING = 4;
 static const int CL2RS_RSMG_ACK = 5;
+static const int CL2RS_RSMG_ENDMATCH = 6;
 
 // Messages sent from Relay-Server to Client
 static const int RS2CL_RSMG = 0;
@@ -207,6 +208,7 @@ void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, cons
     m_eventPool.reclaim();
     m_packetPool.reclaim();
     m_rsmgHistory.Reset(0);
+    m_endMatchRequested = false;
 
     switch (m_connectionType)
     {
@@ -231,6 +233,13 @@ void BrainCloudRelayComms::disconnect()
     send(CL2RS_DISCONNECT, "");
 }
 
+void BrainCloudRelayComms::endMatch(FString jsonPayload)
+{
+    if (!m_isSocketConnected) return;
+    
+    send(CL2RS_RSMG_ENDMATCH, jsonPayload);
+}
+
 void BrainCloudRelayComms::socketCleanup()
 {
     if (!m_isSocketConnected) return;
@@ -239,17 +248,19 @@ void BrainCloudRelayComms::socketCleanup()
     m_isSocketConnected = false;
     m_resendConnectRequest = false;
 
-    // Close socket
-    if (m_pSocket != NULL) {
-        m_pSocket->close();
+    if(!m_endMatchRequested)
+    {
+        // Close socket
+        if (m_pSocket != NULL) {
+            m_pSocket->close();
+        }
+        else {
+            UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket Socket pointer is null"));
+        }
+        delete m_pSocket;
+        m_pSocket = nullptr;
+        UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket Destroyed"));   
     }
-    else {
-        UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket Socket pointer is null"));
-    }
-    delete m_pSocket;
-    m_pSocket = nullptr;
-    UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket Destroyed"));
-
 
     m_sendPacketId.Reset();
     m_recvPacketId.Reset();
@@ -710,6 +721,11 @@ void BrainCloudRelayComms::onRSMG(const uint8* in_data, int in_size)
             return;
         }
     }
+    else if(op == "END_MATCH")
+    {
+        m_endMatchRequested = true;
+        socketCleanup();
+    }
 
     queueSystemEvent(jsonString);
 }
@@ -1020,7 +1036,7 @@ void BrainCloudRelayComms::RunCallbacks()
                     }
                     break;
                 case EventType::ConnectFailure:
-                    if (m_pRelayConnectCallback)
+                    if (m_pRelayConnectCallback && !m_endMatchRequested)
                     {
                         if (m_client->isLoggingEnabled())
                         {
@@ -1028,7 +1044,7 @@ void BrainCloudRelayComms::RunCallbacks()
                         }
                         m_pRelayConnectCallback->relayConnectFailure(pEvent->message);
                     }
-                    if (m_pRelayConnectCallbackBP)
+                    if (m_pRelayConnectCallbackBP && !m_endMatchRequested)
                     {
                         if (m_client->isLoggingEnabled())
                         {
