@@ -361,6 +361,15 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation UpdateGroupSummaryData;
 	static const ServiceOperation GetRandomGroupsMatching;
 
+	//group file services
+	static const ServiceOperation CheckFilenameExists;
+	static const ServiceOperation CheckFullpathFilenameExists;
+	static const ServiceOperation CopyGroupFile;
+	static const ServiceOperation DeleteGroupFile;
+	static const ServiceOperation MoveGroupFile;
+	static const ServiceOperation MoveUserToGroupFile;
+	static const ServiceOperation UpdateFileInfo;
+
 	//mail
 	static const ServiceOperation SendBasicEmail;
 	static const ServiceOperation SendAdvancedEmail;

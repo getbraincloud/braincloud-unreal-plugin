@@ -542,6 +542,23 @@ const OperationParam OperationParam::GlobalAppReadPropertiesInCategories = Opera
 const OperationParam OperationParam::BlockChainIntegrationId = OperationParam("integrationId");
 const OperationParam OperationParam::BlockChainContext = OperationParam("contextJson");
 
+const OperationParam OperationParam::FolderPath = OperationParam("folderPath");
+const OperationParam OperationParam::FileName = OperationParam("filename");
+const OperationParam OperationParam::FullPathFilename = OperationParam("fullPathFilename");
+const OperationParam OperationParam::FileId = OperationParam("fileId");
+const OperationParam OperationParam::Version = OperationParam("version");
+const OperationParam OperationParam::NewTreeId = OperationParam("newTreeId");
+const OperationParam OperationParam::TreeVersion = OperationParam("treeVersion");
+const OperationParam OperationParam::NewFilename = OperationParam("newFilename");
+const OperationParam OperationParam::OverwriteIfPresent = OperationParam("overwriteIfPresent");
+const OperationParam OperationParam::Recurse = OperationParam("recurse");
+const OperationParam OperationParam::UserCloudPath = OperationParam("userCloudPath");
+const OperationParam OperationParam::UserCloudFilename = OperationParam("userCloudFilename");
+const OperationParam OperationParam::GroupTreeId = OperationParam("groupTreeId");
+const OperationParam OperationParam::GroupFilename = OperationParam("groupFilename");
+const OperationParam OperationParam::GroupFileACL = OperationParam("groupFileAcl");
+const OperationParam OperationParam::NewACL = OperationParam("newAcl");
+
 bool OperationParam::operator==(const OperationParam &s) const
 {
 	return _value == s.getValue();

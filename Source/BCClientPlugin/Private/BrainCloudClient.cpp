@@ -432,6 +432,15 @@ BrainCloudBlockchain* BrainCloudClient::getBlockchainService()
 	return _blockchainService;
 }
 
+BrainCloudGroupFile* BrainCloudClient::getGroupFileService()
+{
+	if(_groupFileService == nullptr)
+	{
+		_groupFileService = new BrainCloudGroupFile(this);
+	}
+	return _groupFileService;
+}
+
 BrainCloudAuthentication *BrainCloudClient::getAuthenticationService()
 {
 	if (_authenticationService == nullptr)
