@@ -535,6 +535,25 @@ class BCCLIENTPLUGIN_API OperationParam
 
 	static const OperationParam BlockChainIntegrationId;
 	static const OperationParam BlockChainContext;
+
+	//group file
+	static const OperationParam FolderPath;
+	static const OperationParam FileName;
+	static const OperationParam FullPathFilename;
+	static const OperationParam FileId;
+	static const OperationParam Version;
+	static const OperationParam NewTreeId;
+	static const OperationParam TreeVersion;
+	static const OperationParam NewFilename;
+	static const OperationParam OverwriteIfPresent;
+	static const OperationParam Recurse;
+	static const OperationParam UserCloudPath;
+	static const OperationParam UserCloudFilename;
+	static const OperationParam GroupTreeId;
+	static const OperationParam GroupFilename;
+	static const OperationParam GroupFileACL;
+	static const OperationParam NewACL;
+	
 	
 
 	FString getValue() const { return _value; }

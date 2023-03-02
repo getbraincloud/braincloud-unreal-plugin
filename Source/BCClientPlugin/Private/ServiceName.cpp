@@ -68,6 +68,7 @@ const ServiceName ServiceName::Lobby = ServiceName("lobby");
 const ServiceName ServiceName::Relay = ServiceName("relay");
 
 const ServiceName ServiceName::Blockchain = ServiceName("blockchain");
+const ServiceName ServiceName::GroupFile = ServiceName("groupFile");
 
 bool ServiceName::operator==(const ServiceName &s) const
 {
