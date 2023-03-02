@@ -39,6 +39,11 @@ public:
      */
     void disconnect();
 
+    /*
+     * Sends end match request to server to close relay services.
+     */
+    void endMatch(FString jsonPayload);
+
     /**
      * Returns whether or not we have a successful connection with
      * the relay server.
