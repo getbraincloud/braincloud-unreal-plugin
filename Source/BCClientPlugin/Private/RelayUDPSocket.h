@@ -32,6 +32,7 @@ namespace BrainCloud
         bool m_isSocketConnected = false;
         bool m_isValid = true;
 
+        FCriticalSection m_mutex;
         TSharedPtr<FInternetAddr> m_remoteAddr;
         TSharedPtr<FInternetAddr> m_localAddr;
         FSocket* m_connectedSocket = nullptr;

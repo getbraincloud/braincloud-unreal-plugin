@@ -7,20 +7,17 @@
 #include <Interfaces/IPv4/IPv4Address.h>
 #include "Runtime/Core/Public/Windows/HideWindowsPlatformTypes.h"
 #include <Common/UdpSocketBuilder.h>
+#include <WinSock2.h>
 
 BrainCloud::RelayUDPSocket::RelayUDPSocket(const FString& host, int port)
 {
 	
 	if (!m_connectedSocket) {
 		
-		UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayUDPSocket Initializing"));
-
 		ISocketSubsystem* SocketSubsystem = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM);
 
 		FIPv4Address Addr;
 		FIPv4Address::Parse(TEXT("127.0.0.1"), Addr);
-
-		
 
 		m_remoteAddr = SocketSubsystem->CreateInternetAddr();
 		m_localAddr = SocketSubsystem->CreateInternetAddr();
@@ -40,18 +37,15 @@ BrainCloud::RelayUDPSocket::RelayUDPSocket(const FString& host, int port)
 
 		int32 SendSize = 2 * 1024 * 1024;
 
-		//m_connectedSocket = SocketSubsystem->CreateSocket(NAME_DGram, TEXT("UDP Socket"), false);
 		m_connectedSocket = FUdpSocketBuilder("UDP Socket")
 			.AsNonBlocking()
 			.AsReusable()
-			.BoundToEndpoint(localEndPoint)
 			.WithReceiveBufferSize(SendSize)
 			.WithSendBufferSize(SendSize)
 			.WithBroadcast();
 
 
-		UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayUDPSocket Socket initialized"));
-		
+		UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayUDPSocket Socket initialized [!]"));
 	}
 	else {
 		UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayUDPSocket Socket already initialized"));
@@ -61,6 +55,7 @@ BrainCloud::RelayUDPSocket::RelayUDPSocket(const FString& host, int port)
 
 BrainCloud::RelayUDPSocket::~RelayUDPSocket()
 {
+	FScopeLock Lock(&m_mutex);
 	close();
 }
 
@@ -77,25 +72,27 @@ bool BrainCloud::RelayUDPSocket::isValid()
 
 void BrainCloud::RelayUDPSocket::update()
 {
-	/*
 	TArray<uint8> RecvData;
-	RecvData.Init(0, 65507);
+	RecvData.Init(0, 57344);
 
-	uint32 Size;
-	while (m_connectedSocket->HasPendingData(Size)) {
+	uint32 BufferSize;
+	while (m_connectedSocket->HasPendingData(BufferSize)) {
 		int32 Read = 0;
-		m_connectedSocket->RecvFrom(RecvData.GetData(), Size, Read, *m_localAddr);
+		m_connectedSocket->RecvFrom(RecvData.GetData(), BufferSize, Read, *m_remoteAddr);
 
 		if (Read > 0) {
 			FString ReceivedString = BytesToString(RecvData.GetData(), Read);
-			UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayUDPSocket ReceivedData %s"), *ReceivedString );
+			//UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayUDPSocket Received Data: %s"), *ReceivedString);
+			if (!m_connectedSocket) return;
+			m_packetQueue.Add(RecvData);
 		}
 	}
-	*/
+	
 }
 
 void BrainCloud::RelayUDPSocket::updateConnection()
 {
+
 }
 
 void BrainCloud::RelayUDPSocket::send(const uint8* pData, int size)
@@ -105,9 +102,8 @@ void BrainCloud::RelayUDPSocket::send(const uint8* pData, int size)
 		return;
 	}
 
+	FScopeLock Lock(&m_mutex);
 	FString messageData = BytesToString(pData, size);
-
-	UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayUDPSocket Sending message %s of size %z"), *messageData, size);
 
 	int32 BytesSent = 0;
 
@@ -121,44 +117,33 @@ void BrainCloud::RelayUDPSocket::send(const uint8* pData, int size)
 		UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayUDPSocket %s"), *Str);
 		return;
 	}
+}
 
-	UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayUDPSocket Message Send Successfull, Bytes Sent = %s"), BytesSent);
-}
-/*
-void BrainCloud::RelayUDPSocket::recv(const FArrayReaderPtr& ArrayReaderPtr, const FIPv4Endpoint& EndPt)
-{
-}
-*/
 const uint8* BrainCloud::RelayUDPSocket::peek(int& size)
 {
-	UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayUDPSocket Peeking"));
+	{
+		FScopeLock Lock(&m_mutex);
+		if (m_packetQueue.Num() == 0) return nullptr;
 
-	TArray<uint8> RecvData;
-	RecvData.Init(0, 65507);
-
-	uint32 Size;
-	while (m_connectedSocket->HasPendingData(Size)) {
-		int32 Read = 0;
-		m_connectedSocket->RecvFrom(RecvData.GetData(), Size, Read, *m_remoteAddr);
-
-		if (Read > 0) {
-			FString ReceivedString = BytesToString(RecvData.GetData(), Read);
-			UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayUDPSocket ReceivedData %s"), *ReceivedString);
-			size = Size;
-			return RecvData.GetData();
-		}
+		m_currentPacket = m_packetQueue[0];
+		m_packetQueue.RemoveAt(0);
 	}
-
-	return nullptr;
+	auto packetSize = (int)ntohs(*(u_short*)m_currentPacket.GetData());
+	size = packetSize;
+	return m_currentPacket.GetData();
 }
 
 void BrainCloud::RelayUDPSocket::close()
 {
-	
-	if (m_connectedSocket) {
+	FScopeLock Lock(&m_mutex);
+	if (m_connectedSocket != nullptr) {
+
 		m_connectedSocket->Close();
 		delete m_connectedSocket;
+		m_connectedSocket = nullptr;
 	}
-	
+	m_isConnected = false;
+	m_isValid = false;
+	m_packetQueue.Empty(0);
 }
 

@@ -220,6 +220,10 @@ void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, cons
         {
             UE_LOG(LogBrainCloudRelayComms, Log, TEXT("Creating UDP Socket Connection"));
             m_pSocket = new BrainCloud::RelayUDPSocket(host, port);
+            m_lastRecvTime = FPlatformTime::Seconds();
+            m_lastConnectResendTime = FPlatformTime::Seconds();
+            m_resendConnectRequest = true;
+            m_isSocketConnected = true;
             break;
         }
         default:
@@ -247,15 +251,15 @@ void BrainCloudRelayComms::socketCleanup()
     m_resendConnectRequest = false;
 
     // Close socket
-    if (m_pSocket != NULL) {
+    if (m_pSocket != nullptr) {
         m_pSocket->close();
     }
     else {
-        UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket Socket pointer is null"));
+        UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelaySocket is null"));
     }
     delete m_pSocket;
     m_pSocket = nullptr;
-    UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket Destroyed"));
+    UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelaySocket Destroyed"));
 
 
     m_sendPacketId.Reset();
@@ -463,6 +467,7 @@ void BrainCloudRelayComms::send(const TArray<uint8> &in_dataArr, uint64 in_playe
         pPacket->timeSinceFirstSend = pPacket->lastResendTime;
         pPacket->resendInterval = RELIABLE_RESEND_INTERVALS[(int)in_channel];
         uint64 ackId = *(uint64*)(pPacket->data.GetData() + 3);
+
         m_reliables.Add(ackId, pPacket);
     }
     else
@@ -473,6 +478,7 @@ void BrainCloudRelayComms::send(const TArray<uint8> &in_dataArr, uint64 in_playe
 
 void BrainCloudRelayComms::sendPing()
 {
+    UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayComms Sending ping"));
     m_lastPingTime = FPlatformTime::Seconds();
 
     uint8 data[5];
@@ -531,15 +537,16 @@ void BrainCloudRelayComms::onRecv(const uint8* in_data, int in_size)
         return;
     }
 
-    int size = (int)netToHost(*(uint16*)in_data);
+    int size = (int)ntohs(*(u_short*)in_data);
     int controlByte = (int)in_data[2];
-
+    
     if (size < in_size)
     {
         socketCleanup();
         queueErrorEvent("Relay Recv Error: Packet is smaller than header's size");
         return;
     }
+    
 
     if (controlByte == RS2CL_RSMG)
     {
@@ -735,10 +742,12 @@ void BrainCloudRelayComms::onPONG()
 void BrainCloudRelayComms::onAck(const uint8* in_data)
 {
     auto ackId = *(uint64*)in_data;
+
     auto it = m_reliables.Find(ackId);
     if (it)
     {
         auto pPacket = *it;
+
 #if VERBOSE_LOG
         if (m_client->isLoggingEnabled())
         {
@@ -767,15 +776,15 @@ static bool packetLE(int a, int b)
 
 void BrainCloudRelayComms::onRelay(const uint8* in_data, int in_size)
 {
-    auto rh = (int)netToHost(*(uint16*)in_data);
-    auto playerMask0 = (uint64)netToHost(*(uint16*)(in_data + 2));
-    auto playerMask1 = (uint64)netToHost(*(uint16*)(in_data + 4));
-    auto playerMask2 = (uint64)netToHost(*(uint16*)(in_data + 6));
-    auto ackId = 
-        (((uint64)rh << 48)          & 0xFFFF000000000000) |
+    auto rh = (int)ntohs(*(u_short*)in_data);
+    auto playerMask0 = (uint64_t)ntohs(*(u_short*)(in_data + 2));
+    auto playerMask1 = (uint64_t)ntohs(*(u_short*)(in_data + 4));
+    auto playerMask2 = (uint64_t)ntohs(*(u_short*)(in_data + 6));
+    auto ackId =
+        (((uint64)rh << 48) & 0xFFFF000000000000) |
         (((uint64)playerMask0 << 32) & 0x0000FFFF00000000) |
         (((uint64)playerMask1 << 16) & 0x00000000FFFF0000) |
-        (((uint64)playerMask2)       & 0x000000000000FFFF);
+        (((uint64)playerMask2) & 0x000000000000FFFF);
     uint64 ackIdWithoutPacketId = ackId & 0xF000FFFFFFFFFFFF;
     auto reliable = rh & RELIABLE_BIT ? true : false;
     auto ordered = rh & ORDERED_BIT ? true : false;
@@ -810,8 +819,8 @@ void BrainCloudRelayComms::onRelay(const uint8* in_data, int in_size)
 #if VERBOSE_LOG
                     if (m_client->isLoggingEnabled())
                     {
-                        UE_LOG(LogBrainCloudRelayComms, Log, TEXT("Duplicated packet from %s. got %s"), 
-                            *FString::FromInt(netId), 
+                        UE_LOG(LogBrainCloudRelayComms, Log, TEXT("Duplicated packet from %s. got %s"),
+                            *FString::FromInt(netId),
                             *FString::FromInt(packetId));
                     }
 #endif
@@ -819,6 +828,11 @@ void BrainCloudRelayComms::onRelay(const uint8* in_data, int in_size)
                 }
 
                 // Check if it's out of order, then save it for later
+
+                if (!m_orderedReliablePackets.Contains(ackIdWithoutPacketId)) {
+                    m_orderedReliablePackets.Add(ackIdWithoutPacketId);
+                }
+
                 auto& orderedReliablePackets = m_orderedReliablePackets[ackIdWithoutPacketId];
                 if (packetId != ((prevPacketId + 1) & MAX_PACKET_ID))
                 {
@@ -838,8 +852,8 @@ void BrainCloudRelayComms::onRelay(const uint8* in_data, int in_size)
 #if VERBOSE_LOG
                             if (m_client->isLoggingEnabled())
                             {
-                                UE_LOG(LogBrainCloudRelayComms, Log, TEXT("Duplicated packet from %s. got %s"), 
-                                    *FString::FromInt(netId), 
+                                UE_LOG(LogBrainCloudRelayComms, Log, TEXT("Duplicated packet from %s. got %s"),
+                                    *FString::FromInt(netId),
                                     *FString::FromInt(packetId));
                             }
 #endif
@@ -856,8 +870,8 @@ void BrainCloudRelayComms::onRelay(const uint8* in_data, int in_size)
 #if VERBOSE_LOG
                     if (m_client->isLoggingEnabled())
                     {
-                        UE_LOG(LogBrainCloudRelayComms, Log, TEXT("Queuing out of order reliable from %s. got %s"), 
-                            *FString::FromInt(netId), 
+                        UE_LOG(LogBrainCloudRelayComms, Log, TEXT("Queuing out of order reliable from %s. got %s"),
+                            *FString::FromInt(netId),
                             *FString::FromInt(packetId));
                     }
 #endif
@@ -869,7 +883,7 @@ void BrainCloudRelayComms::onRelay(const uint8* in_data, int in_size)
                 queueRelayEvent(netId, in_data + 8, in_size - 8);
 
                 // Empty previously queued packets if they follow this one
-                while (orderedReliablePackets.Num() > 0)
+                while (!orderedReliablePackets.IsEmpty())
                 {
                     auto pPacket = orderedReliablePackets[0];
                     if (pPacket->id == ((packetId + 1) & MAX_PACKET_ID))
@@ -909,6 +923,7 @@ void BrainCloudRelayComms::onRelay(const uint8* in_data, int in_size)
     queueRelayEvent(netId, in_data + 8, in_size - 8);
 }
 
+
 void BrainCloudRelayComms::RunCallbacks()
 {
     auto now = FPlatformTime::Seconds();
@@ -920,20 +935,17 @@ void BrainCloudRelayComms::RunCallbacks()
 
         if (m_pSocket->isConnected())
         {
-            UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayComms Socket Connected - Checking messages"));
             // Peek messages
             int packetSize;
-            const uint8* pPacketData;
-            pPacketData = m_pSocket->peek(packetSize);
-            while (m_pSocket && pPacketData)
+            const uint8_t* pPacketData;
+            while (m_pSocket && ((pPacketData = m_pSocket->peek(packetSize)) != 0))
             {
                 onRecv(pPacketData, packetSize);
-                pPacketData = m_pSocket->peek(packetSize);
             }
 
             // Check for connect request resend
             if (m_connectionType == BCRelayConnectionType::UDP &&
-                //m_resendConnectRequest &&
+                m_resendConnectRequest &&
                 now - m_lastConnectResendTime > ((double)CONNECT_RESEND_INTERVAL_MS / 1000.0))
             {
                 UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayComms Resending connect request"));
@@ -964,6 +976,7 @@ void BrainCloudRelayComms::RunCallbacks()
                         pPacket->lastResendTime = now;
                         pPacket->resendInterval = FMath::Min((double)pPacket->resendInterval * 1.25, (double)(MAX_RELIABLE_RESEND_INTERVAL_MS / 1000.0));
                         send(pPacket->data.GetData(), (int)pPacket->data.Num());
+
 #if VERBOSE_LOG
                         if (m_client->isLoggingEnabled())
                         {
@@ -971,6 +984,7 @@ void BrainCloudRelayComms::RunCallbacks()
                                 *FString::FromInt((uint64)((pPacket->timeSinceFirstSend - now) * 1000.0)));
                         }
 #endif
+
                     }
                 }
             }
@@ -981,7 +995,7 @@ void BrainCloudRelayComms::RunCallbacks()
                 now - m_lastRecvTime > (double)TIMEOUT_SECONDS)
             {
                 socketCleanup();
-                queueErrorEvent("Relay Socket Timeout");
+                queueErrorEvent("Relay Socket Timeout!");
             }
         }
         else if (!m_pSocket->isValid())
