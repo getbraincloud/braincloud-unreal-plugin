@@ -179,12 +179,7 @@ void BrainCloudRTTComms::RunCallbacks()
 
 	if(m_disconnectedWithReason)
 	{
-		m_disconnectedWithReason = false;
-		m_heartBeatSent = false;
-		m_heartBeatRecv = true;
-		m_timeSinceLastRequest = 0;
 		disconnect();
-		//processRegisteredListeners(ServiceName::RTTRegistration.getValue().ToLower(), "disconnect", UBrainCloudWrapper::buildErrorJson(403, ReasonCodes::RS_CLIENT_ERROR,"Server has disconnected"));
 	}
 }
 
@@ -322,6 +317,7 @@ void BrainCloudRTTComms::connectWebSocket()
 void BrainCloudRTTComms::disconnect()
 {
 	if (!isRTTEnabled()) return;
+	
 
 	m_rttConnectionStatus = BCRTTConnectionStatus::DISCONNECTING;
 	// clear everything
@@ -354,7 +350,10 @@ void BrainCloudRTTComms::disconnect()
 
 	m_cxId = TEXT("");
 	m_eventServer = TEXT("");
-
+	m_disconnectedWithReason = false;
+	m_heartBeatSent = false;
+	m_heartBeatRecv = true;
+	m_timeSinceLastRequest = 0;
 	m_rttConnectionStatus = BCRTTConnectionStatus::DISCONNECTED;
 
 	m_appCallback = nullptr;
@@ -574,7 +573,8 @@ void BrainCloudRTTComms::webSocket_OnClose()
 			UE_LOG(LogBrainCloudComms, Log, TEXT("RTT: Disconnect "), *response);
 		}
 	}
-	disconnect();
+	//disconnect();
+	m_disconnectedWithReason = true;
 	m_websocketStatus = BCWebsocketStatus::CLOSED;
 	processRegisteredListeners(ServiceName::RTTRegistration.getValue().ToLower(), "error", UBrainCloudWrapper::buildErrorJson(403, ReasonCodes::RS_CLIENT_ERROR,"Could not connect at this time"));
 }
