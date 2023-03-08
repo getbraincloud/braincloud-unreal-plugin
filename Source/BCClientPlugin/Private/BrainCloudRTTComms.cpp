@@ -176,6 +176,16 @@ void BrainCloudRTTComms::RunCallbacks()
             bool retval = send(buildHeartbeatRequest(), false);
 		}
 	}
+
+	if(m_disconnectedWithReason)
+	{
+		m_disconnectedWithReason = false;
+		m_heartBeatSent = false;
+		m_heartBeatRecv = true;
+		m_timeSinceLastRequest = 0;
+		disconnect();
+		//processRegisteredListeners(ServiceName::RTTRegistration.getValue().ToLower(), "disconnect", UBrainCloudWrapper::buildErrorJson(403, ReasonCodes::RS_CLIENT_ERROR,"Server has disconnected"));
+	}
 }
 
 #if PLATFORM_UWP
@@ -419,7 +429,8 @@ void BrainCloudRTTComms::processRegisteredListeners(const FString &in_service, c
 		{
 			m_appCallbackBP->serverError(ServiceName::RTTRegistration, ServiceOperation::Connect, 400, -1, "RTT Connection has been closed. Re-Enable RTT to re-establish connection : " + in_jsonMessage);
 		}
-		disconnect();
+		//disconnect();
+		m_disconnectedWithReason = true;
 		return;
 	}
 
@@ -464,7 +475,8 @@ void BrainCloudRTTComms::processRegisteredListeners(const FString &in_service, c
 		if (in_operation == TEXT("disconnect"))
 		{
 			// this may remove the callback
-			disconnect();
+			//disconnect();
+			m_disconnectedWithReason = true;
 		}
 	}
 }
@@ -746,5 +758,6 @@ void BrainCloudRTTComms::serverError(ServiceName serviceName, ServiceOperation s
 		m_appCallbackBP->serverError(serviceName, serviceOperation, statusCode, reasonCode, jsonError);
 	}
 
-	disconnect();
+	//disconnect();
+	m_disconnectedWithReason = true;
 }
