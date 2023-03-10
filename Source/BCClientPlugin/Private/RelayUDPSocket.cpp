@@ -72,6 +72,11 @@ bool BrainCloud::RelayUDPSocket::isValid()
 
 void BrainCloud::RelayUDPSocket::update()
 {
+	if (!m_connectedSocket || !isConnected()) {
+		UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayUDPSocket Can't update because socket not connected"));
+		return;
+	}
+
 	TArray<uint8> RecvData;
 	RecvData.Init(0, 57344);
 
