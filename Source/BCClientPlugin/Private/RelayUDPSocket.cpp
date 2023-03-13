@@ -61,6 +61,11 @@ BrainCloud::RelayUDPSocket::~RelayUDPSocket()
 
 bool BrainCloud::RelayUDPSocket::isConnected()
 {
+	if (!m_connectedSocket) {
+		UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayUDPSocket socket is null"));
+		return false;
+	}
+
 	return m_connectedSocket->GetConnectionState() == SCS_Connected;
 	//return false;
 }
