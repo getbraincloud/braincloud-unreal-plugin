@@ -42,6 +42,7 @@
 #include "BrainCloudVirtualCurrency.h"
 #include "BrainCloudAppStore.h"
 #include "BrainCloudBlockchain.h"
+#include "BrainCloudGroupFile.h"
 #include "BrainCloudRelay.h"
 #include "BrainCloudTimeUtils.h"
 #include "Kismet/GameplayStatics.h"
@@ -328,6 +329,7 @@ class BCCLIENTPLUGIN_API BrainCloudClient
 	BrainCloudRelay *getRelayService();
 	BrainCloudTimeUtils *getUtil();
 	BrainCloudBlockchain *getBlockchainService();
+	BrainCloudGroupFile *getGroupFileService();
 	
 	const FString &getAppId() { return _appId; };
 	const FString &getSessionId();
@@ -578,6 +580,8 @@ class BCCLIENTPLUGIN_API BrainCloudClient
 	BrainCloudTimeUtils *_brainCloudTimeUtils = nullptr;
 
 	BrainCloudBlockchain *_blockchainService = nullptr;
+
+	BrainCloudGroupFile *_groupFileService = nullptr;
 
 	static FString s_brainCloudClientVersion;
 

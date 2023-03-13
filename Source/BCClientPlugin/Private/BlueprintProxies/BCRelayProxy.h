@@ -35,6 +35,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "BrainCloud|Relay")
 	static void Disconnect(UBrainCloudWrapper *brainCloudWrapper);
 
+	/*
+	 * Sends end match request to server to close relay services.
+	 * jsonPayload is optional and can be empty, this will send to other users in the same relay server.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "BrainCloud|Relay")
+	static void EndMatch(UBrainCloudWrapper *brainCloudWrapper, FString jsonPayload);
+
 	/** 
 	* Is Connected
 	*/

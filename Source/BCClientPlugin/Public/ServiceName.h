@@ -65,6 +65,7 @@ public:
   static const ServiceName Relay;
 
   static const ServiceName Blockchain;
+  static const ServiceName GroupFile;
 
   FString getValue() const { return _value; }
 

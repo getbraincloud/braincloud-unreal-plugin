@@ -176,6 +176,11 @@ void BrainCloudRTTComms::RunCallbacks()
             bool retval = send(buildHeartbeatRequest(), false);
 		}
 	}
+
+	if(m_disconnectedWithReason)
+	{
+		disconnect();
+	}
 }
 
 #if PLATFORM_UWP
@@ -312,6 +317,7 @@ void BrainCloudRTTComms::connectWebSocket()
 void BrainCloudRTTComms::disconnect()
 {
 	if (!isRTTEnabled()) return;
+	
 
 	m_rttConnectionStatus = BCRTTConnectionStatus::DISCONNECTING;
 	// clear everything
@@ -344,7 +350,10 @@ void BrainCloudRTTComms::disconnect()
 
 	m_cxId = TEXT("");
 	m_eventServer = TEXT("");
-
+	m_disconnectedWithReason = false;
+	m_heartBeatSent = false;
+	m_heartBeatRecv = true;
+	m_timeSinceLastRequest = 0;
 	m_rttConnectionStatus = BCRTTConnectionStatus::DISCONNECTED;
 
 	m_appCallback = nullptr;
@@ -419,7 +428,8 @@ void BrainCloudRTTComms::processRegisteredListeners(const FString &in_service, c
 		{
 			m_appCallbackBP->serverError(ServiceName::RTTRegistration, ServiceOperation::Connect, 400, -1, "RTT Connection has been closed. Re-Enable RTT to re-establish connection : " + in_jsonMessage);
 		}
-		disconnect();
+		//disconnect();
+		m_disconnectedWithReason = true;
 		return;
 	}
 
@@ -464,7 +474,8 @@ void BrainCloudRTTComms::processRegisteredListeners(const FString &in_service, c
 		if (in_operation == TEXT("disconnect"))
 		{
 			// this may remove the callback
-			disconnect();
+			//disconnect();
+			m_disconnectedWithReason = true;
 		}
 	}
 }
@@ -562,7 +573,8 @@ void BrainCloudRTTComms::webSocket_OnClose()
 			UE_LOG(LogBrainCloudComms, Log, TEXT("RTT: Disconnect "), *response);
 		}
 	}
-	disconnect();
+	//disconnect();
+	m_disconnectedWithReason = true;
 	m_websocketStatus = BCWebsocketStatus::CLOSED;
 	processRegisteredListeners(ServiceName::RTTRegistration.getValue().ToLower(), "error", UBrainCloudWrapper::buildErrorJson(403, ReasonCodes::RS_CLIENT_ERROR,"Could not connect at this time"));
 }
@@ -746,5 +758,6 @@ void BrainCloudRTTComms::serverError(ServiceName serviceName, ServiceOperation s
 		m_appCallbackBP->serverError(serviceName, serviceOperation, statusCode, reasonCode, jsonError);
 	}
 
-	disconnect();
+	//disconnect();
+	m_disconnectedWithReason = true;
 }
