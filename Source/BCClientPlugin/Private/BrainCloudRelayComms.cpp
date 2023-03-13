@@ -259,7 +259,7 @@ void BrainCloudRelayComms::socketCleanup()
     }
     delete m_pSocket;
     m_pSocket = nullptr;
-    UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelaySocket Destroyed"));
+    UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelaySocket Cleaned Up"));
 
 
     m_sendPacketId.Reset();
@@ -478,7 +478,6 @@ void BrainCloudRelayComms::send(const TArray<uint8> &in_dataArr, uint64 in_playe
 
 void BrainCloudRelayComms::sendPing()
 {
-    UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayComms Sending ping"));
     m_lastPingTime = FPlatformTime::Seconds();
 
     uint8 data[5];
@@ -883,7 +882,7 @@ void BrainCloudRelayComms::onRelay(const uint8* in_data, int in_size)
                 queueRelayEvent(netId, in_data + 8, in_size - 8);
 
                 // Empty previously queued packets if they follow this one
-                while (!orderedReliablePackets.IsEmpty())
+                while (!orderedReliablePackets.Num() > 0)
                 {
                     auto pPacket = orderedReliablePackets[0];
                     if (pPacket->id == ((packetId + 1) & MAX_PACKET_ID))
