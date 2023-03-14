@@ -15,7 +15,6 @@
 
 BrainCloud::RelayUDPSocket::RelayUDPSocket(const FString& host, int port)
 {
-	
 	if (!m_connectedSocket) {
 		
 		ISocketSubsystem* SocketSubsystem = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM);
@@ -71,7 +70,6 @@ bool BrainCloud::RelayUDPSocket::isConnected()
 	}
 
 	return m_connectedSocket->GetConnectionState() == SCS_Connected;
-	//return false;
 }
 
 bool BrainCloud::RelayUDPSocket::isValid()
@@ -135,13 +133,13 @@ void BrainCloud::RelayUDPSocket::send(const uint8* pData, int size)
 
 const uint8* BrainCloud::RelayUDPSocket::peek(int& size)
 {
-	{
-		FScopeLock Lock(&m_mutex);
-		if (m_packetQueue.Num() == 0) return nullptr;
+	
+	FScopeLock Lock(&m_mutex);
+	if (m_packetQueue.Num() == 0) return nullptr;
 
-		m_currentPacket = m_packetQueue[0];
-		m_packetQueue.RemoveAt(0);
-	}
+	m_currentPacket = m_packetQueue[0];
+	m_packetQueue.RemoveAt(0);
+	
 	auto packetSize = (int)ntohs(*(u_short*)m_currentPacket.GetData());
 	size = packetSize;
 	return m_currentPacket.GetData();

@@ -36,7 +36,6 @@ namespace BrainCloud
         TSharedPtr<FInternetAddr> m_remoteAddr;
         TSharedPtr<FInternetAddr> m_localAddr;
         FSocket* m_connectedSocket = nullptr;
-        FSocket* m_receiverSocket = nullptr;
         TArray<TArray<uint8>> m_packetQueue;
         TArray<uint8> m_currentPacket;
 	};
