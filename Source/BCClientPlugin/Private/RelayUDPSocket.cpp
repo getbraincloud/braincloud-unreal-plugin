@@ -5,12 +5,13 @@
 #include "Runtime/Core/Public/Windows/AllowWindowsPlatformTypes.h"
 #include "windows.h" // any native windows header
 #include "Runtime/Core/Public/Windows/HideWindowsPlatformTypes.h"
+#include <WinSock2.h>
 #endif
 
 #include "SocketSubsystem.h"
 #include <Interfaces/IPv4/IPv4Address.h>
 #include <Common/UdpSocketBuilder.h>
-#include <WinSock2.h>
+
 
 BrainCloud::RelayUDPSocket::RelayUDPSocket(const FString& host, int port)
 {
