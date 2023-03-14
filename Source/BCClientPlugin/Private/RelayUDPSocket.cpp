@@ -1,11 +1,14 @@
 
 #include "RelayUDPSocket.h"
 
+#if PLATFORM_WINDOWS
 #include "Runtime/Core/Public/Windows/AllowWindowsPlatformTypes.h"
 #include "windows.h" // any native windows header
+#include "Runtime/Core/Public/Windows/HideWindowsPlatformTypes.h"
+#endif
+
 #include "SocketSubsystem.h"
 #include <Interfaces/IPv4/IPv4Address.h>
-#include "Runtime/Core/Public/Windows/HideWindowsPlatformTypes.h"
 #include <Common/UdpSocketBuilder.h>
 #include <WinSock2.h>
 
