@@ -6,6 +6,8 @@
 #include "windows.h" // any native windows header
 #include "Runtime/Core/Public/Windows/HideWindowsPlatformTypes.h"
 #include <WinSock2.h>
+#else
+#include <netinet/in.h>
 #endif
 
 #include "SocketSubsystem.h"
