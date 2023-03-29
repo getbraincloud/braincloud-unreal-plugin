@@ -870,6 +870,7 @@ class BCCLIENTPLUGIN_API UBrainCloudWrapper : public UObject, public IServerCall
     BrainCloudMessaging *getMessagingService() { return _client->getMessagingService(); }
     BrainCloudRelay *getRelayService() { return _client->getRelayService(); }
     BrainCloudBlockchain *getBlockchainService() { return _client->getBlockchainService(); }
+    BrainCloudGroupFile *getGroupFileService() { return _client->getGroupFileService(); }
     /**
      * Returns the instance of the BrainCloudClient.
      * @return The instance of the BrainCloudClient.

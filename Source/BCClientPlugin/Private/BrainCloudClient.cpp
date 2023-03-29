@@ -21,7 +21,7 @@
 #include "BCPlatform.h"
 
 // Define all static member variables.
-FString BrainCloudClient::s_brainCloudClientVersion = TEXT("4.13.1");
+FString BrainCloudClient::s_brainCloudClientVersion = TEXT("4.14.0");
 
 ////////////////////////////////////////////////////
 // (De)Constructors
@@ -328,7 +328,7 @@ void BrainCloudClient::resetCommunication()
 {
 	_brainCloudComms->ResetCommunication();
 	_brainCloudRTTComms->disableRTT();
-	_brainCloudRelayComms->disconnect();
+	_brainCloudRelayComms->socketCleanup();
 
 	if (_authenticationService)
 		_authenticationService->clearSavedProfileId();
@@ -430,6 +430,15 @@ BrainCloudBlockchain* BrainCloudClient::getBlockchainService()
 		_blockchainService = new BrainCloudBlockchain(this);
 	}
 	return _blockchainService;
+}
+
+BrainCloudGroupFile* BrainCloudClient::getGroupFileService()
+{
+	if(_groupFileService == nullptr)
+	{
+		_groupFileService = new BrainCloudGroupFile(this);
+	}
+	return _groupFileService;
 }
 
 BrainCloudAuthentication *BrainCloudClient::getAuthenticationService()

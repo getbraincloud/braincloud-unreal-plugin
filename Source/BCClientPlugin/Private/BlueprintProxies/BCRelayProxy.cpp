@@ -23,6 +23,11 @@ void UBCRelayProxy::Disconnect(UBrainCloudWrapper *brainCloudWrapper)
 	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getRelayService()->disconnect();
 }
 
+void UBCRelayProxy::EndMatch(UBrainCloudWrapper* brainCloudWrapper, FString jsonPayload)
+{
+    UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getRelayService()->endMatch(jsonPayload);
+}
+
 bool UBCRelayProxy::IsConnected(UBrainCloudWrapper *brainCloudWrapper)
 {
 	return UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getRelayService()->isConnected();

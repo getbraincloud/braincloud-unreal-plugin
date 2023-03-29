@@ -30,10 +30,17 @@ public:
 	static UBCRelayProxy *Connect(UBrainCloudWrapper *brainCloudWrapper, BCRelayConnectionType in_connectionType, const FString &host, int port, const FString &passcode, const FString &lobbyId);
 
 	/** 
-	* Disables relay event for this session.
+	* Disconnects from current relay session
 	*/
 	UFUNCTION(BlueprintCallable, Category = "BrainCloud|Relay")
 	static void Disconnect(UBrainCloudWrapper *brainCloudWrapper);
+
+	/*
+	 * Sends end match request to server to close relay services.
+	 * jsonPayload is optional and can be empty, this will send to other users in the same relay server.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "BrainCloud|Relay")
+	static void EndMatch(UBrainCloudWrapper *brainCloudWrapper, FString jsonPayload);
 
 	/** 
 	* Is Connected

@@ -38,6 +38,8 @@ public:
     void connect(BCRelayConnectionType in_connectionType, const FString& host, int port, const FString& passcode, const FString& lobbyId, IRelayConnectCallback* in_callback);
     void connect(BCRelayConnectionType in_connectionType, const FString& host, int port, const FString& passcode, const FString& lobbyId, UBCRelayProxy* in_callback);
     void disconnect();
+    void endMatch(FString jsonPayload);
+    void socketCleanup();
     bool isConnected() const;
     int getPing() const;
     void setPingInterval(int in_intervalMS);
@@ -174,7 +176,8 @@ private:
     bool m_resendConnectRequest = false;
     double m_lastConnectResendTime;
     bool m_isConnected = false;
-
+    bool m_endMatchRequested = false;
+    
     // Events
     TArray<Event*> m_events;
     TArray<Event*> m_eventsCopy;

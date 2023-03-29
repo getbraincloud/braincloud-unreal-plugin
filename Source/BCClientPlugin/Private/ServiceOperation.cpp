@@ -358,6 +358,15 @@ const ServiceOperation ServiceOperation::SetGroupOpen = ServiceOperation(TEXT("S
 const ServiceOperation ServiceOperation::UpdateGroupSummaryData = ServiceOperation(TEXT("UPDATE_GROUP_SUMMARY_DATA"));
 const ServiceOperation ServiceOperation::GetRandomGroupsMatching = ServiceOperation(TEXT("GET_RANDOM_GROUPS_MATCHING"));
 
+//group file
+const ServiceOperation ServiceOperation::CheckFilenameExists = ServiceOperation(TEXT("CHECK_FILENAME_EXISTS"));
+const ServiceOperation ServiceOperation::CheckFullpathFilenameExists = ServiceOperation(TEXT("CHECK_FULLPATH_FILENAME_EXISTS"));
+const ServiceOperation ServiceOperation::CopyGroupFile = ServiceOperation(TEXT("COPY_FILE"));
+const ServiceOperation ServiceOperation::DeleteGroupFile = ServiceOperation(TEXT("DELETE_FILE"));
+const ServiceOperation ServiceOperation::MoveGroupFile = ServiceOperation(TEXT("MOVE_FILE"));
+const ServiceOperation ServiceOperation::MoveUserToGroupFile = ServiceOperation(TEXT("MOVE_USER_TO_GROUP_FILE"));
+const ServiceOperation ServiceOperation::UpdateFileInfo = ServiceOperation(TEXT("UPDATE_FILE_INFO"));
+
 //mail
 const ServiceOperation ServiceOperation::SendBasicEmail = ServiceOperation(TEXT("SEND_BASIC_EMAIL"));
 const ServiceOperation ServiceOperation::SendAdvancedEmail = ServiceOperation(TEXT("SEND_ADVANCED_EMAIL"));
