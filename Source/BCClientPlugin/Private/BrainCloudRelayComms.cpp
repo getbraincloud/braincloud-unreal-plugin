@@ -211,6 +211,9 @@ void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, cons
     m_rsmgHistory.Reset(0);
     m_endMatchRequested = false;
 
+    m_trackedPacketIds.Empty();
+    m_trackedPacketIds.SetNum(4);
+
     switch (m_connectionType)
     {
         case BCRelayConnectionType::WEBSOCKET:
@@ -710,6 +713,18 @@ void BrainCloudRelayComms::onRSMG(const uint8* in_data, int in_size)
         json->Values["netId"]->TryGetNumber(netId);
         auto cxId = json->Values["cxId"]->AsString();
         auto profileId = extractProfileIdFromCxId(cxId);
+        
+        TArray<TSharedPtr<FJsonValue>> PacketIdsArray = json->GetArrayField("orderedPacketIds");
+
+        // Loop through the array to get the index and value of each packet id
+        for (int channelId = 0; channelId < PacketIdsArray.Num(); channelId++)
+        {
+            int PacketId = PacketIdsArray[channelId]->AsNumber();
+            if (PacketId != 0) {
+                m_trackedPacketIds[channelId].Add(netId, PacketId);
+                UE_LOG(LogTemp, Display, TEXT("Added tracked packetId %d for netId %d at channel %d"), PacketId, netId, channelId);
+            }
+        }
 
         m_netIdToCxId.Add(netId, cxId);
         m_cxIdToNetId.Add(cxId, netId);
@@ -823,6 +838,17 @@ void BrainCloudRelayComms::onRelay(const uint8* in_data, int in_size)
             if (it)
             {
                 prevPacketId = *it;
+            }
+
+            //look for a tracked packetId in channel for netId
+            if (m_trackedPacketIds.Num() > 0 && m_trackedPacketIds[channel].Contains(netId)) {
+                prevPacketId = m_trackedPacketIds[channel][netId];
+                m_trackedPacketIds[channel].Remove(netId);
+
+                UE_LOG(LogBrainCloudRelayComms, Log, TEXT("Found tracked packetId for channel: %d netId: %d which was %d"),
+                    channel,
+                    netId,
+                    prevPacketId);
             }
 
             if (reliable)
