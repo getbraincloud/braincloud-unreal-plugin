@@ -214,4 +214,11 @@ private:
     // Memory
     Pool<Event> m_eventPool;
     Pool<Packet> m_packetPool;
+
+    // Tracking packet IDs for each player
+    // index of array represents channel ids 0 to 3
+    // TMap value has the player netId as the key
+    // And the tracked packetId as the value
+    // Data is structured this way because once it is used to update the client it will then be discarded
+    TArray<TMap<uint8, int>> m_trackedPacketIds;
 };
