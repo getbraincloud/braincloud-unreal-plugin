@@ -11,7 +11,6 @@ https://portal.braincloudservers.com/
 
 Package | Description
  ---- | ----
-[**brainCloudClient_Unreal_vX.X.X_X.X.X.zip**](https://github.com/getbraincloud/braincloud-unreal/releases) | C++, Blueprint, and OnlineSubSystem library for Unreal 4 (stable zip)
 [**braincloud-unreal-plugin-src**](https://github.com/getbraincloud/braincloud-unreal-plugin-src/) | C++, Blueprint, and OnlineSubSystem library for Unreal 4 (source)
 [**Unreal - Older Versions**](http://getbraincloud.com/apidocs/tutorials/unreal-tutorials/building-the-plugin-for-older-versions-of-unreal/) | Instructions for building brainCloud for older versions of Unreal (for Blueprint only projects)
 
