@@ -2,6 +2,7 @@
 
 #pragma once
 #include "Interfaces/IHttpRequest.h"
+#include "Runtime/Launch/Resources/Version.h"
 
 class IEventCallback;
 class IRewardCallback;

@@ -25,6 +25,7 @@
 #include "UObject/NoExportTypes.h"
 #include "Delegates/DelegateCombinations.h"
 #include "WebSocketBase.generated.h"
+#include "Runtime/Launch/Resources/Version.h"
 
 DEFINE_LOG_CATEGORY_STATIC(WebSocket, Log, All);
 

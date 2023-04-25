@@ -4,6 +4,7 @@
 
 #include "Interfaces/OnlineIdentityInterface.h"
 #include "OnlineSubsystemBrainCloud.h"
+#include "Runtime/Launch/Resources/Version.h"
 
 /**
  * BrainCloud service implementation of the online identity interface
