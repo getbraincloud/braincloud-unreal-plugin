@@ -22,7 +22,6 @@
 #include "BCClientPluginPrivatePCH.h"
 #include <iostream>
 #include "BrainCloudRelay.h"
-#include "Runtime/Launch/Resources/Version.h"
 
 #if PLATFORM_UWP
 	#if ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION <24
