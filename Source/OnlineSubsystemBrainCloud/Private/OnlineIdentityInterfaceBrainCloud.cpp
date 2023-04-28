@@ -157,7 +157,8 @@ TSharedPtr<const FUniqueNetId> FOnlineIdentityBrainCloud::CreateUniquePlayerId(u
             // disable warnings about  FUniqueNetId constructors deprecations
             PRAGMA_DISABLE_DEPRECATION_WARNINGS
             return MakeShareable(new FUniqueNetIdString(StrId));
-            PRAGMA_ENABLE_DEPRECATION_WARNINGS        }
+            PRAGMA_ENABLE_DEPRECATION_WARNINGS
+        }
     }
     return NULL;
 }
