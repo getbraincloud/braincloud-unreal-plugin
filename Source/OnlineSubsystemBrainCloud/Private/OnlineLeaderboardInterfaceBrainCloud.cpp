@@ -175,8 +175,12 @@ void FOnlineLeaderboardsBrainCloud::readLeaderboardSuccess(const FString& jsonDa
         UE_LOG(LogOnline, Display, TEXT("Value: %d"), score);
         UE_LOG(LogOnline, Display, TEXT("----------------------------------------------------------------"));
 
+        // disable warnings about  FUniqueNetId constructors deprecations
+        PRAGMA_DISABLE_DEPRECATION_WARNINGS
         TSharedRef<const FUniqueNetId> userId = MakeShareable(new FUniqueNetIdString(playerID));
 
+        PRAGMA_ENABLE_DEPRECATION_WARNINGS
+        
         FOnlineStatsRow* userRow = leaderboardRead.Get().FindPlayerRecord(userId.Get());
         if (userRow == NULL)
         {

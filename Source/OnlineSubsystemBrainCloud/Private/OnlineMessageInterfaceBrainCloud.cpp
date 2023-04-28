@@ -177,13 +177,21 @@ void FOnlineMessageBrainCloud::EnumerateMessagesSuccess(const FString& jsonData)
 
 // Unreal Engine Version is >= 4.18 OR in Unreal Engine 5
 #if (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 18) || ENGINE_MAJOR_VERSION == 5
+        // disable warnings about FUniqueNetId constructor deprecations
+        PRAGMA_DISABLE_DEPRECATION_WARNINGS
         const TSharedRef <FUniqueNetIdString> sref_fromId = MakeShareable(new FUniqueNetIdString(fromId));
         const TSharedRef <FUniqueNetIdString> sref_messageId = MakeShareable(new FUniqueNetIdString(messageId));
+        PRAGMA_ENABLE_DEPRECATION_WARNINGS
+        
         FOnlineMessageHeader *fOnlineMessageHeader = new FOnlineMessageHeader(sref_fromId, sref_messageId);
         TSharedPtr<FOnlineMessageHeader> header = MakeShareable(fOnlineMessageHeader);
+
 #else
-        TSharedPtr<FOnlineMessageHeader> header = MakeShareable( 
+        // disable warnings about FUniqueNetId constructor deprecations
+        PRAGMA_DISABLE_DEPRECATION_WARNINGS
+        TSharedPtr<FOnlineMessageHeader> header = MakeShareable(
             new FOnlineMessageHeader(new FUniqueNetIdString(fromId), new FUniqueNetIdString(messageId))); 
+        PRAGMA_ENABLE_DEPRECATION_WARNINGS
 #endif
 
 
