@@ -4,6 +4,7 @@
 
 #include "Interfaces/OnlineMessageInterface.h"
 #include "OnlineSubsystemBrainCloud.h"
+#include "Runtime/Launch/Resources/Version.h"
 
 /**
 * BrainCloud service implementation of the online message interface

@@ -4,6 +4,7 @@
 
 #include "Interfaces/OnlineTitleFileInterface.h"
 #include "OnlineSubsystemBrainCloud.h"
+#include "Runtime/Launch/Resources/Version.h"
 
 #include "Interfaces/IHttpRequest.h"
 #include "Interfaces/IHttpResponse.h"

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "IServerCallback.h"
+#include "Runtime/Launch/Resources/Version.h"
 
 #if PLATFORM_UWP
 #if ENGINE_MAJOR_VERSION <= 4 && ENGINE_MINOR_VERSION <24
@@ -10,11 +11,20 @@
 #endif
 #endif
 #else
- #define UI UI_ST
- THIRD_PARTY_INCLUDES_START
- #include "libwebsockets.h"
- THIRD_PARTY_INCLUDES_END
- #undef UI
+#if PLATFORM_WINDOWS
+#   include "Windows/WindowsHWrapper.h"
+#    include "Windows/AllowWindowsPlatformTypes.h"
+#endif
+
+#define UI UI_ST
+THIRD_PARTY_INCLUDES_START
+#include "libwebsockets.h"
+THIRD_PARTY_INCLUDES_END
+#undef UI
+
+#if PLATFORM_WINDOWS
+#    include "Windows/HideWindowsPlatformTypes.h"
+#endif
 #endif
 
 enum class BCRTTConnectionType : uint8;
