@@ -637,8 +637,8 @@ void BrainCloudRTTComms::onRecv(const FString &in_message)
 	else if (operation == "DISCONNECT")
 	{
 		m_disconnectedWithReason = true;
-		m_disconnectJson->SetStringField("reason", jsonData->GetStringField(TEXT("reason")));
-		m_disconnectJson->SetNumberField("reasonCode", jsonData->GetNumberField(TEXT("reasonCode")));
+		m_disconnectJson->SetStringField("reason", innerData->GetStringField(TEXT("reason")));
+		m_disconnectJson->SetNumberField("reasonCode", innerData->GetNumberField(TEXT("reasonCode")));
 		m_disconnectJson->SetStringField("severity", "ERROR");
 	}
 

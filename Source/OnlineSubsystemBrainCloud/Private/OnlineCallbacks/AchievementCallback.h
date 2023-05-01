@@ -3,6 +3,7 @@
 #pragma once
 
 #include "AssignableServerCallback.h"
+#include "OnlineAchievementsInterfaceBrainCloud.h"
 #include "OnlineStats.h"
 
 class FOnlineAchievementsBrainCloud;
