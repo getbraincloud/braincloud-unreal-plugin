@@ -15,9 +15,6 @@
 #endif
 
 #define UI UI_ST
-THIRD_PARTY_INCLUDES_START
-#include "libwebsockets.h"
-THIRD_PARTY_INCLUDES_END
 #undef UI
 
 #if PLATFORM_WINDOWS
@@ -25,11 +22,11 @@ THIRD_PARTY_INCLUDES_END
 #endif
 #endif
 
-#include "WebSocketBase.h"
+#include "WinWebSocketBase.h"
 
 namespace BrainCloud
 {
-    class RelayWebSocket : public IRelaySocket, public IWebSocketBaseCallbacks
+    class RelayWebSocket : public IRelaySocket, public IWinWebSocketBaseCallbacks
     {
     public:
         RelayWebSocket(const FString &host, int port, bool sslEnabled);
@@ -47,20 +44,20 @@ namespace BrainCloud
         void close() override;
 
         // Websocket callback, don't call this directly
-        static int callback_echo(struct lws *wsi, enum lws_callback_reasons reason, void *user, void *in, size_t len);
+
 
     private:
-        void OnConnectError(const FString &error) override;
+        void OnConnectError(const FString& error) override;
         void OnClosed() override;
         void OnConnectComplete() override;
-        void OnReceiveData(const TArray<uint8> &data) override;
+        void OnReceiveData(const TArray<uint8>& data) override;
 
         FCriticalSection m_mutex;
         bool m_isConnected = false;
         bool m_isSocketConnected = false;
         bool m_isValid = true;
-	    struct lws_context *m_lwsContext = nullptr;
-	    UWebSocketBase *m_connectedSocket = nullptr;
+
+	    UWinWebSocketBase *m_connectedSocket = nullptr;
         TArray<TArray<uint8>> m_packetQueue;
         TArray<uint8> m_currentPacket;
     };

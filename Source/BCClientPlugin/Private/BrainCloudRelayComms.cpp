@@ -27,8 +27,9 @@
 #include "HttpCodes.h"
 
 // #include "BCRelayCommsProxy.h"
-#include "WebSocketBase.h"
+#include "WinWebSocketBase.h"
 #include <iostream>
+#include <Winsock2.h>
 #include "Runtime/Launch/Resources/Version.h"
 
 

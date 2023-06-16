@@ -17,15 +17,14 @@
 #endif
 
 #define UI UI_ST
-THIRD_PARTY_INCLUDES_START
-#include "libwebsockets.h"
-THIRD_PARTY_INCLUDES_END
 #undef UI
 
 #if PLATFORM_WINDOWS
 #    include "Windows/HideWindowsPlatformTypes.h"
 #endif
 #endif
+
+#include "WinWebSocketBase.h"
 
 enum class BCRTTConnectionType : uint8;
 enum class BCRTTConnectionStatus : uint8;
@@ -38,7 +37,7 @@ class ServerCall;
 class BCFileUploader;
 class BrainCloudClient;
 class FJsonObject;
-class UWebSocketBase;
+class UWinWebSocketBase;
 class UBCRTTCommsProxy;
 class UBCBlueprintRTTCallProxyBase;
 class UBCRTTProxy;
@@ -67,14 +66,6 @@ class BrainCloudRTTComms : public IServerCallback
 	const FString &getEventServer() { return m_eventServer; }
 
 // expose web socket functions
-#if PLATFORM_UWP
-#if ENGINGE_MINOR_VERSION <24
-#if PLATFORM_HTML5
-#endif
-#endif
-#else
-	static int callback_echo(struct lws *wsi, enum lws_callback_reasons reason, void *user, void *in, size_t len);
-#endif
 
 	void webSocket_OnClose();
 	void websocket_OnOpen();
@@ -87,7 +78,7 @@ class BrainCloudRTTComms : public IServerCallback
 
 	FString buildConnectionRequest();
 	FString buildHeartbeatRequest();
-	bool send(const FString &in_message, bool in_allowLogging = true);
+	void send(const FString &in_message, bool in_allowLogging = true);
 
 	void startReceivingWebSocket();
 
@@ -113,7 +104,7 @@ class BrainCloudRTTComms : public IServerCallback
 	TMap<FString, IRTTCallback *> m_registeredRTTCallbacks;
 	TMap<FString, UBCBlueprintRTTCallProxyBase *> m_registeredRTTBluePrintCallbacks;
 
-	UWebSocketBase *m_connectedSocket;
+	UWinWebSocketBase *m_connectedSocket;
 	UBCRTTCommsProxy *m_commsPtr;
 
 	FString m_cxId; // connectionID
@@ -137,8 +128,4 @@ class BrainCloudRTTComms : public IServerCallback
 	BCWebsocketStatus m_websocketStatus;
 	bool m_bIsConnected;
 	bool m_disconnectedWithReason = false;
-    
-	struct lws_context *m_lwsContext;
-
-	FString BCBytesToString(const uint8* in, int32 count);
 };

@@ -12,7 +12,7 @@ class BrainCloudClient;
 class IRelayConnectCallback;
 class IRelayCallback;
 class IRelaySystemCallback;
-class UWebSocketBase;
+class UWinWebSocketBase;
 class UBCRelayCommsProxy;
 class UBCBlueprintRelayConnectCallProxyBase;
 class UBCBlueprintRelayCallProxyBase;
