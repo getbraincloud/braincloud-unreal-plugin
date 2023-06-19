@@ -43,8 +43,6 @@ namespace BrainCloud
 
         void close() override;
 
-        // Websocket callback, don't call this directly
-
 
     private:
         void OnConnectError(const FString& error) override;
@@ -59,6 +57,7 @@ namespace BrainCloud
 
 	    UWinWebSocketBase *m_connectedSocket = nullptr;
         TArray<TArray<uint8>> m_packetQueue;
+        TArray<TArray<uint8>> m_sendPacketQueue;
         TArray<uint8> m_currentPacket;
     };
 };

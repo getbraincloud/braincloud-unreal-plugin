@@ -59,7 +59,7 @@ void UWinWebSocketBase::SetupSocket(const FString& url)
 
 		WebSocket->OnMessageSent().AddLambda([this](const FString& message)
 			{
-				UE_LOG(WinWebSocket, Warning, TEXT("[WinWebSocket] Sent message: %s"), *message);
+				UE_LOG(WinWebSocket, Log, TEXT("[WinWebSocket] Sent message: %s"), *message);
 			});
 	}
 	else {

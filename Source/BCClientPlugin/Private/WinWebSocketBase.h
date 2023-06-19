@@ -1,9 +1,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include <WebSockets/Public/IWebSocket.h>
-#include <WebSockets/Public/IWebSocketsManager.h>
-#include <WebSockets/Public/WebSocketsModule.h>
+#include "Runtime/Online/WebSockets/Public/IWebSocket.h"
+#include "Runtime/Online/WebSockets/Public/IWebSocketsManager.h"
+#include "Runtime/Online/WebSockets/Public/WebSocketsModule.h"
 #include "WinWebSocketBase.generated.h"
 
 DEFINE_LOG_CATEGORY_STATIC(WinWebSocket, Log, All);
