@@ -2,7 +2,7 @@
 
 UWinWebSocketBase::UWinWebSocketBase()
 {
-	
+	FModuleManager::Get().LoadModuleChecked(TEXT("WebSockets"));
 }
 
 void UWinWebSocketBase::SetupSocket(const FString& url)
