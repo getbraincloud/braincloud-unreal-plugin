@@ -28,11 +28,9 @@
 
 // #include "BCRelayCommsProxy.h"
 #include <iostream>
-#if PLATFORM_WINDOWS
 #include "WinWebSocketBase.h"
+#if PLATFORM_WINDOWS
 #include <Winsock2.h>
-#else
-#include "WebSocketBase.h"
 #endif
 
 #include "Runtime/Launch/Resources/Version.h"
