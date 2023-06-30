@@ -54,8 +54,6 @@ namespace BrainCloud
 
     void RelayWebSocket::send(const uint8* pData, int size)
     {
-        UE_LOG(WinWebSocket, Log, TEXT("[RelayWebSocket - Send()]"));
-
         TArray<uint8> data;
         data.SetNum(size, false);
         memcpy(data.GetData(), pData, size);
@@ -65,8 +63,6 @@ namespace BrainCloud
 
     const uint8* RelayWebSocket::peek(int& size)
     {
-        //UE_LOG(WinWebSocket, Log, TEXT("[RelayWebSocket - Peek()] packet queue size: %d"), m_packetQueue.Num());
-
         {
             FScopeLock Lock(&m_mutex);
             if (m_packetQueue.Num() == 0) return nullptr;
@@ -76,8 +72,6 @@ namespace BrainCloud
         }
 
         FString packetString = BytesToString(m_currentPacket.GetData(), m_currentPacket.Num());
-
-        UE_LOG(WinWebSocket, Log, TEXT("Peek: packet: %s"), *packetString);
 
         size = (int)m_currentPacket.Num();
         return m_currentPacket.GetData();
@@ -119,7 +113,6 @@ namespace BrainCloud
 
     void RelayWebSocket::OnReceiveData(const TArray<uint8>& data)
     {
-        UE_LOG(LogBrainCloudRelayComms, Warning, TEXT("[RelayWebSocket - OnReceiveData] Size: %d"), data.Num());
         FScopeLock Lock(&m_mutex);
         if (!m_connectedSocket) return;
         m_packetQueue.Add(data);

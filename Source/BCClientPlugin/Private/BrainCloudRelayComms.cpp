@@ -558,8 +558,6 @@ void BrainCloudRelayComms::onRecv(const uint8* in_data, int in_size)
 
     int size = (int)ntohs(*(u_short*)in_data);
     int controlByte = (int)in_data[2];
-
-    UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RELAY RECEIVE - control byte: %d"), controlByte);
     
     if (size < in_size)
     {
@@ -976,7 +974,6 @@ void BrainCloudRelayComms::onRelay(const uint8* in_data, int in_size)
 void BrainCloudRelayComms::RunCallbacks()
 {
     auto now = FPlatformTime::Seconds();
-    //UE_LOG(LogBrainCloudRelayComms, Log, TEXT("[RelayComms - RunCallbacks()] started"));
     // Update socket
     if (m_pSocket)
     {
@@ -987,7 +984,6 @@ void BrainCloudRelayComms::RunCallbacks()
             // Peek messages
             int packetSize;
             const uint8_t* pPacketData;
-            //UE_LOG(LogBrainCloudRelayComms, Log, TEXT("[RelayComms - RunCallbacks()] pSocket is connected"));
             while (m_pSocket && ((pPacketData = m_pSocket->peek(packetSize)) != 0))
             {
                 onRecv(pPacketData, packetSize);
@@ -1055,7 +1051,6 @@ void BrainCloudRelayComms::RunCallbacks()
         }
         else
         {
-            //UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayComms Socket valid but not connected - updating connection"));
             m_pSocket->updateConnection();
             if (m_pSocket->isConnected())
             {
