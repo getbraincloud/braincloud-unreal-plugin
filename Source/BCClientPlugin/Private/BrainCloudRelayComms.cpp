@@ -27,12 +27,11 @@
 #include "HttpCodes.h"
 
 // #include "BCRelayCommsProxy.h"
-#include <iostream>
 #include "WinWebSocketBase.h"
+#include <iostream>
 #if PLATFORM_WINDOWS
 #include <Winsock2.h>
 #endif
-
 #include "Runtime/Launch/Resources/Version.h"
 
 
@@ -191,6 +190,11 @@ void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, cons
     connect(in_connectionType, host, port, passcode, lobbyId);
 }
 
+/*
+* For real-time networking in WebSocket, make sure to modify or add the ThreadTargetFrameTimeInSeconds to increase the send rate of packets in your DefaultEngine.ini config file
+* It would go under the [WebSockets.LibWebSockets] category, a lower value is a faster send rate, something like 0.001 or 0.0001 would be adequate for real-time
+* Keep in mind that this could impact performance on the socket and CPU, for best results with real-time networking please use UDP protocol.
+*/
 void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, const FString& host, int port, const FString& passcode, const FString& lobbyId)
 {
     m_connectionType = in_connectionType;
@@ -224,6 +228,7 @@ void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, cons
         {
             m_pSocket = new BrainCloud::RelayWebSocket(host, port, false);
             m_lastConnectResendTime = FPlatformTime::Seconds();
+
             send(CL2RS_CONNECT, buildConnectionRequest());
             break;
         }
@@ -289,7 +294,6 @@ void BrainCloudRelayComms::socketCleanup()
     m_reliables.Reset();
     m_orderedReliablePackets.Reset();
     m_packetPool.reclaim();
-    
 }
 
 bool BrainCloudRelayComms::isConnected() const
@@ -520,7 +524,7 @@ void BrainCloudRelayComms::send(int netId, const FString& text)
 {
     if (m_client->isLoggingEnabled())
     {
-        UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RELAY SEND: %s"), *text);
+        //UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RELAY SEND: %s"), *text);
     }
 
 
@@ -558,6 +562,8 @@ void BrainCloudRelayComms::onRecv(const uint8* in_data, int in_size)
 
     int size = (int)ntohs(*(u_short*)in_data);
     int controlByte = (int)in_data[2];
+
+    //UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RELAY RECEIVE - control byte: %d"), controlByte);
     
     if (size < in_size)
     {
@@ -984,6 +990,7 @@ void BrainCloudRelayComms::RunCallbacks()
             // Peek messages
             int packetSize;
             const uint8_t* pPacketData;
+
             while (m_pSocket && ((pPacketData = m_pSocket->peek(packetSize)) != 0))
             {
                 onRecv(pPacketData, packetSize);
@@ -1051,6 +1058,7 @@ void BrainCloudRelayComms::RunCallbacks()
         }
         else
         {
+            //UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayComms Socket valid but not connected - updating connection"));
             m_pSocket->updateConnection();
             if (m_pSocket->isConnected())
             {

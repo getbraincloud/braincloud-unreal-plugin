@@ -43,7 +43,6 @@ namespace BrainCloud
 
         void close() override;
 
-
     private:
         void OnConnectError(const FString& error) override;
         void OnClosed() override;
@@ -59,5 +58,6 @@ namespace BrainCloud
         TArray<TArray<uint8>> m_packetQueue;
         TArray<TArray<uint8>> m_sendPacketQueue;
         TArray<uint8> m_currentPacket;
+        TArray<uint8> m_sendPacket;
     };
 };

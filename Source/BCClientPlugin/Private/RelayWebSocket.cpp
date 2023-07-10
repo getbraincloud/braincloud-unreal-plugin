@@ -1,5 +1,6 @@
 #include "RelayWebSocket.h"
 #include "WinWebSocketBase.h"
+#include <ConvertUtilities.h>
 
 #define MAX_PAYLOAD 1024
 
@@ -54,11 +55,9 @@ namespace BrainCloud
 
     void RelayWebSocket::send(const uint8* pData, int size)
     {
-        TArray<uint8> data;
-        data.SetNum(size, false);
-        memcpy(data.GetData(), pData, size);
-        m_sendPacketQueue.Add(data);
-
+        m_sendPacket.Empty();
+        m_sendPacket.Append(pData, size);
+        m_sendPacketQueue.Add(MoveTemp(m_sendPacket));
     }
 
     const uint8* RelayWebSocket::peek(int& size)
@@ -70,8 +69,6 @@ namespace BrainCloud
             m_currentPacket = m_packetQueue[0];
             m_packetQueue.RemoveAt(0);
         }
-
-        FString packetString = BytesToString(m_currentPacket.GetData(), m_currentPacket.Num());
 
         size = (int)m_currentPacket.Num();
         return m_currentPacket.GetData();
@@ -120,11 +117,12 @@ namespace BrainCloud
 
     void RelayWebSocket::update()
     {
+        double now = FPlatformTime::Seconds();
+
         if (m_connectedSocket->IsConnected()) {
             if (m_sendPacketQueue.Num() == 0) return;
 
-            TArray<uint8> currentPacket = m_sendPacketQueue[0];
-            m_connectedSocket->SendData(currentPacket);
+            m_connectedSocket->SendData(m_sendPacketQueue[0]);
             m_sendPacketQueue.RemoveAt(0);
         }
     }

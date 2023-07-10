@@ -1,4 +1,5 @@
 #include "WinWebSocketBase.h"
+#include <ConvertUtilities.h>
 
 UWinWebSocketBase::UWinWebSocketBase()
 {
@@ -19,53 +20,47 @@ void UWinWebSocketBase::SetupSocket(const FString& url)
 	if (WebSocket.IsValid()) {
 		WebSocket->OnMessage().AddLambda([this](const FString& data)
 			{
-				UE_LOG(WinWebSocket, Log, TEXT("[WinWebSocket] Received message %s"), *data);
-				
-				OnReceiveMessage.Broadcast(data);
+				if(OnReceiveMessage.IsBound()) OnReceiveMessage.Broadcast(data);
 			});
 
 		WebSocket->OnRawMessage().AddLambda([this](const void* Data, SIZE_T Size, SIZE_T)
 			{
-				FString DataString = BytesToString(Data, Size);
+				
 				TArray<uint8> DataArray;
 				DataArray.Append((const uint8*)Data, Size);
 
-				UE_LOG(WinWebSocket, Log, TEXT("[WinWebSocket] Received data %s - size: %d"), *DataString, Size);
-
 				if (mCallbacks) mCallbacks->OnReceiveData(DataArray);
-				OnReceiveData.Broadcast(DataArray);
+				if (OnReceiveData.IsBound()) OnReceiveData.Broadcast(DataArray);
 			});
 
 		WebSocket->OnConnected().AddLambda([this]()
 			{
 				UE_LOG(WinWebSocket, Log, TEXT("[WinWebSocket] Connected"));
 				if (mCallbacks) mCallbacks->OnConnectComplete();
-				OnConnectComplete.Broadcast();
+				if (OnConnectComplete.IsBound()) OnConnectComplete.Broadcast();
 			});
 
 		WebSocket->OnClosed().AddLambda([this](uint32 StatusCode, const FString& Reason, bool bWasClean)
 			{
 				UE_LOG(WinWebSocket, Log, TEXT("[WinWebSocket] Closed - StatusCode: %d Reason: %s WasClean: %s"), StatusCode, *Reason, bWasClean ? TEXT("true") : TEXT("false"));
 				if (mCallbacks) mCallbacks->OnClosed();
-				OnClosed.Broadcast();
+				if (OnClosed.IsBound()) OnClosed.Broadcast();
 			});
 
 		WebSocket->OnConnectionError().AddLambda([this](const FString& reason)
 			{
 				UE_LOG(WinWebSocket, Warning, TEXT("[WinWebSocket] Connection error: %s"), *reason);
 				if (mCallbacks) mCallbacks->OnConnectError(reason);
-				OnConnectError.Broadcast(reason);
+				if (OnConnectError.IsBound()) OnConnectError.Broadcast(reason);
 			});
 
-		WebSocket->OnMessageSent().AddLambda([this](const FString& message)
-			{
-				UE_LOG(WinWebSocket, Log, TEXT("[WinWebSocket] Sent message: %s"), *message);
-			});
 	}
 	else {
 		UE_LOG(WinWebSocket, Warning, TEXT("[WinWebSocket] Couldn't setup"));
 		OnConnectError.Broadcast(TEXT("WebSocket couldn't setup"));
 	}
+
+
 }
 
 void UWinWebSocketBase::Connect()
