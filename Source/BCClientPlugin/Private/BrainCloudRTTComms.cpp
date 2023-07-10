@@ -21,43 +21,13 @@
 #include "HttpCodes.h"
 
 #include "BCRTTCommsProxy.h"
-#include "WebSocketBase.h"
+#include "WinWebSocketBase.h"
 #include <iostream>
 #include "Runtime/Launch/Resources/Version.h"
 
 #define MAX_PAYLOAD_RTT (64 * 1024) // [dsl] This used to be set to 10MB, failed on mac SNDBUF too big for the TCP socket.
 #define INITIAL_HEARTBEAT_TIME 10
 #define HEARTBEAT_IDLE_DELAY 2
-
-#if PLATFORM_UWP
-#if ENGINE_MINOR_VERSION <24
-#if PLATFORM_HTML5
-#endif
-#endif
-#else
-static struct lws_protocols protocols[] = {
-	/* first protocol must always be HTTP handler */
-
-	{
-		"bcrtt",
-		&BrainCloudRTTComms::callback_echo,
-		0,
-		MAX_PAYLOAD_RTT,
-        0, NULL, 0
-	},
-	{
-		NULL, NULL, 0 /* End of list */
-	}};
-
-static const struct lws_extension exts[] = {
-	{"permessage-deflate",
-	 lws_extension_callback_pm_deflate,
-	 "permessage-deflate; client_no_context_takeover"},
-	{"deflate-frame",
-	 lws_extension_callback_pm_deflate,
-	 "deflate_frame"},
-	{NULL, NULL, NULL /* terminator */}};
-#endif
 
 BrainCloudRTTComms::BrainCloudRTTComms(BrainCloudClient *client) 
 : m_client(client)
@@ -75,7 +45,6 @@ BrainCloudRTTComms::BrainCloudRTTComms(BrainCloudClient *client)
 , m_lastNowMS(FPlatformTime::Seconds())
 , m_rttConnectionStatus(BCRTTConnectionStatus::DISCONNECTED)
 , m_websocketStatus(BCWebsocketStatus::NONE)
-, m_lwsContext(nullptr)
 {
 }
 
@@ -139,18 +108,6 @@ BCRTTConnectionStatus BrainCloudRTTComms::getConnectionStatus()
 
 void BrainCloudRTTComms::RunCallbacks()
 {
-#if PLATFORM_UWP
-#if ENGINE_MINOR_VERSION <24
-#if PLATFORM_HTML5
-#endif
-#endif
-#else
-	if (m_lwsContext != nullptr)
-	{
-		lws_callback_on_writable_all_protocol(m_lwsContext, &protocols[0]);
-		lws_service(m_lwsContext, 0);
-	}
-#endif
 
 	if (isRTTEnabled())
 	{
@@ -173,7 +130,7 @@ void BrainCloudRTTComms::RunCallbacks()
             m_timeSinceLastRequest = 0;
             m_heartBeatSent = true;
             m_heartBeatRecv = false;
-            bool retval = send(buildHeartbeatRequest(), false);
+            send(buildHeartbeatRequest(), false);
 		}
 	}
 
@@ -182,79 +139,6 @@ void BrainCloudRTTComms::RunCallbacks()
 		disconnect();
 	}
 }
-
-#if PLATFORM_UWP
-#if ENGINE_MINOR_VERSION <24
-#if PLATFORM_HTML5
-#endif
-#endif
-#else
-int BrainCloudRTTComms::callback_echo(struct lws *wsi, enum lws_callback_reasons reason, void *user, void *in, size_t len)
-{
-	void *pUser = lws_wsi_user(wsi);
-	UWebSocketBase *pWebSocketBase = (UWebSocketBase *)pUser;
-	switch (reason)
-	{
-	case LWS_CALLBACK_CLOSED_CLIENT_HTTP:
-	case LWS_CALLBACK_CLOSED:
-	case LWS_CALLBACK_CLIENT_CLOSED:
-
-		if (!pWebSocketBase)
-			return -1;
-		pWebSocketBase->Cleanlws();
-		pWebSocketBase->OnClosed.Broadcast();
-		break;
-
-	case LWS_CALLBACK_CLIENT_CONNECTION_ERROR:
-	{
-		FString strError = UTF8_TO_TCHAR(in);
-		if (!pWebSocketBase)
-			return -1;
-		pWebSocketBase->Cleanlws();
-		pWebSocketBase->OnConnectError.Broadcast(strError);
-	}
-	break;
-
-	case LWS_CALLBACK_CLIENT_ESTABLISHED:
-		if (!pWebSocketBase)
-			return -1;
-		pWebSocketBase->OnConnectComplete.Broadcast();
-		break;
-
-	case LWS_CALLBACK_CLIENT_APPEND_HANDSHAKE_HEADER:
-	{
-		if (!pWebSocketBase)
-			return -1;
-
-		unsigned char **p = (unsigned char **)in, *end = (*p) + len;
-		if (!pWebSocketBase->ProcessHeader(p, end))
-		{
-			return -1;
-		}
-
-		pWebSocketBase->ProcessWriteable();
-	}
-	break;
-
-	case LWS_CALLBACK_CLIENT_RECEIVE:
-		if (!pWebSocketBase)
-			return -1;
-		pWebSocketBase->ProcessRead((const char *)in, (int)len);
-		break;
-
-	case LWS_CALLBACK_CLIENT_WRITEABLE:
-		if (!pWebSocketBase)
-			return -1;
-		pWebSocketBase->ProcessWriteable();
-		break;
-
-	default:
-		break;
-	}
-
-	return 0;
-}
-#endif
 
 // add blueprints
 void BrainCloudRTTComms::registerRTTCallback(ServiceName in_serviceName, UBCBlueprintRTTCallProxyBase *callback)
@@ -324,6 +208,7 @@ void BrainCloudRTTComms::disconnect()
 	if (m_connectedSocket != nullptr && m_commsPtr != nullptr)
 	{
 		m_commsPtr->RemoveFromRoot();
+		m_connectedSocket->Close();
 		m_connectedSocket->RemoveFromRoot();
 		m_connectedSocket->OnConnectError.RemoveDynamic(m_commsPtr, &UBCRTTCommsProxy::WebSocket_OnError);
 		m_connectedSocket->OnClosed.RemoveDynamic(m_commsPtr, &UBCRTTCommsProxy::WebSocket_OnClose);
@@ -338,15 +223,6 @@ void BrainCloudRTTComms::disconnect()
 	if (m_connectedSocket)
 		m_connectedSocket->ConditionalBeginDestroy();
 	m_connectedSocket = nullptr;
-#if PLATFORM_UWP
-#if ENGINE_MINOR_VERSION <24
-#if PLATFORM_HTML5
-#endif
-#endif
-#else
-	lws_context_destroy(m_lwsContext);
-	m_lwsContext = nullptr;
-#endif
 
 	m_cxId = TEXT("");
 	m_eventServer = TEXT("");
@@ -397,20 +273,18 @@ FString BrainCloudRTTComms::buildHeartbeatRequest()
 	return JsonUtil::jsonValueToString(json);
 }
 
-bool BrainCloudRTTComms::send(const FString &in_message, bool in_allowLogging/* = true*/)
+void BrainCloudRTTComms::send(const FString &in_message, bool in_allowLogging/* = true*/)
 {
-	bool bMessageSent = false;
 	// early return
 	if (m_connectedSocket == nullptr)
 	{
-		return bMessageSent;
+		return;
 	}
 
-	bMessageSent = m_connectedSocket->SendText(in_message);
-	if (in_allowLogging && bMessageSent && m_client->isLoggingEnabled())
+	m_connectedSocket->SendText(in_message);
+	if (in_allowLogging && m_client->isLoggingEnabled())
 		UE_LOG(LogBrainCloudComms, Log, TEXT("RTT SEND:  %s"), *in_message);
 
-	return bMessageSent;
 }
 
 void BrainCloudRTTComms::processRegisteredListeners(const FString &in_service, const FString &in_operation, const FString &in_jsonMessage)
@@ -490,49 +364,18 @@ void BrainCloudRTTComms::startReceivingWebSocket()
 	url += FString::Printf(TEXT("%d"), m_endpoint->GetIntegerField(TEXT("port")));
 	url += getUrlQueryParameters();
 
+	UE_LOG(LogBrainCloudComms, Log, TEXT("Setting up web socket with url %s "), *url);
+
 	setupWebSocket(url);
 }
 
 void BrainCloudRTTComms::setupWebSocket(const FString &in_url)
 {
-#if PLATFORM_UWP
-#if ENGINE_MINOR_VERSION <24
-#if PLATFORM_HTML5
-#endif
-#endif
-#else
-	if (m_lwsContext == nullptr)
-	{
-		struct lws_context_creation_info info;
-		memset(&info, 0, sizeof info);
-
-		info.protocols = protocols;
-		info.ssl_cert_filepath = NULL;
-		info.ssl_private_key_filepath = NULL;
-
-		info.port = -1;
-		info.gid = -1;
-		info.uid = -1;
-		info.options = LWS_SERVER_OPTION_VALIDATE_UTF8;
-        info.options |= LWS_SERVER_OPTION_DO_SSL_GLOBAL_INIT;
-        //info.options |= LWS_SERVER_OPTION_DISABLE_IPV6;
-        //info.options |= LWS_SERVER_OPTION_SSL_ECDH;
-        //info.options |= LWS_SERVER_OPTION_IGNORE_MISSING_CERT;
-
-        lws_set_log_level(0xFFFFFFFF, [](int level, const char* line)
-        {
-            FString lstr = line;
-            UE_LOG(LogBrainCloudComms, Log, TEXT("LWS: %s"), *lstr);
-        });
-		m_lwsContext = lws_create_context(&info);
-	}
-#endif
-
 	m_timeSinceLastRequest = 0;
 	// lazy load
 	if (m_connectedSocket == nullptr)
 	{
-		m_connectedSocket = NewObject<UWebSocketBase>();
+		m_connectedSocket = NewObject<UWinWebSocketBase>();
 		m_connectedSocket->AddToRoot();
 	}
 
@@ -548,16 +391,9 @@ void BrainCloudRTTComms::setupWebSocket(const FString &in_url)
 	m_connectedSocket->OnClosed.AddDynamic(m_commsPtr, &UBCRTTCommsProxy::WebSocket_OnClose);
 	m_connectedSocket->OnConnectComplete.AddDynamic(m_commsPtr, &UBCRTTCommsProxy::Websocket_OnOpen);
 	m_connectedSocket->OnReceiveData.AddDynamic(m_commsPtr, &UBCRTTCommsProxy::WebSocket_OnMessage);
-#if PLATFORM_UWP
-#if ENGINE_MINOR_VERSION <24
-#if PLATFORM_HTML5
-#endif
-#endif
-#else
-	m_connectedSocket->mlwsContext = m_lwsContext;
-#endif
 
-	m_connectedSocket->Connect(in_url, m_rttHeadersMap);
+	m_connectedSocket->SetupSocket(in_url);
+	m_connectedSocket->Connect();
 }
 
 void BrainCloudRTTComms::webSocket_OnClose()
