@@ -4,6 +4,7 @@
 
 #include <cinttypes>
 
+
 namespace BrainCloud
 {
     class IRelaySocket
@@ -24,5 +25,6 @@ namespace BrainCloud
 
     protected:
         IRelaySocket() {}
+        
     };
 };

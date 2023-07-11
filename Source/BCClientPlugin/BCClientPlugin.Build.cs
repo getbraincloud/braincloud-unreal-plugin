@@ -47,6 +47,7 @@ public class BCClientPlugin : ModuleRules
                     "Engine",
                     "Sockets",
                     "Networking",
+                    "WebSockets",
                     "Json",
                     "HTTP"
                 });
@@ -58,29 +59,12 @@ public class BCClientPlugin : ModuleRules
         if (Target.Platform == UnrealTargetPlatform.Win64 /*|| Target.Platform == UnrealTargetPlatform.Win32*/)
         {
             PrivateDependencyModuleNames.Add("zlib");
-            PublicDependencyModuleNames.Add("libWebSockets");
         }
-        else if (Target.Platform == UnrealTargetPlatform.Mac)
-        {           
-            PublicDependencyModuleNames.Add("libWebSockets");
-        }
-        else if (Target.Platform == UnrealTargetPlatform.Linux)
-        {
-            PublicDependencyModuleNames.Add("libWebSockets");
-        }
-        else if (Target.Platform == UnrealTargetPlatform.IOS)
-        {
-            PublicDependencyModuleNames.Add("libWebSockets");
-        }
-        else if (Target.Platform == UnrealTargetPlatform.Android)
-        {
-            PublicDependencyModuleNames.Add("libWebSockets");
-        }
+
         //Uncomment if you're developing for Playstation 5
         /*else if (Target.Platform == UnrealTargetPlatform.PS5)
         {
             PublicDependencyModuleNames.Add("WebSockets_PS5");
-            PublicDependencyModuleNames.Add("libWebSockets");
         }*/
     #if UE_4_24_OR_LATER
         else 
