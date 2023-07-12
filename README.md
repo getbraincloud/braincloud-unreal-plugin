@@ -114,6 +114,13 @@ If your app is already live, you should **NOT** specify the Wrapper Name - other
 
 ---------------
 
+## For real-time networking in WebSocket with our Relay system
+Make sure to modify or add the ThreadTargetFrameTimeInSeconds to increase the send rate of packets in your projects DefaultEngine.ini config file.
+It would go under the [WebSockets.LibWebSockets] category, a lower value is a faster send rate, something like 0.001 or 0.0001 would be adequate for real-time.
+Keep in mind that this could impact performance on the socket and CPU, for best results with real-time networking please use UDP protocol.
+    This is what it would look like in your DefaultEngine.ini file:
+    [WebSockets.LibWebSockets]
+    ThreadTargetFrameTimeInSeconds=0.001
 
 Version is the current version of our app. Having an Version less than your minimum app version on brainCloud will prevent the user from accessing the service until they update their app to the lastest version you have provided them.
 
