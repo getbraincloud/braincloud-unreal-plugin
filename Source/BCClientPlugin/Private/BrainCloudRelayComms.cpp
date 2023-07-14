@@ -4,6 +4,7 @@
 #include "ConvertUtilities.h"
 #include "RelayWebSocket.h"
 #include "RelayUDPSocket.h"
+#include "RelayTCPSocket.h"
 
 #include "BCClientPluginPrivatePCH.h"
 #include "Serialization/JsonTypes.h"
@@ -122,7 +123,7 @@ BrainCloudRelayComms::BrainCloudRelayComms(BrainCloudClient* in_client)
 BrainCloudRelayComms::~BrainCloudRelayComms()
 {
     socketCleanup();
-    
+    UE_LOG(LogTemp, Display, TEXT("~BrainCloudRelayComms"));
 	if (m_pRelayConnectCallbackBP != nullptr)
 	{
         m_pRelayConnectCallbackBP->RemoveFromRoot();
@@ -164,6 +165,7 @@ void BrainCloudRelayComms::shutdown()
 void BrainCloudRelayComms::resetCommunication()
 {
     socketCleanup();
+    UE_LOG(LogTemp, Display, TEXT("BrainCloudRelayComms::resetCommunication()"));
 }
 
 void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, const FString& host, int port, const FString& passcode, const FString& lobbyId, IRelayConnectCallback* in_callback)
@@ -171,6 +173,7 @@ void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, cons
     if (m_isSocketConnected)
     {
         socketCleanup();
+        UE_LOG(LogTemp, Display, TEXT("Attempting to connect while socket already connected"));
     }
 
     m_pRelayConnectCallback = in_callback;
@@ -183,6 +186,7 @@ void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, cons
     if (m_isSocketConnected)
     {
         socketCleanup();
+        UE_LOG(LogTemp, Display, TEXT("Attempting to connect while socket already connected"));
     }
 
     m_pRelayConnectCallbackBP = in_callback;
@@ -242,6 +246,19 @@ void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, cons
             m_isSocketConnected = true;
             break;
         }
+        case BCRelayConnectionType::TCP:
+        {
+            UE_LOG(LogBrainCloudRelayComms, Log, TEXT("Creating TCP Socket Connection"));
+            m_pSocket = new BrainCloud::RelayTCPSocket(host, port);
+            m_lastRecvTime = FPlatformTime::Seconds();
+            
+            m_resendConnectRequest = true;
+            m_isSocketConnected = true;
+
+            send(CL2RS_CONNECT, buildConnectionRequest());
+            m_lastConnectResendTime = FPlatformTime::Seconds();
+            break;
+        }
         default:
         {
             socketCleanup();
@@ -280,11 +297,11 @@ void BrainCloudRelayComms::socketCleanup()
             m_pSocket->close();
         }
         else {
-            UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket Socket pointer is null"));
+            UE_LOG(LogBrainCloudRelayComms, Log, TEXT("Socket Socket pointer is null"));
         }
         delete m_pSocket;
         m_pSocket = nullptr;
-        UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket Destroyed"));   
+        UE_LOG(LogBrainCloudRelayComms, Log, TEXT("Socket Destroyed"));   
     }
 
     m_sendPacketId.Reset();
@@ -764,6 +781,7 @@ void BrainCloudRelayComms::onRSMG(const uint8* in_data, int in_size)
     {
         m_endMatchRequested = true;
         socketCleanup();
+        UE_LOG(LogTemp, Display, TEXT("END_MATCH triggered"));
     }
 
     queueSystemEvent(jsonString);
