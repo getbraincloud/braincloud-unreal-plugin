@@ -39,7 +39,7 @@ BrainCloud::RelayTCPSocket::RelayTCPSocket(const FString& host, int port)
 			return;
 		}
 
-		int32 SendSize = 2 * 1024 * 1024;
+		int32 SendSize = 1024;
 
 		m_connectedSocket = FTcpSocketBuilder("TCP Socket")
 			.AsReusable();
@@ -87,7 +87,7 @@ void BrainCloud::RelayTCPSocket::update()
 		return;
 	}
 
-	uint32 BufferSize = 4096;
+	uint32 BufferSize = 2048;
 	TArray<uint8> receivedPacket;
 	receivedPacket.SetNumZeroed(BufferSize);
 
@@ -106,7 +106,7 @@ void BrainCloud::RelayTCPSocket::update()
 	bool bSendSuccessfull = m_connectedSocket->Send(m_sendPacketQueue[0].GetData(), m_sendPacketQueue[0].Num(), BytesSent);
 	m_sendPacketQueue.RemoveAt(0);
 
-	UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayTCPSocket Send successfull? %s"), bSendSuccessfull ? TEXT("True") : TEXT("False"));
+	UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayTCPSocket Send successfull? %s Bytes sent: %d"), bSendSuccessfull ? TEXT("True") : TEXT("False"), BytesSent);
 }
 
 void BrainCloud::RelayTCPSocket::updateConnection()
@@ -119,21 +119,10 @@ void BrainCloud::RelayTCPSocket::send(const uint8* pData, int size)
 	m_sendPacket.Empty();
 	m_sendPacket.Append(pData, size);
 
-	// Remove unwanted characters from the packet
-	TArray<uint8> cleanedPacket;
-	for (int32 i = 0; i < m_sendPacket.Num(); i++)
-	{
-		uint8 byte = m_sendPacket[i];
-		if (byte >= 32 && byte <= 126) // ASCII printable characters range
-		{
-			cleanedPacket.Add(byte);
-		}
-	}
-
-	FString messageData = ConvertUtilities::BCBytesToString(cleanedPacket.GetData(), cleanedPacket.Num());
+	FString messageData = ConvertUtilities::BCBytesToString(m_sendPacket.GetData(), m_sendPacket.Num());
 	UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayTCPSocket Sending Data: %s"), *messageData);
 
-	m_sendPacketQueue.Add(MoveTemp(cleanedPacket));
+	m_sendPacketQueue.Add(MoveTemp(m_sendPacket));
 }
 
 const uint8* BrainCloud::RelayTCPSocket::peek(int& size)
