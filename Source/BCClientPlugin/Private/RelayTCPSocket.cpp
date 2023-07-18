@@ -11,6 +11,7 @@
 #include "SocketSubsystem.h"
 #include <Interfaces/IPv4/IPv4Address.h>
 #include <Common/TcpSocketBuilder.h>
+#include <ConvertUtilities.h>
 
 
 BrainCloud::RelayTCPSocket::RelayTCPSocket(const FString& host, int port)
@@ -28,6 +29,8 @@ BrainCloud::RelayTCPSocket::RelayTCPSocket(const FString& host, int port)
 		m_remoteAddr->SetIp(*host, m_isValid);
 		m_remoteAddr->SetPort(port);
 
+		UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayTCPSocket Set remote host to %s:%d"), *host, port);
+
 		m_localAddr->SetIp(Addr.Value);
 		m_localAddr->SetPort(54000);
 
@@ -39,10 +42,10 @@ BrainCloud::RelayTCPSocket::RelayTCPSocket(const FString& host, int port)
 		int32 SendSize = 2 * 1024 * 1024;
 
 		m_connectedSocket = FTcpSocketBuilder("TCP Socket")
-			.AsNonBlocking()
-			.AsReusable()
-			.WithReceiveBufferSize(SendSize)
-			.WithSendBufferSize(SendSize);
+			.AsReusable();
+			//.BoundToEndpoint(m_remoteAddr)
+			//.BoundToAddress(Addr)
+			//.BoundToPort(54000);
 
 		m_isConnected = m_connectedSocket->Connect(*m_remoteAddr);
 
@@ -67,7 +70,7 @@ bool BrainCloud::RelayTCPSocket::isConnected()
 		return false;
 	}
 
-	UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayTCPSocket connection state: %d"), m_connectedSocket->GetConnectionState());
+	//UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayTCPSocket connection state: %d"), m_connectedSocket->GetConnectionState());
 
 	return m_connectedSocket->GetConnectionState() == SCS_Connected;
 }
@@ -92,7 +95,7 @@ void BrainCloud::RelayTCPSocket::update()
 	bool bReceived = m_connectedSocket->Recv(receivedPacket.GetData(), receivedPacket.Num(), BytesRead);
 
 	if (bReceived && BytesRead > 0) {
-		FString ReceivedData = BytesToString(receivedPacket.GetData(), BytesRead);
+		FString ReceivedData =  ConvertUtilities::BCBytesToString(receivedPacket.GetData(), BytesRead);
 		UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayTCPSocket Received data %s"), *ReceivedData);
 		m_packetQueue.Add(receivedPacket);
 	}
@@ -113,18 +116,24 @@ void BrainCloud::RelayTCPSocket::updateConnection()
 
 void BrainCloud::RelayTCPSocket::send(const uint8* pData, int size)
 {
-	//if (!m_connectedSocket || !isConnected()) {
-	//	UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayTCPSocket Can't send message because socket not connected"));
-	//	return;
-	//}
-
-	FString messageData = BytesToString(pData, size);
-	UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayTCPSocket Sending Data: %s"), *messageData);
-
 	m_sendPacket.Empty();
 	m_sendPacket.Append(pData, size);
-	//m_connectedSocket->Send(m_sendPacket.GetData(), size, BytesSent);
-	m_sendPacketQueue.Add(MoveTemp(m_sendPacket));
+
+	// Remove unwanted characters from the packet
+	TArray<uint8> cleanedPacket;
+	for (int32 i = 0; i < m_sendPacket.Num(); i++)
+	{
+		uint8 byte = m_sendPacket[i];
+		if (byte >= 32 && byte <= 126) // ASCII printable characters range
+		{
+			cleanedPacket.Add(byte);
+		}
+	}
+
+	FString messageData = ConvertUtilities::BCBytesToString(cleanedPacket.GetData(), cleanedPacket.Num());
+	UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayTCPSocket Sending Data: %s"), *messageData);
+
+	m_sendPacketQueue.Add(MoveTemp(cleanedPacket));
 }
 
 const uint8* BrainCloud::RelayTCPSocket::peek(int& size)
@@ -147,7 +156,7 @@ void BrainCloud::RelayTCPSocket::close()
 	if (m_connectedSocket != nullptr) {
 
 		m_connectedSocket->Close();
-		delete m_connectedSocket;
+		ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->DestroySocket(m_connectedSocket);
 		m_connectedSocket = nullptr;
 	}
 	m_isConnected = false;

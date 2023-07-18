@@ -248,11 +248,10 @@ void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, cons
         }
         case BCRelayConnectionType::TCP:
         {
-            UE_LOG(LogBrainCloudRelayComms, Log, TEXT("Creating TCP Socket Connection"));
+            UE_LOG(LogBrainCloudRelayComms, Log, TEXT("Creating TCP Socket Connection to %s:%d"), *host, port);
             m_pSocket = new BrainCloud::RelayTCPSocket(host, port);
             m_lastRecvTime = FPlatformTime::Seconds();
             
-            m_resendConnectRequest = true;
             m_isSocketConnected = true;
 
             send(CL2RS_CONNECT, buildConnectionRequest());
@@ -1072,11 +1071,11 @@ void BrainCloudRelayComms::RunCallbacks()
         else if (!m_pSocket->isValid())
         {
             socketCleanup();
-            queueErrorEvent("Relay Socket Error: failed to connect");
+            queueErrorEvent("Relay Socket Error: failed to connect - invalid socket");
         }
         else
         {
-            //UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayComms Socket valid but not connected - updating connection"));
+            UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayComms Socket valid but not connected - updating connection"));
             m_pSocket->updateConnection();
             if (m_pSocket->isConnected())
             {
@@ -1085,9 +1084,10 @@ void BrainCloudRelayComms::RunCallbacks()
                 {
                     UE_LOG(LogBrainCloudRelayComms, Log, TEXT("Relay Socket Connected"));
                 }
-                send(CL2RS_CONNECT, buildConnectionRequest());
+                
                 if (m_connectionType == BCRelayConnectionType::UDP)
                 {
+                    send(CL2RS_CONNECT, buildConnectionRequest());
                     m_resendConnectRequest = true;
                     m_lastConnectResendTime = now;
                 }
