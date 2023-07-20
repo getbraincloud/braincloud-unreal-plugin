@@ -17,7 +17,7 @@
 BrainCloud::RelayTCPSocket::RelayTCPSocket(const FString& host, int port)
 {
 	if (!m_connectedSocket) {
-		
+
 		ISocketSubsystem* SocketSubsystem = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM);
 
 		FIPv4Address Addr;
@@ -43,9 +43,9 @@ BrainCloud::RelayTCPSocket::RelayTCPSocket(const FString& host, int port)
 
 		m_connectedSocket = FTcpSocketBuilder("TCP Socket")
 			.AsReusable();
-			//.BoundToEndpoint(m_remoteAddr)
-			//.BoundToAddress(Addr)
-			//.BoundToPort(54000);
+		//.BoundToEndpoint(m_remoteAddr)
+		//.BoundToAddress(Addr)
+		//.BoundToPort(54000);
 
 		m_isConnected = m_connectedSocket->Connect(*m_remoteAddr);
 
@@ -54,7 +54,7 @@ BrainCloud::RelayTCPSocket::RelayTCPSocket(const FString& host, int port)
 	else {
 		UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayTCPSocket Socket already initialized"));
 	}
-	
+
 }
 
 BrainCloud::RelayTCPSocket::~RelayTCPSocket()
@@ -87,16 +87,19 @@ void BrainCloud::RelayTCPSocket::update()
 		return;
 	}
 
-	uint32 BufferSize = 2048;
+	uint32 BufferSize = 4096;
 	TArray<uint8> receivedPacket;
 	receivedPacket.SetNumZeroed(BufferSize);
 
 	int32 BytesRead = 0;
 	bool bReceived = m_connectedSocket->Recv(receivedPacket.GetData(), receivedPacket.Num(), BytesRead);
 
+
+	receivedPacket.SetNumZeroed(BytesRead);
+
 	if (bReceived && BytesRead > 0) {
-		FString ReceivedData =  ConvertUtilities::BCBytesToString(receivedPacket.GetData(), BytesRead);
-		UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayTCPSocket Received data %s"), *ReceivedData);
+		FString ReceivedData = ConvertUtilities::BCBytesToString(receivedPacket.GetData(), BytesRead);
+		UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayTCPSocket Received %d bytes | data: %s"), BytesRead, *ReceivedData);
 		m_packetQueue.Add(receivedPacket);
 	}
 
@@ -127,15 +130,18 @@ void BrainCloud::RelayTCPSocket::send(const uint8* pData, int size)
 
 const uint8* BrainCloud::RelayTCPSocket::peek(int& size)
 {
-	
+
 	FScopeLock Lock(&m_mutex);
 	if (m_packetQueue.Num() == 0) return nullptr;
 
 	m_currentPacket = m_packetQueue[0];
 	m_packetQueue.RemoveAt(0);
-	
-	auto packetSize = (int)ntohs(*(u_short*)m_currentPacket.GetData());
-	size = packetSize;
+
+
+	FString messageData = ConvertUtilities::BCBytesToString(m_currentPacket.GetData(), m_currentPacket.Num());
+	UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayTCPSocket Peek packet: %s"), *messageData);
+	//auto packetSize = (int)ntohs(*(u_short*)m_currentPacket.GetData());
+	size = m_currentPacket.Num();
 	return m_currentPacket.GetData();
 }
 

@@ -565,44 +565,36 @@ void BrainCloudRelayComms::send(const uint8* in_data, int in_size)
     }
 }
 
-void BrainCloudRelayComms::onRecv(const uint8* in_data, int in_size)
+void BrainCloudRelayComms::processPacket(const uint8* pData, int size)
 {
-    m_lastRecvTime = FPlatformTime::Seconds();
+    //int size = (int)ntohs(*(u_short*)pData);
 
-    if (in_size < 3)
-    {
-        socketCleanup();
-        queueErrorEvent("Relay Recv Error: packet cannot be smaller than 3 bytes");
-        return;
-    }
+    int controlByte = (int)pData[2];
 
-    int size = (int)ntohs(*(u_short*)in_data);
-    int controlByte = (int)in_data[2];
+    UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RELAY RECEIVE - control byte: %d"), controlByte);
 
-    //UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RELAY RECEIVE - control byte: %d"), controlByte);
-    
-    if (size < in_size)
-    {
-        socketCleanup();
-        queueErrorEvent("Relay Recv Error: Packet is smaller than header's size");
-        return;
-    }
-    
+    //if (size < in_size)
+    //{
+    //    socketCleanup();
+    //    queueErrorEvent("Relay Recv Error: Packet is smaller than header's size");
+    //    return;
+    //}
+
 
     if (controlByte == RS2CL_RSMG)
     {
         if (size < 5)
         {
-            socketCleanup();
-            queueErrorEvent("Relay Recv Error: RSMG cannot be smaller than 5 bytes");
+            //socketCleanup();
+            //queueErrorEvent("Relay Recv Error: RSMG cannot be smaller than 5 bytes");
             return;
         }
-        onRSMG(in_data + 3, size - 3);
+        onRSMG(pData + 3, size - 3);
     }
     else if (controlByte == RS2CL_DISCONNECT)
     {
-        socketCleanup();
-        queueErrorEvent("Relay: Disconnected by server");
+        //socketCleanup();
+        //queueErrorEvent("Relay: Disconnected by server");
     }
     else if (controlByte == RS2CL_PONG)
     {
@@ -612,30 +604,80 @@ void BrainCloudRelayComms::onRecv(const uint8* in_data, int in_size)
     {
         if (size < 11)
         {
-            socketCleanup();
-            queueErrorEvent("Relay Recv Error: ack packet cannot be smaller than 5 bytes");
+            //socketCleanup();
+            //queueErrorEvent("Relay Recv Error: ack packet cannot be smaller than 5 bytes");
             return;
         }
         if (m_connectionType == BCRelayConnectionType::UDP)
         {
-            onAck(in_data + 3);
+            onAck(pData + 3);
         }
     }
     else if (controlByte == RS2CL_RELAY)
     {
         if (size < 11)
         {
-            socketCleanup();
-            queueErrorEvent("Relay Recv Error: relay packet cannot be smaller than 5 bytes");
+            //socketCleanup();
+            //queueErrorEvent("Relay Recv Error: relay packet cannot be smaller than 5 bytes");
             return;
         }
-        onRelay(in_data + 3, in_size - 3);
+        onRelay(pData + 3, size - 3);
     }
     else
     {
-        socketCleanup();
-        queueErrorEvent("Relay Recv Error: Unknown control byte: " + FString::FromInt(controlByte));
+        //socketCleanup();
+        //queueErrorEvent("Relay Recv Error: Unknown control byte: " + FString::FromInt(controlByte));
     }
+}
+
+void BrainCloudRelayComms::onRecv(const uint8* in_data, int in_size)
+{
+    UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RELAY RECEIVE [START]"));
+
+    m_lastRecvTime = FPlatformTime::Seconds();
+
+    auto pData = (uint8_t*)in_data;
+
+    m_receiveBuffer.Append(pData, in_size);
+    
+    if (m_processingPackets)
+        return;
+
+    m_processingPackets = true;
+
+    //Add packet to buffer
+    //m_receiveBuffer.Append(pData, in_size);
+    UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RELAY RECEIVE - Processing packet of total length %d"), in_size);
+    //Process complete frames from the buffer
+    while (m_receiveBuffer.Num() >= 2) // Minimum required size for the frame length
+    {
+        // Read the first 2 bytes to get the size of the frame
+        FString bufferContent = ConvertUtilities::BCBytesToString(m_receiveBuffer.GetData(), m_receiveBuffer.Num());
+        UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RELAY RECEIVE - Full Buffer: %s"), *bufferContent);
+
+        uint16_t frameLen = ntohs(*reinterpret_cast<const uint16_t*>(m_receiveBuffer.GetData()));
+        UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RELAY RECEIVE - Processing frame | Length:%d"), frameLen);
+        // Check if the frame is fully received
+        if (m_receiveBuffer.Num() >= frameLen) // frameLen + 2 for the frame length itself
+        {
+            FString ProcessingPacket = ConvertUtilities::BCBytesToString(m_receiveBuffer.GetData(), frameLen);
+            UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RELAY RECEIVE - Processing full frame: %s"), *ProcessingPacket);
+
+            // Process the complete frame (skipping the first 2 bytes used for the frame length)
+            processPacket(m_receiveBuffer.GetData(), frameLen);
+
+            m_receiveBuffer.RemoveAt(0, frameLen);
+        }
+        else
+        {
+            // If the frame is not complete yet, break the loop to wait for more data
+            break;
+        }
+    }
+
+    m_processingPackets = false;
+
+    UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RELAY RECEIVE - [Processing END]"));
 }
 
 void BrainCloudRelayComms::sendRSMGAck(int rsmgPacketId)
