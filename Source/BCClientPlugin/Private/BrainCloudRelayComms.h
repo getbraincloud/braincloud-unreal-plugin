@@ -223,6 +223,4 @@ private:
     // Data is structured this way because once it is used to update the client it will then be discarded
     TArray<TMap<uint8, int>> m_trackedPacketIds;
     TArray<uint8> m_receiveBuffer;
-    TArray<uint8> m_remainingData;
-    bool m_processingPackets = false;
 };
