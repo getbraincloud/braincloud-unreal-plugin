@@ -123,7 +123,6 @@ BrainCloudRelayComms::BrainCloudRelayComms(BrainCloudClient* in_client)
 BrainCloudRelayComms::~BrainCloudRelayComms()
 {
     socketCleanup();
-    UE_LOG(LogTemp, Display, TEXT("~BrainCloudRelayComms"));
 	if (m_pRelayConnectCallbackBP != nullptr)
 	{
         m_pRelayConnectCallbackBP->RemoveFromRoot();
@@ -165,7 +164,6 @@ void BrainCloudRelayComms::shutdown()
 void BrainCloudRelayComms::resetCommunication()
 {
     socketCleanup();
-    UE_LOG(LogTemp, Display, TEXT("BrainCloudRelayComms::resetCommunication()"));
 }
 
 void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, const FString& host, int port, const FString& passcode, const FString& lobbyId, IRelayConnectCallback* in_callback)
@@ -173,7 +171,6 @@ void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, cons
     if (m_isSocketConnected)
     {
         socketCleanup();
-        UE_LOG(LogTemp, Display, TEXT("Attempting to connect while socket already connected"));
     }
 
     m_pRelayConnectCallback = in_callback;
@@ -186,7 +183,6 @@ void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, cons
     if (m_isSocketConnected)
     {
         socketCleanup();
-        UE_LOG(LogTemp, Display, TEXT("Attempting to connect while socket already connected"));
     }
 
     m_pRelayConnectCallbackBP = in_callback;
