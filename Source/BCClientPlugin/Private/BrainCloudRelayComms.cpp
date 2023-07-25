@@ -30,6 +30,7 @@
 // #include "BCRelayCommsProxy.h"
 #include "WinWebSocketBase.h"
 #include <iostream>
+#include <arpa/inet.h>
 #if PLATFORM_WINDOWS
 #include <Winsock2.h>
 #endif
