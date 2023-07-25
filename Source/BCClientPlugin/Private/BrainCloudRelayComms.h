@@ -158,6 +158,7 @@ private:
     void send(int netId, const TSharedRef<FJsonObject>& json);
     void send(int netId, const FString& text);
 
+    void processPacket(const uint8* pData, int size);
     void onRecv(const uint8* in_data, int in_size);
     void onRSMG(const uint8* in_data, int in_size);
     void onPONG();
@@ -221,4 +222,5 @@ private:
     // And the tracked packetId as the value
     // Data is structured this way because once it is used to update the client it will then be discarded
     TArray<TMap<uint8, int>> m_trackedPacketIds;
+    TArray<uint8> m_receiveBuffer;
 };
