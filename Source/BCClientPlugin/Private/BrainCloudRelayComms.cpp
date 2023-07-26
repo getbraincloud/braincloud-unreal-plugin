@@ -30,9 +30,10 @@
 // #include "BCRelayCommsProxy.h"
 #include "WinWebSocketBase.h"
 #include <iostream>
-#include <arpa/inet.h>
 #if PLATFORM_WINDOWS
 #include <Winsock2.h>
+#else
+#include <arpa/inet.h> // for ntohs on gnu/clang compiler
 #endif
 #include "Runtime/Launch/Resources/Version.h"
 
