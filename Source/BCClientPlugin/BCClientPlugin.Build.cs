@@ -66,17 +66,10 @@ public class BCClientPlugin : ModuleRules
         {
             PublicDependencyModuleNames.Add("WebSockets_PS5");
         }*/
-    #if UE_4_24_OR_LATER
-        else 
-        {
-            //PublicLibraryPaths.Add(Path.Combine(ModulePath, "ThirdParty/lib/HTML5"));
-            PublicAdditionalLibraries.Add(Path.Combine(ModulePath,"ThirdParty/lib/HTML5/WebSocket.js"));
-        }
-    #endif
 
     #if EARLIER_THAN_4_23 
     #if WITH_FORWARDED_MODULE_RULES_CTOR
-        
+        // support for HTML5 available in engine before UE 4.24
         else if (Target.Platform ==UnrealTargetPlatform.HTML5)
         {
             PublicLibraryPaths.Add(Path.Combine(ModulePath, "ThirdParty/lib/HTML5"));
