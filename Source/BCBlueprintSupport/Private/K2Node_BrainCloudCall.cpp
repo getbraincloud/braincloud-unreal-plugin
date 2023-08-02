@@ -90,7 +90,7 @@ void UK2Node_BrainCloudCall::GetMenuActions(FBlueprintActionDatabaseRegistrar &A
                         UObjectProperty *ReturnProp = CastChecked<UObjectProperty>(Func->GetReturnProperty());
 // Unreal Engine Version is >= 4.25 OR in Unreal Engine 5
 #elif (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 25) || ENGINE_MAJOR_VERSION == 5 
-                        FObjectProperty *ReturnProp = CastChecked<FObjectProperty>(Func->GetReturnProperty());
+                        FObjectProperty *ReturnProp = CastFieldChecked<FObjectProperty>(Func->GetReturnProperty());
 #endif
 
                         AsyncTaskNode->ProxyFactoryFunctionName = Func->GetFName();
