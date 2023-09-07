@@ -19,6 +19,8 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     * anonymous installation id and most recently used profile id
     * @param anonymousId - The anonymous installation id that was generated for this device
     * @param profileId - The id of the profile id that was most recently used by the app (on this device)
+    *
+    * (Note: recommend using BCWrapper method instead.)
     */
     UFUNCTION(BlueprintCallable, Category = "BrainCloud|Authentication")
     static void Initialize(UBrainCloudWrapper *brainCloudWrapper, const FString &profileId, const FString &anonymousId);
@@ -45,11 +47,13 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     * Service Operation - Authenticate
     *
     * Param - forceCreate  Should a new profile be created if it does not exist?
+    *
+    * (Note: recommend using BCWrapper method instead.)
     */
     UFUNCTION(BlueprintCallable, Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *AuthenticateAnonymous(UBrainCloudWrapper *brainCloudWrapper, bool forceCreate);
 
-    /*
+    /**
     * Authenticate the user with brainCloud using their Facebook Credentials
     *
     * Service Name - Authenticate
@@ -59,11 +63,13 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     * Param - authenticationToken The validated token from the Facebook SDK
     *   (that will be further validated when sent to the bC service)
     * Param - forceCreate Should a new profile be created for this user if the account does not exist?
+    *
+    * (Note: recommend using BCWrapper method instead.)
     */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *AuthenticateFacebook(UBrainCloudWrapper *brainCloudWrapper, FString facebookId, FString password, bool forceCreate);
 
-    /*
+    /**
     * Authenticate the user with brainCloud using their FacebookLimited Credentials
     *
     * Service Name - Authenticate
@@ -73,11 +79,13 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     * Param - authenticationToken The validated token from the Facebook SDK
     *   (that will be further validated when sent to the bC service)
     * Param - forceCreate Should a new profile be created for this user if the account does not exist?
+    *
+    * (Note: recommend using BCWrapper method instead.)
     */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *AuthenticateFacebookLimited(UBrainCloudWrapper *brainCloudWrapper, FString facebookLimitedId, FString password, bool forceCreate);
 
-    /*
+    /**
     * Authenticate the user with brainCloud using their Oculus Credentials
     *
     * Service Name - Authenticate
@@ -86,11 +94,13 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     * Param - oculusId The oculus id of the user
     * Param - oculusNonce token from the Oculus SDK
     * Param - forceCreate Should a new profile be created for this user if the account does not exist?
+    *
+    * (Note: recommend using BCWrapper method instead.)
     */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *AuthenticateOculus(UBrainCloudWrapper *brainCloudWrapper, FString oculusId, FString oculusNonce, bool forceCreate);
 	
-    /*
+    /**
     * Authenticate the user specifically for Playstation 4 with brainCloud using their psn account id and auth token
     *
     * Service Name - Authenticate
@@ -100,6 +110,8 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     * Param - psnAuthToken The validated token from the playstation sdk
     *   (that will be further validated when sent to the bC service)
     * Param - forceCreate Should a new profile be created for this user if the account does not exist?
+    *
+    * (Note: recommend using BCWrapper method instead.)
     */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *AuthenticatePlaystationNetwork(UBrainCloudWrapper *brainCloudWrapper, FString psnAccountId, FString psnAuthToken, bool forceCreate);
@@ -114,11 +126,13 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
 	* Param - psnAuthToken The validated token from the playstation sdk
 	*   (that will be further validated when sent to the bC service)
 	* Param - forceCreate Should a new profile be created for this user if the account does not exist?
-	*/
+     *
+     * (Note: recommend using BCWrapper method instead.)
+     */
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
 	static UBCAuthenticationProxy *AuthenticatePlaystation5(UBrainCloudWrapper *brainCloudWrapper, FString psnAccountId, FString psnAuthToken, bool forceCreate);
 	
-    /*
+    /**
     * Authenticate the user using their Game Center id
     *
     * Service Name - Authenticate
@@ -126,11 +140,13 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     *
     * Param - gameCenterId The player's game center id  (use the playerID property from the local GKPlayer object)
     * Param - forceCreate Should a new profile be created for this user if the account does not exist?
+    *
+    * (Note: recommend using BCWrapper method instead.)
     */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *AuthenticateGameCenter(UBrainCloudWrapper *brainCloudWrapper, FString gameCenterId, bool forceCreate);
 
-    /*
+    /**
     * Authenticate the user with a custom Email and Password.  Note that the client app
     * is responsible for collecting (and storing) the e-mail and potentially password
     * (for convenience) in the client data.  For the greatest security,
@@ -145,11 +161,13 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     * Param - email  The e-mail address of the user
     * Param - password  The password of the user
     * Param - forceCreate Should a new profile be created for this user if the account does not exist?
+    *
+    * (Note: recommend using BCWrapper method instead.)
     */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *AuthenticateEmailPassword(UBrainCloudWrapper *brainCloudWrapper, FString email, FString password, bool forceCreate);
 
-    /*
+    /**
     * Authenticate the user using a userid and password (without any validation on the userid).
     * Similar to AuthenticateEmailPassword - except that that method has additional features to
     * allow for e-mail validation, password resets, etc.
@@ -160,11 +178,13 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     * Param - email  The e-mail address of the user
     * Param - password  The password of the user
     * Param - forceCreate Should a new profile be created for this user if the account does not exist?
+    *
+    * (Note: recommend using BCWrapper method instead.)
     */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *AuthenticateUniversal(UBrainCloudWrapper *brainCloudWrapper, FString userId, FString password, bool forceCreate);
 
-    /*
+    /**
     * Authenticate the user using a steam userid and session ticket (without any validation on the userid).
     *
     * Service Name - Authenticate
@@ -173,11 +193,13 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     * Param - userid  String representation of 64 bit steam id
     * Param - sessionticket  The session ticket of the user (hex encoded)
     * Param - forceCreate Should a new profile be created for this user if the account does not exist?
+    *
+    * (Note: recommend using BCWrapper method instead.)
     */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *AuthenticateSteam(UBrainCloudWrapper *brainCloudWrapper, FString steamId, FString sessionTicket, bool forceCreate);
 
-    /*
+    /**
     * Authenticate the user using a google userid(email address) and google authentication token.
     *
     * Service Name - Authenticate
@@ -186,11 +208,13 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     * Param - userid  String representation of google+ userid (email)
     * Param - token  The authentication token derived via the google apis.
     * Param - forceCreate Should a new profile be created for this user if the account does not exist?
+    *
+    * (Note: recommend using BCWrapper method instead.)
     */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *AuthenticateGoogle(UBrainCloudWrapper *brainCloudWrapper, FString googleId, FString token, bool forceCreate);
 
-        /*
+        /**
     * Authenticate the user using a google userid(email address) and google authentication token.
     *
     * Service Name - Authenticate
@@ -199,11 +223,13 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     * @param googleUserAccountEmail The email associated with the google user
     * @param IdToken  The Id token of the google account. Can get with calls like requestIdToken
     * Param - forceCreate Should a new profile be created for this user if the account does not exist?
+    *
+    * (Note: recommend using BCWrapper method instead.)
     */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *AuthenticateGoogleOpenId(UBrainCloudWrapper *brainCloudWrapper, FString googleUserAccountEmail, FString IdToken, bool forceCreate);
 
-        /*
+        /**
     * Authenticate the user using a google userid(email address) and google authentication token.
     *
     * Service Name - Authenticate
@@ -212,11 +238,13 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     * @param appleUserId this can be user id OR the email of the user account
     * @param identityToken  the token confirming the user's identity
     * Param - forceCreate Should a new profile be created for this user if the account does not exist?
+    *
+    * (Note: recommend using BCWrapper method instead.)
     */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *AuthenticateApple(UBrainCloudWrapper *brainCloudWrapper, FString appleUserId, FString identityToken, bool forceCreate);
 
-    /*
+    /**
     * Authenticate the user using a Twitter userid, authentication token, and secret from Twitter.
     *
     * Service Name - Authenticate
@@ -226,11 +254,13 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     * Param - token  The authentication token derived via the Twitter apis.
     * Param - secret  The secret given when attempting to link with Twitter
     * Param - forceCreate Should a new profile be created for this user if the account does not exist?
+    *
+    * (Note: recommend using BCWrapper method instead.)
     */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *AuthenticateTwitter(UBrainCloudWrapper *brainCloudWrapper, FString twitterId, FString token, FString secret, bool forceCreate);
 
-    /*
+    /**
     * Authenticate the user using a Parse ID and authentication token.
     *
     * Service Name - Authenticate
@@ -239,12 +269,14 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     * Param - userid  String representation of Parse user ID
     * Param - token  The authentication token from Parse
     * Param - forceCreate Should a new profile be created for this user if the account does not exist?
+    *
+    * (Note: recommend using BCWrapper method instead.)
     */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *AuthenticateParse(UBrainCloudWrapper *brainCloudWrapper, FString parseId, FString token, bool forceCreate);
 
-    /*
-    * Authenticate the user using a handoffId and a token 
+    /**
+    * Authenticate the user using a handoffId and a token
     *
     * Service Name - Authenticate
     * Service Operation - Authenticate
@@ -252,12 +284,14 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     * @param handoffId braincloud handoff id generated from cloud script
     * @param securityToken The security token entered byt the user
     * @param callback The method to be invoked when the server response is received
+    *
+    * (Note: recommend using BCWrapper method instead.)
     */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *AuthenticateHandoff(UBrainCloudWrapper *brainCloudWrapper, FString handoffId, FString securityToken, bool forceCreate);
 
-        /*
-    * Authenticate the user using a handoffId and a token 
+        /**
+    * Authenticate the user using a handoffId and a token
     *
     * Service Name - Authenticate
     * Service Operation - Authenticate
@@ -265,6 +299,8 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     * @param handoffCode braincloud handoff id generated from cloud script
     * @param securityToken The security token entered byt the user
     * @param callback The method to be invoked when the server response is received
+    *
+    * (Note: recommend using BCWrapper method instead.)
     */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *AuthenticateSettopHandoff(UBrainCloudWrapper *brainCloudWrapper, FString handoffCode);
@@ -280,6 +316,8 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     * Param - token The user token (password etc)
     * Param - externalAuthName The name of the cloud script to call for external authentication
     * Param - force Should a new profile be created for this user if the account does not exist?
+    *
+    * (Note: recommend using BCWrapper method instead.)
     */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *AuthenticateExternal(UBrainCloudWrapper *brainCloudWrapper, FString userId, FString token, FString externalAuthName, bool forceCreate);
@@ -296,6 +334,8 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
 	 * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
 	 * @param in_extraJson Additional to piggyback along with the call, to be picked up by pre- or post- hooks. Leave empty string for no extraJson.
 	 * @param in_callback The method to be invoked when the server response is received
+     *
+    * (Note: recommend using BCWrapper method instead.)
 	 */
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
 	static UBCAuthenticationProxy *AuthenticateAdvanced(UBrainCloudWrapper *brainCloudWrapper, EBCAuthType in_authenticationType, const FAuthenticationIds &in_ids, bool in_forceCreate, const FString &in_extraJson);
@@ -310,6 +350,8 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
 	 * @param in_ultraIdToken {string} - The "id_token" taken from Ultra's JWT.
 	 * @param in_forceCreate {boolean} - Should a new profile be created for this user if the account does not exist?
 	 * If set to false, you need to handle errors in the case of new players.
+     *
+     * (Note: recommend using BCWrapper method instead.)
 	 */
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
 	static UBCAuthenticationProxy *AuthenticateUltra(UBrainCloudWrapper *brainCloudWrapper, FString in_ultraUsername, FString in_ultraIdToken, bool in_forceCreate);
@@ -325,6 +367,8 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     *
     * Note the follow error reason codes:
     * SECURITY_ERROR (40209) - If the email address cannot be found.
+    *
+    * (Note: recommend using BCWrapper method instead.)
     */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *ResetEmailPassword(UBrainCloudWrapper *brainCloudWrapper, const FString &email);
@@ -349,6 +393,8 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     * Note the follow error reason codes:
     *
     * SECURITY_ERROR (40209) - If the email address cannot be found.
+    *
+    * (Note: recommend using BCWrapper method instead.)
     */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *ResetEmailPasswordAdvanced(UBrainCloudWrapper *brainCloudWrapper, const FString &email, const FString &serviceParams);
@@ -371,6 +417,8 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     * Note the follow error reason codes:
     *
     * SECURITY_ERROR (40209) - If the email address cannot be found.
+    *
+    * (Note: recommend using BCWrapper method instead.)
     */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *ResetEmailPasswordWithExpiry(UBrainCloudWrapper *brainCloudWrapper, const FString &email, int32 in_tokenTtlInMinutes);
@@ -396,12 +444,14 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     * Note the follow error reason codes:
     *
     * SECURITY_ERROR (40209) - If the email address cannot be found.
+    *
+    * (Note: recommend using BCWrapper method instead.)
     */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *ResetEmailPasswordAdvancedWithExpiry(UBrainCloudWrapper *brainCloudWrapper, const FString &email, const FString &in_serviceParams, int32 in_tokenTtlInMinutes);
 
     /**
-    * Reset Universal Id password with service parameters 
+    * Reset Universal Id password with service parameters
     *
     * Service Name - Authenticate
     * Operation - ResetEmailPasswordAdvanced
@@ -417,12 +467,14 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     *   "data": {}
     * }
     *
-    */ 
+    *
+    * (Note: recommend using BCWrapper method instead.)
+    */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *ResetUniversalIdPassword(UBrainCloudWrapper *brainCloudWrapper, const FString &in_universalId);
     
     /**
-    * Reset Universal Id password with service parameters 
+    * Reset Universal Id password with service parameters
     *
     * Service Name - Authenticate
     * Operation - ResetEmailPasswordAdvanced
@@ -438,7 +490,9 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     *   "data": {}
     * }
     *
-    */ 
+    *
+    * (Note: recommend using BCWrapper method instead.)
+    */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *ResetUniversalIdPasswordAdvanced(UBrainCloudWrapper *brainCloudWrapper, const FString &in_universalId, const FString &in_serviceParams);
    
@@ -459,12 +513,14 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     *   "data": {}
     * }
     *
-    */ 
+    *
+    * (Note: recommend using BCWrapper method instead.)
+    */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *ResetUniversalIdPasswordWithExpiry(UBrainCloudWrapper *brainCloudWrapper, const FString &in_universalId, int32 in_tokenTtlInMinutes);
    
       /**
-    * Reset Universal Id password with service parameters and with expiry 
+    * Reset Universal Id password with service parameters and with expiry
     *
     * Service Name - Authenticate
     * Operation - ResetEmailPasswordAdvanced
@@ -481,7 +537,9 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     *   "data": {}
     * }
     *
-    */ 
+    *
+    * (Note: recommend using BCWrapper method instead.)
+    */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *ResetUniversalIdPasswordAdvancedWithExpiry(UBrainCloudWrapper *brainCloudWrapper, const FString &in_universalId, const FString &in_serviceParams, int32 in_tokenTtlInMinutes);
 
