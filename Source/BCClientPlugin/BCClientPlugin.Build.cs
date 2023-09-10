@@ -49,8 +49,18 @@ public class BCClientPlugin : ModuleRules
                     "Networking",
                     "WebSockets",
                     "Json",
-                    "HTTP"
+                    "HTTP",
+                    "ToolMenus",
+                    "Slate",
+                    "SlateCore",
+                    "Blutility",
+                    "AssetRegistry"
                 });
+
+        if (Target.bBuildEditor)
+        {
+            PrivateDependencyModuleNames.AddRange(new string[] { "UnrealEd", "EditorStyle" });
+        }
 
         // win64
         PublicDefinitions.Add("PLATFORM_UWP=0");
