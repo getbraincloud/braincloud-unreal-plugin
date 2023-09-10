@@ -52,9 +52,7 @@ public class BCClientPlugin : ModuleRules
                     "HTTP",
                     "ToolMenus",
                     "Slate",
-                    "SlateCore",
-                    "Blutility",
-                    "AssetRegistry"
+                    "SlateCore"
                 });
 
         if (Target.bBuildEditor)
