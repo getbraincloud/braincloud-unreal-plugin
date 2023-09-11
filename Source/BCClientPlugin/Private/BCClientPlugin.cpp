@@ -27,16 +27,12 @@ public:
             FConfigSection* ConfigSection = GConfig->GetSectionPrivate(*SectionName, false, true, ConfigPath);
             FConfigFile* ConfigFile = GConfig->FindConfigFile(*ConfigPath);
 
-            if (ConfigFile->DoesSectionExist(*SectionName))
+            if (!ConfigFile->DoesSectionExist(*SectionName))
             {
-                UE_LOG(LogBrainCloud, Log, TEXT("Already has section"));
-            }
-            else {
-                UE_LOG(LogBrainCloud, Log, TEXT("Does not have section, add it"));
-
                 GConfig->EmptySection(*SectionName, ConfigPath);
-                GConfig->SetString(*SectionName, TEXT("+StartupObjects"), TEXT("/BCClient/EditorUtility/BCUtilityWidget.BCUtilityWidget"), ConfigPath);
             }
+
+            GConfig->SetString(*SectionName, TEXT("+StartupObjects"), TEXT("/BCClient/EditorUtility/BCUtilityWidget.BCUtilityWidget"), ConfigPath);
         }
 
         GConfig->Flush(true, ConfigPath);
@@ -65,7 +61,7 @@ public:
     {
         UE_LOG(LogBrainCloud, Log, TEXT("Execute Console Command"));
 
-        FString Command = TEXT("KISMETEVENT BCUtilityWidget.BCUtilityWidget_C OpenWidgetOptions");
+        FString Command = TEXT("KISMETEVENT BCUtilityWidget_C_0 OpenWidgetOptions");
         FString Output;
 
         // Ensure we are in the context of a world
