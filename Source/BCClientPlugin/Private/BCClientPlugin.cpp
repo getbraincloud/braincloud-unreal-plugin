@@ -65,7 +65,7 @@ public:
     {
         UE_LOG(LogBrainCloud, Log, TEXT("Execute Console Command"));
 
-        FString Command = TEXT("KISMETEVENT BCUtilityWidget_C_0 OpenWidgetOptions");
+        FString Command = TEXT("KISMETEVENT BCUtilityWidget.BCUtilityWidget_C OpenWidgetOptions");
         FString Output;
 
         // Ensure we are in the context of a world

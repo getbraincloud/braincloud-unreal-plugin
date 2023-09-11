@@ -22,6 +22,8 @@ FBrainCloudAppDataStruct UBrainCloudFunctionLibrary::GetBCAppData()
             Result.AppSecret = ConfigSection->FindRef("AppSecret").GetValue();
             Result.Version = ConfigSection->FindRef("Version").GetValue();
             Result.ServerUrl = ConfigSection->FindRef("ServerUrl").GetValue();
+            Result.S2SKey = ConfigSection->FindRef("S2SKey").GetValue();
+            Result.S2SUrl = ConfigSection->FindRef("S2SUrl").GetValue();
         }
     }
 
@@ -45,6 +47,8 @@ void UBrainCloudFunctionLibrary::SetBCAppData(FBrainCloudAppDataStruct appData)
     GConfig->SetString(*SectionName, TEXT("AppSecret"), *appData.AppSecret, ConfigPath);
     GConfig->SetString(*SectionName, TEXT("Version"), *appData.Version, ConfigPath);
     GConfig->SetString(*SectionName, TEXT("ServerUrl"), *appData.ServerUrl, ConfigPath);
+    GConfig->SetString(*SectionName, TEXT("S2SKey"), *appData.S2SKey, ConfigPath);
+    GConfig->SetString(*SectionName, TEXT("S2SUrl"), *appData.S2SUrl, ConfigPath);
 
     GConfig->Flush(false, ConfigPath);
 

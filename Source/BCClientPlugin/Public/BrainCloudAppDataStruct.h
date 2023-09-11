@@ -19,4 +19,10 @@ struct FBrainCloudAppDataStruct
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "brainCloud Init Params")
 		FString Version = "";
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "brainCloud Init Params")
+		FString S2SKey = "";
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "brainCloud Init Params")
+		FString S2SUrl = "";
 };
