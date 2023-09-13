@@ -16,28 +16,39 @@ public:
     /** IModuleInterface implementation */
     virtual void StartupModule() override
     {
+
+
         UE_LOG(LogBrainCloud, Log, TEXT("BrainCloud Plugin Startup"));
 
         FString SectionName = TEXT("/Script/Blutility.EditorUtilitySubsystem");
         FString Filename = TEXT("DefaultEditorPerProjectUserSettings.ini");
 
-        FString ConfigPath = FConfigCacheIni::NormalizeConfigIniPath(FPaths::ProjectConfigDir() + *Filename);
+        FString ConfigPath = FPaths::ProjectConfigDir();
+        ConfigPath += Filename;
+
+#if ENGINE_MAJOR_VERSION == 5
+        ConfigPath = FConfigCacheIni::NormalizeConfigIniPath(FPaths::ProjectConfigDir() + *Filename);
+#endif
 
         if (GConfig) {
             FConfigSection* ConfigSection = GConfig->GetSectionPrivate(*SectionName, false, true, ConfigPath);
             FConfigFile* ConfigFile = GConfig->FindConfigFile(*ConfigPath);
 
-            if (!ConfigFile->DoesSectionExist(*SectionName))
+            if (!GConfig->DoesSectionExist(*SectionName, ConfigPath))
             {
                 GConfig->EmptySection(*SectionName, ConfigPath);
             }
-
+#if ENGINE_MAJOR_VERSION == 5
             GConfig->SetString(*SectionName, TEXT("+StartupObjects"), TEXT("/BCClient/EditorUtility/BCUtilityWidget.BCUtilityWidget"), ConfigPath);
+#elif ENGINE_MAJOR_VERSION == 4
+            GConfig->SetString(*SectionName, TEXT("+StartupObjects"), TEXT("/BCClient/EditorUtility/BCUtilityWidget_UE4.BCUtilityWidget_UE4"), ConfigPath);
+#endif
         }
 
         GConfig->Flush(true, ConfigPath);
 
-        //UToolMenu* Menu = UToolMenus::Get()->ExtendMenu("LevelEditor.LevelEditorToolBar.User");
+#if ENGINE_MAJOR_VERSION == 5
+
         UToolMenu* Menu = UToolMenus::Get()->ExtendMenu("LevelEditor.MainMenu.Tools");
         FToolMenuSection& NewSection = Menu->AddSection("BrainCloud", FText::FromString("BrainCloud"));
 
@@ -53,15 +64,36 @@ public:
             EUserInterfaceActionType::Button,
             FName("BrainCloud Utilities"));
 
+#elif ENGINE_MAJOR_VERSION == 4
 
-        UE_LOG(LogBrainCloud, Log, TEXT("Added BC ToolBar button"));
+        UToolMenu* Menu = UToolMenus::Get()->ExtendMenu("LevelEditor.LevelEditorToolBar");
+        FToolMenuSection& NewSection = Menu->AddSection("BrainCloud", FText::FromString("BrainCloud"));
+
+        FToolMenuEntry toolbarEntry = FToolMenuEntry::InitToolBarButton(
+            FName("BrainCloud Settings"),
+            FUIAction(
+                FExecuteAction::CreateRaw(this, &FBCClientPlugin::MenuCommand)
+            ),
+            FText::FromString("BrainCloud Settings"),
+            FText::FromString("Change BrainCloud Settings"),
+            FSlateIcon(),
+            EUserInterfaceActionType::Button,
+            FName("BrainCloud Utilities")
+        );
+        NewSection.AddEntry(toolbarEntry);
+#endif
     }
 
     void MenuCommand()
     {
         UE_LOG(LogBrainCloud, Log, TEXT("Execute Console Command"));
+        FString Command;
 
-        FString Command = TEXT("KISMETEVENT BCUtilityWidget_C_0 OpenWidgetOptions");
+#if ENGINE_MAJOR_VERSION == 5
+        Command = TEXT("KISMETEVENT BCUtilityWidget_C_0 OpenWidgetOptions");
+#elif ENGINE_MAJOR_VERSION == 4
+        Command = TEXT("KISMETEVENT BCUtilityWidget_UE4_C_0 OpenWidgetOptions");
+#endif
         FString Output;
 
         // Ensure we are in the context of a world
