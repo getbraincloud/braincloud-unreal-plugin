@@ -204,7 +204,6 @@ bool FOnlineSubsystemBrainCloud::Init()
 		FConfigSection *Configs = GConfig->GetSectionPrivate(TEXT("BrainCloud.Client"), false, true, _configPath);
 		if (Configs)
 		{
-
 // Unreal Engine Version is >= 4.12 OR in Unreal Engine 5
 #if (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 12) || ENGINE_MAJOR_VERSION == 5
 			FString test = Configs->Find(TEXT("ServerURL"))->GetValue();
