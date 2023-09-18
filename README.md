@@ -93,7 +93,7 @@ It is recommended to use the wrapper by default.
 
 ## Hooking up Unreal project to brainCloud
 
-###Using the brainCloud Utility Widget
+***Using the brainCloud Utility Widget***
 If you restarted the Unreal Editor a second time once the brainCloud plugins modules have been built and initialized, you will have the brainCloud Utility Widget at your disposal to edit the projects brainCloud app settings.
 For Unreal Engine 4, this is located at the end of your main toolbar: 
 ![utility](/screenshots/_bc-UE4toolmenu.png?raw=true)
@@ -105,7 +105,7 @@ When you click this button a new Editor widget window will open that looks like 
 
 When you click update to save these settings, it is important to restart your Unreal Editor after for these changes to take effect.
 
-###Manually
+***Manually***
 If you do not want to use the brainCloud Utility Widget, you can simply edit the `BrainCloudSettings.ini` that is located in your projects Config folder, if it doesn't exist then you can create it.
 Then you can fill in the values for your app settings:
 ```
