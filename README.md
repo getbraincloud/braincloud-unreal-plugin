@@ -100,6 +100,7 @@ If you restarted the Unreal Editor a second time once the brainCloud plugins mod
 For Unreal Engine 4, this is located at the end of your main toolbar: 
 
 ![utility](/screenshots/_bc-UE4toolmenu.png?raw=true)
+
 And for Unreal Engine 5, it is located in the Tools submenu under the brainCloud section: 
 
 ![utility](/screenshots/_bc-UE5toolmenu.png?raw=true)
