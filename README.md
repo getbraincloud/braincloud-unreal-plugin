@@ -96,12 +96,16 @@ It is recommended to use the wrapper by default.
 ***Using the brainCloud Utility Widget***
 
 If you restarted the Unreal Editor a second time once the brainCloud plugins modules have been built and initialized, you will have the brainCloud Utility Widget at your disposal to edit the projects brainCloud app settings.
+
 For Unreal Engine 4, this is located at the end of your main toolbar: 
+
 ![utility](/screenshots/_bc-UE4toolmenu.png?raw=true)
-And for Unreal Engine 5, it is located in the Tools submenu: 
+And for Unreal Engine 5, it is located in the Tools submenu under the brainCloud section: 
+
 ![utility](/screenshots/_bc-UE5toolmenu.png?raw=true)
 
 When you click this button a new Editor widget window will open that looks like this. (You can also drag and dock it as a tab in any layout frame)
+
 ![utility](/screenshots/bcWidget.png?raw=true)
 
 When you click update to save these settings, it is important to restart your Unreal Editor after for these changes to take effect.
@@ -130,7 +134,9 @@ You can then use these values in your project with the GetBCAppData blueprint fu
 
 3. Set the Default brainCloud instance to your wrapper - this allows Singleton functionality, and you won't need to pass the wrapper into each function call, unless needed.
 
-4. Initialize brainCloud with your app credentials 
+4. Get the brainCloud app credentials using GetBCAppData
+
+5. Initialize brainCloud with your app credentials 
 
 Your Secret Key, and App Id, is set on the brainCloud dashboard. Under Design | Core App Info > Application IDs
 
