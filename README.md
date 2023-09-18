@@ -174,6 +174,10 @@ To do this, you need to call Run Callbacks
 
 ![Min Version](/screenshots/_bp-runcallbacks.png?raw=true)
 
+Alternatively, if you are using a GameInstance class in your project and wish to manage brainCloud in there, you can run callbacks on a timer.
+
+![Min Version](/screenshots/_bc-runCallbacks_v5.png?raw=true)
+
 
 ## How do I authenticate a user with brainCloud?
 The simplest form of authenticating with brainCloud is Anonymous Authentication.
