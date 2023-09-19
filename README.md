@@ -27,7 +27,9 @@ Package | Description
 8.  A dialog will pop up saying you're missing 3 modules, click yes to rebuild.
 9.  Or, rebuild manually by deleting Intermediate folder, Binaries folder and .sln file 
 then right click on your .uproject and generate visual studio files.
-10.  Installation complete!
+10. Restart Unreal Editor one more time. This ensures you will then be able to access the brainCloud Utility Widget which allows you to manage your projects brainCloud app settings (such as the app ID, secret, etc.)
+11.  Installation complete!
+
 
 ### Git Submodule Installation
 BCClient plugin can be installed as a submodule of your git project.
@@ -89,8 +91,43 @@ It is recommended to use the wrapper by default.
 
 ![wrapper](/screenshots/bc-wrapper.png?raw=true)
 
+## Hooking up Unreal project to brainCloud
+
+***Using the brainCloud Utility Widget***
+
+If you restarted the Unreal Editor a second time once the brainCloud plugins modules have been built and initialized, you will have the brainCloud Utility Widget at your disposal to edit the projects brainCloud app settings.
+
+For Unreal Engine 4, this is located at the end of your main toolbar: 
+
+![utility](/screenshots/_bc-UE4toolmenu.png?raw=true)
+
+And for Unreal Engine 5, it is located in the Tools submenu under the brainCloud section: 
+
+![utility](/screenshots/_bc-UE5toolmenu.png?raw=true)
+
+When you click this button a new Editor widget window will open that looks like this. (You can also drag and dock it as a tab in any layout frame)
+
+![utility](/screenshots/bcWidget.png?raw=true)
+
+When you click update to save these settings, it is important to restart your Unreal Editor after for these changes to take effect.
+
+***Manually***
+
+If you do not want to use the brainCloud Utility Widget, you can simply edit the `BrainCloudSettings.ini` that is located in your projects Config folder, if it doesn't exist then you can create it.
+Then you can fill in the values for your app settings:
+```
+[Credentials]
+AppId=
+AppSecret=
+Version=
+ServerUrl=
+S2SKey=
+S2SUrl=
+```
+You can then use these values in your project with the GetBCAppData blueprint function. Remember to restart your editor if you make any changes to this file.
+
 ## How do I initialize brainCloud?
-![wrapper](/screenshots/_bp-initWrapper.png?raw=true)
+![wrapper](/screenshots/_bp-initWrapper_BC5.png?raw=true)
 
 1. Create a BrainCloudWrapper - This will store an instance of brainCloud and give you a way of accessing the services we provide.
 
@@ -98,7 +135,9 @@ It is recommended to use the wrapper by default.
 
 3. Set the Default brainCloud instance to your wrapper - this allows Singleton functionality, and you won't need to pass the wrapper into each function call, unless needed.
 
-4. Initialize brainCloud with your app credentials 
+4. Get the brainCloud app credentials using GetBCAppData
+
+5. Initialize brainCloud with your app credentials 
 
 Your Secret Key, and App Id, is set on the brainCloud dashboard. Under Design | Core App Info > Application IDs
 
@@ -118,9 +157,11 @@ If your app is already live, you should **NOT** specify the Wrapper Name - other
 Make sure to modify or add the ThreadTargetFrameTimeInSeconds to increase the send rate of packets in your projects DefaultEngine.ini config file.
 It would go under the [WebSockets.LibWebSockets] category, a lower value is a faster send rate, something like 0.001 or 0.0001 would be adequate for real-time.
 Keep in mind that this could impact performance on the socket and CPU, for best results with real-time networking please use UDP protocol.
-    This is what it would look like in your DefaultEngine.ini file:
-    [WebSockets.LibWebSockets]
-    ThreadTargetFrameTimeInSeconds=0.001
+This is what it would look like in your `DefaultEngine.ini` file:
+```
+[WebSockets.LibWebSockets]
+ThreadTargetFrameTimeInSeconds=0.001
+```
 
 Version is the current version of our app. Having an Version less than your minimum app version on brainCloud will prevent the user from accessing the service until they update their app to the lastest version you have provided them.
 
@@ -132,6 +173,10 @@ In your project's update loop, you're going to want to update brainCloud client 
 To do this, you need to call Run Callbacks
 
 ![Min Version](/screenshots/_bp-runcallbacks.png?raw=true)
+
+Alternatively, if you are using a GameInstance class in your project and wish to manage brainCloud in there, you can run callbacks on a timer.
+
+![Min Version](/screenshots/_bc-runCallbacks_v5.png?raw=true)
 
 
 ## How do I authenticate a user with brainCloud?
