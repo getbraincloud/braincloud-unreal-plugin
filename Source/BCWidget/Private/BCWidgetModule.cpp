@@ -75,20 +75,6 @@ void FBCWidgetModule::StartupModule()
     );
     NewSection.AddEntry(toolbarEntry);
 #endif
-
-#if ENGINE_MAJOR_VERSION == 4
-    //delete UE5 widget asset file
-    FString relativePath = TEXT("Plugins/BCClient/Content/EditorUtility/BCUtilityWidget.uasset");
-    FString fullPath = FPaths::Combine(FPaths::ProjectDir(), relativePath);
-    
-    if (FPaths::ValidatePath(fullPath) && FPaths::FileExists(fullPath))
-    {
-        IFileManager& fManager = IFileManager::Get();
-        fManager.Delete(*fullPath);
-    }
-#endif
-
-
 #endif
 }
 
