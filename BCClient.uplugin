@@ -39,6 +39,11 @@
         "Server",
         "Client"
       ]
+    },
+    {
+      "Name": "BCCompatibility",
+      "Type": "Editor",
+      "LoadingPhase": "EarliestPossible"
     }
   ],
   "Plugins": [
