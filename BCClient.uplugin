@@ -43,7 +43,7 @@
     {
       "Name": "BCCompatibility",
       "Type": "Editor",
-      "LoadingPhase": "EarliestPossible"
+      "LoadingPhase": "PreDefault"
     }
   ],
   "Plugins": [
