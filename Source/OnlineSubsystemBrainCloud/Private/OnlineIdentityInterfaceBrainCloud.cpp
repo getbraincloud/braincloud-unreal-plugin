@@ -140,7 +140,7 @@ TArray<TSharedPtr<FUserOnlineAccount> > FOnlineIdentityBrainCloud::GetAllUserAcc
 
 TSharedPtr<const FUniqueNetId> FOnlineIdentityBrainCloud::GetUniquePlayerId(int32 LocalUserNum) const
 {
-    return FUniqueNetIdString::Create(Subsystem->GetClient()->getAuthenticationService()->getProfileId(), TEXT("BCFOO"));
+    return FUniqueNetIdString::Create(Subsystem->GetClient()->getAuthenticationService()->getProfileId(), NAME_Unset);
 }
 
 TSharedPtr<const FUniqueNetId> FOnlineIdentityBrainCloud::CreateUniquePlayerId(uint8* Bytes, int32 Size)
@@ -151,14 +151,14 @@ TSharedPtr<const FUniqueNetId> FOnlineIdentityBrainCloud::CreateUniquePlayerId(u
         if (StrLen > 0)
         {
             FString StrId((TCHAR*)Bytes);
-            return FUniqueNetIdString::Create(StrId, TEXT("BCFOO"));     }
+            return FUniqueNetIdString::Create(StrId, NAME_Unset);     }
     }
     return NULL;
 }
 
 TSharedPtr<const FUniqueNetId> FOnlineIdentityBrainCloud::CreateUniquePlayerId(const FString& Str)
 {
-    return FUniqueNetIdString::Create(Str, TEXT("BCFOO"));
+    return FUniqueNetIdString::Create(Str, NAME_Unset);
 }
 
 ELoginStatus::Type FOnlineIdentityBrainCloud::GetLoginStatus(int32 LocalUserNum) const

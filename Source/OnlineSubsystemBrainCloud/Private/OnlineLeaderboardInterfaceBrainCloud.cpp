@@ -175,7 +175,7 @@ void FOnlineLeaderboardsBrainCloud::readLeaderboardSuccess(const FString& jsonDa
         UE_LOG(LogOnline, Display, TEXT("Value: %d"), score);
         UE_LOG(LogOnline, Display, TEXT("----------------------------------------------------------------"));
 
-        TSharedRef<const FUniqueNetId> userId = FUniqueNetIdString::Create(playerID, TEXT("BCFOO"));
+        TSharedRef<const FUniqueNetId> userId = FUniqueNetIdString::Create(playerID, NAME_Unset);
         
         FOnlineStatsRow* userRow = leaderboardRead.Get().FindPlayerRecord(userId.Get());
         if (userRow == NULL)
