@@ -37,14 +37,12 @@ FBrainCloudAppDataStruct UBrainCloudFunctionLibrary::GetBCAppData()
 
             ConfigSection->GenerateKeyArray(configKeys);
 
-            FString server = configKeys.Contains(*ServerUrlKey) ? ConfigSection->Find(*ServerUrlKey)->GetValue() : TEXT("");
-
             Result.AppId = configKeys.Contains(*AppIdKey) ? ConfigSection->Find(*AppIdKey)->GetValue() : TEXT("");
             Result.AppSecret = configKeys.Contains(*AppSecretKey) ? ConfigSection->Find(*AppSecretKey)->GetValue() : TEXT("");
             Result.Version = configKeys.Contains(*AppVersionKey) ? ConfigSection->Find(*AppVersionKey)->GetValue() : TEXT("");
-            Result.ServerUrl = server + "/dispatcherv2";
+            Result.ServerUrl = configKeys.Contains(*ServerUrlKey) ? ConfigSection->Find(*ServerUrlKey)->GetValue() : TEXT("");
             Result.S2SKey = configKeys.Contains(*S2SKeyKey) ? ConfigSection->Find(*S2SKeyKey)->GetValue() : TEXT("");
-            Result.S2SUrl = server + "/s2sdispatcher";
+            Result.S2SUrl = configKeys.Contains(*S2SUrlKey) ? ConfigSection->Find(*S2SUrlKey)->GetValue() : TEXT("");
         }
         else {
             UE_LOG(LogBrainCloud, Warning, TEXT("Couldn't find BrainCloudSettings.ini file in projects Config folder"));
@@ -75,11 +73,15 @@ void UBrainCloudFunctionLibrary::SetBCAppData(FBrainCloudAppDataStruct appData)
         GConfig->EmptySection(*SectionName, ConfigPath);
     }
 
+    FString ServerFullUrl = appData.ServerUrl + "/dispatcherv2";
+    FString S2SFullUrl = appData.ServerUrl + "/s2sdispatcher";
+
     GConfig->SetString(*SectionName, TEXT("AppId"), *appData.AppId, ConfigPath);
     GConfig->SetString(*SectionName, TEXT("AppSecret"), *appData.AppSecret, ConfigPath);
     GConfig->SetString(*SectionName, TEXT("Version"), *appData.Version, ConfigPath);
-    GConfig->SetString(*SectionName, TEXT("ServerUrl"), *appData.ServerUrl, ConfigPath);
+    GConfig->SetString(*SectionName, TEXT("ServerUrl"), *ServerFullUrl, ConfigPath);
     GConfig->SetString(*SectionName, TEXT("S2SKey"), *appData.S2SKey, ConfigPath);
+    GConfig->SetString(*SectionName, TEXT("S2SUrl"), *S2SFullUrl, ConfigPath);
 
     GConfig->Flush(false, ConfigPath);
 
