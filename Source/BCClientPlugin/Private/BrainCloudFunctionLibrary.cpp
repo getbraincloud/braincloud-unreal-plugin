@@ -72,12 +72,15 @@ void UBrainCloudFunctionLibrary::SetBCAppData(FBrainCloudAppDataStruct appData)
         GConfig->EmptySection(*SectionName, ConfigPath);
     }
 
+    FString serverFullUrl = appData.ServerUrl + "/dispatcherv2";
+    FString s2sfullUrl = appData.ServerUrl + "/s2sdispatcher";
+
     GConfig->SetString(*SectionName, TEXT("AppId"), *appData.AppId, ConfigPath);
     GConfig->SetString(*SectionName, TEXT("AppSecret"), *appData.AppSecret, ConfigPath);
     GConfig->SetString(*SectionName, TEXT("Version"), *appData.Version, ConfigPath);
-    GConfig->SetString(*SectionName, TEXT("ServerUrl"), *appData.ServerUrl, ConfigPath);
+    GConfig->SetString(*SectionName, TEXT("ServerUrl"), *serverFullUrl, ConfigPath);
     GConfig->SetString(*SectionName, TEXT("S2SKey"), *appData.S2SKey, ConfigPath);
-    GConfig->SetString(*SectionName, TEXT("S2SUrl"), *appData.S2SUrl, ConfigPath);
+    GConfig->SetString(*SectionName, TEXT("S2SUrl"), *s2sfullUrl, ConfigPath);
 
     GConfig->Flush(false, ConfigPath);
 
