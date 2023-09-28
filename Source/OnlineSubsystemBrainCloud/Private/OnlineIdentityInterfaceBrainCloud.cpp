@@ -67,7 +67,7 @@ bool FOnlineIdentityBrainCloud::Login(int32 LocalUserNum, const FOnlineAccountCr
         // disable warnings about FUniqueNetId constructors deprecations
         PRAGMA_DISABLE_DEPRECATION_WARNINGS
         UE_LOG_ONLINE(Warning, TEXT("Login request failed: %s"), *ErrorStr);
-        TriggerOnLoginCompleteDelegates(LocalUserNum, false, FUniqueNetIdString(), ErrorStr);
+        TriggerOnLoginCompleteDelegates(LocalUserNum, false, FUniqueNetIdString::EmptyId().Get(), ErrorStr);
         return false;
         PRAGMA_ENABLE_DEPRECATION_WARNINGS
     }
@@ -140,10 +140,7 @@ TArray<TSharedPtr<FUserOnlineAccount> > FOnlineIdentityBrainCloud::GetAllUserAcc
 
 TSharedPtr<const FUniqueNetId> FOnlineIdentityBrainCloud::GetUniquePlayerId(int32 LocalUserNum) const
 {
-    // disable warnings about  FUniqueNetId constructors deprecations
-    PRAGMA_DISABLE_DEPRECATION_WARNINGS
-    return MakeShareable(new FUniqueNetIdString(Subsystem->GetClient()->getAuthenticationService()->getProfileId()));
-    PRAGMA_ENABLE_DEPRECATION_WARNINGS
+    return FUniqueNetIdString::Create(Subsystem->GetClient()->getAuthenticationService()->getProfileId(), NAME_Unset);
 }
 
 TSharedPtr<const FUniqueNetId> FOnlineIdentityBrainCloud::CreateUniquePlayerId(uint8* Bytes, int32 Size)
@@ -154,20 +151,14 @@ TSharedPtr<const FUniqueNetId> FOnlineIdentityBrainCloud::CreateUniquePlayerId(u
         if (StrLen > 0)
         {
             FString StrId((TCHAR*)Bytes);
-            // disable warnings about  FUniqueNetId constructors deprecations
-            PRAGMA_DISABLE_DEPRECATION_WARNINGS
-            return MakeShareable(new FUniqueNetIdString(StrId));
-            PRAGMA_ENABLE_DEPRECATION_WARNINGS        }
+            return FUniqueNetIdString::Create(StrId, NAME_Unset);     }
     }
     return NULL;
 }
 
 TSharedPtr<const FUniqueNetId> FOnlineIdentityBrainCloud::CreateUniquePlayerId(const FString& Str)
 {
-    // disable warnings about FUniqueNetId constructors deprecations
-    PRAGMA_DISABLE_DEPRECATION_WARNINGS
-    return MakeShareable(new FUniqueNetIdString(Str));
-    PRAGMA_ENABLE_DEPRECATION_WARNINGS
+    return FUniqueNetIdString::Create(Str, NAME_Unset);
 }
 
 ELoginStatus::Type FOnlineIdentityBrainCloud::GetLoginStatus(int32 LocalUserNum) const
@@ -241,10 +232,7 @@ void FOnlineIdentityBrainCloud::authenticateSuccess(const FString& jsonData)
 void FOnlineIdentityBrainCloud::authenticateFail(int32 returnCode, const FString& jsonData)
 {
     bLoggingInUser = false;
-    // disable warnings about  FUniqueNetId constructors deprecations
-    PRAGMA_DISABLE_DEPRECATION_WARNINGS
-    TriggerOnLoginCompleteDelegates(0, false, FUniqueNetIdString(TEXT("")), FString());
-    PRAGMA_ENABLE_DEPRECATION_WARNINGS
+    TriggerOnLoginCompleteDelegates(0, false, FUniqueNetIdString::EmptyId().Get(), FString());
 }
 
 void FOnlineIdentityBrainCloud::logoutSuccess(const FString&)
