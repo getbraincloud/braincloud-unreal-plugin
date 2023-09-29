@@ -29,6 +29,21 @@
       "Name": "OnlineSubsystemBrainCloud",
       "Type": "Runtime",
       "LoadingPhase": "PreDefault"
+    },
+    {
+      "Name": "BCWidget",
+      "Type": "EditorNoCommandlet",
+      "LoadingPhase": "PreDefault",
+      "BlacklistTargets": [
+        "Game",
+        "Server",
+        "Client"
+      ]
+    },
+    {
+      "Name": "BCCompatibility",
+      "Type": "Editor",
+      "LoadingPhase": "PreDefault"
     }
   ],
   "Plugins": [
