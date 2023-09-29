@@ -90,21 +90,15 @@ void UBrainCloudFunctionLibrary::SetBCAppData(FBrainCloudAppDataStruct appData)
 
 bool UBrainCloudFunctionLibrary::ValidateAndExtractURL(const FString& InputURL, FString& OutURL)
 {
-
     if (InputURL.IsEmpty())
         return false;
 
-
-    // Parse the input URL using FURL
-    UE_LOG(LogBrainCloud, Log, TEXT("In URL : %s"), *InputURL);
     FURL ParsedURL(nullptr, *InputURL, TRAVEL_Absolute);
-    UE_LOG(LogBrainCloud, Log, TEXT("Parsed in URL : %s"), *ParsedURL.Host);
     // Check if the URL is valid
     if (ParsedURL.Valid)
     {
         // Construct the base URL without the path
         OutURL = FString::Printf(TEXT("%s://%s"), *ParsedURL.Protocol, *ParsedURL.Host);
-        UE_LOG(LogBrainCloud, Log, TEXT("Out URL : %s"), *OutURL);
         return true; // URL is valid
     }
     else

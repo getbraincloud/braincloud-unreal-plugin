@@ -85,7 +85,6 @@ void FBCWidgetModule::ShutdownModule()
 void FBCWidgetModule::MenuCommand()
 {
 #if WITH_EDITOR && WITH_EDITORONLY_DATA 
-    UE_LOG(LogBCWidget, Log, TEXT("Execute Console Command"));
     FString Command;
 
 #if ENGINE_MAJOR_VERSION == 5
