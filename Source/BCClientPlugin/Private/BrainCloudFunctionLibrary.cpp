@@ -2,6 +2,7 @@
 
 #include "BrainCloudFunctionLibrary.h"
 #include "BCClientPluginPrivatePCH.h"
+#include <Engine/Engine.h>
 
 FBrainCloudAppDataStruct UBrainCloudFunctionLibrary::GetBCAppData()
 {
@@ -72,14 +73,37 @@ void UBrainCloudFunctionLibrary::SetBCAppData(FBrainCloudAppDataStruct appData)
         GConfig->EmptySection(*SectionName, ConfigPath);
     }
 
+    FString ServerFullUrl = appData.ServerUrl + "/dispatcherv2";
+    FString S2SFullUrl = appData.ServerUrl + "/s2sdispatcher";
+
     GConfig->SetString(*SectionName, TEXT("AppId"), *appData.AppId, ConfigPath);
     GConfig->SetString(*SectionName, TEXT("AppSecret"), *appData.AppSecret, ConfigPath);
     GConfig->SetString(*SectionName, TEXT("Version"), *appData.Version, ConfigPath);
-    GConfig->SetString(*SectionName, TEXT("ServerUrl"), *appData.ServerUrl, ConfigPath);
+    GConfig->SetString(*SectionName, TEXT("ServerUrl"), *ServerFullUrl, ConfigPath);
     GConfig->SetString(*SectionName, TEXT("S2SKey"), *appData.S2SKey, ConfigPath);
-    GConfig->SetString(*SectionName, TEXT("S2SUrl"), *appData.S2SUrl, ConfigPath);
+    GConfig->SetString(*SectionName, TEXT("S2SUrl"), *S2SFullUrl, ConfigPath);
 
     GConfig->Flush(false, ConfigPath);
 
     UE_LOG(LogBrainCloud, Warning, TEXT("App Data saved to config file, please restart Unreal Editor for changes to take effect"));
+}
+
+bool UBrainCloudFunctionLibrary::ValidateAndExtractURL(const FString& InputURL, FString& OutURL)
+{
+    if (InputURL.IsEmpty())
+        return false;
+
+    FURL ParsedURL(nullptr, *InputURL, TRAVEL_Absolute);
+    // Check if the URL is valid
+    if (ParsedURL.Valid)
+    {
+        // Construct the base URL without the path
+        OutURL = FString::Printf(TEXT("%s://%s"), *ParsedURL.Protocol, *ParsedURL.Host);
+        return true; // URL is valid
+    }
+    else
+    {
+        // URL is not valid
+        return false;
+    }
 }
