@@ -93,7 +93,7 @@ private:
     FOnlineAchievementsBrainCloud() {};
 
     /** Mapping of players to their achievements */
-    TMap<FUniqueNetIdStringRef, TArray<FOnlineAchievement>> PlayerAchievements;
+    TMap<FUniqueNetIdString, TArray<FOnlineAchievement>> PlayerAchievements;
 
     /** Cached achievement descriptions for an Id */
     TMap<FString, FOnlineAchievementDesc> AchievementDescriptions;

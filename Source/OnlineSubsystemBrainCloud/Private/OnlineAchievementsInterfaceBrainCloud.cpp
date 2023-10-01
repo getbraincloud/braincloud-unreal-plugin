@@ -35,8 +35,13 @@ void FOnlineAchievementsBrainCloud::WriteAchievements(const FUniqueNetId& Player
         Delegate.ExecuteIfBound(PlayerId, false);
         return;
     }
+
+    // disable warnings about FUniqueNetId constructors deprecation
+    PRAGMA_DISABLE_DEPRECATION_WARNINGS
+    FUniqueNetIdString BrainCloudId(PlayerId);
+    PRAGMA_ENABLE_DEPRECATION_WARNINGS
     
-    const TArray<FOnlineAchievement> * PlayerAch = PlayerAchievements.Find(FUniqueNetIdString::Create(PlayerId.ToString(), PlayerId.GetType()));
+    const TArray<FOnlineAchievement> * PlayerAch = PlayerAchievements.Find(BrainCloudId);
     if (NULL == PlayerAch)
     {
         // achievements haven't been read for a player
@@ -123,7 +128,12 @@ EOnlineCachedResult::Type FOnlineAchievementsBrainCloud::GetCachedAchievement(co
         return EOnlineCachedResult::NotFound;
     }
     
-    const TArray<FOnlineAchievement> * PlayerAch = PlayerAchievements.Find(FUniqueNetIdString::Create(PlayerId.ToString(), PlayerId.GetType()));
+    // disable warnings about FUniqueNetId constructors deprecation
+    PRAGMA_DISABLE_DEPRECATION_WARNINGS
+    FUniqueNetIdString BrainCloudId(PlayerId);
+    PRAGMA_ENABLE_DEPRECATION_WARNINGS
+    
+    const TArray<FOnlineAchievement> * PlayerAch = PlayerAchievements.Find(BrainCloudId);
     if (PlayerAch == nullptr)
     {
         // achievements haven't been read for a player
@@ -152,7 +162,12 @@ EOnlineCachedResult::Type FOnlineAchievementsBrainCloud::GetCachedAchievements(c
         return EOnlineCachedResult::NotFound;
     }
 
-    const TArray<FOnlineAchievement> * PlayerAch = PlayerAchievements.Find(FUniqueNetIdString::Create(PlayerId.ToString(), PlayerId.GetType()));
+    // disable warnings about FUniqueNetId constructors deprecation
+    PRAGMA_DISABLE_DEPRECATION_WARNINGS
+    FUniqueNetIdString BrainCloudId(PlayerId);
+    PRAGMA_ENABLE_DEPRECATION_WARNINGS
+
+    const TArray<FOnlineAchievement> * PlayerAch = PlayerAchievements.Find(BrainCloudId);
     if (PlayerAch == nullptr)
     {
         // achievements haven't been read for a player
@@ -193,7 +208,10 @@ void FOnlineAchievementsBrainCloud::OnWriteAchievementsComplete(bool bWasSuccess
     // if write completed successfully, unlock the achievements (and update their cache)
     if (bWasSuccessful)
     {
-        TArray<FOnlineAchievement> * PlayerAch = PlayerAchievements.Find(FUniqueNetIdString::Create(PlayerId.ToString(), PlayerId.GetType()));
+        // disable warnings about FUniqueNetId constructors deprecation
+        PRAGMA_DISABLE_DEPRECATION_WARNINGS
+        TArray<FOnlineAchievement> * PlayerAch = PlayerAchievements.Find(FUniqueNetIdString(PlayerId));
+        PRAGMA_ENABLE_DEPRECATION_WARNINGS
 
         check(PlayerAch);   // were we writing for a non-existing player?
         if (PlayerAch != nullptr)
@@ -256,8 +274,12 @@ void FOnlineAchievementsBrainCloud::OnQueryAchievementsComplete(bool bWasSuccess
             }
         }
     }
-    FUniqueNetIdStringRef brainCloudId = FUniqueNetIdString::Create(PlayerId->ToString(), PlayerId->GetType());
-
+    
+    // disable warnings about FUniqueNetId constructors deprecation
+    PRAGMA_DISABLE_DEPRECATION_WARNINGS
+    FUniqueNetIdString brainCloudId(*PlayerId);
+    PRAGMA_ENABLE_DEPRECATION_WARNINGS
+    
     if (PlayerAchievements.Contains(brainCloudId))
     {
         PlayerAchievements.Remove(brainCloudId);
@@ -340,8 +362,13 @@ bool FOnlineAchievementsBrainCloud::ResetAchievements(const FUniqueNetId& Player
         UE_LOG_ONLINE(Warning, TEXT("No achievements have been configured"));
         return false;
     }
-
-    TArray<FOnlineAchievement> * PlayerAch = PlayerAchievements.Find(FUniqueNetIdString::Create(PlayerId.ToString(), PlayerId.GetType()));
+    
+    // disable warnings about FUniqueNetId constructors deprecation
+    PRAGMA_DISABLE_DEPRECATION_WARNINGS
+    FUniqueNetIdString BrainCloudId(PlayerId);
+    PRAGMA_ENABLE_DEPRECATION_WARNINGS
+    
+    TArray<FOnlineAchievement> * PlayerAch = PlayerAchievements.Find(BrainCloudId);
     if (NULL == PlayerAch)
     {
         // achievements haven't been read for a player
