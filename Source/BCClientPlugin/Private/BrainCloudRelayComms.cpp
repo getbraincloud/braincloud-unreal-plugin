@@ -267,14 +267,14 @@ void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, cons
 
 void BrainCloudRelayComms::disconnect() 
 {
-    if (!m_isSocketConnected) return;
+    if (!m_isConnected) return;
 
     send(CL2RS_DISCONNECT, "");
 }
 
 void BrainCloudRelayComms::endMatch(FString jsonPayload)
 {
-    if (!m_isSocketConnected) return;
+    if (!m_isConnected) return;
     
     send(CL2RS_RSMG_ENDMATCH, jsonPayload);
 }
