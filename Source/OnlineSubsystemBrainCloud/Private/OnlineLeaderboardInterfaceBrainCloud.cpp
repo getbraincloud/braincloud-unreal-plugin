@@ -175,8 +175,12 @@ void FOnlineLeaderboardsBrainCloud::readLeaderboardSuccess(const FString& jsonDa
         UE_LOG(LogOnline, Display, TEXT("Value: %d"), score);
         UE_LOG(LogOnline, Display, TEXT("----------------------------------------------------------------"));
 
+        // Unreal Engine Version is >= Unreal Engine 5.0
+#if ENGINE_MAJOR_VERSION >= 5
         TSharedRef<const FUniqueNetId> userId = FUniqueNetIdString::Create(playerID, NAME_Unset);
-        
+#else
+        TSharedRef<const FUniqueNetId> userId = MakeShareable(new FUniqueNetIdString(playerID));
+#endif
         FOnlineStatsRow* userRow = leaderboardRead.Get().FindPlayerRecord(userId.Get());
         if (userRow == NULL)
         {
