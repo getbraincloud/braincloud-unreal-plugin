@@ -11,7 +11,7 @@
   "MarketplaceURL": "",
   "SupportURL": "http://getbraincloud.com/apidocs/support/",
   "EnabledByDefault": false,
-  "CanContainContent": false,
+  "CanContainContent": true,
   "IsBetaVersion": false,
   "Installed": false,
   "Modules": [
@@ -28,6 +28,21 @@
     {
       "Name": "OnlineSubsystemBrainCloud",
       "Type": "Runtime",
+      "LoadingPhase": "PreDefault"
+    },
+    {
+      "Name": "BCWidget",
+      "Type": "EditorNoCommandlet",
+      "LoadingPhase": "PreDefault",
+      "BlacklistTargets": [
+        "Game",
+        "Server",
+        "Client"
+      ]
+    },
+    {
+      "Name": "BCCompatibility",
+      "Type": "Editor",
       "LoadingPhase": "PreDefault"
     }
   ],

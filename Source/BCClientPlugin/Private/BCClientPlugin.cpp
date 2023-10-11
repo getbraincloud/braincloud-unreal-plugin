@@ -1,20 +1,23 @@
 // Copyright 2018 bitHeads, Inc. All Rights Reserved.
 
-#include "BCClientPluginPrivatePCH.h"
+#include "Engine/Engine.h"
 
 class FBCClientPlugin : public IBCClientPlugin
 {
+public:
+
     /** IModuleInterface implementation */
     virtual void StartupModule() override
     {
-        // @HACK Force classes to be compiled on shipping build
+        UE_LOG(LogBrainCloud, Log, TEXT("BrainCloud Plugin Startup"));
     }
 
     virtual void ShutdownModule() override
     {
-    }
-};
 
+    }
+
+};
 IMPLEMENT_MODULE(FBCClientPlugin, BCClientPlugin)
 
 DEFINE_LOG_CATEGORY(LogBrainCloud);
