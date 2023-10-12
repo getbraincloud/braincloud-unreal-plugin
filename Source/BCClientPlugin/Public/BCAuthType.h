@@ -1,6 +1,7 @@
 // Copyright 2018 bitHeads, Inc. All Rights Reserved.
 
 #pragma once
+#include "BCAuthType.generated.h"
 
 UENUM(BlueprintType)
 enum class EBCAuthType : uint8
