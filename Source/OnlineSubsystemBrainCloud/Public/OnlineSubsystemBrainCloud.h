@@ -6,7 +6,11 @@
 #include "OnlineSubsystemImpl.h"
 #include "OnlineSubsystemBrainCloudPackage.h"
 #include "Runtime/Launch/Resources/Version.h"
-#include "Json.h"
+#include "Dom/JsonObject.h"
+#include "Serialization/JsonSerializer.h"
+#include "Misc/LocalTimestampDirectoryVisitor.h"
+#include "HAL/PlatformFileManager.h"
+#include "GenericPlatform/GenericPlatformFile.h"
 
 /** Forward declarations of all interface classes */
 typedef TSharedPtr<class FOnlineLeaderboardsBrainCloud, ESPMode::ThreadSafe> FOnlineLeaderboardsBrainCloudPtr;

@@ -1,6 +1,6 @@
 // Copyright 2018 bitHeads, Inc. All Rights Reserved.
 
-#include "Engine/Engine.h"
+#include "CoreMinimal.h"
 
 class FBCClientPlugin : public IBCClientPlugin
 {

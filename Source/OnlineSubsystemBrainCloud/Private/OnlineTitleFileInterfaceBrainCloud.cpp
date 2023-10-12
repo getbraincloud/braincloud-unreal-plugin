@@ -7,6 +7,9 @@
 #include "HttpModule.h"
 
 #include "OnlineSubsystemBrainCloud.h"
+#include "Misc/FileHelper.h"
+#include "HAL/PlatformFileManager.h"
+#include "GenericPlatform/GenericPlatformFile.h"
 
 #include "AssignableServerCallback.h"
 

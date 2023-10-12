@@ -12,16 +12,16 @@ struct FBC_ReturnData
 {
     GENERATED_USTRUCT_BODY()
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "BrainCloud")
     FString ServiceName = TEXT("");
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "BrainCloud")
     FString ServiceOperation = TEXT("");
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "BrainCloud")
     int32 StatusCode = 0;
 
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadWrite, Category = "BrainCloud")
     int32 ReasonCode = 0;
 
     /*Constructors*/

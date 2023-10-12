@@ -2,7 +2,7 @@
 
 #include "BCCompatibilityModule.h"
 #include "Runtime/Launch/Resources/Version.h"
-#include "Engine/Engine.h"
+#include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
 
 

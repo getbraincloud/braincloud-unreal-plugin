@@ -4,7 +4,7 @@
 
 class BrainCloudClient;
 class IServerCallback;
-enum class ESortOrder : uint8;
+enum class ESortBoardOrder : uint8;
 
 class BCCLIENTPLUGIN_API BrainCloudTournament
 {
@@ -116,7 +116,7 @@ class BCCLIENTPLUGIN_API BrainCloudTournament
 	/**
 	* @deprecated will be removed March 2021, Use postTournamentScoreWithResultsUTC instead
 	*/
-	void postTournamentScoreWithResults(const FString &leaderboardId, int32 score, const FString &jsonData, const FDateTime roundStartedTime, ESortOrder sort, int32 beforeCount, int32 afterCount, float initialScore, IServerCallback *callback);
+	void postTournamentScoreWithResults(const FString &leaderboardId, int32 score, const FString &jsonData, const FDateTime roundStartedTime, ESortBoardOrder sort, int32 beforeCount, int32 afterCount, float initialScore, IServerCallback *callback);
 
 	/**
 	* Post the users score to the leaderboard
@@ -148,7 +148,7 @@ class BCCLIENTPLUGIN_API BrainCloudTournament
 	* @param initialScore
 	* @param callback The method to be invoked when the server response is received
 	*/
-	void postTournamentScoreWithResultsUTC(const FString &leaderboardId, int32 score, const FString &jsonData, int64 roundStartTimeUTC, ESortOrder sort, int32 beforeCount, int32 afterCount, float initialScore, IServerCallback *callback);
+	void postTournamentScoreWithResultsUTC(const FString &leaderboardId, int32 score, const FString &jsonData, int64 roundStartTimeUTC, ESortBoardOrder sort, int32 beforeCount, int32 afterCount, float initialScore, IServerCallback *callback);
 
 
 	/**
@@ -176,5 +176,5 @@ class BCCLIENTPLUGIN_API BrainCloudTournament
 
   private:
 	BrainCloudClient *_client = nullptr;
-	FString tournamentSortOrderToString(ESortOrder type);
+	FString tournamentSortOrderToString(ESortBoardOrder type);
 };

@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "CoreUObject.h"
 #include "CoreMinimal.h"
 
 #include "Framework/Commands/UIAction.h"

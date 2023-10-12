@@ -10,8 +10,9 @@
 #include "ServiceName.h"
 
 #include "AssignableServerCallback.h"
+#include "Misc/CommandLine.h"
 
-FOnlineIdentityBrainCloud::FOnlineIdentityBrainCloud(class FOnlineSubsystemBrainCloud* InSubsystem) 
+FOnlineIdentityBrainCloud::FOnlineIdentityBrainCloud(class FOnlineSubsystemBrainCloud* InSubsystem)
     : Subsystem(InSubsystem)
 {
 }

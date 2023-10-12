@@ -3,7 +3,8 @@
 #include "ServerCall.h"
 #include "BCClientPluginPrivatePCH.h"
 
-#include <Json.h>
+#include "Dom/JsonObject.h"
+#include "Serialization/JsonSerializer.h"
 
 //////////////////////////////////////////////////////
 // (De)Constructors

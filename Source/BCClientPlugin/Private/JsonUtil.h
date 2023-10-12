@@ -1,7 +1,8 @@
 // Copyright 2018 bitHeads, Inc. All Rights Reserved.
 #pragma once
 
-#include <Json.h>
+#include "Dom/JsonObject.h"
+#include "Serialization/JsonSerializer.h"
 
 class BCCLIENTPLUGIN_API JsonUtil
 {
