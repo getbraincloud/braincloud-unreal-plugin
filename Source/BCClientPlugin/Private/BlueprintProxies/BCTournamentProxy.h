@@ -5,6 +5,7 @@
 #include "BCBlueprintCallProxyBase.h"
 #include "BCTournamentProxy.generated.h"
 
+
 UCLASS(MinimalAPI)
 class UBCTournamentProxy : public UBCBlueprintCallProxyBase
 {

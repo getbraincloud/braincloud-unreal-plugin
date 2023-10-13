@@ -7,6 +7,9 @@
 #include "ServerCall.h"
 #include "JsonUtil.h"
 #include "BrainCloudComms.h"
+#include "HAL/PlatformFileManager.h"
+#include "GenericPlatform/GenericPlatformFile.h"
+#include "Misc/Paths.h"
 
 BrainCloudFile::BrainCloudFile(BrainCloudClient *client) : _client(client){};
 

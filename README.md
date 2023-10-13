@@ -1,6 +1,7 @@
 # brainCloud Unreal Plugin
 Copyright 2021 bitHeads, Inc. All Rights Reserved.
 
+## Welcome to brainCloud!
 Thanks for downloading the brainCloud Unreal plugin! Here are a few notes to get you started. Further information about the brainCloud API, including example Tutorials can be found here:
 
 http://getbraincloud.com/apidocs/
@@ -8,6 +9,10 @@ http://getbraincloud.com/apidocs/
 If you haven't signed up or you want to log into the brainCloud portal, you can do that here:
 
 https://portal.braincloudservers.com/
+
+And join our community here:
+
+https://forums.getbraincloud.com/
 
 Package | Description
  ---- | ----
@@ -41,10 +46,24 @@ $ git submodule add https://github.com/getbraincloud/braincloud-unreal-plugin-sr
 
 Follow steps 4-10 above.
 
-### Unreal Engine 5.0
+### Unreal Engine Version
 
 The plugin will easily work with any version of UE4 and UE5. If switching, ensure that Intermediate files are cleaned up from previous build.
 
+### Platforms
+
+The plugin will work with all platforms. Make sure the required SDK, environment paths and licenses set up. To build for a specific platform only, edit the BCClient.uplugin file. Eg:
+
+```
+"SupportedTargetPlatforms": [
+    "Win64",
+    "Android",
+    "Mac",
+    "IOS",
+    "Linux",
+    "LinuxArm64"
+],
+```
 ## Example Projects
 
 Examples of using brainCloud in your Unreal Projects can be found [here](https://github.com/getbraincloud/examples-unreal).
@@ -57,18 +76,22 @@ When methods are deprecated and removed Unreal will throw exceptions when openin
 Blueprints that contain these functions.
 
 Ensure you have removed these functions from your blueprints before updating to the new
-version of the plugin.  If you experience issues, roll back to to the previous version and
+version of the plugin.  If you experience issues, roll back to the previous version and
 ensure you have not missed removal of these deprecated calls.
+
+### Known Errors and Workarounds
+
+Let us know any issues or suggestions in our [forums](https://forums.getbraincloud.com/).
 
 Note there is a defect that UTCTimeZoneOffset will be off for one hour in case of daylight savings due to limitations of UE Core API regarding DateTime.
 
-There is a known Clang compiler issue when using Xcode 14 with UE 4. There will be errors of redifintions of HTTP_STATUS codes in thirdparty libraries used by Unreal and brainCloud. This issue is resolved in UE 5. In order to continue development in previous versions of Unreal, the file  Engine/Source/ThirdParty/libWebSockets/libwebsockets/include/Mac/libwebsockets.h can be overwritten by the updated one downloaded from [Epic Games' developer github](https://github.com/EpicGames/UnrealEngine/blob/2cd6352a6928d0ba38138a72d1aa8d1fdd882a68/Engine/Source/ThirdParty/libWebSockets/libwebsockets/include/Mac/libwebsockets.h). 
+There is a known Clang compiler issue when using Xcode 14 with UE 4. There will be errors of redifintions of HTTP_STATUS codes in thirdparty libraries used by Unreal and brainCloud. This issue is resolved in UE 5. In order to continue development in previous versions of Unreal, the file  Engine/Source/ThirdParty/libWebSockets/libwebsockets/include/Mac/libwebsockets.h can be overwritten by the updated one downloaded from [Epic Games' developer github](https://github.com/EpicGames/UnrealEngine/blob/2cd6352a6928d0ba38138a72d1aa8d1fdd882a68/Engine/Source/ThirdParty/libWebSockets/libwebsockets/include/Mac/libwebsockets.h).
 
-## Troubleshooting
+### Troubleshooting Server Connection
 
 Here are a few common errors that you may see on your first attempt to connect to brainCloud.
 
-- **App id not set**: Verify you've set up the app id and app secret correctly in the `initialize()` method.
+- **App id not set**: Verify you've set up the app id and app secret correctly in the `initialize()` method. Check the server URL is correct including its case.
 - **Platform not enabled**: Verify you've enabled your platform on the portal.
 
 If you're still having issues, log into the portal and give us a shout through the help system (bottom right icon with the question mark and chat bubble).
@@ -145,7 +168,6 @@ Your Secret Key, and App Id, is set on the brainCloud dashboard. Under Design | 
 
 Wrapper Name prefixes save operations that the wrapper will make. Use a Wrapper Name if you plan on having multiple instances of brainCloud running.
 
-
 ----------------
 
 #### Newly upgraded?
@@ -178,11 +200,9 @@ Alternatively, if you are using a GameInstance class in your project and wish to
 
 ![Min Version](/screenshots/_bc-runCallbacks_v5.png?raw=true)
 
-
 ## How do I authenticate a user with brainCloud?
 The simplest form of authenticating with brainCloud is Anonymous Authentication.
 ![Authentication Anon](/screenshots/_bp-anonauth.png?raw=true)
-
 
 ## How do I attach an email to a user's brainCloud profile?
 After having the user create an anonymous with brainCloud, they are probably going to want to attach an email or username, so their account can be accessed via another platform, or when their local data is discarded. Attaching email authenticate would look like this.
@@ -194,14 +214,5 @@ Attaching email authenticate would look like this.
 There are many authentication types. You can also merge profiles and detach idenities. See the brainCloud documentation for more information:
 http://getbraincloud.com/apidocs/apiref/?cpp#capi-auth
 
-## Building for Android
-For developers looking to build their project for Android, note that you can only package one architecture at a time (ex.ARM64, ARMv7, etc.)
-
 ## Change Notes
-3.5.3
-- toPlayerId in SendNormalizedPushNotificationToGroup blueprint has been corrected to groupId. Be sure to reenter/reconnect those values
-
-3.4.0
-- gameId and gameVersion have been renamed to appId and version respectively. Be sure to reenter/reconnect those values
-
-![alt text](screenshots/InitializeValueChange.png "Update Initialize Values")
+Refer to our latest [release notes](https://getbraincloud.com/apidocs/releases/) for new brainCloud features and API changes.

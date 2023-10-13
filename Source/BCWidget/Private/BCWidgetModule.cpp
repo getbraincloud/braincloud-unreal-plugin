@@ -1,9 +1,10 @@
 // Copyright 2023 bitHeads, Inc. All Rights Reserved.
 
 #include "BCWidgetModule.h"
-#include "Engine/Engine.h"
+#include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
-
+#include "Runtime/Launch/Resources/Version.h"
+#include "Misc/ConfigCacheIni.h"
 
 IMPLEMENT_MODULE(FBCWidgetModule, BCWidget);
 DEFINE_LOG_CATEGORY(LogBCWidget);

@@ -409,7 +409,10 @@ void BrainCloudRTTComms::webSocket_OnClose()
 			UE_LOG(LogBrainCloudComms, Log, TEXT("RTT: Disconnect "), *response);
 		}
 	}
-	//disconnect();
+	if(!m_disconnectedWithReason)
+	{
+		disconnect();
+	}
 	m_disconnectedWithReason = true;
 	m_websocketStatus = BCWebsocketStatus::CLOSED;
 	processRegisteredListeners(ServiceName::RTTRegistration.getValue().ToLower(), "error", UBrainCloudWrapper::buildErrorJson(403, ReasonCodes::RS_CLIENT_ERROR,"Could not connect at this time"));

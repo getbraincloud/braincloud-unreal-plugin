@@ -6,8 +6,10 @@
 
 #include "ReasonCodes.h"
 #include "HttpCodes.h"
+#include "Misc/FileHelper.h"
+#include "Misc/Paths.h"
 
-BCFileUploader::BCFileUploader(int32 lowTransferRateTimeoutSecs, int32 lowTransferRateThresholdBytes, int32 overallTimeoutSecs, bool loggingEnabled) 
+BCFileUploader::BCFileUploader(int32 lowTransferRateTimeoutSecs, int32 lowTransferRateThresholdBytes, int32 overallTimeoutSecs, bool loggingEnabled)
 : _isLoggingEnabled(loggingEnabled)
 , _lowTransferRateTimeout(lowTransferRateTimeoutSecs)    
 , _lowTransferRateThreshold(lowTransferRateThresholdBytes)  

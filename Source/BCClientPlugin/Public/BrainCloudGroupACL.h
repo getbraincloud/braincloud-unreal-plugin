@@ -18,9 +18,9 @@ class BCCLIENTPLUGIN_API UBrainCloudGroupACL : public UObject, public IAcl
 
     virtual TSharedRef<FJsonObject> toJsonObject();
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BrainCloud|ACL")
     EAcl Other;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BrainCloud|ACL")
     EAcl Member;
 };

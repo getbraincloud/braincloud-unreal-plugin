@@ -2,7 +2,8 @@
 
 #include "BrainCloudFunctionLibrary.h"
 #include "BCClientPluginPrivatePCH.h"
-#include <Engine/Engine.h>
+#include <CoreMinimal.h>
+#include "Misc/ConfigCacheIni.h"
 
 FBrainCloudAppDataStruct UBrainCloudFunctionLibrary::GetBCAppData()
 {

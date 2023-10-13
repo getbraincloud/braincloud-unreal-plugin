@@ -6,13 +6,13 @@ struct FAuthenticationIds
 {
 	GENERATED_USTRUCT_BODY();
 
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite, Category = "BrainCloud")
 	FString externalId = TEXT("");
 
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite, Category = "BrainCloud")
 	FString authenticationToken = TEXT("");
 
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite, Category = "BrainCloud")
 	FString authenticationSubType = TEXT("");
 
 	FAuthenticationIds() {}

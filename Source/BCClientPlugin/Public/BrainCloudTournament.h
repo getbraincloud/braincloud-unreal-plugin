@@ -4,7 +4,10 @@
 
 class BrainCloudClient;
 class IServerCallback;
+
+// defined in Leaderboard
 enum class ESortOrder : uint8;
+
 
 class BCCLIENTPLUGIN_API BrainCloudTournament
 {
