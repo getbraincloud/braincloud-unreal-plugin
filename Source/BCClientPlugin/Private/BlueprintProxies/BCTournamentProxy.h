@@ -5,6 +5,7 @@
 #include "BCBlueprintCallProxyBase.h"
 #include "BCTournamentProxy.generated.h"
 
+
 UCLASS(MinimalAPI)
 class UBCTournamentProxy : public UBCBlueprintCallProxyBase
 {
@@ -124,7 +125,7 @@ class UBCTournamentProxy : public UBCBlueprintCallProxyBase
 	* @deprecated will be removed March 2021, Use postTournamentScoreWithResultsUTC instead
 	*/
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Tournament")
-	static UBCTournamentProxy *PostTournamentScoreWithResults(UBrainCloudWrapper *brainCloudWrapper, const FString &leaderboardId, int32 score, const FString &jsonData, const struct FDateTime roundStartedTime, ESortBoardOrder sort, int32 beforeCount, int32 afterCount, float initialScore);
+	static UBCTournamentProxy *PostTournamentScoreWithResults(UBrainCloudWrapper *brainCloudWrapper, const FString &leaderboardId, int32 score, const FString &jsonData, const struct FDateTime roundStartedTime, ESortOrder sort, int32 beforeCount, int32 afterCount, float initialScore);
 
 	/**
 	* Post the users score to the leaderboard
@@ -159,7 +160,7 @@ class UBCTournamentProxy : public UBCBlueprintCallProxyBase
 	*/
 
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Tournament")
-	static UBCTournamentProxy *PostTournamentScoreWithResultsUTC(UBrainCloudWrapper *brainCloudWrapper, const FString &leaderboardId, int32 score, const FString &jsonData, int64 roundStartedTime, ESortBoardOrder sort, int32 beforeCount, int32 afterCount, float initialScore);
+	static UBCTournamentProxy *PostTournamentScoreWithResultsUTC(UBrainCloudWrapper *brainCloudWrapper, const FString &leaderboardId, int32 score, const FString &jsonData, int64 roundStartedTime, ESortOrder sort, int32 beforeCount, int32 afterCount, float initialScore);
 
 
 	/**
