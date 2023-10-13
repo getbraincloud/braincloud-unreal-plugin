@@ -3,7 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
+#include "HAL/FileManager.h"
+#include "Misc/Paths.h"
 
 #include "Modules/ModuleManager.h"
 
