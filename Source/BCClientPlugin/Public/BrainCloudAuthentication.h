@@ -310,6 +310,19 @@ public:
    */
    void authenticateUltra(const FString &in_ultraUsername,const FString &in_ultraIdToken, bool in_forceCreate, IServerCallback * in_callback = NULL);
   
+  /**
+   * Authenticate the user using their Nintendo account id and an auth token
+   *
+   * Service Name - Authenticate
+   * Service Operation - Authenticate
+   *
+   * @param in_accountId The user's Nintendo account id
+   * @param in_authToken The user's Nintendo auth token
+   * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
+   * @param in_callback The method to be invoked when the server response is received
+   */
+   void authenticateNintendo(const FString &in_accountId,const FString &in_authToken, bool in_forceCreate, IServerCallback * in_callback = NULL);
+
     /**
     * Reset Email password - Sends a password reset email to the specified address
     *

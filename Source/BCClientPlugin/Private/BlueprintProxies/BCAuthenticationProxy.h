@@ -355,6 +355,22 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
 	 */
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
 	static UBCAuthenticationProxy *AuthenticateUltra(UBrainCloudWrapper *brainCloudWrapper, FString in_ultraUsername, FString in_ultraIdToken, bool in_forceCreate);
+
+	/**
+	 * Authenticate the user using their Nintendo account id and an auth token
+	 *
+	 * Service Name - authenticationV2
+	 * Service Operation - AUTHENTICATE
+	 *
+	 * @param in_accountId {string} - The user's Nintendo account id
+	 * @param in_authToken {string} - The user's Nintendo auth token
+	 * @param in_forceCreate {boolean} - Should a new profile be created for this user if the account does not exist?
+	 * If set to false, you need to handle errors in the case of new players.
+	 *
+	 * (Note: recommend using BCWrapper method instead.)
+	 */
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
+	static UBCAuthenticationProxy *AuthenticateNintendo(UBrainCloudWrapper *brainCloudWrapper, FString in_accountId, FString in_authToken, bool in_forceCreate);
 	
     /**
     * Reset Email password - Sends a password reset email to the specified address

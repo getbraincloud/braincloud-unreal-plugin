@@ -149,6 +149,11 @@ void BrainCloudAuthentication::authenticateUltra(const FString& in_ultraUsername
 	authenticate(in_ultraUsername, in_ultraIdToken, EBCAuthType::Ultra, "", in_forceCreate, "", in_callback);
 }
 
+void BrainCloudAuthentication::authenticateNintendo(const FString& in_accountId, const FString& in_authToken, bool in_forceCreate, IServerCallback* in_callback)
+{
+	authenticate(in_accountId, in_authToken, EBCAuthType::Nintendo, "", in_forceCreate, "", in_callback);
+}
+
 void BrainCloudAuthentication::resetEmailPassword(const FString &in_email, IServerCallback *in_callback)
 {
 	BrainCloudClient *brainCloudClientRef = _client;

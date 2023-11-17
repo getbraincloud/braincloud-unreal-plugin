@@ -25,6 +25,7 @@ enum class EBCAuthType : uint8
 	SettopHandoff UMETA(DisplayName = "SettopHandoff"),
 	External UMETA(DisplayName = "External"),
 	Ultra UMETA(DisplayName = "Ultra"),
+	Nintendo UMETA(DisplayName = "Nintendo"),
 	Unknown UMETA(DisplayName = "Unknown")
 };
 

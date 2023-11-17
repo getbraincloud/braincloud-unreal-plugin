@@ -309,6 +309,21 @@ public:
     */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Wrapper")
     static UBCWrapperProxy *AuthenticateSettopHandoff(UBrainCloudWrapper *brainCloudWrapper, FString handoffCode);
+
+
+   /*
+   * Authenticate the user using their Nintendo account id and an auth token
+   *
+   * Service Name - Authenticate
+   * Service Operation - Authenticate
+   *
+   * @param userid  The user's Nintendo account id
+   * @param password  The password of the user
+   * @param forceCreate Should a new profile be created for this user if the account does not exist?
+   *
+   */
+    UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Wrapper")
+    static UBCWrapperProxy *AuthenticateNintendo(UBrainCloudWrapper *brainCloudWrapper, FString accountId, FString authToken, bool forceCreate);
    
   /**
      * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
@@ -569,6 +584,25 @@ public:
      */
    UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Wrapper")
    static UBCWrapperProxy *SmartSwitchAuthenticateUltra(UBrainCloudWrapper *brainCloudWrapper, const FString &in_ultraUsername,const FString &in_ultraIdToken, bool in_forceCreate);
+   
+
+   /**
+     * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
+     * In event the current session was previously an anonymous account, the smart switch will delete that profile.
+     * Use this function to keep a clean designflow from anonymous to signed profiles
+     * 
+     * Authenticate the user for Ultra.
+     *
+     * Service Name - authenticationV2
+     * Service Operation - AUTHENTICATE
+     *
+     * @param in_accountId {string} - The Nintendo account id of the user
+     * @param in_authToken {string} -The validated token from the Nintendo SDK (that will be further validated when sent to the BC service)
+     * @param in_forceCreate {boolean} - Should a new profile be created for this user if the account does not exist?
+     * If set to false, you need to handle errors in the case of new players.
+     */
+   UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Wrapper")
+   static UBCWrapperProxy *SmartSwitchAuthenticateNintendo(UBrainCloudWrapper *brainCloudWrapper, const FString &in_accountId,const FString &in_authToken, bool in_forceCreate);
    
   /**
     * Reset Email password - Sends a password reset email to the specified address

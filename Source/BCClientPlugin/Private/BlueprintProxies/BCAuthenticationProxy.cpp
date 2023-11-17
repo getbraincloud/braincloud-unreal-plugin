@@ -167,6 +167,13 @@ UBCAuthenticationProxy *UBCAuthenticationProxy::AuthenticateUltra(UBrainCloudWra
     return Proxy;
 }
 
+UBCAuthenticationProxy* UBCAuthenticationProxy::AuthenticateNintendo(UBrainCloudWrapper* brainCloudWrapper, FString in_accountId, FString in_authToken, bool in_forceCreate)
+{
+    UBCAuthenticationProxy *Proxy = NewObject<UBCAuthenticationProxy>();
+    UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getClient()->getAuthenticationService()->authenticateNintendo(in_accountId, in_authToken, in_forceCreate, Proxy);
+    return Proxy;
+}
+
 UBCAuthenticationProxy *UBCAuthenticationProxy::ResetEmailPassword(UBrainCloudWrapper *brainCloudWrapper, const FString &in_email)
 {
     UBCAuthenticationProxy *Proxy = NewObject<UBCAuthenticationProxy>();
