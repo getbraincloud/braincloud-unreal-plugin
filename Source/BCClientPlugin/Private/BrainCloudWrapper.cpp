@@ -235,7 +235,7 @@ void UBrainCloudWrapper::authenticateNintendo(const FString& in_accountId, const
 {
     _authenticateCallback = in_callback;
     initializeIdentity();
-    _client->getAuthenticationService()->authenticateUltra(in_accountId, in_authToken, in_forceCreate, this);
+    _client->getAuthenticationService()->authenticateNintendo(in_accountId, in_authToken, in_forceCreate, this);
 }
 
 void UBrainCloudWrapper::authenticateHandoff(FString &handoffId, FString &securityToken, bool forceCreate, IServerCallback *callback)
