@@ -237,6 +237,54 @@ class UBCIdentityProxy : public UBCBlueprintCallProxyBase
 	 */
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Identity")
 	static UBCIdentityProxy *DetachUltraIdentity(UBrainCloudWrapper *brainCloudWrapper, const FString &in_ultraUsername, bool in_continueAnon);	
+
+	/**
+	* Attach the user's Nintendo credentials to the current profile.
+	 *
+	 * Service Name - Identity
+	 * Service Operation - Attach
+	 *
+	 * @param in_accountId {string} - The user's Nintendo account id
+	 * @param in_authToken {string} - The user's Nintendo auth token
+	 *
+	 * Errors to watch for:  SWITCHING_PROFILES - this means that the identity you provided
+	 * already points to a different profile.  You will likely want to offer the user the
+	 * choice to *SWITCH* to that profile, or *MERGE* the profiles.
+	 *
+	 * To switch profiles, call ClearSavedProfileID() and call AuthenticateNintendo().
+	 */
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Identity")
+	static UBCIdentityProxy *AttachNintendoIdentity(UBrainCloudWrapper *brainCloudWrapper, const FString &in_accountId,const FString &in_authToken);
+
+	/**
+	 * Merge the profile associated with the provided Nintendo credentials with the
+	 * current profile.
+	 *
+	 * Service Name - Identity
+	 * Service Operation - Merge
+	 *
+	 * @param in_accountId {string} - The user's Nintendo account id
+	 * @param in_authToken {string} - The user's Nintendo auth token
+	 *
+	 */
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Identity")
+	static UBCIdentityProxy *MergeNintendoIdentity(UBrainCloudWrapper *brainCloudWrapper, const FString &in_accountId,const FString &in_authToken);
+	
+	/**
+	 * Detach the Nintendo identity from this profile.
+	 *
+	 * Service Name - Identity
+	 * Service Operation - Detach
+	 *
+	 * @param in_accountId {string} - The user's Nintendo account id
+	 * @param in_continueAnon Proceed even if the profile will revert to anonymous?
+	 *
+	 * Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set continueAnon to false, and
+	 * disconnecting this identity would result in the profile being anonymous (which means that
+	 * the profile wouldn't be retrievable if the user loses their device)
+	 */
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Identity")
+	static UBCIdentityProxy *DetachNintendoIdentity(UBrainCloudWrapper *brainCloudWrapper, const FString &in_accountId, bool in_continueAnon);	
 	
 	/*
 	* Attach the user's Oculus credentials to the current profile.
