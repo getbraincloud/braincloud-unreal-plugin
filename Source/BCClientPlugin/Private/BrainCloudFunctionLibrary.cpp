@@ -4,6 +4,7 @@
 #include "BCClientPluginPrivatePCH.h"
 #include <CoreMinimal.h>
 #include "Misc/ConfigCacheIni.h"
+#include "HAL/PlatformApplicationMisc.h"
 
 FBrainCloudAppDataStruct UBrainCloudFunctionLibrary::GetBCAppData()
 {
@@ -87,6 +88,11 @@ void UBrainCloudFunctionLibrary::SetBCAppData(FBrainCloudAppDataStruct appData)
     GConfig->Flush(false, ConfigPath);
 
     UE_LOG(LogBrainCloud, Warning, TEXT("App Data saved to config file, please restart Unreal Editor for changes to take effect"));
+}
+
+void UBrainCloudFunctionLibrary::CopyToClipboard(const FString& TextString)
+{
+    FPlatformApplicationMisc::ClipboardCopy(*TextString);
 }
 
 bool UBrainCloudFunctionLibrary::ValidateAndExtractURL(const FString& InputURL, FString& OutURL)
