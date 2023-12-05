@@ -284,14 +284,14 @@ UBCWrapperProxy* UBCWrapperProxy::SmartSwitchAuthenticateAdvanced(UBrainCloudWra
 	const FAuthenticationIds& in_ids, bool in_forceCreate, const FString& in_extraJson)
 {
 	UBCWrapperProxy *Proxy = NewObject<UBCWrapperProxy>();
-	GetBrainCloudInstance(brainCloudWrapper)->authenticateAdvanced(in_authenticationType, in_ids, in_forceCreate, in_extraJson, Proxy);
+	GetBrainCloudInstance(brainCloudWrapper)->smartSwitchAuthenticateAdvanced(in_authenticationType, in_ids, in_forceCreate, in_extraJson, Proxy);
 	return Proxy;
 }
 
 UBCWrapperProxy* UBCWrapperProxy::SmartSwitchAuthenticateUltra(UBrainCloudWrapper* brainCloudWrapper, const FString& in_ultraUsername, const FString& in_ultraIdToken, bool in_forceCreate)
 {
 	UBCWrapperProxy *Proxy = NewObject<UBCWrapperProxy>();
-	GetBrainCloudInstance(brainCloudWrapper)->authenticateUltra(in_ultraUsername, in_ultraIdToken, in_forceCreate, Proxy);
+	GetBrainCloudInstance(brainCloudWrapper)->smartSwitchAuthenticateUltra(in_ultraUsername, in_ultraIdToken, in_forceCreate, Proxy);
 	return Proxy;
 }
 

@@ -591,7 +591,7 @@ public:
      * In event the current session was previously an anonymous account, the smart switch will delete that profile.
      * Use this function to keep a clean designflow from anonymous to signed profiles
      * 
-     * Authenticate the user for Ultra.
+     * Authenticate the user for Nintendo.
      *
      * Service Name - authenticationV2
      * Service Operation - AUTHENTICATE

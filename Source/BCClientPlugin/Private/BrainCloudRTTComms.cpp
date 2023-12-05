@@ -392,7 +392,7 @@ void BrainCloudRTTComms::setupWebSocket(const FString &in_url)
 	m_connectedSocket->OnConnectComplete.AddDynamic(m_commsPtr, &UBCRTTCommsProxy::Websocket_OnOpen);
 	m_connectedSocket->OnReceiveData.AddDynamic(m_commsPtr, &UBCRTTCommsProxy::WebSocket_OnMessage);
 
-	m_connectedSocket->SetupSocket(in_url);
+	m_connectedSocket->SetupSocket(in_url, m_client);
 	m_connectedSocket->Connect();
 }
 
