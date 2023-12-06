@@ -5,6 +5,11 @@
 #include <CoreMinimal.h>
 #include "Misc/ConfigCacheIni.h"
 #include "HAL/PlatformApplicationMisc.h"
+#include "Internationalization/Culture.h"
+#include "Internationalization/Internationalization.h"
+#include <iostream>
+#include <Windows.h>
+#include <Engine/Engine.h>
 
 FBrainCloudAppDataStruct UBrainCloudFunctionLibrary::GetBCAppData()
 {
@@ -113,4 +118,26 @@ bool UBrainCloudFunctionLibrary::ValidateAndExtractURL(const FString& InputURL, 
         // URL is not valid
         return false;
     }
+}
+
+FString UBrainCloudFunctionLibrary::GetSystemCountryCode()
+{
+    FString CountryCode = FString();
+#if PLATFORM_IOS
+    CountryCode = FIOSPlatformMisc::GetDefaultLocale();
+#elif PLATFORM_ANDROID
+    CountryCode = FAndroidMisc::GetDefaultLocale();
+#else
+    LCID locale = GetUserDefaultLCID();
+
+    // Get the country code
+    const int bufferSize = 10;  // Adjust as needed
+    TCHAR countryBuffer[bufferSize];
+    if (GetLocaleInfo(locale, LOCALE_SISO3166CTRYNAME, countryBuffer, bufferSize) > 0) {
+        CountryCode = FString(countryBuffer);
+    }
+
+#endif
+
+    return CountryCode;
 }
