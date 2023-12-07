@@ -8,7 +8,12 @@
 #include "Internationalization/Culture.h"
 #include "Internationalization/Internationalization.h"
 #include <iostream>
-#include <Windows.h>
+
+
+#if PLATFORM_WINDOWS
+    #include <Windows.h>
+#endif
+
 #include <Engine/Engine.h>
 
 FBrainCloudAppDataStruct UBrainCloudFunctionLibrary::GetBCAppData()
@@ -127,7 +132,7 @@ FString UBrainCloudFunctionLibrary::GetSystemCountryCode()
     CountryCode = FIOSPlatformMisc::GetDefaultLocale();
 #elif PLATFORM_ANDROID
     CountryCode = FAndroidMisc::GetDefaultLocale();
-#else
+#elif PLATFORM_WINDOWS
     LCID locale = GetUserDefaultLCID();
 
     // Get the country code
