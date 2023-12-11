@@ -141,7 +141,8 @@ FString UBrainCloudFunctionLibrary::GetSystemCountryCode()
     if (GetLocaleInfo(locale, LOCALE_SISO3166CTRYNAME, countryBuffer, bufferSize) > 0) {
         CountryCode = FString(countryBuffer);
     }
-
+#else
+    CountryCode = FInternationalization::Get().GetCurrentLocale()->GetRegion();
 #endif
 
     return CountryCode;
