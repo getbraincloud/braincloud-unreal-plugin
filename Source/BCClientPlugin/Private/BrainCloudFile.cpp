@@ -7,7 +7,11 @@
 #include "ServerCall.h"
 #include "JsonUtil.h"
 #include "BrainCloudComms.h"
+#if ENGINE_MAJOR_VERSION == 5
 #include "HAL/PlatformFileManager.h"
+#else
+#include "HAL/PlatformFilemanager.h"
+#endif
 #include "GenericPlatform/GenericPlatformFile.h"
 #include "Misc/Paths.h"
 
