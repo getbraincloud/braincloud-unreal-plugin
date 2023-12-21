@@ -1,21 +1,22 @@
 #include "RelayWebSocket.h"
 #include "WinWebSocketBase.h"
 #include <ConvertUtilities.h>
+#include "BrainCloudClient.h"
 
 #define MAX_PAYLOAD 1024
 
 
 namespace BrainCloud
 {
-    RelayWebSocket::RelayWebSocket(const FString &host, int port, bool sslEnabled)
+    RelayWebSocket::RelayWebSocket(const FString &host, int port, bool sslEnabled, BrainCloudClient* in_client)
     {
         FString url = (sslEnabled ? "wss://" : "ws://") + host + ":" + FString::FromInt(port);
-
+        m_client = in_client;
         // lazy load
         if (m_connectedSocket == nullptr)
         {
             m_connectedSocket = NewObject<UWinWebSocketBase>();
-            m_connectedSocket->SetupSocket(url);
+            m_connectedSocket->SetupSocket(url, m_client);
 
             m_connectedSocket->mCallbacks = this;
 
@@ -86,7 +87,10 @@ namespace BrainCloud
 
     void RelayWebSocket::OnConnectError(const FString& error)
     {
-        UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket OnConnectError: %s"), *error);
+        if(m_client->isLoggingEnabled())
+        {
+            UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket OnConnectError: %s"), *error);
+        }
         close();
 
         FScopeLock Lock(&m_mutex);
@@ -96,13 +100,21 @@ namespace BrainCloud
 
     void RelayWebSocket::OnClosed()
     {
-        UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket OnClosed"));
+        if(m_client->isLoggingEnabled())
+        {
+            UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket OnClosed"));
+        }
+        
         close();
     }
 
     void RelayWebSocket::OnConnectComplete()
     {
-        UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket OnConnectComplete"));
+        if(m_client->isLoggingEnabled())
+        {
+            UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket OnConnectComplete"));
+        }
+        
         FScopeLock Lock(&m_mutex);
         if (!m_connectedSocket) return;
         m_isSocketConnected = true;

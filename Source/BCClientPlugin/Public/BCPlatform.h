@@ -25,6 +25,7 @@ enum class EBCPlatform : uint8
     PS_VITA UMETA(DisplayName = "PS Vita"),
     TIZEN UMETA(DisplayName = "Tizen"),
     ROKU UMETA(DisplayName = "Roku"),
+    NINTENDO UMETA(DisplayName = "Nintendo"),
     UNKNOWN UMETA(DisplayName = "Unknown")
 };
 

@@ -6,6 +6,7 @@
 #include "Runtime/Online/WebSockets/Public/WebSocketsModule.h"
 #include "WinWebSocketBase.generated.h"
 
+class BrainCloudClient;
 DEFINE_LOG_CATEGORY_STATIC(WinWebSocket, Log, All);
 
 
@@ -31,7 +32,7 @@ class BCCLIENTPLUGIN_API UWinWebSocketBase : public UObject
 public:
 	UWinWebSocketBase();
 
-	void SetupSocket(const FString& url);
+	void SetupSocket(const FString& url, BrainCloudClient* in_client);
 
 	void Connect();
 
@@ -57,7 +58,7 @@ public:
 
 private:
 	FString BytesToString(const void* Data, SIZE_T Size);
-
+	BrainCloudClient *mClient = nullptr;
 	TSharedPtr<IWebSocket> WebSocket;
 	FString ServerUrl;
 	TArray<FString> mSendQueue;

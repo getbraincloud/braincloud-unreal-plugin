@@ -233,6 +233,54 @@ class BCCLIENTPLUGIN_API BrainCloudIdentity
 	 * the profile wouldn't be retrievable if the user loses their device)
 	 */
 	void detachUltraIdentity(const FString &in_ultraUsername, bool in_continueAnon, IServerCallback *in_callback = nullptr);
+
+	/**
+	 * Attach the user's Nintendo credentials to the current profile.
+	 *
+	 * Service Name - Identity
+	 * Service Operation - Attach
+	 *
+	 * @param in_accountId {string} - The user's Nintendo account id
+	 * @param in_authToken {string} - The user's Nintendo auth token
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 * Errors to watch for:  SWITCHING_PROFILES - this means that the Ultra identity you provided
+	 * already points to a different profile.  You will likely want to offer the player the
+	 * choice to *SWITCH* to that profile, or *MERGE* the profiles.
+	 *
+	 * To switch profiles, call ClearSavedProfileID() and call AuthenticateNintendo().
+	 */
+	void attachNintendoIdentity(const FString &in_accountId,const FString &in_authToken, IServerCallback *in_callback = nullptr);
+
+	/**
+	 * Merge the profile associated with the provided Nintendo credentials with the
+	 * current profile.
+	 *
+	 * Service Name - Identity
+	 * Service Operation - Merge
+	 *
+	 * @param in_accountId {string} -The user's Nintendo account id
+	 * @param in_authToken {string} - The user's Nintendo auth token
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 */
+	void mergeNintendoIdentity(const FString &in_accountId, const FString &in_authToken, IServerCallback *in_callback = nullptr);
+
+	/**
+	 * Detach the Nintendo identity from this profile.
+	 *
+	 * Service Name - Identity
+	 * Service Operation - Detach
+	 *
+	 * @param in_accountId {string} - The user's Nintendo account id
+	 * @param in_continueAnon Proceed even if the profile will revert to anonymous?
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 * Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set continueAnon to false, and
+	 * disconnecting this identity would result in the profile being anonymous (which means that
+	 * the profile wouldn't be retrievable if the user loses their device)
+	 */
+	void detachNintendoIdentity(const FString &in_accountId, bool in_continueAnon, IServerCallback *in_callback = nullptr);
 	
 	/*
 	 * Attach the user's Oculus credentials to the current profile.
