@@ -20,6 +20,7 @@
 #include "IRelayCallback.h"
 #include "BCPlatform.h"
 #include "Internationalization/Culture.h"
+#include <BrainCloudFunctionLibrary.h>
 
 // Define all static member variables.
 FString BrainCloudClient::s_brainCloudClientVersion = TEXT("5.1.0");
@@ -126,9 +127,9 @@ void BrainCloudClient::initialize(
 	_appVersion = appVersion;
 
 	if (_language.IsEmpty())
-		_language = FInternationalization::Get().GetCurrentLanguage()->GetTwoLetterISOLanguageName();
+		_language = FInternationalization::Get().GetCurrentCulture()->GetName();
 	if (_country.IsEmpty())
-		_country = FInternationalization::Get().GetCurrentLocale()->GetRegion();
+		_country = UBrainCloudFunctionLibrary::GetSystemCountryCode();
     
     _timezoneOffset = BrainCloudTimeUtils::UTCTimeZoneOffset();
 }
