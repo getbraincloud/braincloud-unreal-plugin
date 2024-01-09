@@ -3,7 +3,6 @@
 #include "BrainCloudFunctionLibrary.h"
 #include "BCClientPluginPrivatePCH.h"
 #include "CoreMinimal.h"
-#include "Engine/Engine.h"
 #include "Misc/ConfigCacheIni.h"
 #include "Runtime/Launch/Resources/Version.h"
 #include "HAL/PlatformApplicationMisc.h"
@@ -13,10 +12,10 @@
 
 
 #if PLATFORM_WINDOWS
-    #include <Windows.h>
+#include "Runtime/Core/Public/Windows/AllowWindowsPlatformTypes.h"
+#include "windows.h"
+#include "Runtime/Core/Public/Windows/HideWindowsPlatformTypes.h"
 #endif
-
-#include <Engine/Engine.h>
 
 FBrainCloudAppDataStruct UBrainCloudFunctionLibrary::GetBCAppData()
 {
