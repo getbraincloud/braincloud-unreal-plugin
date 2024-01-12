@@ -56,6 +56,8 @@ class UBCPlayerStateProxy : public UBCBlueprintCallProxyBase
     *
     * Service Name - PlayerState
     * Service Operation - Logout
+    * 
+    * (Note: Recommend using the Wrapper logout function instead)
     */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Player State")
     static UBCPlayerStateProxy *Logout(UBrainCloudWrapper *brainCloudWrapper);

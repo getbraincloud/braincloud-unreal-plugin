@@ -851,6 +851,7 @@ class BCCLIENTPLUGIN_API UBrainCloudWrapper : public UObject, public IServerCall
 	*/
     void reconnect(IServerCallback *callback = nullptr);
 
+    void logout(bool forgetUser, IServerCallback* in_callback);
     /**
      * Run callbacks, to be called once per frame from your main thread
      */

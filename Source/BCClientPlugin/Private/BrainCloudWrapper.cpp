@@ -408,6 +408,14 @@ void UBrainCloudWrapper::reconnect(IServerCallback *callback)
     authenticateAnonymous(callback, false);
 }
 
+void UBrainCloudWrapper::logout(bool forgetUser, IServerCallback* in_callback)
+{
+    if (forgetUser)
+        resetStoredProfileId();
+
+    getPlayerStateService()->logout(in_callback);
+}
+
 void UBrainCloudWrapper::runCallbacks()
 {
     _client->runCallbacks();
