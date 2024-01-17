@@ -26,11 +26,6 @@
       "LoadingPhase": "PreDefault"
     },
     {
-      "Name": "OnlineSubsystemBrainCloud",
-      "Type": "Runtime",
-      "LoadingPhase": "PreDefault"
-    },
-    {
       "Name": "BCWidget",
       "Type": "EditorNoCommandlet",
       "LoadingPhase": "PreDefault",
