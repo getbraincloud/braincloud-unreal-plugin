@@ -604,6 +604,19 @@ public:
    UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Wrapper")
    static UBCWrapperProxy *SmartSwitchAuthenticateNintendo(UBrainCloudWrapper *brainCloudWrapper, const FString &in_accountId,const FString &in_authToken, bool in_forceCreate);
    
+
+   /**
+     * Logs user out of server with the option to reset stored profile ID
+     *
+     * Service Name - PlayerState
+     * Service Operation - Logout
+     *
+     * @param forgetUser whether or not to reset the stored profile ID 
+     * @param callback The method to be invoked when the server response is received
+     */
+   UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Wrapper")
+   static UBCWrapperProxy *Logout(UBrainCloudWrapper* brainCloudWrapper, bool forgetUser);
+
   /**
     * Reset Email password - Sends a password reset email to the specified address
     *
