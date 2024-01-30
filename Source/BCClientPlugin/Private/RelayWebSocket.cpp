@@ -104,8 +104,6 @@ namespace BrainCloud
         {
             UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket OnClosed"));
         }
-        
-        //close();
     }
 
     void RelayWebSocket::OnConnectComplete()
