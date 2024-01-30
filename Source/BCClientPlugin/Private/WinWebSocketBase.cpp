@@ -8,14 +8,16 @@ UWinWebSocketBase::UWinWebSocketBase()
 	FModuleManager::Get().LoadModuleChecked(TEXT("WebSockets"));
 }
 
-void UWinWebSocketBase::SetupSocket(const FString& url, BrainCloudClient* in_client)
+void UWinWebSocketBase::SetupSocket(const FString& url, BrainCloudClient* in_client, bool debugLoggingEnabled)
 {
+	mIsLoggingEnabled = debugLoggingEnabled;
+
 	if(mClient == nullptr && in_client != nullptr)
 	{
 		mClient = in_client;
 	}
 	if (url.IsEmpty()) {
-		if(mClient->isLoggingEnabled())
+		if(mIsLoggingEnabled)
 		{
 			UE_LOG(WinWebSocket, Warning, TEXT("[WinWebSocket] URL is empty"));
 		}
@@ -44,7 +46,7 @@ void UWinWebSocketBase::SetupSocket(const FString& url, BrainCloudClient* in_cli
 
 		WebSocket->OnConnected().AddLambda([this]()
 			{
-				if(mClient->isLoggingEnabled())
+				if(mIsLoggingEnabled)
 				{
 					UE_LOG(WinWebSocket, Log, TEXT("[WinWebSocket] Connected"));
 				}
@@ -54,7 +56,7 @@ void UWinWebSocketBase::SetupSocket(const FString& url, BrainCloudClient* in_cli
 
 		WebSocket->OnClosed().AddLambda([this](uint32 StatusCode, const FString& Reason, bool bWasClean)
 			{
-				if(mClient->isLoggingEnabled())
+				if(mIsLoggingEnabled)
 				{
 					UE_LOG(WinWebSocket, Log, TEXT("[WinWebSocket] Closed - StatusCode: %d Reason: %s WasClean: %s"), StatusCode, *Reason, bWasClean ? TEXT("true") : TEXT("false"));
 				}
@@ -64,7 +66,7 @@ void UWinWebSocketBase::SetupSocket(const FString& url, BrainCloudClient* in_cli
 
 		WebSocket->OnConnectionError().AddLambda([this](const FString& reason)
 			{
-				if(mClient->isLoggingEnabled())
+				if(mIsLoggingEnabled)
 				{
 					UE_LOG(WinWebSocket, Warning, TEXT("[WinWebSocket] Connection error: %s"), *reason);
 				}
@@ -74,7 +76,7 @@ void UWinWebSocketBase::SetupSocket(const FString& url, BrainCloudClient* in_cli
 
 	}
 	else {
-		if(mClient->isLoggingEnabled())
+		if(mIsLoggingEnabled)
 		{
 			UE_LOG(WinWebSocket, Warning, TEXT("[WinWebSocket] Couldn't setup"));
 		}
@@ -89,7 +91,7 @@ void UWinWebSocketBase::Connect()
 	if (WebSocket.IsValid() && !WebSocket->IsConnected())
 	{
 		WebSocket->Connect();
-		if(mClient->isLoggingEnabled())
+		if(mIsLoggingEnabled)
 		{
 			UE_LOG(LogTemp, Log, TEXT("[WebSocket] Connecting..."));
 		}
