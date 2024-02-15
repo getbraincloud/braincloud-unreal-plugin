@@ -35,6 +35,11 @@ then right click on your .uproject and generate visual studio files.
 10. Restart Unreal Editor one more time. This ensures you will then be able to access the brainCloud Utility Widget which allows you to manage your projects brainCloud app settings (such as the app ID, secret, etc.)
 11.  Installation complete!
 
+Note: If you're using the plugin for RTT or Relay services and building to Mac OS platform, you will need to do the following steps to ensure the connection gets established. 
+    1. Open up terminal
+    2. Execute this command: rsync -a "{UE_INSTALL_PATH}/Engine/Content/Certificates/ThirdParty/cacert.pem" {PROJECT_PATH}/Content/Certificates/
+    3. Open the project and go to Project Settings -> Packaging, look for "Advanced" near the bottom of Packaging section of the page and open it up.
+    4. Add a element to "Additional Non-Asset Directories To Copy" and in the value field input "Certificates"
 
 ### Git Submodule Installation
 BCClient plugin can be installed as a submodule of your git project.
