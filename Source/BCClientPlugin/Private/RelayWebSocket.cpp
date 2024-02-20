@@ -16,7 +16,7 @@ namespace BrainCloud
         if (m_connectedSocket == nullptr)
         {
             m_connectedSocket = NewObject<UWinWebSocketBase>();
-            m_connectedSocket->SetupSocket(url, m_client);
+            m_connectedSocket->SetupSocket(url, m_client, m_client->isLoggingEnabled());
 
             m_connectedSocket->mCallbacks = this;
 
@@ -104,8 +104,6 @@ namespace BrainCloud
         {
             UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket OnClosed"));
         }
-        
-        close();
     }
 
     void RelayWebSocket::OnConnectComplete()
