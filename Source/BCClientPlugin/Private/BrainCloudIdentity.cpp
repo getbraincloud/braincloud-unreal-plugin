@@ -131,6 +131,24 @@ void BrainCloudIdentity::detachUltraIdentity(const FString& in_ultraUsername, bo
 	detachIdentity(in_ultraUsername, EBCAuthType::Ultra, in_continueAnon, in_callback);
 }
 
+void BrainCloudIdentity::attachNintendoIdentity(const FString& in_accountId, const FString& in_authToken,
+	IServerCallback* in_callback)
+{
+	attachIdentity(in_accountId, in_authToken, EBCAuthType::Nintendo, in_callback);
+}
+
+void BrainCloudIdentity::mergeNintendoIdentity(const FString& in_accountId, const FString& in_authToken,
+	IServerCallback* in_callback)
+{
+	mergeIdentity(in_accountId, in_authToken, EBCAuthType::Nintendo, in_callback);
+}
+
+void BrainCloudIdentity::detachNintendoIdentity(const FString& in_accountId, bool in_continueAnon,
+	IServerCallback* in_callback)
+{
+	detachIdentity(in_accountId, EBCAuthType::Nintendo, in_continueAnon, in_callback);
+}
+
 void BrainCloudIdentity::attachOculusIdentity(const FString &oculusId, const FString &oculusNonce, IServerCallback *callback)
 {
 	attachIdentity(oculusId, oculusNonce, EBCAuthType::Oculus, callback);

@@ -11,6 +11,7 @@ UCLASS()
 class BCCLIENTPLUGIN_API UBrainCloudFunctionLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
+public:
 
 	UFUNCTION(BlueprintCallable, Category = "BrainCloud Utility")
 	static FBrainCloudAppDataStruct GetBCAppData();
@@ -18,6 +19,12 @@ class BCCLIENTPLUGIN_API UBrainCloudFunctionLibrary : public UBlueprintFunctionL
 	UFUNCTION(BlueprintCallable, Category = "BrainCloud Utility")
 	static void SetBCAppData(FBrainCloudAppDataStruct appData);
 
-	UFUNCTION(BlueprintCallable, Category = "BrainCloud Utility")
+    UFUNCTION(BlueprintCallable, Category = "BrainCloud Utility")
+    static void CopyToClipboard(const FString & TextString);
+
+    UFUNCTION(BlueprintCallable, Category = "BrainCloud Utility")
 	static bool ValidateAndExtractURL(const FString& InputURL, FString& OutURL);
+
+	UFUNCTION(BlueprintCallable, Category = "System Information")
+	static FString GetSystemCountryCode();
 };

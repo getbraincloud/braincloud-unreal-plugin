@@ -4,8 +4,8 @@
 #if PLATFORM_WINDOWS
 #include "Runtime/Core/Public/Windows/AllowWindowsPlatformTypes.h"
 #include "windows.h" // any native windows header
+#include <winsock2.h>
 #include "Runtime/Core/Public/Windows/HideWindowsPlatformTypes.h"
-#include <WinSock2.h>
 #else
 #include <netinet/in.h>
 #endif

@@ -44,6 +44,7 @@ public class BCClientPlugin : ModuleRules
                 {
                     "Core",
                     "CoreUObject",
+                    "ApplicationCore",
                     "Engine",
                     "Sockets",
                     "Networking",

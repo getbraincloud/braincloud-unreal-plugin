@@ -341,6 +341,19 @@ class BCCLIENTPLUGIN_API UBrainCloudWrapper : public UObject, public IServerCall
   */
  void authenticateUltra(const FString& in_ultraUsername, const FString& in_ultraIdToken, bool in_forceCreate, IServerCallback * in_callback = NULL);
  
+ /**
+  * Authenticate the user using their Nintendo account id and an auth token
+  *
+  * Service Name - Authenticate
+  * Service Operation - Authenticate
+  *
+  * @param in_accountId The user's Nintendo account id
+  * @param in_authToken The user's Nintendo auth token
+  * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
+  * @param in_callback The method to be invoked when the server response is received
+  */
+ void authenticateNintendo(const FString &in_accountId,const FString &in_authToken, bool in_forceCreate, IServerCallback * in_callback = NULL);
+
   /*
     * Authenticate the user using a handoffId and a token 
     *
@@ -637,7 +650,24 @@ class BCCLIENTPLUGIN_API UBrainCloudWrapper : public UObject, public IServerCall
        * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
        * @param in_callback The method to be invoked when the server response is received
        */
-     void smartSwitchAuthenticateUltra(const FString &in_ultraUsername,const FString &in_ultraIdToken, bool in_forceCreate, IServerCallback * in_callback = NULL);
+    void smartSwitchAuthenticateUltra(const FString &in_ultraUsername,const FString &in_ultraIdToken, bool in_forceCreate, IServerCallback * in_callback = NULL);
+
+      /**
+       * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
+       * In event the current session was previously an anonymous account, the smart switch will delete that profile.
+       * Use this function to keep a clean design flow from anonymous to signed profiles
+       *
+       * Authenticate the user for Nintendo.
+       *
+       * Service Name - Authenticate
+       * Service Operation - Authenticate
+       *
+       * @param in_accountId  The user's Nintendo account id
+       * @param in_authToken The user's Nintendo auth token
+       * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
+       * @param in_callback The method to be invoked when the server response is received
+       */
+    void smartSwitchAuthenticateNintendo(const FString &in_accountId,const FString &in_authToken, bool in_forceCreate, IServerCallback * in_callback = NULL);
  
     /**
     * Reset Email password - Sends a password reset email to the specified address
@@ -821,6 +851,7 @@ class BCCLIENTPLUGIN_API UBrainCloudWrapper : public UObject, public IServerCall
 	*/
     void reconnect(IServerCallback *callback = nullptr);
 
+    void logout(bool forgetUser, IServerCallback* in_callback);
     /**
      * Run callbacks, to be called once per frame from your main thread
      */

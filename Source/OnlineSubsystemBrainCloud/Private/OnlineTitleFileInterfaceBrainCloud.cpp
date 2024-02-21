@@ -8,7 +8,11 @@
 
 #include "OnlineSubsystemBrainCloud.h"
 #include "Misc/FileHelper.h"
+#if ENGINE_MAJOR_VERSION == 5
 #include "HAL/PlatformFileManager.h"
+#else
+#include "HAL/PlatformFilemanager.h"
+#endif
 #include "GenericPlatform/GenericPlatformFile.h"
 
 #include "AssignableServerCallback.h"

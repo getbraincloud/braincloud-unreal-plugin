@@ -1,15 +1,26 @@
 #include "WinWebSocketBase.h"
 #include <ConvertUtilities.h>
 
+#include "BrainCloudClient.h"
+
 UWinWebSocketBase::UWinWebSocketBase()
 {
 	FModuleManager::Get().LoadModuleChecked(TEXT("WebSockets"));
 }
 
-void UWinWebSocketBase::SetupSocket(const FString& url)
+void UWinWebSocketBase::SetupSocket(const FString& url, BrainCloudClient* in_client, bool debugLoggingEnabled)
 {
+	mIsLoggingEnabled = debugLoggingEnabled;
+
+	if(mClient == nullptr && in_client != nullptr)
+	{
+		mClient = in_client;
+	}
 	if (url.IsEmpty()) {
-		UE_LOG(WinWebSocket, Warning, TEXT("[WinWebSocket] URL is empty"));
+		if(mIsLoggingEnabled)
+		{
+			UE_LOG(WinWebSocket, Warning, TEXT("[WinWebSocket] URL is empty"));
+		}
 		OnConnectError.Broadcast(TEXT("URL is empty"));
 		return;
 	}
@@ -35,28 +46,40 @@ void UWinWebSocketBase::SetupSocket(const FString& url)
 
 		WebSocket->OnConnected().AddLambda([this]()
 			{
-				UE_LOG(WinWebSocket, Log, TEXT("[WinWebSocket] Connected"));
+				if(mIsLoggingEnabled)
+				{
+					UE_LOG(WinWebSocket, Log, TEXT("[WinWebSocket] Connected"));
+				}
 				if (mCallbacks) mCallbacks->OnConnectComplete();
 				if (OnConnectComplete.IsBound()) OnConnectComplete.Broadcast();
 			});
 
 		WebSocket->OnClosed().AddLambda([this](uint32 StatusCode, const FString& Reason, bool bWasClean)
 			{
-				UE_LOG(WinWebSocket, Log, TEXT("[WinWebSocket] Closed - StatusCode: %d Reason: %s WasClean: %s"), StatusCode, *Reason, bWasClean ? TEXT("true") : TEXT("false"));
+				if(mIsLoggingEnabled)
+				{
+					UE_LOG(WinWebSocket, Log, TEXT("[WinWebSocket] Closed - StatusCode: %d Reason: %s WasClean: %s"), StatusCode, *Reason, bWasClean ? TEXT("true") : TEXT("false"));
+				}
 				if (mCallbacks) mCallbacks->OnClosed();
 				if (OnClosed.IsBound()) OnClosed.Broadcast();
 			});
 
 		WebSocket->OnConnectionError().AddLambda([this](const FString& reason)
 			{
-				UE_LOG(WinWebSocket, Warning, TEXT("[WinWebSocket] Connection error: %s"), *reason);
+				if(mIsLoggingEnabled)
+				{
+					UE_LOG(WinWebSocket, Warning, TEXT("[WinWebSocket] Connection error: %s"), *reason);
+				}
 				if (mCallbacks) mCallbacks->OnConnectError(reason);
 				if (OnConnectError.IsBound()) OnConnectError.Broadcast(reason);
 			});
 
 	}
 	else {
-		UE_LOG(WinWebSocket, Warning, TEXT("[WinWebSocket] Couldn't setup"));
+		if(mIsLoggingEnabled)
+		{
+			UE_LOG(WinWebSocket, Warning, TEXT("[WinWebSocket] Couldn't setup"));
+		}
 		OnConnectError.Broadcast(TEXT("WebSocket couldn't setup"));
 	}
 
@@ -68,7 +91,10 @@ void UWinWebSocketBase::Connect()
 	if (WebSocket.IsValid() && !WebSocket->IsConnected())
 	{
 		WebSocket->Connect();
-		UE_LOG(LogTemp, Log, TEXT("[WebSocket] Connecting..."));
+		if(mIsLoggingEnabled)
+		{
+			UE_LOG(LogTemp, Log, TEXT("[WebSocket] Connecting..."));
+		}
 	}
 }
 

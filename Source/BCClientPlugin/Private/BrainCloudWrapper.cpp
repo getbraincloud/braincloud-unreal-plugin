@@ -230,6 +230,14 @@ void UBrainCloudWrapper::authenticateUltra(const FString& in_ultraUsername, cons
     _client->getAuthenticationService()->authenticateUltra(in_ultraUsername, in_ultraIdToken, in_forceCreate, this);
 }
 
+void UBrainCloudWrapper::authenticateNintendo(const FString& in_accountId, const FString& in_authToken,
+    bool in_forceCreate, IServerCallback* in_callback)
+{
+    _authenticateCallback = in_callback;
+    initializeIdentity();
+    _client->getAuthenticationService()->authenticateNintendo(in_accountId, in_authToken, in_forceCreate, this);
+}
+
 void UBrainCloudWrapper::authenticateHandoff(FString &handoffId, FString &securityToken, bool forceCreate, IServerCallback *callback)
 {
     _authenticateCallback = callback;
@@ -336,6 +344,12 @@ void UBrainCloudWrapper::smartSwitchAuthenticateUltra(const FString& in_ultraUse
     getIdentitiesCallback(smartCallback);
 }
 
+void UBrainCloudWrapper::smartSwitchAuthenticateNintendo(const FString& in_accountId, const FString& in_authToken, bool in_forceCreate, IServerCallback* in_callback)
+{
+    SmartSwitchAuthenticateCallback* smartCallback = new SmartSwitchAuthenticateCallback(this, EBCAuthType::Nintendo, in_accountId, in_authToken, in_forceCreate, in_callback);
+    getIdentitiesCallback(smartCallback);
+}
+
 void UBrainCloudWrapper::getIdentitiesCallback(IServerCallback *success)
 {
     BCIdentityCallback *identityCallback = new BCIdentityCallback(this, success);
@@ -392,6 +406,14 @@ void UBrainCloudWrapper::resetUniversalIdPasswordAdvancedWithExpiry(const FStrin
 void UBrainCloudWrapper::reconnect(IServerCallback *callback)
 {
     authenticateAnonymous(callback, false);
+}
+
+void UBrainCloudWrapper::logout(bool forgetUser, IServerCallback* in_callback)
+{
+    if (forgetUser)
+        resetStoredProfileId();
+
+    getPlayerStateService()->logout(in_callback);
 }
 
 void UBrainCloudWrapper::runCallbacks()
