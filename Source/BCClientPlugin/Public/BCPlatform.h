@@ -1,6 +1,7 @@
 // Copyright 2018 bitHeads, Inc. All Rights Reserved.
 
 #pragma once
+#include "UObject/Class.h"
 
 UENUM(BlueprintType)
 enum class EBCPlatform : uint8
