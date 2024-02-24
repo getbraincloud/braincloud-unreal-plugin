@@ -8,7 +8,6 @@
 #include "BrainCloudComms.h"
 #include "BrainCloudRTTComms.h"
 #include "BrainCloudRelayComms.h"
-#include "BrainCloudFunctionLibrary.h"
 #include "ServerCall.h"
 #include "JsonUtil.h"
 #include "IServerCallback.h"
