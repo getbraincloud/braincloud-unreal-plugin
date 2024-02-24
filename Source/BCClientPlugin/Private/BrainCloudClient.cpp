@@ -8,6 +8,7 @@
 #include "BrainCloudComms.h"
 #include "BrainCloudRTTComms.h"
 #include "BrainCloudRelayComms.h"
+#include "BrainCloudFunctionLibrary.h"
 #include "ServerCall.h"
 #include "JsonUtil.h"
 #include "IServerCallback.h"
@@ -20,7 +21,6 @@
 #include "IRelayCallback.h"
 #include "BCPlatform.h"
 #include "Internationalization/Culture.h"
-#include <BrainCloudFunctionLibrary.h>
 
 // Define all static member variables.
 FString BrainCloudClient::s_brainCloudClientVersion = TEXT("5.2.0");
