@@ -7,6 +7,7 @@
 #include "Delegates/Delegate.h"
 //#include "Http.h"
 #include "Containers/Map.h"
+#include "Containers/List.h"
 
 #include "Dom/JsonObject.h"
 #include "Serialization/JsonSerializer.h"
