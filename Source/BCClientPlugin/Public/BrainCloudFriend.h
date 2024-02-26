@@ -3,6 +3,7 @@
 #pragma once
 
 #include "BCAuthType.h"
+#include "BrainCloudFriend.generated.h"
 
 class BrainCloudClient;
 class IServerCallback;

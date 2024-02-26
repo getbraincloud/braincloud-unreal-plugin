@@ -20,10 +20,9 @@
 #include "IRelayCallback.h"
 #include "BCPlatform.h"
 #include "Internationalization/Culture.h"
-#include <BrainCloudFunctionLibrary.h>
 
 // Define all static member variables.
-FString BrainCloudClient::s_brainCloudClientVersion = TEXT("5.2.0");
+FString BrainCloudClient::s_brainCloudClientVersion = TEXT("5.2.1");
 
 ////////////////////////////////////////////////////
 // (De)Constructors
