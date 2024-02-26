@@ -49,6 +49,7 @@
 #include "BrainCloudUserItems.h"
 #include "BrainCloudVirtualCurrency.h"
 #include "Kismet/GameplayStatics.h"
+#include "BrainCloudClient.generated.h"
 
 class BrainCloudComms;
 class BrainCloudRTTComms;

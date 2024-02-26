@@ -5,7 +5,7 @@
 class BrainCloudClient;
 class IServerCallback;
 
-// defined in Leaderboard
+// defined in Leaderboard, beware name conflict in Experimental Plugin Virtual Camera
 enum class ESortOrder : uint8;
 
 
