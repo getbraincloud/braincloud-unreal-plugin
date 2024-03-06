@@ -29,7 +29,7 @@ namespace BrainCloud
     class RelayWebSocket : public IRelaySocket, public IWinWebSocketBaseCallbacks
     {
     public:
-        RelayWebSocket(const FString &host, int port, bool sslEnabled, BrainCloudClient* in_client);
+        RelayWebSocket(const FString &host, int port, bool sslEnabled, BrainCloudClient* in_client, bool loggingEnabled);
         virtual ~RelayWebSocket();
 
         bool isConnected() override;
@@ -60,5 +60,6 @@ namespace BrainCloud
         TArray<TArray<uint8>> m_sendPacketQueue;
         TArray<uint8> m_currentPacket;
         TArray<uint8> m_sendPacket;
+        bool mIsLoggingEnabled;
     };
 };

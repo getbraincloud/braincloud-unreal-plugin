@@ -228,7 +228,7 @@ void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, cons
     {
         case BCRelayConnectionType::WEBSOCKET:
         {
-            m_pSocket = new BrainCloud::RelayWebSocket(host, port, false, m_client);
+            m_pSocket = new BrainCloud::RelayWebSocket(host, port, false, m_client, m_client->isLoggingEnabled());
             m_lastConnectResendTime = FPlatformTime::Seconds();
             m_isSocketConnected = true;
             send(CL2RS_CONNECT, buildConnectionRequest());

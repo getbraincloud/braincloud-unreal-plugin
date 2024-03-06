@@ -8,10 +8,11 @@
 
 namespace BrainCloud
 {
-    RelayWebSocket::RelayWebSocket(const FString &host, int port, bool sslEnabled, BrainCloudClient* in_client)
+    RelayWebSocket::RelayWebSocket(const FString &host, int port, bool sslEnabled, BrainCloudClient* in_client, bool loggingEnabled)
     {
         FString url = (sslEnabled ? "wss://" : "ws://") + host + ":" + FString::FromInt(port);
         m_client = in_client;
+        mIsLoggingEnabled = loggingEnabled;
         // lazy load
         if (m_connectedSocket == nullptr)
         {
@@ -87,7 +88,7 @@ namespace BrainCloud
 
     void RelayWebSocket::OnConnectError(const FString& error)
     {
-        if(m_client->isLoggingEnabled())
+        if(mIsLoggingEnabled)
         {
             UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket OnConnectError: %s"), *error);
         }
@@ -100,7 +101,7 @@ namespace BrainCloud
 
     void RelayWebSocket::OnClosed()
     {
-        if(m_client->isLoggingEnabled())
+        if(mIsLoggingEnabled)
         {
             UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket OnClosed"));
         }
@@ -112,7 +113,7 @@ namespace BrainCloud
 
     void RelayWebSocket::OnConnectComplete()
     {
-        if(m_client->isLoggingEnabled())
+        if(mIsLoggingEnabled)
         {
             UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RelayWebSocket OnConnectComplete"));
         }
