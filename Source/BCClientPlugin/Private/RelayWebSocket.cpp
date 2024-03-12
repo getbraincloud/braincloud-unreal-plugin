@@ -109,6 +109,9 @@ namespace BrainCloud
         m_isSocketConnected = false;
         m_isValid = false;
         m_packetQueue.Empty(0);
+
+        m_connectedSocket->ConditionalBeginDestroy();
+        m_connectedSocket = nullptr;
     }
 
     void RelayWebSocket::OnConnectComplete()
@@ -132,6 +135,8 @@ namespace BrainCloud
 
     void RelayWebSocket::update()
     {
+        if (!m_connectedSocket) return;
+
         double now = FPlatformTime::Seconds();
 
         if (m_connectedSocket->IsConnected()) {
