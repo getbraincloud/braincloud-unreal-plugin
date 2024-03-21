@@ -24,17 +24,22 @@ Package | Description
 ## Installation
 1.  Open your Unreal Project's root folder (where the *.uproject file is)
 2.  Open the Plugins folder, or create it if it does not exist
-3.  Copy the BCClient folder into the Plugins folder
-4.  If your project is NOT Blueprint only, be sure to regenerate your code project files
+3.  From the downloaded release .zip file, copy the `braincloud-unreal-plugin-VersionNumber` folder into your projects Plugins folder, and rename it to `BCClient` then restart your Unreal Editor if it was open during this process.
+4.  If your project has source code, be sure to regenerate your code project files
 5.  Navigate to Edit -> Plugins
 6.  Search for braincloud and enable plugin
 7.  Restart Unreal Editor
-8.  A dialog will pop up saying you're missing 3 modules, click yes to rebuild.
+8.  A dialog will pop up saying you're missing some modules, click yes to rebuild.
 9.  Or, rebuild manually by deleting Intermediate folder, Binaries folder and .sln file 
 then right click on your .uproject and generate visual studio files.
 10. Restart Unreal Editor one more time. This ensures you will then be able to access the brainCloud Utility Widget which allows you to manage your projects brainCloud app settings (such as the app ID, secret, etc.)
 11.  Installation complete!
 
+Note: If you're using the plugin for RTT or Relay services and building to Mac OS platform, you will need to do the following steps to ensure the connection gets established. 
+    1. Open up terminal
+    2. Execute this command: rsync -a "{UE_INSTALL_PATH}/Engine/Content/Certificates/ThirdParty/cacert.pem" {PROJECT_PATH}/Content/Certificates/
+    3. Open the project and go to Project Settings -> Packaging, look for "Advanced" near the bottom of Packaging section of the page and open it up.
+    4. Add a element to "Additional Non-Asset Directories To Copy" and in the value field input "Certificates"
 
 ### Git Submodule Installation
 BCClient plugin can be installed as a submodule of your git project.

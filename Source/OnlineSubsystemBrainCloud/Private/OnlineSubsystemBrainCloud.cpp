@@ -196,17 +196,21 @@ bool FOnlineSubsystemBrainCloud::Init()
 	UE_LOG_ONLINE(Display, TEXT("FOnlineSubsystemBrainCloud::Init()"));
 	const bool bBrainCloudInit = true;
 
-	_configPath = FPaths::SourceConfigDir();
-	_configPath += TEXT("BrainCloudConfig.ini");
+    _configPath = FPaths::ProjectConfigDir() + TEXT("BrainCloudConfig.ini");
 
-	if (FPaths::FileExists(_configPath))
-	{
-		FConfigSection *Configs = GConfig->GetSectionPrivate(TEXT("BrainCloud.Client"), false, true, _configPath);
-		if (Configs)
-		{
+    if (GConfig)
+    {
+        FConfigSection* Configs = GConfig->GetSectionPrivate(TEXT("BrainCloud.Client"), false, true, _configPath);
+
+#if ENGINE_MAJOR_VERSION == 5
+        _configPath = FConfigCacheIni::NormalizeConfigIniPath(_configPath);
+#endif
+        if (Configs)
+        {
 // Unreal Engine Version is >= 4.12 OR in Unreal Engine 5
 #if (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 12) || ENGINE_MAJOR_VERSION == 5
 			FString test = Configs->Find(TEXT("ServerURL"))->GetValue();
+            UE_LOG_ONLINE(Display, TEXT("Online Subsystem Initializing for Server:  %s"), *test);
 			_clientPtr->initialize(
 				Configs->Find(TEXT("ServerURL"))->GetValue(),
 				Configs->Find(TEXT("Secret"))->GetValue(),
@@ -214,6 +218,7 @@ bool FOnlineSubsystemBrainCloud::Init()
 				Configs->Find(TEXT("Version"))->GetValue());
 #else
 			FString test = *Configs->Find(TEXT("ServerURL"));
+            UE_LOG_ONLINE(Display, TEXT("Online Subsystem Initializing for Server:  %s"), *test);
 			_clientPtr->initialize(
 				*Configs->Find(TEXT("ServerURL")),
 				*Configs->Find(TEXT("Secret")),

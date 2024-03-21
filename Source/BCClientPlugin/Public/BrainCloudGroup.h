@@ -1,6 +1,7 @@
 // Copyright 2018 bitHeads, Inc. All Rights Reserved.
 
 #pragma once
+#include "BrainCloudGroup.generated.h"
 
 UENUM(BlueprintType)
 enum class ERole : uint8

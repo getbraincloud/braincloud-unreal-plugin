@@ -4,49 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
-#include "BrainCloudBlockchain.h"
-#include "UObject/NoExportTypes.h"
+
 #include "IServerCallback.h"
 
 class BrainCloudClient;
 #include "BrainCloudClient.h"
-#include "BrainCloudAuthentication.h"
-#include "BrainCloudLeaderboard.h"
-#include "BrainCloudPlayerState.h"
-#include "BrainCloudGamification.h"
-#include "BrainCloudGlobalEntity.h"
-#include "BrainCloudGlobalStatistics.h"
-#include "BrainCloudEntity.h"
-#include "BrainCloudPlayerStatistics.h"
-#include "BrainCloudTime.h"
-#include "BrainCloudPlayerStatisticsEvent.h"
-#include "BrainCloudIdentity.h"
-#include "BrainCloudItemCatalog.h"
-#include "BrainCloudUserItems.h"
-#include "BrainCloudEvent.h"
-#include "BrainCloudS3Handling.h"
-#include "BrainCloudScript.h"
-#include "BrainCloudAsyncMatch.h"
-#include "BrainCloudFriend.h"
-#include "BrainCloudGlobalApp.h"
-#include "BrainCloudMatchmaking.h"
-#include "BrainCloudOneWayMatch.h"
-#include "BrainCloudPlaybackStream.h"
-#include "BrainCloudPushNotification.h"
-#include "BrainCloudRedemptionCode.h"
-#include "BrainCloudDataStream.h"
-#include "BrainCloudProfanity.h"
-#include "BrainCloudFile.h"
-#include "BrainCloudGroup.h"
-#include "BrainCloudMail.h"
-#include "BrainCloudTournament.h"
-#include "BrainCloudGlobalFile.h"
-#include "BrainCloudCustomEntity.h"
-#include "BrainCloudPresence.h"
-#include "BrainCloudVirtualCurrency.h"
-#include "BrainCloudAppStore.h"
-#include "BrainCloudRelay.h"
-#include "BrainCloudTimeUtils.h"
+
 #include "BrainCloudWrapper.generated.h"
 
 class ServiceName;
@@ -851,6 +814,7 @@ class BCCLIENTPLUGIN_API UBrainCloudWrapper : public UObject, public IServerCall
 	*/
     void reconnect(IServerCallback *callback = nullptr);
 
+    void logout(bool forgetUser, IServerCallback* in_callback);
     /**
      * Run callbacks, to be called once per frame from your main thread
      */

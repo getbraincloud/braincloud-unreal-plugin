@@ -302,6 +302,13 @@ UBCWrapperProxy* UBCWrapperProxy::SmartSwitchAuthenticateNintendo(UBrainCloudWra
 	return Proxy;
 }
 
+UBCWrapperProxy* UBCWrapperProxy::Logout(UBrainCloudWrapper* brainCloudWrapper, bool forgetUser)
+{
+	UBCWrapperProxy* Proxy = NewObject<UBCWrapperProxy>();
+	GetBrainCloudInstance(brainCloudWrapper)->logout(forgetUser, Proxy);
+	return Proxy;
+}
+
 UBCWrapperProxy *UBCWrapperProxy::ResetEmailPassword(UBrainCloudWrapper *brainCloudWrapper, const FString &in_email)
 {
 	UBCWrapperProxy *Proxy = NewObject<UBCWrapperProxy>();
