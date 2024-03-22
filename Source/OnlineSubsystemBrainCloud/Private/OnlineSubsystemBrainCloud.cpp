@@ -200,7 +200,7 @@ bool FOnlineSubsystemBrainCloud::Init()
 
     if (GConfig)
     {
-        FConfigSection* Configs = GConfig->GetSectionPrivate(TEXT("BrainCloud.Client"), false, true, _configPath);
+        const FConfigSection* Configs = GConfig->GetSection(TEXT("BrainCloud.Client"), false, _configPath);
 
 #if ENGINE_MAJOR_VERSION == 5
         _configPath = FConfigCacheIni::NormalizeConfigIniPath(_configPath);

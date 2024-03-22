@@ -25,7 +25,7 @@ void FBCWidgetModule::StartupModule()
 #endif
 
     if (GConfig) {
-        FConfigSection* ConfigSection = GConfig->GetSection(*SectionName, false, ConfigPath);
+        const FConfigSection* ConfigSection = GConfig->GetSection(*SectionName, false, ConfigPath);
         FConfigFile* ConfigFile = GConfig->FindConfigFile(*ConfigPath);
 
         if (!GConfig->DoesSectionExist(*SectionName, ConfigPath))
