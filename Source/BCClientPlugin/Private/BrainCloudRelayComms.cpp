@@ -748,7 +748,7 @@ void BrainCloudRelayComms::onRSMG(const uint8* in_data, int in_size)
         auto cxId = json->Values["cxId"]->AsString();
         auto profileId = extractProfileIdFromCxId(cxId);
         
-        TArray<TSharedPtr<FJsonValue>> PacketIdsArray = json->GetArrayField("orderedPacketIds");
+        TArray<TSharedPtr<FJsonValue>> PacketIdsArray = json->GetArrayField(TEXT("orderedPacketIds"));
 
         // Loop through the array to get the index and value of each packet id
         for (int channelId = 0; channelId < PacketIdsArray.Num(); channelId++)

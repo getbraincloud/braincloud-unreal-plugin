@@ -200,7 +200,11 @@ bool FOnlineSubsystemBrainCloud::Init()
 
     if (GConfig)
     {
+#if (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 4)
+        const FConfigSection* Configs = GConfig->GetSection(TEXT("BrainCloud.Client"), false, _configPath);
+#else
         FConfigSection* Configs = GConfig->GetSectionPrivate(TEXT("BrainCloud.Client"), false, true, _configPath);
+#endif
 
 #if ENGINE_MAJOR_VERSION == 5
         _configPath = FConfigCacheIni::NormalizeConfigIniPath(_configPath);
@@ -312,7 +316,7 @@ TSharedPtr<FJsonObject> FOnlineSubsystemBrainCloud::GetJsonData(const FString &j
 	TSharedRef<TJsonReader<>> reader = TJsonReaderFactory<>::Create(jsonString);
 	TSharedPtr<FJsonObject> jsonValue = MakeShareable(new FJsonObject());
 	FJsonSerializer::Deserialize(reader, jsonValue);
-	TSharedPtr<FJsonObject> data = jsonValue->GetObjectField("data");
+	TSharedPtr<FJsonObject> data = jsonValue->GetObjectField(TEXT("data"));
 	return data;
 }
 
