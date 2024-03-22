@@ -152,7 +152,7 @@ void FOnlineLeaderboardsBrainCloud::readLeaderboardSuccess(const FString& jsonDa
 {
     bool bWasSuccessful = false;
 
-    TArray<TSharedPtr<FJsonValue>> leaderboard = FOnlineSubsystemBrainCloud::GetJsonData(jsonData)->GetArrayField("leaderboard");
+    TArray<TSharedPtr<FJsonValue>> leaderboard = FOnlineSubsystemBrainCloud::GetJsonData(jsonData)->GetArrayField(TEXT("leaderboard"));
 
     TSharedPtr<const FUniqueNetId> currentUserId = Subsystem->GetIdentityInterface()->GetUniquePlayerId(0);
 
@@ -166,9 +166,9 @@ void FOnlineLeaderboardsBrainCloud::readLeaderboardSuccess(const FString& jsonDa
     for (int32 i = 0; i < leaderboard.Num(); i++)
     {
         TSharedPtr<FJsonObject> lbObj = leaderboard[i]->AsObject();
-        FString playerID = lbObj->GetStringField("playerId");
-        int32 score = (int32)lbObj->GetNumberField("score");
-        FString playerName = lbObj->GetStringField("name");
+        FString playerID = lbObj->GetStringField(TEXT("playerId"));
+        int32 score = (int32)lbObj->GetNumberField(TEXT("score"));
+        FString playerName = lbObj->GetStringField(TEXT("name"));
 
         UE_LOG(LogOnline, Display, TEXT("PlayerId: %s"), *playerID);
         UE_LOG(LogOnline, Display, TEXT("Name: %s"), *playerName);

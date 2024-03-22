@@ -254,7 +254,7 @@ void FOnlineAchievementsBrainCloud::OnQueryAchievementsComplete(bool bWasSuccess
         return;
     }
 
-    TArray<TSharedPtr<FJsonValue>> achievements = FOnlineSubsystemBrainCloud::GetJsonData(jsonData)->GetArrayField("achievements");
+    TArray<TSharedPtr<FJsonValue>> achievements = FOnlineSubsystemBrainCloud::GetJsonData(jsonData)->GetArrayField(TEXT("achievements"));
 
     TArray<FOnlineAchievement> achievementsForPlayer;
 
@@ -302,7 +302,7 @@ void FOnlineAchievementsBrainCloud::OnQueryAchievementDescComplete(bool bWasSucc
         return;
     }
 
-    TArray<TSharedPtr<FJsonValue>> achievements = FOnlineSubsystemBrainCloud::GetJsonData(jsonData)->GetArrayField("achievements");
+    TArray<TSharedPtr<FJsonValue>> achievements = FOnlineSubsystemBrainCloud::GetJsonData(jsonData)->GetArrayField(TEXT("achievements"));
 
     TArray<FOnlineAchievement> achievementsForPlayer;
 

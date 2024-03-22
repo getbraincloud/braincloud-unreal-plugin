@@ -30,7 +30,7 @@ FString FOnlineTimeBrainCloud::GetLastServerUtcTime()
 //BC Callbacks
 void FOnlineTimeBrainCloud::OnQueryTimeComplete(const FString& jsonData)
 {
-    uint64 time = FOnlineSubsystemBrainCloud::GetJsonData(jsonData)->GetNumberField("server_time") / 1000;
+    uint64 time = FOnlineSubsystemBrainCloud::GetJsonData(jsonData)->GetNumberField(TEXT("server_time")) / 1000;
 
     _lastServerUtcTime = FDateTime::FromUnixTimestamp(time).ToString();
 

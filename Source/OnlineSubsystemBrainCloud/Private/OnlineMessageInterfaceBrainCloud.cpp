@@ -159,21 +159,21 @@ void FOnlineMessageBrainCloud::EnumerateMessagesSuccess(const FString& jsonData)
     _cachedMessageHeaders.Empty();
     _cachedMessages.Empty();
 
-    TArray<TSharedPtr<FJsonValue>> messages = FOnlineSubsystemBrainCloud::GetJsonData(jsonData)->GetArrayField("incoming_events");
+    TArray<TSharedPtr<FJsonValue>> messages = FOnlineSubsystemBrainCloud::GetJsonData(jsonData)->GetArrayField(TEXT("incoming_events"));
 
     for (int32 i = 0; i < messages.Num(); ++i)
     {
         FJsonObject* messageObj = messages[i]->AsObject().Get();
 
-        if (!messageObj->GetObjectField(TEXT("eventData"))->HasField("payload"))
+        if (!messageObj->GetObjectField(TEXT("eventData"))->HasField(TEXT("payload")))
         {
             UE_LOG(LogOnline, Display, TEXT("Message with no payload received, ignoring."));
             continue;
         }
 
         //header creation
-        FString fromId = messageObj->GetStringField("fromPlayerId");
-        FString messageId = FString::FromInt((int64)messageObj->GetNumberField("eventId"));
+        FString fromId = messageObj->GetStringField(TEXT("fromPlayerId"));
+        FString messageId = FString::FromInt((int64)messageObj->GetNumberField(TEXT("eventId")));
 
 // Unreal Engine Version is >= 4.18 OR in Unreal Engine 5
 #if (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 18) || ENGINE_MAJOR_VERSION == 5
@@ -195,8 +195,8 @@ void FOnlineMessageBrainCloud::EnumerateMessagesSuccess(const FString& jsonData)
 #endif
 
 
-        header->TimeStamp = FDateTime::FromUnixTimestamp((int64)messageObj->GetNumberField("createdAt") / 1000).ToString();
-        header->Type = messageObj->GetStringField("eventType");
+        header->TimeStamp = FDateTime::FromUnixTimestamp((int64)messageObj->GetNumberField(TEXT("createdAt")) / 1000).ToString();
+        header->Type = messageObj->GetStringField(TEXT("eventType"));
 
         _cachedMessageHeaders.Add(header);
 
@@ -208,7 +208,7 @@ void FOnlineMessageBrainCloud::EnumerateMessagesSuccess(const FString& jsonData)
         TSharedPtr<FOnlineMessage> message = MakeShareable(new FOnlineMessage(new FUniqueNetIdString(messageId)));
 #endif
 
-        FString payloadStr = messageObj->GetObjectField("eventData")->GetStringField("payload");
+        FString payloadStr = messageObj->GetObjectField(TEXT("eventData"))->GetStringField(TEXT("payload"));
         TArray<uint8> bytes;
         FBase64::Decode(payloadStr, bytes);
         message->Payload.FromBytes(bytes);
