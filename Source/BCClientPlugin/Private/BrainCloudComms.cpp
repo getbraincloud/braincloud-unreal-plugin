@@ -438,7 +438,7 @@ void BrainCloudComms::RunCallbacks()
 					UE_LOG(LogBrainCloudComms, Warning, TEXT("Request timed out"));
 				isError = true;
 			}
-#if (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 3)
+#if (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 4)
             //warning: 'Failed_ConnectionError' is deprecated: Failed_ConnectionError has been deprecated, use Failed + EHttpFailureReason::ConnectionError instead
             else if (!_waitingForRetry && status == EHttpRequestStatus::Failed && _activeRequest->GetFailureReason() == EHttpFailureReason::ConnectionError)
 #else
