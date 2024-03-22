@@ -282,13 +282,13 @@ void BrainCloudLobby::pingRegions(IServerCallback* in_callback)
             valueObj = value->AsObject();
 
             //is the region of Ping type?
-            if (valueObj->HasField("type") && valueObj->GetStringField("type") == "PING")
+            if (valueObj->HasField(TEXT("type")) && valueObj->GetStringField(TEXT("type")) == "PING")
             {
 	            TArray<double> newArray;
                 _cachedPingResponses.Emplace(name, newArray);
 
                 //update the string of the target 
-                targetStr = "http://" + valueObj->GetStringField("target");
+                targetStr = "http://" + valueObj->GetStringField(TEXT("target"));
 
                 Mutex.Lock();
                 //ping that region 4 times. 
@@ -369,8 +369,8 @@ void BrainCloudLobby::serverCallback(ServiceName serviceName, ServiceOperation s
     
         if (res)
         {
-            TSharedPtr<FJsonObject> data = jsonPacket->GetObjectField("data");
-            _regionPingData = data->GetObjectField("regionPingData");
+            TSharedPtr<FJsonObject> data = jsonPacket->GetObjectField(TEXT("data"));
+            _regionPingData = data->GetObjectField(TEXT("regionPingData"));
         }
     
         if (_regionsForLobbiesCallback != nullptr)

@@ -173,7 +173,7 @@ void FOnlineTitleFileBrainCloud::EnumerateFilesSuccess(const FString & jsonData)
 {
     _cachedFileHeaders.Empty();
 
-    TArray<TSharedPtr<FJsonValue>> files = FOnlineSubsystemBrainCloud::GetJsonData(jsonData)->GetArrayField("fileDetails");
+    TArray<TSharedPtr<FJsonValue>> files = FOnlineSubsystemBrainCloud::GetJsonData(jsonData)->GetArrayField(TEXT("fileDetails"));
 
     for (int32 i = 0; i < files.Num(); ++i)
     {
@@ -181,11 +181,11 @@ void FOnlineTitleFileBrainCloud::EnumerateFilesSuccess(const FString & jsonData)
 
         TSharedPtr<FCloudFileHeaderBrainCloud> fileHeader = MakeShareable(new FCloudFileHeaderBrainCloud());
 
-        fileHeader->DLName = fileObj->GetStringField("shortName");
+        fileHeader->DLName = fileObj->GetStringField(TEXT("shortName"));
         fileHeader->FileName = fileHeader->DLName;
-        fileHeader->URL = fileObj->GetStringField("absoluteUrl");
-        fileHeader->Hash = fileObj->GetStringField("md5Hash");
-        fileHeader->FileSize = fileObj->GetNumberField("fileSize");
+        fileHeader->URL = fileObj->GetStringField(TEXT("absoluteUrl"));
+        fileHeader->Hash = fileObj->GetStringField(TEXT("md5Hash"));
+        fileHeader->FileSize = fileObj->GetNumberField(TEXT("fileSize"));
 
         _cachedFileHeaders.Add(fileHeader);
     }
