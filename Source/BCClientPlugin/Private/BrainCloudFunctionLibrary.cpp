@@ -41,7 +41,7 @@ FBrainCloudAppDataStruct UBrainCloudFunctionLibrary::GetBCAppData()
 #endif
 
     if (GConfig) {
-        FConfigSection* ConfigSection = GConfig->GetSectionPrivate(*SectionName, false, true, ConfigPath);
+        const FConfigSection* ConfigSection = GConfig->GetSection(*SectionName, false, ConfigPath);
         FConfigFile* ConfigFile = GConfig->FindConfigFile(*ConfigPath);
 
         TArray<FName> configKeys;
@@ -75,7 +75,7 @@ void UBrainCloudFunctionLibrary::SetBCAppData(FBrainCloudAppDataStruct appData)
     FString ConfigPath = FPaths::ProjectConfigDir();
     ConfigPath += Filename;
 
-    FConfigSection* ConfigSection = GConfig->GetSectionPrivate(*SectionName, false, true, ConfigPath);
+    const FConfigSection* ConfigSection = GConfig->GetSection(*SectionName, false, ConfigPath);
 
 #if ENGINE_MAJOR_VERSION == 5
     ConfigPath = FConfigCacheIni::NormalizeConfigIniPath(FPaths::ProjectConfigDir() + *Filename);
