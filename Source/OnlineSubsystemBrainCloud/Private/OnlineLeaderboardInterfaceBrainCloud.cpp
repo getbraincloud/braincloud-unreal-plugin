@@ -167,8 +167,8 @@ void FOnlineLeaderboardsBrainCloud::readLeaderboardSuccess(const FString& jsonDa
     {
         TSharedPtr<FJsonObject> lbObj = leaderboard[i]->AsObject();
         FString playerID = lbObj->GetStringField(TEXT("playerId"));
-        int32 score = (int32)lbObj->GetNumberField(TEXT("score");
-        FString playerName = lbObj->GetStringField(TEXT("name");
+        int32 score = (int32)lbObj->GetNumberField(TEXT("score"));
+        FString playerName = lbObj->GetStringField(TEXT("name"));
 
         UE_LOG(LogOnline, Display, TEXT("PlayerId: %s"), *playerID);
         UE_LOG(LogOnline, Display, TEXT("Name: %s"), *playerName);
