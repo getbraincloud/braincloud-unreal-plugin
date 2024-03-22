@@ -25,7 +25,7 @@ void FBCWidgetModule::StartupModule()
 #endif
 
     if (GConfig) {
-        #if (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 3)
+        #if (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 4)
         const FConfigSection* ConfigSection = GConfig->GetSection(*SectionName, false, ConfigPath);
         #else
         FConfigSection* ConfigSection = GConfig->GetSectionPrivate(*SectionName, false, true, ConfigPath);
