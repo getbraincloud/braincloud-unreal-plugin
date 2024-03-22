@@ -104,7 +104,7 @@ void BCFileUploader::OnProcessRequestComplete(FHttpRequestPtr request, FHttpResp
         _reasonCode = ReasonCodes::CLIENT_UPLOAD_FILE_UNKNOWN;
     }
 }
-#if (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 3)
+#if (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 4)
 void BCFileUploader::OnRequestProgress(FHttpRequestPtr request, uint64 bytesSent, uint64 bytesReceived)
 #else
 void BCFileUploader::OnRequestProgress(FHttpRequestPtr request, int32 bytesSent, int32 bytesReceived)
