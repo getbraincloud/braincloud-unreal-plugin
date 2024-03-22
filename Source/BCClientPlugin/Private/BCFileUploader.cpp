@@ -64,7 +64,7 @@ bool BCFileUploader::UploadFile(FString &filePath, FString &sessionId, FString &
     }
 
     _request->OnProcessRequestComplete().BindRaw(this, &BCFileUploader::OnProcessRequestComplete);
-#if (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 3)
+#if (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 4)
     _request->OnRequestProgress64().BindRaw(this, &BCFileUploader::OnRequestProgress);
 #else
     _request->OnRequestProgress().BindRaw(this, &BCFileUploader::OnRequestProgress);
