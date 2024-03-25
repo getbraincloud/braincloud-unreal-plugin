@@ -38,8 +38,11 @@ public:
   const FString &GetUploadId() { return _uploadId; }
 
   void OnProcessRequestComplete(FHttpRequestPtr request, FHttpResponsePtr response, bool bWasSuccessful);
-  void OnRequestProgress(FHttpRequestPtr request, int32 bytesSent, int32 bytesReceived);
-
+#if (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 4)
+  void OnRequestProgress(FHttpRequestPtr request, uint64 bytesSent, uint64 bytesReceived);
+#else
+    void OnRequestProgress(FHttpRequestPtr request, int32 bytesSent, int32 bytesReceived);
+#endif
 private:
   TArray<uint8> CreateContent(FString &boundary, FString &sessionId, FString &fileUploadId, FString &fileName, TArray<uint8> &data);
   void ReportError(int32 statusCode, int32 reasonCode, FString &statusMessage);
