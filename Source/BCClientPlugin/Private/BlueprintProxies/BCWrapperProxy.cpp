@@ -309,6 +309,13 @@ UBCWrapperProxy* UBCWrapperProxy::Logout(UBrainCloudWrapper* brainCloudWrapper, 
 	return Proxy;
 }
 
+UBCWrapperProxy* UBCWrapperProxy::LogoutOnApplicationQuit(UBrainCloudWrapper* brainCloudWrapper, bool forgetUser)
+{
+	UBCWrapperProxy* Proxy = NewObject<UBCWrapperProxy>();
+	GetBrainCloudInstance(brainCloudWrapper)->logoutOnApplicationQuit(forgetUser, Proxy);
+	return Proxy;
+}
+
 UBCWrapperProxy *UBCWrapperProxy::ResetEmailPassword(UBrainCloudWrapper *brainCloudWrapper, const FString &in_email)
 {
 	UBCWrapperProxy *Proxy = NewObject<UBCWrapperProxy>();

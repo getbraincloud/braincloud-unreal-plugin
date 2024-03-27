@@ -617,6 +617,18 @@ public:
    UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Wrapper")
    static UBCWrapperProxy *Logout(UBrainCloudWrapper* brainCloudWrapper, bool forgetUser);
 
+   /**
+     * Immediately sends a logout request - intended to be used when game is shutdown
+     *
+     * Service Name - PlayerState
+     * Service Operation - Logout
+     *
+     * @param forgetUser whether or not to reset the stored profile ID
+     * @param callback The method to be invoked when the server response is received
+     */
+   UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Wrapper")
+   static UBCWrapperProxy* LogoutOnApplicationQuit(UBrainCloudWrapper* brainCloudWrapper, bool forgetUser);
+
   /**
     * Reset Email password - Sends a password reset email to the specified address
     *
