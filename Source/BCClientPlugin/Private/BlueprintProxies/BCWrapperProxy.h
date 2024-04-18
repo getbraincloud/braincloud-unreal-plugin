@@ -805,7 +805,13 @@ public:
        */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Wrapper")
     static UBCWrapperProxy* reconnect(UBrainCloudWrapper *brainCloudWrapper);
- 
+
+    /**
+       * returns true if we can relogin a user
+       */
+    UFUNCTION(BlueprintCallable, Category = "BrainCloud|Wrapper")
+    static bool CanReconnect(UBrainCloudWrapper* brainCloudWrapper);
+
     /**
        * Sets the stored profile id, saves it as well
        * @param profileId The profile id to set
@@ -824,8 +830,8 @@ public:
      * Returns the stored anonymous id
      * @return The stored anonymous id
      */
-  UFUNCTION(BlueprintCallable, Category = "BrainCloud|Wrapper")
-  static FString GetStoredProfileId(UBrainCloudWrapper *brainCloudWrapper);
+    UFUNCTION(BlueprintCallable, Category = "BrainCloud|Wrapper")
+    static FString GetStoredProfileId(UBrainCloudWrapper *brainCloudWrapper);
 
   /**
      * Sets the stored anonymous id, saves it as well

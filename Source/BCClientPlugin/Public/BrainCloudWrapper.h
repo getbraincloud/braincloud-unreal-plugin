@@ -873,6 +873,8 @@ class BCCLIENTPLUGIN_API UBrainCloudWrapper : public UObject, public IServerCall
      */
     BrainCloudClient *getBCClient() { return _client; }
 
+    bool canReconnect() { return getStoredProfileId() != "" && getStoredAnonymousId() != ""; }
+
     /**
      * Returns the stored profile id
      * @return The stored profile id
