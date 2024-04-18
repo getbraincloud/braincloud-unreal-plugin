@@ -59,7 +59,7 @@ class UBCPlayerStateProxy : public UBCBlueprintCallProxyBase
     * 
     * (Note: Recommend using the Wrapper logout function instead)
     */
-    UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Player State")
+    UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", DeprecatedFunction, DeprecationMessage="This function has been deprecated, please use the logout function from the Wrapper instead"), Category = "BrainCloud|Player State")
     static UBCPlayerStateProxy *Logout(UBrainCloudWrapper *brainCloudWrapper);
 
     /**

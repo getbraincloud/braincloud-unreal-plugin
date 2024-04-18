@@ -380,6 +380,11 @@ UBCWrapperProxy *UBCWrapperProxy::reconnect(UBrainCloudWrapper *brainCloudWrappe
     return Proxy;
 }
 
+bool UBCWrapperProxy::CanReconnect(UBrainCloudWrapper* brainCloudWrapper)
+{
+	return UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->canReconnect();
+}
+
 void UBCWrapperProxy::SetStoredProfileId(UBrainCloudWrapper *brainCloudWrapper, FString profileId)
 {
     UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->setStoredProfileId(profileId);

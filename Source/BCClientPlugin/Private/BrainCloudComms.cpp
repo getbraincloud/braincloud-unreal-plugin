@@ -889,8 +889,11 @@ void BrainCloudComms::FilterIncomingMessages(TSharedRef<ServerCall> servercall, 
 		_isAuthenticated = false;
 		_sessionId = TEXT("");
 		ResetErrorCache();
-		_client->getAuthenticationService()->clearSavedProfileId();
 		_client->getPlayerStateService()->setUserName(TEXT(""));
+
+		if (operation == ServiceOperation::FullReset) {
+			_client->getAuthenticationService()->clearSavedProfileId();
+		}
 	}
 	else if (service == ServiceName::PlayerState && operation == ServiceOperation::UpdateName)
 	{
