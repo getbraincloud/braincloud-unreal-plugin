@@ -617,6 +617,18 @@ public:
    UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Wrapper")
    static UBCWrapperProxy *Logout(UBrainCloudWrapper* brainCloudWrapper, bool forgetUser);
 
+   /**
+     * Immediately sends a logout request - intended to be used when game is shutdown
+     *
+     * Service Name - PlayerState
+     * Service Operation - Logout
+     *
+     * @param forgetUser whether or not to reset the stored profile ID
+     * @param callback The method to be invoked when the server response is received
+     */
+   UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Wrapper")
+   static UBCWrapperProxy* LogoutOnApplicationQuit(UBrainCloudWrapper* brainCloudWrapper, bool forgetUser);
+
   /**
     * Reset Email password - Sends a password reset email to the specified address
     *
@@ -793,7 +805,13 @@ public:
        */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Wrapper")
     static UBCWrapperProxy* reconnect(UBrainCloudWrapper *brainCloudWrapper);
- 
+
+    /**
+       * returns true if we can relogin a user
+       */
+    UFUNCTION(BlueprintCallable, Category = "BrainCloud|Wrapper")
+    static bool CanReconnect(UBrainCloudWrapper* brainCloudWrapper);
+
     /**
        * Sets the stored profile id, saves it as well
        * @param profileId The profile id to set
@@ -812,8 +830,8 @@ public:
      * Returns the stored anonymous id
      * @return The stored anonymous id
      */
-  UFUNCTION(BlueprintCallable, Category = "BrainCloud|Wrapper")
-  static FString GetStoredProfileId(UBrainCloudWrapper *brainCloudWrapper);
+    UFUNCTION(BlueprintCallable, Category = "BrainCloud|Wrapper")
+    static FString GetStoredProfileId(UBrainCloudWrapper *brainCloudWrapper);
 
   /**
      * Sets the stored anonymous id, saves it as well

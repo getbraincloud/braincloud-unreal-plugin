@@ -814,6 +814,8 @@ class BCCLIENTPLUGIN_API UBrainCloudWrapper : public UObject, public IServerCall
 	*/
     void reconnect(IServerCallback *callback = nullptr);
 
+    void logoutOnApplicationQuit(bool forgetUser, IServerCallback* in_callback);
+
     void logout(bool forgetUser, IServerCallback* in_callback);
     /**
      * Run callbacks, to be called once per frame from your main thread
@@ -870,6 +872,8 @@ class BCCLIENTPLUGIN_API UBrainCloudWrapper : public UObject, public IServerCall
      * @return The instance of the BrainCloudClient.
      */
     BrainCloudClient *getBCClient() { return _client; }
+
+    bool canReconnect() { return getStoredProfileId() != "" && getStoredAnonymousId() != ""; }
 
     /**
      * Returns the stored profile id

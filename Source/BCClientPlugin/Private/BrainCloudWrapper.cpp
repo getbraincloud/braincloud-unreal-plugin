@@ -408,6 +408,18 @@ void UBrainCloudWrapper::reconnect(IServerCallback *callback)
     authenticateAnonymous(callback, false);
 }
 
+void UBrainCloudWrapper::logoutOnApplicationQuit(bool forgetUser, IServerCallback* in_callback)
+{
+    if (forgetUser)
+        resetStoredProfileId();
+
+    _client->flushCachedMessages(false);
+
+    getPlayerStateService()->logout(in_callback);
+
+    _client->runCallbacks(eBCUpdateType::REST);
+}
+
 void UBrainCloudWrapper::logout(bool forgetUser, IServerCallback* in_callback)
 {
     if (forgetUser)
