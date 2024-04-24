@@ -309,6 +309,13 @@ UBCWrapperProxy* UBCWrapperProxy::Logout(UBrainCloudWrapper* brainCloudWrapper, 
 	return Proxy;
 }
 
+UBCWrapperProxy* UBCWrapperProxy::LogoutOnApplicationQuit(UBrainCloudWrapper* brainCloudWrapper, bool forgetUser)
+{
+	UBCWrapperProxy* Proxy = NewObject<UBCWrapperProxy>();
+	GetBrainCloudInstance(brainCloudWrapper)->logoutOnApplicationQuit(forgetUser, Proxy);
+	return Proxy;
+}
+
 UBCWrapperProxy *UBCWrapperProxy::ResetEmailPassword(UBrainCloudWrapper *brainCloudWrapper, const FString &in_email)
 {
 	UBCWrapperProxy *Proxy = NewObject<UBCWrapperProxy>();
@@ -371,6 +378,11 @@ UBCWrapperProxy *UBCWrapperProxy::reconnect(UBrainCloudWrapper *brainCloudWrappe
     UBCWrapperProxy *Proxy = NewObject<UBCWrapperProxy>();
     UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->reconnect(Proxy);
     return Proxy;
+}
+
+bool UBCWrapperProxy::CanReconnect(UBrainCloudWrapper* brainCloudWrapper)
+{
+	return UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->canReconnect();
 }
 
 void UBCWrapperProxy::SetStoredProfileId(UBrainCloudWrapper *brainCloudWrapper, FString profileId)
