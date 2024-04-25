@@ -129,7 +129,12 @@ void BrainCloudClient::initialize(
 		_language = FInternationalization::Get().GetCurrentCulture()->GetName();
 	if (_country.IsEmpty())
 		_country = UBrainCloudFunctionLibrary::GetSystemCountryCode();
-    
+
+	if (_language.IsEmpty())
+		_language = FPlatformMisc::GetDefaultLanguage();
+	if (_country.IsEmpty())
+		_country = FPlatformMisc::GetDefaultLocale();
+
     _timezoneOffset = BrainCloudTimeUtils::UTCTimeZoneOffset();
 }
 
