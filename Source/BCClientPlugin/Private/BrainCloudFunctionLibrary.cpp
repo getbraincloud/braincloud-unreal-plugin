@@ -138,11 +138,8 @@ bool UBrainCloudFunctionLibrary::ValidateAndExtractURL(const FString& InputURL, 
 FString UBrainCloudFunctionLibrary::GetSystemCountryCode()
 {
     FString CountryCode = FString();
-#if PLATFORM_IOS
-    CountryCode = FIOSPlatformMisc::GetDefaultLocale();
-#elif PLATFORM_ANDROID
-    CountryCode = FAndroidMisc::GetDefaultLocale();
-#elif PLATFORM_WINDOWS
+
+#if PLATFORM_WINDOWS
     LCID locale = GetUserDefaultLCID();
 
     // Get the country code
@@ -155,5 +152,22 @@ FString UBrainCloudFunctionLibrary::GetSystemCountryCode()
     CountryCode = FInternationalization::Get().GetCurrentLocale()->GetRegion();
 #endif
 
+    if (CountryCode.IsEmpty())
+        CountryCode = FPlatformMisc::GetDefaultLocale();
+
     return CountryCode;
 }
+
+FString UBrainCloudFunctionLibrary::GetSystemLanguageCode()
+{
+    FString LanguageCode = FString();
+
+    LanguageCode = FInternationalization::Get().GetCurrentCulture()->GetName();
+
+    if (LanguageCode.IsEmpty())
+        LanguageCode = FPlatformMisc::GetDefaultLanguage();
+
+    return LanguageCode;
+}
+
+

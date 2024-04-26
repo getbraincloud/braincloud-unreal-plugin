@@ -28,4 +28,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "System Information")
 	static FString GetSystemCountryCode();
+
+	UFUNCTION(BlueprintCallable, Category = "System Information")
+	static FString GetSystemLanguageCode();
 };
