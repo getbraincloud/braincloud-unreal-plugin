@@ -126,9 +126,15 @@ void BrainCloudClient::initialize(
 	_appVersion = appVersion;
 
 	if (_language.IsEmpty())
-		_language = UBrainCloudFunctionLibrary::GetSystemCountryCode();
+        _language = FInternationalization::Get().GetCurrentCulture()->GetName();
 	if (_country.IsEmpty())
 		_country = UBrainCloudFunctionLibrary::GetSystemCountryCode();
+
+	if (_language.IsEmpty())
+		_language = FPlatformMisc::GetDefaultLanguage();
+	if (_country.IsEmpty())
+		_country = FPlatformMisc::GetDefaultLocale();
+
 
     _timezoneOffset = BrainCloudTimeUtils::UTCTimeZoneOffset();
 }
@@ -792,6 +798,8 @@ BrainCloudMessaging *BrainCloudClient::getMessagingService()
 	}
 	return _messagingService;
 }
+
+
 
 
 BrainCloudRelay *BrainCloudClient::getRelayService()
