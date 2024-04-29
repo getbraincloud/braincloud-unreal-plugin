@@ -16,6 +16,11 @@
   "Installed": false,
   "Modules": [
     {
+      "Name": "AndroidNative",
+      "Type": "Runtime",
+      "LoadingPhase": "PreDefault"
+    },
+    {
       "Name": "BCClientPlugin",
       "Type": "Runtime",
       "LoadingPhase": "PreDefault"
