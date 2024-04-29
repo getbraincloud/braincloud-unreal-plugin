@@ -295,8 +295,14 @@ void BrainCloudAuthentication::authenticate(
 	{
 		message->SetStringField(OperationParam::AuthenticateServiceAuthenticateExtraJson.getValue(), in_extraJson);
 	}
+
+	FString countryCode = brainCloudClientRef->getCountryCode();
+	//If resulting country code is 419 remap to _LA_ to represent the Latin America region
+	if (countryCode == "419") {
+		countryCode = "_LA_";
+	}
     
-    message->SetStringField(OperationParam::AuthenticateServiceAuthenticateCountryCode.getValue(), brainCloudClientRef->getCountryCode());
+    message->SetStringField(OperationParam::AuthenticateServiceAuthenticateCountryCode.getValue(), countryCode);
     message->SetStringField(OperationParam::AuthenticateServiceAuthenticateLanguageCode.getValue(), brainCloudClientRef->getLanguageCode());
     message->SetNumberField(OperationParam::AuthenticateServiceAuthenticateTimeZoneOffset.getValue(), brainCloudClientRef->getTimezoneOffset());
                                                                       

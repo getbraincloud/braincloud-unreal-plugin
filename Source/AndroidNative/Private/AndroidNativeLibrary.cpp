@@ -51,13 +51,19 @@ FBaseDeviceInfo UAndroidNativeLibrary::GetBaseDeviceInfo()
 
 FString UAndroidNativeLibrary::GetCountryCode()
 {
+	//First get country from SIM card
 	FString countryCode = "";
 	countryCode = AndroidNativeUtils::CallJavaStaticMethod<FString>(DeviceInfoClassName, "GetCountryCodeFromSIM", FAndroidGameActivity());
-	UE_LOG(LogTemp, Log, TEXT("Got country code from SIM: %s"), *countryCode);
-	countryCode = AndroidNativeUtils::CallJavaStaticMethod<FString>(DeviceInfoClassName, "GetCountryCodeFromNetwork", FAndroidGameActivity());
-	UE_LOG(LogTemp, Log, TEXT("Got country code from Network: %s"), *countryCode);
-	countryCode = AndroidNativeUtils::CallJavaStaticMethod<FString>(DeviceInfoClassName, "GetCountryCodeFromLocale", FAndroidGameActivity());
-	UE_LOG(LogTemp, Log, TEXT("Got country code from Locale: %s"), *countryCode);
+	
+	if (countryCode == "") {
+		//If SIM failed, get country from connected network
+		countryCode = AndroidNativeUtils::CallJavaStaticMethod<FString>(DeviceInfoClassName, "GetCountryCodeFromNetwork", FAndroidGameActivity());
+	}
+
+	if (countryCode == "") {
+		//If not connected to network, get country from locale as last resort (least reliable region accuracy)
+		countryCode = AndroidNativeUtils::CallJavaStaticMethod<FString>(DeviceInfoClassName, "GetCountryCodeFromLocale", FAndroidGameActivity());
+	}
 
 	return countryCode;
 }

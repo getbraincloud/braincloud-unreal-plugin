@@ -19,6 +19,7 @@
 #include "IRTTCallback.h"
 #include "IRelayCallback.h"
 #include "BCPlatform.h"
+#include "BrainCloudFunctionLibrary.h"
 #include "Internationalization/Culture.h"
 
 // Define all static member variables.
@@ -168,8 +169,13 @@ void BrainCloudClient::initializeWithApps(
 
     if (_language.IsEmpty())
         _language = FInternationalization::Get().GetCurrentLanguage()->GetTwoLetterISOLanguageName();
-    if (_country.IsEmpty())
-        _country = FInternationalization::Get().GetCurrentLocale()->GetRegion();
+	if (_country.IsEmpty())
+		_country = UBrainCloudFunctionLibrary::GetSystemCountryCode();
+
+	if (_country.IsEmpty()) {
+		//fall back to locale if empty result
+		FInternationalization::Get().GetCurrentLocale()->GetRegion();
+	}
             
     _timezoneOffset = BrainCloudTimeUtils::UTCTimeZoneOffset();
 }
