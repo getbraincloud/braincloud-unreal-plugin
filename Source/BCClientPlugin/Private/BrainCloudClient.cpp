@@ -126,12 +126,7 @@ void BrainCloudClient::initialize(
 	_appId = appId;
 	_appVersion = appVersion;
 
-	if (_language.IsEmpty())
-		_language = FInternationalization::Get().GetCurrentCulture()->GetName();
-	if (_country.IsEmpty())
-		_country = UBrainCloudFunctionLibrary::GetSystemCountryCode();
-    
-    _timezoneOffset = BrainCloudTimeUtils::UTCTimeZoneOffset();
+	InitDeviceInfo();
 }
 
 void BrainCloudClient::initializeWithApps(
@@ -167,8 +162,18 @@ void BrainCloudClient::initializeWithApps(
 	_appId = appId;
 	_appVersion = appVersion;
 
-    if (_language.IsEmpty())
-        _language = FInternationalization::Get().GetCurrentLanguage()->GetTwoLetterISOLanguageName();
+	InitDeviceInfo();
+}
+
+void BrainCloudClient::initializeIdentity(const FString &profileId, const FString &anonymousId)
+{
+	getAuthenticationService()->initialize(profileId, anonymousId);
+}
+
+void BrainCloudClient::InitDeviceInfo()
+{
+	if (_language.IsEmpty())
+		_language = FInternationalization::Get().GetCurrentLanguage()->GetTwoLetterISOLanguageName();
 	if (_country.IsEmpty())
 		_country = UBrainCloudFunctionLibrary::GetSystemCountryCode();
 
@@ -176,13 +181,8 @@ void BrainCloudClient::initializeWithApps(
 		//fall back to locale if empty result
 		FInternationalization::Get().GetCurrentLocale()->GetRegion();
 	}
-            
-    _timezoneOffset = BrainCloudTimeUtils::UTCTimeZoneOffset();
-}
 
-void BrainCloudClient::initializeIdentity(const FString &profileId, const FString &anonymousId)
-{
-	getAuthenticationService()->initialize(profileId, anonymousId);
+	_timezoneOffset = BrainCloudTimeUtils::UTCTimeZoneOffset();
 }
 
 void BrainCloudClient::runCallbacks(eBCUpdateType in_updateType /*= eBCUpdateType::ALL*/)

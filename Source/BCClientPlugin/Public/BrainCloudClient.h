@@ -118,7 +118,6 @@ enum class BCWebsocketStatus: uint8
 
 class BCCLIENTPLUGIN_API BrainCloudClient
 {
-
   public:
 	/** Public constants */
 	static bool SINGLE_THREADED;
@@ -161,6 +160,11 @@ class BCCLIENTPLUGIN_API BrainCloudClient
 	* @param anonymousId  The anonymous installation id that was generated for this device
 	*/
 	void initializeIdentity(const FString &profileId, const FString &anonymousId);
+
+	/**
+	* Initializes device info such as country code, language and time zone
+	*/
+	void InitDeviceInfo();
 
 	/**
 	* Run callbacks, to be called once per frame from your main thread
