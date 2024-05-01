@@ -36,7 +36,8 @@ public class BCClientPlugin : ModuleRules
                     "JsonUtilities",
                     "HTTP",
                     "OnlineSubsystemUtils",
-                    "OnlineSubsystem"
+                    "OnlineSubsystem",
+                    "AndroidNative"
                 });
 
         PublicDependencyModuleNames.AddRange(

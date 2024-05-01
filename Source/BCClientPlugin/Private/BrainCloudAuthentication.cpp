@@ -270,6 +270,7 @@ void BrainCloudAuthentication::authenticate(
 	IServerCallback *callback)
 {
 	BrainCloudClient *brainCloudClientRef = _client;
+
 	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
 
 	message->SetStringField(OperationParam::AuthenticateServiceAuthenticateExternalId.getValue(), externalId);
@@ -295,8 +296,15 @@ void BrainCloudAuthentication::authenticate(
 	{
 		message->SetStringField(OperationParam::AuthenticateServiceAuthenticateExtraJson.getValue(), in_extraJson);
 	}
-    
-    message->SetStringField(OperationParam::AuthenticateServiceAuthenticateCountryCode.getValue(), brainCloudClientRef->getCountryCode());
+	
+	FString countryCode = brainCloudClientRef->getCountryCode();
+	//If resulting country code is 419 remap to _LA_ to represent the Latin America region
+	if (countryCode == "419") {
+		countryCode = "_LA_";
+	}
+	countryCode = countryCode.ToUpper();
+
+    message->SetStringField(OperationParam::AuthenticateServiceAuthenticateCountryCode.getValue(), countryCode);
     message->SetStringField(OperationParam::AuthenticateServiceAuthenticateLanguageCode.getValue(), brainCloudClientRef->getLanguageCode());
     message->SetNumberField(OperationParam::AuthenticateServiceAuthenticateTimeZoneOffset.getValue(), brainCloudClientRef->getTimezoneOffset());
                                                                       
