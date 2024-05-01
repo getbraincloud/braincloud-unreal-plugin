@@ -150,7 +150,7 @@ FString UBrainCloudFunctionLibrary::GetSystemCountryCode()
 #if PLATFORM_MAC || PLATFORM_IOS
 
     NSLocale* currentLocale = [NSLocale currentLocale];
-    if (curentLocale != nil) {
+    if (currentLocale != nil) {
         NSString* countryCode = [currentLocale objectForKey : NSLocaleCountryCode];
         if (countryCode != nil) {
             CountryCode = FString(countryCode);
