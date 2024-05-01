@@ -173,14 +173,9 @@ void BrainCloudClient::initializeIdentity(const FString &profileId, const FStrin
 void BrainCloudClient::InitDeviceInfo()
 {
 	if (_language.IsEmpty())
-		_language = FInternationalization::Get().GetCurrentLanguage()->GetTwoLetterISOLanguageName();
+		_language = UBrainCloudFunctionLibrary::GetSystemLanguageCode();
 	if (_country.IsEmpty())
 		_country = UBrainCloudFunctionLibrary::GetSystemCountryCode();
-
-	if (_country.IsEmpty()) {
-		//fall back to locale if empty result
-		FInternationalization::Get().GetCurrentLocale()->GetRegion();
-	}
 
 	_timezoneOffset = BrainCloudTimeUtils::UTCTimeZoneOffset();
 }
