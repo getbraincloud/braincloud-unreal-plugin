@@ -187,3 +187,13 @@ void UBCClientProxy::OverrideLanguageCode(UBrainCloudWrapper *brainCloudWrapper,
 {
 	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getBCClient()->overrideLanguageCode(languageCode);
 }
+
+FString UBCClientProxy::GetCountryCode(UBrainCloudWrapper *brainCloudWrapper)
+{
+	return UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getBCClient()->getCountryCode();
+}
+
+FString UBCClientProxy::GetLanguageCode(UBrainCloudWrapper *brainCloudWrapper)
+{
+	return UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getBCClient()->getLanguageCode();
+}

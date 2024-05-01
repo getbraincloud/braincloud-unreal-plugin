@@ -800,6 +800,8 @@ BrainCloudMessaging *BrainCloudClient::getMessagingService()
 }
 
 
+
+
 BrainCloudRelay *BrainCloudClient::getRelayService()
 {
 	if (_relayService == nullptr)

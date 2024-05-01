@@ -150,7 +150,7 @@ FString UBrainCloudFunctionLibrary::GetSystemCountryCode()
 #if PLATFORM_MAC || PLATFORM_IOS
 
     NSLocale* currentLocale = [NSLocale currentLocale];
-    if (curentLocale != nil) {
+    if (currentLocale != nil) {
         NSString* countryCode = [currentLocale objectForKey : NSLocaleCountryCode];
         if (countryCode != nil) {
             CountryCode = FString(countryCode);
@@ -171,5 +171,22 @@ FString UBrainCloudFunctionLibrary::GetSystemCountryCode()
     CountryCode = FInternationalization::Get().GetCurrentLocale()->GetRegion();
 #endif
 
+    if (CountryCode.IsEmpty())
+        CountryCode = FPlatformMisc::GetDefaultLocale();
+
     return CountryCode;
 }
+
+FString UBrainCloudFunctionLibrary::GetSystemLanguageCode()
+{
+    FString LanguageCode = FString();
+
+    LanguageCode = FInternationalization::Get().GetCurrentCulture()->GetName();
+
+    if (LanguageCode.IsEmpty())
+        LanguageCode = FPlatformMisc::GetDefaultLanguage();
+
+    return LanguageCode;
+}
+
+
