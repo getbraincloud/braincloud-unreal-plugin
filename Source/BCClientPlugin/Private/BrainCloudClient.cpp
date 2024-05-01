@@ -126,16 +126,7 @@ void BrainCloudClient::initialize(
 	_appId = appId;
 	_appVersion = appVersion;
 
-<<<<<<< HEAD
-	if (_language.IsEmpty())
-        _language = UBrainCloudFunctionLibrary::GetSystemLanguageCode();
-	if (_country.IsEmpty())
-		_country = UBrainCloudFunctionLibrary::GetSystemCountryCode();
-
-    _timezoneOffset = BrainCloudTimeUtils::UTCTimeZoneOffset();
-=======
 	InitDeviceInfo();
->>>>>>> origin/develop
 }
 
 void BrainCloudClient::initializeWithApps(
