@@ -8,13 +8,22 @@
 #include "HAL/PlatformApplicationMisc.h"
 #include "Internationalization/Culture.h"
 #include "Internationalization/Internationalization.h"
+#include "AndroidNativeLibrary.h"
 #include <iostream>
 
 
 #if PLATFORM_WINDOWS
-#include "Runtime/Core/Public/Windows/AllowWindowsPlatformTypes.h"
-#include "windows.h"
-#include "Runtime/Core/Public/Windows/HideWindowsPlatformTypes.h"
+#include "Windows/AllowWindowsPlatformTypes.h" // Include this to allow using Windows API
+#include <Windows.h>
+#include "Windows/HideWindowsPlatformTypes.h" // Include this to hide Windows API usa
+#include "Developer/DesktopPlatform/Public/IDesktopPlatform.h"
+#include "Developer/DesktopPlatform/Public/DesktopPlatformModule.h"
+#endif
+
+#if PLATFORM_IOS || PLATFORM_MAC
+
+#include <Foundation/Foundation.h>
+
 #endif
 
 FBrainCloudAppDataStruct UBrainCloudFunctionLibrary::GetBCAppData()
@@ -138,16 +147,26 @@ bool UBrainCloudFunctionLibrary::ValidateAndExtractURL(const FString& InputURL, 
 FString UBrainCloudFunctionLibrary::GetSystemCountryCode()
 {
     FString CountryCode = FString();
+#if PLATFORM_MAC || PLATFORM_IOS
 
-#if PLATFORM_WINDOWS
-    LCID locale = GetUserDefaultLCID();
-
-    // Get the country code
-    const int bufferSize = 10;  // Adjust as needed
-    TCHAR countryBuffer[bufferSize];
-    if (GetLocaleInfo(locale, LOCALE_SISO3166CTRYNAME, countryBuffer, bufferSize) > 0) {
-        CountryCode = FString(countryBuffer);
+    NSLocale* currentLocale = [NSLocale currentLocale];
+    if (curentLocale != nil) {
+        NSString* countryCode = [currentLocale objectForKey : NSLocaleCountryCode];
+        if (countryCode != nil) {
+            CountryCode = FString(countryCode);
+        }
     }
+
+#elif PLATFORM_ANDROID
+    CountryCode = UAndroidNativeLibrary::GetCountryCode();
+#elif PLATFORM_WINDOWS
+
+    int geoId = GetUserGeoID(16);
+    int lcid = GetUserDefaultLCID();
+    wchar_t locationBuffer[3];
+    GetGeoInfo(geoId, 4, locationBuffer, 3, lcid);
+
+    CountryCode = locationBuffer;
 #else
     CountryCode = FInternationalization::Get().GetCurrentLocale()->GetRegion();
 #endif

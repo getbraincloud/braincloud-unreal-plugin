@@ -19,6 +19,7 @@
 #include "IRTTCallback.h"
 #include "IRelayCallback.h"
 #include "BCPlatform.h"
+#include "BrainCloudFunctionLibrary.h"
 #include "Internationalization/Culture.h"
 
 // Define all static member variables.
@@ -125,12 +126,16 @@ void BrainCloudClient::initialize(
 	_appId = appId;
 	_appVersion = appVersion;
 
+<<<<<<< HEAD
 	if (_language.IsEmpty())
         _language = UBrainCloudFunctionLibrary::GetSystemLanguageCode();
 	if (_country.IsEmpty())
 		_country = UBrainCloudFunctionLibrary::GetSystemCountryCode();
 
     _timezoneOffset = BrainCloudTimeUtils::UTCTimeZoneOffset();
+=======
+	InitDeviceInfo();
+>>>>>>> origin/develop
 }
 
 void BrainCloudClient::initializeWithApps(
@@ -166,17 +171,27 @@ void BrainCloudClient::initializeWithApps(
 	_appId = appId;
 	_appVersion = appVersion;
 
-    if (_language.IsEmpty())
-        _language = FInternationalization::Get().GetCurrentLanguage()->GetTwoLetterISOLanguageName();
-    if (_country.IsEmpty())
-        _country = FInternationalization::Get().GetCurrentLocale()->GetRegion();
-            
-    _timezoneOffset = BrainCloudTimeUtils::UTCTimeZoneOffset();
+	InitDeviceInfo();
 }
 
 void BrainCloudClient::initializeIdentity(const FString &profileId, const FString &anonymousId)
 {
 	getAuthenticationService()->initialize(profileId, anonymousId);
+}
+
+void BrainCloudClient::InitDeviceInfo()
+{
+	if (_language.IsEmpty())
+		_language = FInternationalization::Get().GetCurrentLanguage()->GetTwoLetterISOLanguageName();
+	if (_country.IsEmpty())
+		_country = UBrainCloudFunctionLibrary::GetSystemCountryCode();
+
+	if (_country.IsEmpty()) {
+		//fall back to locale if empty result
+		FInternationalization::Get().GetCurrentLocale()->GetRegion();
+	}
+
+	_timezoneOffset = BrainCloudTimeUtils::UTCTimeZoneOffset();
 }
 
 void BrainCloudClient::runCallbacks(eBCUpdateType in_updateType /*= eBCUpdateType::ALL*/)
