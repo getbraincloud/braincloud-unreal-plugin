@@ -171,8 +171,14 @@ FString UBrainCloudFunctionLibrary::GetSystemCountryCode()
     CountryCode = FInternationalization::Get().GetCurrentLocale()->GetRegion();
 #endif
 
-    if (CountryCode.IsEmpty())
+    if (CountryCode.IsEmpty()) {
+        //fall back to locale if empty result
+        CountryCode = FInternationalization::Get().GetCurrentLocale()->GetRegion();
+    }
+    if (CountryCode.IsEmpty()) {
+        // fall back to PlatformMisc default locale if still empty result
         CountryCode = FPlatformMisc::GetDefaultLocale();
+    }
 
     return CountryCode;
 }
