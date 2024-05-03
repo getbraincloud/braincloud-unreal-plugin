@@ -53,7 +53,7 @@ public:
 		Format the country code as per braincCloud server standards
 	*/
 	UFUNCTION(BlueprintCallable, Category = "BrainCloud Utility")
-	static bool ValidateAndFormatCountryCode(FString& CountryCode);
+	static FString FormatCountryCode(FString CountryCode);
 
 	/**
 		Platform dependent get the language

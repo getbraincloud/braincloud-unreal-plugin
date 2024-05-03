@@ -188,13 +188,14 @@ FString UBrainCloudFunctionLibrary::GetSystemCountryCode()
             CountryCode = country;
     }
 
-    ValidateAndFormatCountryCode(CountryCode);
+    FormatCountryCode(CountryCode);
 
     return CountryCode;
 }
 
-bool UBrainCloudFunctionLibrary::ValidateAndFormatCountryCode(FString& CountryCode)
+FString UBrainCloudFunctionLibrary::FormatCountryCode(FString InputCode)
 {
+    FString CountryCode = InputCode;
     if (CountryCode == "419") {
         CountryCode = "_LA_";
     }
@@ -205,8 +206,7 @@ bool UBrainCloudFunctionLibrary::ValidateAndFormatCountryCode(FString& CountryCo
 
         CountryCode = CountryCode.ToUpper().Left(2);
     }
-
-    return true;
+    return CountryCode;
 }
 
 FString UBrainCloudFunctionLibrary::GetSystemLanguageCode()
