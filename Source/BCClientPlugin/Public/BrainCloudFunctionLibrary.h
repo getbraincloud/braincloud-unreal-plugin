@@ -38,12 +38,6 @@ public:
 	static bool ValidateAndExtractURL(const FString& InputURL, FString& OutURL);
 
 	/**
-		Platform dependent get the timezone
-	*/
-	UFUNCTION(BlueprintCallable, Category = "System Information")
-	static float GetSystemTimeZoneOffset();
-
-	/**
 		Platform dependent get the region
 	*/
 	UFUNCTION(BlueprintCallable, Category = "BrainCloud Utility")
