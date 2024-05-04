@@ -177,26 +177,35 @@ FString UBrainCloudFunctionLibrary::GetSystemCountryCode()
     }
     if (CountryCode.IsEmpty()) {
         // fall back to PlatformMisc default locale if still empty result
-        FString locale = FPlatformMisc::GetDefaultLocale();
-        FString language, country;
-        locale.Split(TEXT("-"), &language, &country);
-
-        // on some platforms, will come back like "es-419" or "en-GB" so parse it out
-        if (country.IsEmpty())
-            CountryCode = language;
-        else
-            CountryCode = country;
+        CountryCode = GetCountryCodeFromLocale(FPlatformMisc::GetDefaultLocale());
     }
 
-    FormatCountryCode(CountryCode);
+    return  FormatCountryCode(CountryCode);
+}
 
+FString UBrainCloudFunctionLibrary::GetCountryCodeFromLocale(FString locale)
+{
+    FString CountryCode = locale;
+
+    // on some platforms, will come back like "es-419" or "en-GB" so parse Region out
+    FCulturePtr culture = FInternationalization::Get().GetCulture(locale);
+
+    if (culture.IsValid()) {
+        CountryCode = culture->GetRegion();
+        if (CountryCode.IsEmpty()) {
+            CountryCode = culture->GetName();
+        }
+        if (CountryCode.IsEmpty()) {
+            CountryCode = locale;
+        }
+    }
     return CountryCode;
 }
 
 FString UBrainCloudFunctionLibrary::FormatCountryCode(FString InputCode)
 {
     FString CountryCode = InputCode;
-    if (CountryCode == "419") {
+    if (CountryCode == "419" || CountryCode == "_LA_") {
         CountryCode = "_LA_";
     }
     else if ((CountryCode == "Hans") || (CountryCode == "Hant")) {

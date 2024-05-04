@@ -44,6 +44,12 @@ public:
 	static FString GetSystemCountryCode();
 
 	/**
+		Get the country code (region) part of IETF locale string
+	*/
+	UFUNCTION(BlueprintCallable, Category = "BrainCloud Utility")
+	static FString GetCountryCodeFromLocale(FString Locale);
+
+	/**
 		Format the country code as per braincCloud server standards
 	*/
 	UFUNCTION(BlueprintCallable, Category = "BrainCloud Utility")
