@@ -209,14 +209,10 @@ FString UBrainCloudFunctionLibrary::GetCountryCodeFromLocale(FString locale)
 FString UBrainCloudFunctionLibrary::FormatCountryCode(FString InputCode)
 {
     FString CountryCode = InputCode;
-    if (CountryCode == "419" || CountryCode == "_LA_") {
+    if (CountryCode == "419") {
         CountryCode = "_LA_";
     }
-    else if ((CountryCode == "Hans") || (CountryCode == "Hant")) {
-        CountryCode = "CN";
-    }
-    else {
-
+    else if(CountryCode != "_LA_") {
         CountryCode = CountryCode.ToUpper().Left(2);
     }
     return CountryCode;
