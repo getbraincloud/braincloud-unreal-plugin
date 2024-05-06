@@ -185,9 +185,11 @@ FString UBrainCloudFunctionLibrary::GetSystemCountryCode()
 
 FString UBrainCloudFunctionLibrary::GetCountryCodeFromLocale(FString locale)
 {
-    FString CountryCode = locale;
+    FString CountryCode("");
 
     // on some platforms, will come back like "es-419" or "en-GB" so parse Region out
+    // note using Unreal FCulturePtr class to get the region works in most cases
+    // alternatively, we could split the string on "-"
     FCulturePtr culture = FInternationalization::Get().GetCulture(locale);
 
     if (culture.IsValid()) {
@@ -195,9 +197,11 @@ FString UBrainCloudFunctionLibrary::GetCountryCodeFromLocale(FString locale)
         if (CountryCode.IsEmpty()) {
             CountryCode = culture->GetName();
         }
-        if (CountryCode.IsEmpty()) {
-            CountryCode = locale;
-        }
+    }
+
+    // by default, just use the passed in value
+    if (CountryCode.IsEmpty()) {
+        CountryCode = locale;
     }
     return CountryCode;
 }
