@@ -193,10 +193,7 @@ FString UBrainCloudFunctionLibrary::GetCountryCodeFromLocale(FString locale)
     FCulturePtr culture = FInternationalization::Get().GetCulture(locale);
 
     if (culture.IsValid()) {
-        CountryCode = culture->GetRegion();
-        if (CountryCode.IsEmpty()) {
-            CountryCode = culture->GetName();
-        }
+        CountryCode = culture->GetRegion();    
     }
 
     // by default, just use the passed in value
@@ -211,6 +208,9 @@ FString UBrainCloudFunctionLibrary::FormatCountryCode(FString InputCode)
     FString CountryCode = InputCode;
     if (CountryCode == "419") {
         CountryCode = "_LA_";
+    }
+    else if ((CountryCode == "Hans") || (CountryCode == "Hant")) {
+        CountryCode = "CN";
     }
     else if(CountryCode != "_LA_") {
         CountryCode = CountryCode.ToUpper().Left(2);
