@@ -44,13 +44,26 @@ public:
 	static FString GetSystemCountryCode();
 
 	/**
-		Get the country code (region) part of IETF locale string
+		creates a FCulturePtr to retieve the country code (region) part of IETF locale string
+		works for various cultures
+		For example, the tag en stands for English; es-419 for Latin American Spanish; rm-sursilv for Romansh Sursilvan;
+		sr-Cyrl for Serbian written in Cyrillic script; nan-Hant-TW for Min Nan Chinese using traditional Han characters, as spoken in Taiwan;
+		and gsw-u-sd-chzh for Zürich German.
+
 	*/
 	UFUNCTION(BlueprintCallable, Category = "BrainCloud Utility")
-	static FString GetCountryCodeFromLocale(FString Locale);
+	static FString GetCountryCodeFromCulture(FString locale);
 
 	/**
-		Format the country code as per braincCloud server standards
+		Splits off the country code (region) on a "-" or "_" given IETF locale string
+		only works with: <language>_<country>
+		or: <language>-<country>
+	*/
+	UFUNCTION(BlueprintCallable, Category = "BrainCloud Utility")
+	static FString SplitCountryCodeFromLocale(FString locale);
+
+	/**
+		Format the country code as per braincCloud server expectations
 	*/
 	UFUNCTION(BlueprintCallable, Category = "BrainCloud Utility")
 	static FString FormatCountryCode(FString CountryCode);

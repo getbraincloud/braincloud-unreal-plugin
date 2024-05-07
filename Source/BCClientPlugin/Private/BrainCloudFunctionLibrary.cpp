@@ -172,23 +172,54 @@ FString UBrainCloudFunctionLibrary::GetSystemCountryCode()
 #endif
 
     if (CountryCode.IsEmpty()) {
-        //fall back to locale if empty result
+        //fall back to current/active culture if empty result
         CountryCode = FInternationalization::Get().GetCurrentLocale()->GetRegion();
     }
     if (CountryCode.IsEmpty()) {
         // fall back to PlatformMisc default locale if still empty result
-        CountryCode = GetCountryCodeFromLocale(FPlatformMisc::GetDefaultLocale());
+        CountryCode = SplitCountryCodeFromLocale(FPlatformMisc::GetDefaultLocale());
     }
 
     return  FormatCountryCode(CountryCode);
 }
 
-FString UBrainCloudFunctionLibrary::GetCountryCodeFromLocale(FString locale)
+FString UBrainCloudFunctionLibrary::SplitCountryCodeFromLocale(FString locale)
 {
     FString CountryCode("");
 
+    // on some platforms, may come back like "es-419" or "en-GB" or "zh-Hans" so parse it out
+    // on some platforms, may come back like with underscore seperator like "en_US"
+    FString language, country;
+    locale.Split(TEXT("-"), &language, &country);
+
+    if (country.IsEmpty()) {
+        locale.Split(TEXT("_"), &language, &country);
+
+        if (country.IsEmpty()) {
+            CountryCode = language;
+        }
+        else
+            CountryCode = country;
+    }
+    else
+        CountryCode = country;
+
+    return CountryCode;
+}
+
+FString UBrainCloudFunctionLibrary::GetCountryCodeFromCulture(FString locale)
+{
+    FString CountryCode("");
+
+    // this locale won't get a region code
+    if ((locale.ToLower() == "zh-hans") || (locale.ToLower() == "zh-hant")) {
+        locale += "-CN";
+    }
+
     // on some platforms, will come back like "es-419" or "en-GB" so parse Region out
     // note using Unreal FCulturePtr class to get the region works in most cases
+    // returns en-US-POSIX when it can't find a culture though (eg. empty string, gibberish)
+    // will be invalid if it's a number or something
     // alternatively, we could split the string on "-"
     FCulturePtr culture = FInternationalization::Get().GetCulture(locale);
 
