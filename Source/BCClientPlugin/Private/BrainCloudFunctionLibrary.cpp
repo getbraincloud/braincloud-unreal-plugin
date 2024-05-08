@@ -194,16 +194,16 @@ FString UBrainCloudFunctionLibrary::SplitCountryCodeFromLocale(FString locale)
 
     if (country.IsEmpty()) {
         locale.Split(TEXT("_"), &language, &country);
-
-        if (country.IsEmpty()) {
-            CountryCode = language;
-        }
-        else
-            CountryCode = country;
-    }
-    else
         CountryCode = country;
+    }
+    else {
+        CountryCode = country;
+    }
 
+    // by default, just use the passed in value
+    if (CountryCode.IsEmpty()) {
+        CountryCode = locale;
+    }
     return CountryCode;
 }
 
