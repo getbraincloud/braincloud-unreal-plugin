@@ -206,6 +206,7 @@ const ServiceOperation ServiceOperation::FindPlayersUsingFilter = ServiceOperati
 
 const ServiceOperation ServiceOperation::SubmitTurn = ServiceOperation(TEXT("SUBMIT_TURN"));
 const ServiceOperation ServiceOperation::UpdateMatchSummary = ServiceOperation(TEXT("UPDATE_SUMMARY"));
+const ServiceOperation ServiceOperation::UpdateMatchStateCurrentTurn = ServiceOperation(TEXT("UPDATE_MATCH_STATE_CURRENT_TURN"));
 const ServiceOperation ServiceOperation::Abandon = ServiceOperation(TEXT("ABANDON"));
 const ServiceOperation ServiceOperation::Complete = ServiceOperation(TEXT("COMPLETE"));
 const ServiceOperation ServiceOperation::ReadMatch = ServiceOperation(TEXT("READ_MATCH"));

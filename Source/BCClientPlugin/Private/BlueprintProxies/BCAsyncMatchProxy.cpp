@@ -43,6 +43,13 @@ UBCAsyncMatchProxy *UBCAsyncMatchProxy::UpdateMatchSummaryData(UBrainCloudWrappe
     return Proxy;
 }
 
+UBCAsyncMatchProxy* UBCAsyncMatchProxy::UpdateMatchStateCurrentTurn(UBrainCloudWrapper* brainCloudWrapper, FString ownerId, FString matchId, int32 version, FString matchState, FString statistics)
+{
+    UBCAsyncMatchProxy* Proxy = NewObject<UBCAsyncMatchProxy>();
+    UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getAsyncMatchService()->updateMatchStateCurrentTurn(ownerId, matchId, version, matchState, statistics, Proxy);
+    return Proxy;
+}
+
 UBCAsyncMatchProxy *UBCAsyncMatchProxy::CompleteMatch(UBrainCloudWrapper *brainCloudWrapper, FString ownerId, FString matchId)
 {
     UBCAsyncMatchProxy *Proxy = NewObject<UBCAsyncMatchProxy>();

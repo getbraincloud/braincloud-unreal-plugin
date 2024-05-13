@@ -211,6 +211,7 @@ class BCCLIENTPLUGIN_API ServiceOperation
 
 	static const ServiceOperation SubmitTurn;
 	static const ServiceOperation UpdateMatchSummary;
+	static const ServiceOperation UpdateMatchStateCurrentTurn;
 	static const ServiceOperation Abandon;
 	static const ServiceOperation Complete;
 	static const ServiceOperation ReadMatch;
