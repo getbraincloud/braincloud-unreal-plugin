@@ -111,6 +111,27 @@ void BrainCloudAsyncMatch::updateMatchSummaryData(const FString &ownerId, const 
     _client->sendRequest(sc);
 }
 
+void BrainCloudAsyncMatch::updateMatchStateCurrentTurn(const FString& ownerId, const FString& matchId, uint64 version, const FString& matchState, const FString& statistics, IServerCallback* callback)
+{
+    TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
+    message->SetStringField(OperationParam::AsyncMatchServiceOwnerId.getValue(), ownerId);
+    message->SetStringField(OperationParam::AsyncMatchServiceMatchId.getValue(), matchId);
+    message->SetNumberField(OperationParam::AsyncMatchServiceVersion.getValue(), version);
+
+    if (matchState.Len() != 0)
+    {
+        message->SetObjectField(OperationParam::AsyncMatchServiceMatchState.getValue(), JsonUtil::jsonStringToValue(matchState));
+    }
+
+    if (statistics.Len() != 0)
+    {
+        message->SetObjectField(OperationParam::AsyncMatchServiceStatistics.getValue(), JsonUtil::jsonStringToValue(statistics));
+    }
+
+    ServerCall* sc = new ServerCall(ServiceName::AsyncMatch, ServiceOperation::UpdateMatchStateCurrentTurn, message, callback);
+    _client->sendRequest(sc);
+}
+
 void BrainCloudAsyncMatch::completeMatch(const FString &ownerId, const FString &matchId, IServerCallback *callback)
 {
     TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());

@@ -112,6 +112,25 @@ public:
   static UBCAsyncMatchProxy *UpdateMatchSummaryData(UBrainCloudWrapper *brainCloudWrapper, FString ownerId, FString matchId, int32 version, FString jsonSummary);
 
   /**
+
+    Allows the current player in the game to overwrite the matchState and
+
+    statistics without completing their turn or adding to matchHistory.
+    *
+    * Service Name - AsyncMatch
+    * Service Operation - UpdateMatchStateCurrentTurn
+    *
+    * @param ownerId Match owner identifier
+    * @param matchId Match identifier
+    * @param version Game state version being updated, to ensure data integrity
+    * @param matchState JSON object provided by the caller. Overwrites the matchState. Required.
+    * @param statistics Optional JSON object provided by the caller. Overwrites the statistics.
+    * @return NativeObject Updated match summary.
+    */
+  UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Async Match")
+  static UBCAsyncMatchProxy* UpdateMatchStateCurrentTurn(UBrainCloudWrapper* brainCloudWrapper, FString ownerId, FString matchId, int32 version, FString matchState, FString statistics);
+
+  /**
     * Marks the given match as complete.
     *
     * Service Name - AsyncMatch

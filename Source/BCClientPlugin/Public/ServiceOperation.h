@@ -211,6 +211,7 @@ class BCCLIENTPLUGIN_API ServiceOperation
 
 	static const ServiceOperation SubmitTurn;
 	static const ServiceOperation UpdateMatchSummary;
+	static const ServiceOperation UpdateMatchStateCurrentTurn;
 	static const ServiceOperation Abandon;
 	static const ServiceOperation Complete;
 	static const ServiceOperation ReadMatch;
@@ -334,6 +335,7 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation CreateGroupEntity;
 	static const ServiceOperation DeleteGroup;
 	static const ServiceOperation DeleteGroupEntity;
+	static const ServiceOperation DeleteGroupJoinRequest;
 	static const ServiceOperation DeleteGroupMemeber;
 	static const ServiceOperation GetMyGroups;
 	static const ServiceOperation IncrementGroupData;

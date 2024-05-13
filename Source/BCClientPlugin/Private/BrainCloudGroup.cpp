@@ -180,6 +180,15 @@ void BrainCloudGroup::deleteGroupEntity(const FString &groupId, const FString &e
 	_client->sendRequest(sc);
 }
 
+void BrainCloudGroup::deleteGroupJoinRequest(const FString& groupId, IServerCallback* callback)
+{
+	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
+	message->SetStringField(OperationParam::GroupId.getValue(), groupId);
+
+	ServerCall* sc = new ServerCall(ServiceName::Group, ServiceOperation::DeleteGroupJoinRequest, message, callback);
+	_client->sendRequest(sc);
+}
+
 void BrainCloudGroup::getMyGroups(IServerCallback *callback)
 {
 	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());

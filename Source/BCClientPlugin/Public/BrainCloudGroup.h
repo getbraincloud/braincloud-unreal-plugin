@@ -204,6 +204,17 @@ class BCCLIENTPLUGIN_API BrainCloudGroup
     void deleteGroupEntity(const FString &groupId, const FString &entityId, int32 version, IServerCallback *callback = nullptr);
 
     /**
+     * Delete a request to join a group
+     * 
+     * Service Name - group
+     * Service Opereation - DELETE_GROUP_JOIN_REQUEST
+     * 
+     * @param groupId ID of the group.
+     * @param callback the method to be invoked when the server response is received
+    */
+    void deleteGroupJoinRequest(const FString& groupId, IServerCallback* callback = nullptr);
+
+    /**
      * Read information on groups to which the current player belongs.
      *
      * Service Name - group
