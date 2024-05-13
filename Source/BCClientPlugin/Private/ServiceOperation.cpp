@@ -332,6 +332,7 @@ const ServiceOperation ServiceOperation::CreateGroup = ServiceOperation(TEXT("CR
 const ServiceOperation ServiceOperation::CreateGroupEntity = ServiceOperation(TEXT("CREATE_GROUP_ENTITY"));
 const ServiceOperation ServiceOperation::DeleteGroup = ServiceOperation(TEXT("DELETE_GROUP"));
 const ServiceOperation ServiceOperation::DeleteGroupEntity = ServiceOperation(TEXT("DELETE_GROUP_ENTITY"));
+const ServiceOperation ServiceOperation::DeleteGroupJoinRequest = ServiceOperation(TEXT("DELETE_GROUP_JOIN_REQUEST"));
 const ServiceOperation ServiceOperation::DeleteGroupMemeber = ServiceOperation(TEXT("DELETE_MEMBER_FROM_GROUP"));
 const ServiceOperation ServiceOperation::GetMyGroups = ServiceOperation(TEXT("GET_MY_GROUPS"));
 const ServiceOperation ServiceOperation::IncrementGroupData = ServiceOperation(TEXT("INCREMENT_GROUP_DATA"));

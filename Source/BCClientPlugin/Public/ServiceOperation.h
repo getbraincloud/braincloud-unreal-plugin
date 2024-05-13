@@ -335,6 +335,7 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation CreateGroupEntity;
 	static const ServiceOperation DeleteGroup;
 	static const ServiceOperation DeleteGroupEntity;
+	static const ServiceOperation DeleteGroupJoinRequest;
 	static const ServiceOperation DeleteGroupMemeber;
 	static const ServiceOperation GetMyGroups;
 	static const ServiceOperation IncrementGroupData;

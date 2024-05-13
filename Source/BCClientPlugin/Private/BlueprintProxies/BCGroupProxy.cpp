@@ -114,6 +114,13 @@ UBCGroupProxy *UBCGroupProxy::DeleteGroupEntity(UBrainCloudWrapper *brainCloudWr
     return Proxy;
 }
 
+UBCGroupProxy* UBCGroupProxy::DeleteGroupJoinRequest(UBrainCloudWrapper* brainCloudWrapper, const FString& groupId)
+{
+    UBCGroupProxy* Proxy = NewObject<UBCGroupProxy>();
+    UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getGroupService()->deleteGroupJoinRequest(groupId, Proxy);
+    return Proxy;
+}
+
 UBCGroupProxy *UBCGroupProxy::GetMyGroups(UBrainCloudWrapper *brainCloudWrapper)
 {
     UBCGroupProxy *Proxy = NewObject<UBCGroupProxy>();
