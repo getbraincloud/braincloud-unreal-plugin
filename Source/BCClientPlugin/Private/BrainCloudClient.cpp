@@ -23,7 +23,7 @@
 #include "Internationalization/Culture.h"
 
 // Define all static member variables.
-FString BrainCloudClient::s_brainCloudClientVersion = TEXT("5.2.3");
+FString BrainCloudClient::s_brainCloudClientVersion = TEXT("5.3.0");
 
 ////////////////////////////////////////////////////
 // (De)Constructors
