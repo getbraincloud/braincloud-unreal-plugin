@@ -526,7 +526,9 @@ class BCCLIENTPLUGIN_API BrainCloudClient
 	* Will override any auto detected country.
 	* @param countryCode ISO 3166-1 two-letter country code
 	*/
-	void overrideCountryCode(const FString &countryCode) { _country = countryCode; }
+	void overrideCountryCode(const FString &countryCode) { 
+		_country = UBrainCloudFunctionLibrary::FormatCountryCode(countryCode);
+	}
 
 	/**
 	* Sets the language code sent to brainCloud when a user authenticates.

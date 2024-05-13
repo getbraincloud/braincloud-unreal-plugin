@@ -298,11 +298,6 @@ void BrainCloudAuthentication::authenticate(
 	}
 	
 	FString countryCode = brainCloudClientRef->getCountryCode();
-	//If resulting country code is 419 remap to _LA_ to represent the Latin America region
-	if (countryCode == "419") {
-		countryCode = "_LA_";
-	}
-	countryCode = countryCode.ToUpper();
 
     message->SetStringField(OperationParam::AuthenticateServiceAuthenticateCountryCode.getValue(), countryCode);
     message->SetStringField(OperationParam::AuthenticateServiceAuthenticateLanguageCode.getValue(), brainCloudClientRef->getLanguageCode());
