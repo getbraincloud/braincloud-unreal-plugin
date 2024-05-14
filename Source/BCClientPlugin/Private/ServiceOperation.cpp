@@ -206,6 +206,7 @@ const ServiceOperation ServiceOperation::FindPlayersUsingFilter = ServiceOperati
 
 const ServiceOperation ServiceOperation::SubmitTurn = ServiceOperation(TEXT("SUBMIT_TURN"));
 const ServiceOperation ServiceOperation::UpdateMatchSummary = ServiceOperation(TEXT("UPDATE_SUMMARY"));
+const ServiceOperation ServiceOperation::UpdateMatchStateCurrentTurn = ServiceOperation(TEXT("UPDATE_MATCH_STATE_CURRENT_TURN"));
 const ServiceOperation ServiceOperation::Abandon = ServiceOperation(TEXT("ABANDON"));
 const ServiceOperation ServiceOperation::Complete = ServiceOperation(TEXT("COMPLETE"));
 const ServiceOperation ServiceOperation::ReadMatch = ServiceOperation(TEXT("READ_MATCH"));
@@ -331,6 +332,7 @@ const ServiceOperation ServiceOperation::CreateGroup = ServiceOperation(TEXT("CR
 const ServiceOperation ServiceOperation::CreateGroupEntity = ServiceOperation(TEXT("CREATE_GROUP_ENTITY"));
 const ServiceOperation ServiceOperation::DeleteGroup = ServiceOperation(TEXT("DELETE_GROUP"));
 const ServiceOperation ServiceOperation::DeleteGroupEntity = ServiceOperation(TEXT("DELETE_GROUP_ENTITY"));
+const ServiceOperation ServiceOperation::DeleteGroupJoinRequest = ServiceOperation(TEXT("DELETE_GROUP_JOIN_REQUEST"));
 const ServiceOperation ServiceOperation::DeleteGroupMemeber = ServiceOperation(TEXT("DELETE_MEMBER_FROM_GROUP"));
 const ServiceOperation ServiceOperation::GetMyGroups = ServiceOperation(TEXT("GET_MY_GROUPS"));
 const ServiceOperation ServiceOperation::IncrementGroupData = ServiceOperation(TEXT("INCREMENT_GROUP_DATA"));

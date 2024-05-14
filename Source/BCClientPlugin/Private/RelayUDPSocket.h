@@ -2,7 +2,7 @@
 
 #include "IRelaySocket.h"
 #include "CoreMinimal.h"
-
+#include "Misc/ScopeLock.h"
 //#include "Networking.h"
 #include "Sockets.h"
 

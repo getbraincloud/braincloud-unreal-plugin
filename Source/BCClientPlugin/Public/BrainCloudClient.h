@@ -118,7 +118,6 @@ enum class BCWebsocketStatus: uint8
 
 class BCCLIENTPLUGIN_API BrainCloudClient
 {
-
   public:
 	/** Public constants */
 	static bool SINGLE_THREADED;
@@ -161,6 +160,11 @@ class BCCLIENTPLUGIN_API BrainCloudClient
 	* @param anonymousId  The anonymous installation id that was generated for this device
 	*/
 	void initializeIdentity(const FString &profileId, const FString &anonymousId);
+
+	/**
+	* Initializes device info such as country code, language and time zone
+	*/
+	void InitDeviceInfo();
 
 	/**
 	* Run callbacks, to be called once per frame from your main thread
@@ -522,7 +526,9 @@ class BCCLIENTPLUGIN_API BrainCloudClient
 	* Will override any auto detected country.
 	* @param countryCode ISO 3166-1 two-letter country code
 	*/
-	void overrideCountryCode(const FString &countryCode) { _country = countryCode; }
+	void overrideCountryCode(const FString &countryCode) { 
+		_country = UBrainCloudFunctionLibrary::FormatCountryCode(countryCode);
+	}
 
 	/**
 	* Sets the language code sent to brainCloud when a user authenticates.

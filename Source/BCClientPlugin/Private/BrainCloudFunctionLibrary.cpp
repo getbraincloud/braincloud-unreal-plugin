@@ -8,13 +8,22 @@
 #include "HAL/PlatformApplicationMisc.h"
 #include "Internationalization/Culture.h"
 #include "Internationalization/Internationalization.h"
+#include "AndroidNativeLibrary.h"
 #include <iostream>
 
 
 #if PLATFORM_WINDOWS
-#include "Runtime/Core/Public/Windows/AllowWindowsPlatformTypes.h"
-#include "windows.h"
-#include "Runtime/Core/Public/Windows/HideWindowsPlatformTypes.h"
+#include "Windows/AllowWindowsPlatformTypes.h" // Include this to allow using Windows API
+#include <Windows.h>
+#include "Windows/HideWindowsPlatformTypes.h" // Include this to hide Windows API usa
+#include "Developer/DesktopPlatform/Public/IDesktopPlatform.h"
+#include "Developer/DesktopPlatform/Public/DesktopPlatformModule.h"
+#endif
+
+#if PLATFORM_IOS || PLATFORM_MAC
+
+#include <Foundation/Foundation.h>
+
 #endif
 
 FBrainCloudAppDataStruct UBrainCloudFunctionLibrary::GetBCAppData()
@@ -138,22 +147,118 @@ bool UBrainCloudFunctionLibrary::ValidateAndExtractURL(const FString& InputURL, 
 FString UBrainCloudFunctionLibrary::GetSystemCountryCode()
 {
     FString CountryCode = FString();
-#if PLATFORM_IOS
-    CountryCode = FIOSPlatformMisc::GetDefaultLocale();
-#elif PLATFORM_ANDROID
-    CountryCode = FAndroidMisc::GetDefaultLocale();
-#elif PLATFORM_WINDOWS
-    LCID locale = GetUserDefaultLCID();
+#if PLATFORM_MAC || PLATFORM_IOS
 
-    // Get the country code
-    const int bufferSize = 10;  // Adjust as needed
-    TCHAR countryBuffer[bufferSize];
-    if (GetLocaleInfo(locale, LOCALE_SISO3166CTRYNAME, countryBuffer, bufferSize) > 0) {
-        CountryCode = FString(countryBuffer);
+    NSLocale* currentLocale = [NSLocale currentLocale];
+    if (currentLocale != nil) {
+        NSString* countryCode = [currentLocale objectForKey : NSLocaleCountryCode];
+        if (countryCode != nil) {
+            CountryCode = FString(countryCode);
+        }
     }
+
+#elif PLATFORM_ANDROID
+    CountryCode = UAndroidNativeLibrary::GetCountryCode();
+#elif PLATFORM_WINDOWS
+
+    int geoId = GetUserGeoID(16);
+    int lcid = GetUserDefaultLCID();
+    wchar_t locationBuffer[3];
+    GetGeoInfo(geoId, 4, locationBuffer, 3, lcid);
+
+    CountryCode = locationBuffer;
 #else
     CountryCode = FInternationalization::Get().GetCurrentLocale()->GetRegion();
 #endif
 
+    if (CountryCode.IsEmpty()) {
+        //fall back to current/active culture if empty result
+        CountryCode = FInternationalization::Get().GetCurrentLocale()->GetRegion();
+    }
+    if (CountryCode.IsEmpty()) {
+        // fall back to PlatformMisc default locale if still empty result
+        CountryCode = SplitCountryCodeFromLocale(FPlatformMisc::GetDefaultLocale());
+    }
+
+    return  FormatCountryCode(CountryCode);
+}
+
+FString UBrainCloudFunctionLibrary::SplitCountryCodeFromLocale(FString locale)
+{
+    FString CountryCode("");
+
+    // on some platforms, may come back like "es-419" or "en-GB" or "zh-Hans" so parse it out
+    // on some platforms, may come back like with underscore seperator like "en_US"
+    FString language, country;
+    locale.Split(TEXT("-"), &language, &country);
+
+    if (country.IsEmpty()) {
+        locale.Split(TEXT("_"), &language, &country);
+        CountryCode = country;
+    }
+    else {
+        CountryCode = country;
+    }
+
+    // by default, just use the passed in value
+    if (CountryCode.IsEmpty()) {
+        CountryCode = locale;
+    }
     return CountryCode;
 }
+
+FString UBrainCloudFunctionLibrary::GetCountryCodeFromCulture(FString locale)
+{
+    FString CountryCode("");
+
+    // this locale won't get a region code
+    if ((locale.ToLower() == "zh-hans") || (locale.ToLower() == "zh-hant")) {
+        locale += "-CN";
+    }
+
+    // on some platforms, will come back like "es-419" or "en-GB" so parse Region out
+    // note using Unreal FCulturePtr class to get the region works in most cases
+    // returns en-US-POSIX when it can't find a culture though (eg. empty string, gibberish)
+    // will be invalid if it's a number or something
+    // alternatively, we could split the string on "-"
+    FCulturePtr culture = FInternationalization::Get().GetCulture(locale);
+
+    if (culture.IsValid()) {
+        CountryCode = culture->GetRegion();    
+    }
+
+    // by default, just use the passed in value
+    if (CountryCode.IsEmpty()) {
+        CountryCode = locale;
+    }
+    return CountryCode;
+}
+
+FString UBrainCloudFunctionLibrary::FormatCountryCode(FString InputCode)
+{
+    FString CountryCode = InputCode;
+    if (CountryCode == "419") {
+        CountryCode = "_LA_";
+    }
+    else if ((CountryCode == "Hans") || (CountryCode == "Hant")) {
+        CountryCode = "CN";
+    }
+    else if(CountryCode != "_LA_") {
+        CountryCode = CountryCode.ToUpper().Left(2);
+    }
+    return CountryCode;
+}
+
+FString UBrainCloudFunctionLibrary::GetSystemLanguageCode()
+{
+    FString LanguageCode = FString();
+
+    LanguageCode = FInternationalization::Get().GetCurrentCulture()->GetName();
+
+    if (LanguageCode.IsEmpty())
+        LanguageCode = FPlatformMisc::GetDefaultLanguage();
+
+    return LanguageCode;
+}
+
+

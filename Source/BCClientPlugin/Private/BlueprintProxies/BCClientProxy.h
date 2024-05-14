@@ -319,4 +319,18 @@ class UBCClientProxy : public UBCBlueprintCallProxyBase
 	*/
 	UFUNCTION(BlueprintCallable, Category = "BrainCloud|Client")
 	static void OverrideLanguageCode(UBrainCloudWrapper *brainCloudWrapper, const FString &languageCode);
+
+	/**
+	* Gets the country code sent to brainCloud when a user authenticates.
+	* Return - countryCode ISO 3166-1 two-letter country code
+	*/
+	UFUNCTION(BlueprintCallable, Category = "BrainCloud|Client")
+	static FString GetCountryCode(UBrainCloudWrapper *brainCloudWrapper);
+
+	/**
+	* Gets the language code sent to brainCloud when a user authenticates.
+	 Return - languageCode ISO 639-1 two-letter language code
+	*/
+	UFUNCTION(BlueprintCallable, Category = "BrainCloud|Client")
+	static FString GetLanguageCode(UBrainCloudWrapper *brainCloudWrapper);
 };

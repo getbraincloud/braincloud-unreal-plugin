@@ -19,10 +19,11 @@
 #include "IRTTCallback.h"
 #include "IRelayCallback.h"
 #include "BCPlatform.h"
+#include "BrainCloudFunctionLibrary.h"
 #include "Internationalization/Culture.h"
 
 // Define all static member variables.
-FString BrainCloudClient::s_brainCloudClientVersion = TEXT("5.2.3");
+FString BrainCloudClient::s_brainCloudClientVersion = TEXT("5.3.0");
 
 ////////////////////////////////////////////////////
 // (De)Constructors
@@ -125,12 +126,7 @@ void BrainCloudClient::initialize(
 	_appId = appId;
 	_appVersion = appVersion;
 
-	if (_language.IsEmpty())
-		_language = FInternationalization::Get().GetCurrentCulture()->GetName();
-	if (_country.IsEmpty())
-		_country = UBrainCloudFunctionLibrary::GetSystemCountryCode();
-    
-    _timezoneOffset = BrainCloudTimeUtils::UTCTimeZoneOffset();
+	InitDeviceInfo();
 }
 
 void BrainCloudClient::initializeWithApps(
@@ -166,17 +162,22 @@ void BrainCloudClient::initializeWithApps(
 	_appId = appId;
 	_appVersion = appVersion;
 
-    if (_language.IsEmpty())
-        _language = FInternationalization::Get().GetCurrentLanguage()->GetTwoLetterISOLanguageName();
-    if (_country.IsEmpty())
-        _country = FInternationalization::Get().GetCurrentLocale()->GetRegion();
-            
-    _timezoneOffset = BrainCloudTimeUtils::UTCTimeZoneOffset();
+	InitDeviceInfo();
 }
 
 void BrainCloudClient::initializeIdentity(const FString &profileId, const FString &anonymousId)
 {
 	getAuthenticationService()->initialize(profileId, anonymousId);
+}
+
+void BrainCloudClient::InitDeviceInfo()
+{
+	if (_language.IsEmpty())
+		_language = UBrainCloudFunctionLibrary::GetSystemLanguageCode();
+	if (_country.IsEmpty())
+		_country = UBrainCloudFunctionLibrary::GetSystemCountryCode();
+
+	_timezoneOffset = BrainCloudTimeUtils::UTCTimeZoneOffset();
 }
 
 void BrainCloudClient::runCallbacks(eBCUpdateType in_updateType /*= eBCUpdateType::ALL*/)
@@ -792,6 +793,8 @@ BrainCloudMessaging *BrainCloudClient::getMessagingService()
 	}
 	return _messagingService;
 }
+
+
 
 
 BrainCloudRelay *BrainCloudClient::getRelayService()
