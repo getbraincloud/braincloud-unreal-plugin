@@ -73,4 +73,7 @@ public:
 	*/
 	UFUNCTION(BlueprintCallable, Category = "BrainCloud Utility")
 	static FString GetSystemLanguageCode();
+
+	UFUNCTION(BlueprintPure, Category = "BrainCloud Utility")
+	static FString GetProjectVersion();
 };
