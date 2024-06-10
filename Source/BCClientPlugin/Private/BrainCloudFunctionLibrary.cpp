@@ -275,4 +275,16 @@ FString UBrainCloudFunctionLibrary::GetProjectVersion()
     return AppVersion;
 }
 
+FString UBrainCloudFunctionLibrary::GetProjectEnvironment()
+{
+    FBrainCloudAppDataStruct appData = GetBCAppData();
+
+    if (appData.ServerUrl == "https://api.braincloudservers.com") {
+        return "Prod";
+    }
+    else {
+        return "Internal";
+    }
+}
+
 

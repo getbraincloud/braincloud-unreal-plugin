@@ -76,4 +76,7 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "BrainCloud Utility")
 	static FString GetProjectVersion();
+
+	UFUNCTION(BlueprintPure, Category = "BrainCloud Utility")
+	static FString GetProjectEnvironment();
 };
