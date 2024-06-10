@@ -279,7 +279,7 @@ FString UBrainCloudFunctionLibrary::GetProjectEnvironment()
 {
     FBrainCloudAppDataStruct appData = GetBCAppData();
 
-    if (appData.ServerUrl == "https://api.braincloudservers.com") {
+    if (appData.ServerUrl == "https://api.braincloudservers.com/dispatcherv2") {
         return "Prod";
     }
     else {
