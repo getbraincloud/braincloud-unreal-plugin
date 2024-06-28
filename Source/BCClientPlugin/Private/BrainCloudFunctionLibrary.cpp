@@ -282,8 +282,11 @@ FString UBrainCloudFunctionLibrary::GetProjectEnvironment()
     if (appData.ServerUrl == "https://api.braincloudservers.com/dispatcherv2") {
         return "Prod";
     }
-    else {
+    else if(appData.ServerUrl == "https://api.internal.braincloudservers.com/dispatcherv2"){
         return "Internal";
+    }
+    else if (appData.ServerUrl == "https://api.internalg.braincloudservers.com/dispatcherv2") {
+        return "InternalG";
     }
 }
 
