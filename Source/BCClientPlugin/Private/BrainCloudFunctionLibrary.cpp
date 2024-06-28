@@ -288,6 +288,9 @@ FString UBrainCloudFunctionLibrary::GetProjectEnvironment()
     else if (appData.ServerUrl == "https://api.internalg.braincloudservers.com/dispatcherv2") {
         return "InternalG";
     }
+    else {
+        return "Unknown";
+    }
 }
 
 
