@@ -233,3 +233,10 @@ UBCLeaderboardProxy *UBCLeaderboardProxy::GetGroupLeaderboardViewByVersion(UBrai
 	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getLeaderboardService()->getGroupLeaderboardViewByVersion(leaderboardId, groupId, versionId, sortOrder, beforeCount, afterCount, Proxy);
 	return Proxy;
 }
+
+UBCLeaderboardProxy* UBCLeaderboardProxy::PostScoreToDynamicLeaderboardUsingConfig(UBrainCloudWrapper* brainCloudWrapper, const FString& leaderboardId, int32 score, FString scoreData, FString configJson)
+{
+	UBCLeaderboardProxy* Proxy = NewObject<UBCLeaderboardProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getLeaderboardService()->postScoreToDynamicLeaderboardUsingConfig(leaderboardId, score, scoreData, configJson, Proxy);
+	return Proxy;
+}

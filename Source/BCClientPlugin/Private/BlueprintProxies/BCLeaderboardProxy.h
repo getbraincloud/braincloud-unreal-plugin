@@ -386,11 +386,11 @@ class UBCLeaderboardProxy : public UBCBlueprintCallProxyBase
 	* Service Name - leaderboard
 	* Service Operation - POST_GROUP_SCORE
 	*
-	* @param in_leaderboardId A collection of leaderboardIds to retrieve scores from
-	* @param in_groupId the groups Id
-	* @param in_score the score you wish to post
-	* @param in_jsonData extra json Data
-	* @param in_callback The method to be invoked when the server response is received
+	* @param leaderboardId A collection of leaderboardIds to retrieve scores from
+	* @param groupId the groups Id
+	* @param score the score you wish to post
+	* @param jsonData extra json Data
+	* @param callback The method to be invoked when the server response is received
 	*/
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
 	static UBCLeaderboardProxy *PostScoreToGroupLeaderboard(UBrainCloudWrapper *brainCloudWrapper, const FString &leaderboardId, const FString &groupId, int32 score, const FString &jsonOtherData);
@@ -401,10 +401,10 @@ class UBCLeaderboardProxy : public UBCBlueprintCallProxyBase
 	* Service Name - leaderboard
 	* Service Operation - REMOVE_GROUP_SCORE
 	*
-	* @param in_leaderboardId A collection of leaderboardIds to retrieve scores from
-	* @param in_groupId the groups Id
-	* @param in_versionId the score you wish to post
-	* @param in_callback The method to be invoked when the server response is received
+	* @param leaderboardId A collection of leaderboardIds to retrieve scores from
+	* @param groupId the groups Id
+	* @param versionId the score you wish to post
+	* @param callback The method to be invoked when the server response is received
 	*/
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
 	static UBCLeaderboardProxy *RemoveGroupScore(UBrainCloudWrapper *brainCloudWrapper, const FString &leaderboardId, const FString &groupId, int32 score, int32 versionId);
@@ -415,12 +415,12 @@ class UBCLeaderboardProxy : public UBCBlueprintCallProxyBase
 	* Service Name - leaderboard
 	* Service Operation - GET_GROUP_LEADERBOARD_VIEW
 	*
-	* @param in_leaderboardId A collection of leaderboardIds to retrieve scores from
-	* @param in_groupId the groups Id
-	* @param in_sortOrder the sort order
-	* @param in_beforeCount count of players before current player to include
-	* @param in_afterCount count of players after current player to include
-	* @param in_callback The method to be invoked when the server response is received
+	* @param leaderboardId A collection of leaderboardIds to retrieve scores from
+	* @param groupId the groups Id
+	* @param sortOrder the sort order
+	* @param beforeCount count of players before current player to include
+	* @param afterCount count of players after current player to include
+	* @param callback The method to be invoked when the server response is received
 	*/
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
 	static UBCLeaderboardProxy *GetGroupLeaderboardView(UBrainCloudWrapper *brainCloudWrapper, const FString &leaderboardId, const FString &groupId, ESortOrder sortOrder, int32 beforeCount, int32 afterCount);
@@ -431,15 +431,52 @@ class UBCLeaderboardProxy : public UBCBlueprintCallProxyBase
 	* Service Name - leaderboard
 	* Service Operation - GET_GROUP_LEADERBOARD_VIEW
 	*
-	* @param in_leaderboardId A collection of leaderboardIds to retrieve scores from
-	* @param in_groupId the groups Id
-	* @param in_versionId the version
-	* @param in_sortOrder the sort order
-	* @param in_beforeCount count of players before current player to include
-	* @param in_afterCount count of players after current player to include
-	* @param in_callback The method to be invoked when the server response is received
+	* @param leaderboardId A collection of leaderboardIds to retrieve scores from
+	* @param groupId the groups Id
+	* @param versionId the version
+	* @param sortOrder the sort order
+	* @param beforeCount count of players before current player to include
+	* @param afterCount count of players after current player to include
 	*/
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
 	static UBCLeaderboardProxy *GetGroupLeaderboardViewByVersion(UBrainCloudWrapper *brainCloudWrapper, const FString &leaderboardId, const FString &groupId, int32 versionId, ESortOrder sortOrder, int32 beforeCount, int32 afterCount);
+
+	/**
+	* Post the player's score to the given social leaderboard,
+	* dynamically creating the leaderboard if it does not exist yet.
+	* To create new leaderboard, configJson must specify
+	* leaderboardType, rotationType, resetAt, and retainedCount, at a minimum,
+	* with support to optionally specify an expiry in minutes.
+	*
+	* Service Name - leaderboard
+	* Service Operation - POST_SCORE_DYNAMIC_USING_CONFIG
+	*
+	* @param leaderboardId The leaderboard to post to.
+	* @param score A score to post.
+	* @param scoreData Optional user-defined data to post with the score.
+	* @param configJson
+	* Configuration for the leaderboard if it does not exist yet, specified as JSON object.
+	* Configuration fields supported are:
+	*     leaderboardType': Required. Type of leaderboard. Valid values are:
+	*         'LAST_VALUE',
+	*         'HIGH_VALUE',
+	*         'LOW_VALUE',
+	*         'CUMULATIVE',
+	*         'ARCADE_HIGH',
+	*         'ARCADE_LOW';
+	*     'rotationType': Required. Type of rotation. Valid values are:
+	*         'NEVER',
+	*         'DAILY',
+	*         'DAYS',
+	*         'WEEKLY',
+	*         'MONTHLY',
+	*         'YEARLY';
+	*     'numDaysToRotate': Required if 'DAYS' rotation type, with valid values between 2 and 14; otherwise, null;
+	*     'resetAt': UTC timestamp, in milliseconds, at which to rotate the period. Always null if 'NEVER' rotation type;
+	*     'retainedCount': Required. Number of rotations (versions) of the leaderboard to retain;
+	*     'expireInMins': Optional. Duration, in minutes, before the leaderboard is to automatically expire.
+	*/
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
+	static UBCLeaderboardProxy* PostScoreToDynamicLeaderboardUsingConfig(UBrainCloudWrapper* brainCloudWrapper, const FString& leaderboardId, int32 score, FString scoreData, FString configJson);
 
 };
