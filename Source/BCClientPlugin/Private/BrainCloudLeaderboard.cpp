@@ -401,6 +401,18 @@ void BrainCloudLeaderboard::getGroupLeaderboardViewByVersion(const FString &lead
 	_client->sendRequest(sc);
 }
 
+void BrainCloudLeaderboard::postScoreToDynamicLeaderboardUsingConfig(const FString& leaderboardId, int32 score, FString scoreData, FString configJson, IServerCallback* callback)
+{
+	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
+	message->SetStringField(OperationParam::LeaderboardServiceLeaderboardId.getValue(), leaderboardId);
+	message->SetNumberField(OperationParam::LeaderboardServiceScore.getValue(), score);
+	message->SetObjectField(OperationParam::LeaderboardServiceScoreData.getValue(), JsonUtil::jsonStringToValue(scoreData));
+	message->SetObjectField(OperationParam::LeaderboardServiceConfigJson.getValue(), JsonUtil::jsonStringToValue(configJson));
+
+	ServerCall* sc = new ServerCall(ServiceName::Leaderboard, ServiceOperation::PostScoreDynamicUsingConfig, message, callback);
+	_client->sendRequest(sc);
+}
+
 FString BrainCloudLeaderboard::leaderboardTypeToString(ESocialLeaderboardType type)
 {
 	switch (type)

@@ -490,6 +490,44 @@ class BCCLIENTPLUGIN_API BrainCloudLeaderboard
 	*/
 	void getGroupLeaderboardViewByVersion(const FString &leaderboardId, const FString &groupId, int32 versionId, ESortOrder sortOrder, int32 beforeCount, int32 afterCount, IServerCallback *callback = nullptr);
 
+	/**
+	* Post the player's score to the given social leaderboard, 
+    * dynamically creating the leaderboard if it does not exist yet. 
+    * To create new leaderboard, configJson must specify 
+    * leaderboardType, rotationType, resetAt, and retainedCount, at a minimum, 
+    * with support to optionally specify an expiry in minutes.
+    *
+    * Service Name - leaderboard
+    * Service Operation - POST_SCORE_DYNAMIC_USING_CONFIG
+    *
+    * @param leaderboardId The leaderboard to post to.
+    * @param score A score to post.
+    * @param scoreData Optional user-defined data to post with the score.
+    * @param configJson 
+    * Configuration for the leaderboard if it does not exist yet, specified as JSON object. 
+    * Configuration fields supported are:
+    *     leaderboardType': Required. Type of leaderboard. Valid values are:
+    *         'LAST_VALUE',
+    *         'HIGH_VALUE',
+    *         'LOW_VALUE',
+    *         'CUMULATIVE',
+    *         'ARCADE_HIGH',
+    *         'ARCADE_LOW';
+    *     'rotationType': Required. Type of rotation. Valid values are:
+    *         'NEVER',
+    *         'DAILY',
+    *         'DAYS',
+    *         'WEEKLY',
+    *         'MONTHLY',
+    *         'YEARLY'; 
+    *     'numDaysToRotate': Required if 'DAYS' rotation type, with valid values between 2 and 14; otherwise, null; 
+    *     'resetAt': UTC timestamp, in milliseconds, at which to rotate the period. Always null if 'NEVER' rotation type; 
+    *     'retainedCount': Required. Number of rotations (versions) of the leaderboard to retain; 
+    *     'expireInMins': Optional. Duration, in minutes, before the leaderboard is to automatically expire.
+    * @param callback The callback to the response
+	*/
+	void postScoreToDynamicLeaderboardUsingConfig(const FString& leaderboardId, int32 score, FString scoreData, FString configJson, IServerCallback* callback = nullptr);
+
   private:
 	BrainCloudClient *_client = nullptr;
 

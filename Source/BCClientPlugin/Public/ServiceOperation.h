@@ -145,6 +145,7 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation PostScoreToDynamicGroupLeaderboard;
 	static const ServiceOperation RemoveGroupScore;
 	static const ServiceOperation GetGroupLeaderboardView;
+	static const ServiceOperation PostScoreDynamicUsingConfig;
 
 	//Global File
 	static const ServiceOperation GetFileInfo;

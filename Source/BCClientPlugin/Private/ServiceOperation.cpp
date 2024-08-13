@@ -141,6 +141,7 @@ const ServiceOperation ServiceOperation::PostScoreToGroupLeaderboard = ServiceOp
 const ServiceOperation ServiceOperation::PostScoreToDynamicGroupLeaderboard = ServiceOperation(TEXT("POST_GROUP_SCORE_DYNAMIC"));
 const ServiceOperation ServiceOperation::RemoveGroupScore = ServiceOperation(TEXT("REMOVE_GROUP_SCORE"));
 const ServiceOperation ServiceOperation::GetGroupLeaderboardView = ServiceOperation(TEXT("GET_GROUP_LEADERBOARD_VIEW"));
+const ServiceOperation ServiceOperation::PostScoreDynamicUsingConfig = ServiceOperation(TEXT("POST_SCORE_DYNAMIC_USING_CONFIG"));
 
 //Global File
 const ServiceOperation ServiceOperation::GetFileInfo = ServiceOperation(TEXT("GET_FILE_INFO"));
