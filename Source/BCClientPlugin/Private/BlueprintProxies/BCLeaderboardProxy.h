@@ -38,6 +38,30 @@ class UBCLeaderboardProxy : public UBCBlueprintCallProxyBase
 	static UBCLeaderboardProxy *GetSocialLeaderboard(UBrainCloudWrapper *brainCloudWrapper, FString leaderboardId, bool replaceName);
 
 	/**
+	* Method returns the social leaderboard. A player's social leaderboard is
+	* comprised of players who are recognized as being your friend.
+	* For now, this applies solely to Facebook connected players who are
+	* friends with the logged in player (who also must be Facebook connected).
+	* In the future this will expand to other identification means (such as
+	* Game Centre, Google circles etc).
+	*
+	* Leaderboards entries contain the player's score and optionally, some user-defined
+	* data associated with the score. The currently logged in player will also
+	* be returned in the social leaderboard.
+	*
+	* Note: If no friends have played the game, the bestScore, createdAt, updatedAt
+	* will contain NULL.
+	* 
+	* This method returns the same data as GetSocialLeaderboard, but it will not return an error if the leaderboard is not found.
+	*
+	* Param - leaderboardId The id of the leaderboard to retrieve
+	* Param - replaceName If true, the currently logged in player's name will be replaced
+	* by the string "You".
+	*/
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
+	static UBCLeaderboardProxy* GetSocialLeaderboardIfExists(UBrainCloudWrapper* brainCloudWrapper, FString leaderboardId, bool replaceName);
+
+	/**
 	* Method returns the social leaderboard by its version. A player's social leaderboard is
 	* comprised of players who are recognized as being your friend.
 	* For now, this applies solely to Facebook connected players who are
@@ -59,6 +83,31 @@ class UBCLeaderboardProxy : public UBCBlueprintCallProxyBase
 	*/
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
 	static UBCLeaderboardProxy *GetSocialLeaderboardByVersion(UBrainCloudWrapper *brainCloudWrapper, FString leaderboardId, bool replaceName, int32 versionId);
+
+	/**
+	* Method returns the social leaderboard by its version. A player's social leaderboard is
+	* comprised of players who are recognized as being your friend.
+	* For now, this applies solely to Facebook connected players who are
+	* friends with the logged in player (who also must be Facebook connected).
+	* In the future this will expand to other identification means (such as
+	* Game Centre, Google circles etc).
+	*
+	* Leaderboards entries contain the player's score and optionally, some user-defined
+	* data associated with the score. The currently logged in player will also
+	* be returned in the social leaderboard.
+	*
+	* Note: If no friends have played the game, the bestScore, createdAt, updatedAt
+	* will contain NULL.
+	* 
+	* This method returns the same data as GetSocialLeaderboardByVersion, but it will not return an error if the leaderboard does not exist.
+	*
+	* Param - leaderboardId The id of the leaderboard to retrieve
+	* Param - replaceName If true, the currently logged in player's name will be replaced
+	* Param - versionId the version
+	* by the string "You".
+	*/
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
+	static UBCLeaderboardProxy* GetSocialLeaderboardByVersionIfExists(UBrainCloudWrapper* brainCloudWrapper, FString leaderboardId, bool replaceName, int32 versionId);
 
 	/**
 	* Reads multiple social leaderboards.
@@ -92,6 +141,27 @@ class UBCLeaderboardProxy : public UBCBlueprintCallProxyBase
 
 	/**
 	* Method returns a page of global leaderboard results.
+	*
+	* Leaderboards entries contain the player's score and optionally, some user-defined
+	* data associated with the score.
+	*
+	* Note: This method allows the client to retrieve pages from within the global leaderboard list
+	* 
+	* This method returns the same data as GetGlobalLeaderboardPage, but it will not return an error if the leaderboard does not exist.
+	*
+	* Service Name - SocialLeaderboard
+	* Service Operation - GetGlobalLeaderboardPage
+	*
+	* Param - leaderboardId The id of the leaderboard to retrieve.
+	* Param - sort Sort key Sort order of page.
+	* Param - startIndex The index at which to start the page.
+	* Param - endIndex The index at which to end the page.
+	*/
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
+	static UBCLeaderboardProxy* GetGlobalLeaderboardPageIfExists(UBrainCloudWrapper* brainCloudWrapper, FString leaderboardId, ESortOrder sortOrder, int32 startIndex, int32 endIndex);
+
+	/**
+	* Method returns a page of global leaderboard results.
 	* By using a non-current version id, the user can retrieve a historial leaderboard.
 	* See GetGlobalLeaderboardVersions method to retrieve the version id.
 	*
@@ -106,6 +176,25 @@ class UBCLeaderboardProxy : public UBCBlueprintCallProxyBase
 	*/
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
 	static UBCLeaderboardProxy *GetGlobalLeaderboardPageByVersion(UBrainCloudWrapper *brainCloudWrapper, FString leaderboardId, ESortOrder sortOrder, int32 startIndex, int32 endIndex, int32 versionId);
+
+	/**
+	* Method returns a page of global leaderboard results.
+	* By using a non-current version id, the user can retrieve a historial leaderboard.
+	* See GetGlobalLeaderboardVersions method to retrieve the version id.
+	* 
+	* This method returns the same data as GetGlobalLeaderboardPageByVersion, but it will not return an error if the leaderboard does not exist.
+	*
+	* Service Name - SocialLeaderboard
+	* Service Operation - GetGlobalLeaderboardPage
+	*
+	* Param - leaderboardId The id of the leaderboard to retrieve.
+	* Param - sort Sort key Sort order of page.
+	* Param - startIndex The index at which to start the page.
+	* Param - endIndex The index at which to end the page.
+	* Param - versionId The historical version to retrieve.
+	*/
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
+	static UBCLeaderboardProxy* GetGlobalLeaderboardPageByVersionIfExists(UBrainCloudWrapper* brainCloudWrapper, FString leaderboardId, ESortOrder sortOrder, int32 startIndex, int32 endIndex, int32 versionId);
 
 	/**
 	* Method returns a view of global leaderboard results that centers on the current player.
@@ -126,6 +215,25 @@ class UBCLeaderboardProxy : public UBCBlueprintCallProxyBase
 
 	/**
 	* Method returns a view of global leaderboard results that centers on the current player.
+	*
+	* Leaderboards entries contain the player's score and optionally, some user-defined
+	* data associated with the score.
+	* 
+	* This method returns the same data as GetGlobalLeaderboardView, but it will not return an error if the leaderboard does not exist.
+	*
+	* Service Name - SocialLeaderboard
+	* Service Operation - GetGlobalLeaderboardView
+	*
+	* Param - leaderboardId The id of the leaderboard to retrieve.
+	* Param - sort Sort key Sort order of page.
+	* Param - beforeCount The count of number of players before the current player to include.
+	* Param - afterCount The count of number of players after the current player to include.
+	*/
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
+	static UBCLeaderboardProxy* GetGlobalLeaderboardViewIfExists(UBrainCloudWrapper* brainCloudWrapper, FString leaderboardId, ESortOrder sortOrder, int32 beforeCount, int32 afterCount);
+
+	/**
+	* Method returns a view of global leaderboard results that centers on the current player.
 	* By using a non-current version id, the user can retrieve a historial leaderboard.
 	* See GetGlobalLeaderboardVersions method to retrieve the version id.
 	*
@@ -140,6 +248,25 @@ class UBCLeaderboardProxy : public UBCBlueprintCallProxyBase
 	*/
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
 	static UBCLeaderboardProxy *GetGlobalLeaderboardViewByVersion(UBrainCloudWrapper *brainCloudWrapper, FString leaderboardId, ESortOrder sortOrder, int32 beforeCount, int32 afterCount, int32 versionId);
+
+	/**
+	* Method returns a view of global leaderboard results that centers on the current player.
+	* By using a non-current version id, the user can retrieve a historial leaderboard.
+	* See GetGlobalLeaderboardVersions method to retrieve the version id.
+	* 
+	* This method returns the same data as GetGlobalLeaderboardViewByVersion, but it will not return an error if the leaderboard does not exist.
+	*
+	* Service Name - SocialLeaderboard
+	* Service Operation - GetGlobalLeaderboardViewIfExists
+	*
+	* Param - leaderboardId The id of the leaderboard to retrieve.
+	* Param - sort Sort key Sort order of page.
+	* Param - beforeCount The count of number of players before the current player to include.
+	* Param - afterCount The count of number of players after the current player to include.
+	* Param - versionId The historical version to retrieve.
+	*/
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
+	static UBCLeaderboardProxy* GetGlobalLeaderboardViewByVersionIfExists(UBrainCloudWrapper* brainCloudWrapper, FString leaderboardId, ESortOrder sortOrder, int32 beforeCount, int32 afterCount, int32 versionId);
 
 	/**
 	* Gets the number of entries in a global leaderboard
@@ -327,6 +454,17 @@ class UBCLeaderboardProxy : public UBCBlueprintCallProxyBase
 
 	/**
 	* Retrieve the social leaderboard for a list of players.
+	* 
+	* This function returns the same data as GetPlayersSocialLeaderboard, but it will not return an error if the leaderboard does not exist.
+	*
+	* Param - leaderboardId The leaderboard to retrieve
+	* Param - profileIds The IDs of the players
+	*/
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
+	static UBCLeaderboardProxy* GetPlayersSocialLeaderboardIfExists(UBrainCloudWrapper* brainCloudWrapper, const FString& leaderboardId, const TArray<FString> profileIds);
+
+	/**
+	* Retrieve the social leaderboard for a list of players.
 	*
 	* Param - leaderboardId The leaderboard to retrieve
 	* Param - profileIds The IDs of the players
@@ -334,6 +472,18 @@ class UBCLeaderboardProxy : public UBCBlueprintCallProxyBase
 	*/
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
 	static UBCLeaderboardProxy *GetPlayersSocialLeaderboardByVersion(UBrainCloudWrapper *brainCloudWrapper, const FString &leaderboardId, const TArray<FString> profileIds, int32 versionId);
+
+	/**
+	* Retrieve the social leaderboard for a list of players.
+	* 
+	* This function returns the same data as GetPlayersSocialLeaderboardByVersion, but it will not return an error if the leaderboard does not exist.
+	*
+	* Param - leaderboardId The leaderboard to retrieve
+	* Param - profileIds The IDs of the players
+	* Param - versionId the version
+	*/
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
+	static UBCLeaderboardProxy* GetPlayersSocialLeaderboardByVersionIfExists(UBrainCloudWrapper* brainCloudWrapper, const FString& leaderboardId, const TArray<FString> profileIds, int32 versionId);
 
 	/**
 	* Retrieve a list of all leaderboards
