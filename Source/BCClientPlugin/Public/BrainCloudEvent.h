@@ -44,6 +44,20 @@ class BCCLIENTPLUGIN_API BrainCloudEvent
 	void updateIncomingEventData(const FString &evId, const FString &jsonEventData, IServerCallback *callback);
 
 	/**
+	 * Updates an event in the player's incoming event mailbox.
+	 * 
+	 * Returns the same data as UpdateIncomingEventData, but does not return an error if the event does not exist.
+	 *
+	 * Service Name - Event
+	 * Service Operation - UpdateEventData
+	 *
+	 * @param evId The event id
+	 * @param jsonEventData The user-defined data for this event encoded in JSON.
+	 * @param callback The method to be invoked when the server response is received
+	 */
+	void updateIncomingEventDataIfExists(const FString& evId, const FString& jsonEventData, IServerCallback* callback);
+
+	/**
 	 * Delete an event out of the player's incoming mailbox.
 	 *
 	 * Service Name - Event

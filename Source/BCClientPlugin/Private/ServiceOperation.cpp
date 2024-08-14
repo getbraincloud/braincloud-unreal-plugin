@@ -178,6 +178,7 @@ const ServiceOperation ServiceOperation::ResetParentVC = ServiceOperation(TEXT("
 
 const ServiceOperation ServiceOperation::Send = ServiceOperation(TEXT("SEND"));
 const ServiceOperation ServiceOperation::UpdateEventData = ServiceOperation(TEXT("UPDATE_EVENT_DATA"));
+const ServiceOperation ServiceOperation::UpdateEventDataIfExists = ServiceOperation(TEXT("UPDATE_EVENT_DATA_IF_EXISTS"));
 const ServiceOperation ServiceOperation::DeleteSent = ServiceOperation(TEXT("DELETE_SENT"));
 const ServiceOperation ServiceOperation::DeleteIncoming = ServiceOperation(TEXT("DELETE_INCOMING"));
 const ServiceOperation ServiceOperation::DeleteIncomingEvents = ServiceOperation("DELETE_INCOMING_EVENTS");

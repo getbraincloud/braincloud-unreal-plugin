@@ -182,6 +182,7 @@ class BCCLIENTPLUGIN_API ServiceOperation
 
 	static const ServiceOperation Send;
 	static const ServiceOperation UpdateEventData;
+	static const ServiceOperation UpdateEventDataIfExists;
 	static const ServiceOperation DeleteSent;
 	static const ServiceOperation DeleteIncoming;
 	static const ServiceOperation DeleteIncomingEvents;
