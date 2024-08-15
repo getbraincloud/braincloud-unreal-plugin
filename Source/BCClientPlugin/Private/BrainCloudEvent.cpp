@@ -34,6 +34,18 @@ void BrainCloudEvent::updateIncomingEventData(const FString &evId, const FString
 	_client->sendRequest(sc);
 }
 
+void BrainCloudEvent::updateIncomingEventDataIfExists(const FString& evId, const FString& jsonEventData, IServerCallback* callback)
+{
+	// See IEventService on the server to make sure these parameter names are in sync
+	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
+
+	message->SetStringField(OperationParam::EvId.getValue(), evId);
+	message->SetObjectField(OperationParam::EventServiceUpdateEventDataData.getValue(), JsonUtil::jsonStringToValue(jsonEventData));
+
+	ServerCall* sc = new ServerCall(ServiceName::Event, ServiceOperation::UpdateEventDataIfExists, message, callback);
+	_client->sendRequest(sc);
+}
+
 void BrainCloudEvent::deleteIncomingEvent(const FString &evId, IServerCallback *callback)
 {
 	// See IEventService on the server to make sure these parameter names are in sync

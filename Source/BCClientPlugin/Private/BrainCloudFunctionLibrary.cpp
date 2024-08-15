@@ -168,8 +168,6 @@ FString UBrainCloudFunctionLibrary::GetSystemCountryCode()
     GetGeoInfo(geoId, 4, locationBuffer, 3, lcid);
 
     CountryCode = locationBuffer;
-#else
-    CountryCode = FInternationalization::Get().GetCurrentLocale()->GetRegion();
 #endif
 
     if (CountryCode.IsEmpty()) {

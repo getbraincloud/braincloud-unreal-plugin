@@ -27,6 +27,13 @@ UBCEventProxy *UBCEventProxy::UpdateIncomingEventData(UBrainCloudWrapper *brainC
     return Proxy;
 }
 
+UBCEventProxy* UBCEventProxy::UpdateIncomingEventDataIfExists(UBrainCloudWrapper* brainCloudWrapper, const FString& evId, const FString& jsonEventData)
+{
+    UBCEventProxy* Proxy = NewObject<UBCEventProxy>();
+    UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getEventService()->updateIncomingEventDataIfExists(evId, jsonEventData, Proxy);
+    return Proxy;
+}
+
 UBCEventProxy *UBCEventProxy::DeleteIncomingEvent(UBrainCloudWrapper *brainCloudWrapper, const FString &evId)
 {
     UBCEventProxy *Proxy = NewObject<UBCEventProxy>();

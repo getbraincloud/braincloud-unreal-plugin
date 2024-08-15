@@ -23,10 +23,24 @@ UBCLeaderboardProxy *UBCLeaderboardProxy::GetSocialLeaderboard(UBrainCloudWrappe
 	return Proxy;
 }
 
+UBCLeaderboardProxy* UBCLeaderboardProxy::GetSocialLeaderboardIfExists(UBrainCloudWrapper* brainCloudWrapper, FString leaderboardId, bool replaceName)
+{
+	UBCLeaderboardProxy* Proxy = NewObject<UBCLeaderboardProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getLeaderboardService()->getSocialLeaderboardIfExists(leaderboardId, replaceName, Proxy);
+	return Proxy;
+}
+
 UBCLeaderboardProxy *UBCLeaderboardProxy::GetSocialLeaderboardByVersion(UBrainCloudWrapper *brainCloudWrapper, FString leaderboardId, bool replaceName, int32 versionId)
 {
 	UBCLeaderboardProxy *Proxy = NewObject<UBCLeaderboardProxy>();
 	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getLeaderboardService()->getSocialLeaderboardByVersion(leaderboardId, replaceName, versionId, Proxy);
+	return Proxy;
+}
+
+UBCLeaderboardProxy* UBCLeaderboardProxy::GetSocialLeaderboardByVersionIfExists(UBrainCloudWrapper* brainCloudWrapper, FString leaderboardId, bool replaceName, int32 versionId)
+{
+	UBCLeaderboardProxy* Proxy = NewObject<UBCLeaderboardProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getLeaderboardService()->getSocialLeaderboardByVersionIfExists(leaderboardId, replaceName, versionId, Proxy);
 	return Proxy;
 }
 
@@ -44,10 +58,24 @@ UBCLeaderboardProxy *UBCLeaderboardProxy::GetGlobalLeaderboardPage(UBrainCloudWr
 	return Proxy;
 }
 
+UBCLeaderboardProxy* UBCLeaderboardProxy::GetGlobalLeaderboardPageIfExists(UBrainCloudWrapper* brainCloudWrapper, FString leaderboardId, ESortOrder sortOrder, int32 startIndex, int32 endIndex)
+{
+	UBCLeaderboardProxy* Proxy = NewObject<UBCLeaderboardProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getLeaderboardService()->getGlobalLeaderboardPageIfExists(leaderboardId, sortOrder, startIndex, endIndex, Proxy);
+	return Proxy;
+}
+
 UBCLeaderboardProxy *UBCLeaderboardProxy::GetGlobalLeaderboardPageByVersion(UBrainCloudWrapper *brainCloudWrapper, FString leaderboardId, ESortOrder sortOrder, int32 startIndex, int32 endIndex, int32 versionId)
 {
 	UBCLeaderboardProxy *Proxy = NewObject<UBCLeaderboardProxy>();
 	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getLeaderboardService()->getGlobalLeaderboardPageByVersion(leaderboardId, sortOrder, startIndex, endIndex, versionId, Proxy);
+	return Proxy;
+}
+
+UBCLeaderboardProxy* UBCLeaderboardProxy::GetGlobalLeaderboardPageByVersionIfExists(UBrainCloudWrapper* brainCloudWrapper, FString leaderboardId, ESortOrder sortOrder, int32 startIndex, int32 endIndex, int32 versionId)
+{
+	UBCLeaderboardProxy* Proxy = NewObject<UBCLeaderboardProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getLeaderboardService()->getGlobalLeaderboardPageByVersionIfExists(leaderboardId, sortOrder, startIndex, endIndex, versionId, Proxy);
 	return Proxy;
 }
 
@@ -58,10 +86,24 @@ UBCLeaderboardProxy *UBCLeaderboardProxy::GetGlobalLeaderboardView(UBrainCloudWr
 	return Proxy;
 }
 
+UBCLeaderboardProxy* UBCLeaderboardProxy::GetGlobalLeaderboardViewIfExists(UBrainCloudWrapper* brainCloudWrapper, FString leaderboardId, ESortOrder sortOrder, int32 beforeCount, int32 afterCount)
+{
+	UBCLeaderboardProxy* Proxy = NewObject<UBCLeaderboardProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getLeaderboardService()->getGlobalLeaderboardViewIfExists(leaderboardId, sortOrder, beforeCount, afterCount, Proxy);
+	return Proxy;
+}
+
 UBCLeaderboardProxy *UBCLeaderboardProxy::GetGlobalLeaderboardViewByVersion(UBrainCloudWrapper *brainCloudWrapper, FString leaderboardId, ESortOrder sortOrder, int32 beforeCount, int32 afterCount, int32 versionId)
 {
 	UBCLeaderboardProxy *Proxy = NewObject<UBCLeaderboardProxy>();
 	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getLeaderboardService()->getGlobalLeaderboardViewByVersion(leaderboardId, sortOrder, beforeCount, afterCount, versionId, Proxy);
+	return Proxy;
+}
+
+UBCLeaderboardProxy* UBCLeaderboardProxy::GetGlobalLeaderboardViewByVersionIfExists(UBrainCloudWrapper* brainCloudWrapper, FString leaderboardId, ESortOrder sortOrder, int32 beforeCount, int32 afterCount, int32 versionId)
+{
+	UBCLeaderboardProxy* Proxy = NewObject<UBCLeaderboardProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getLeaderboardService()->getGlobalLeaderboardViewByVersionIfExists(leaderboardId, sortOrder, beforeCount, afterCount, versionId, Proxy);
 	return Proxy;
 }
 
@@ -171,10 +213,24 @@ UBCLeaderboardProxy *UBCLeaderboardProxy::GetPlayersSocialLeaderboard(UBrainClou
 	return Proxy;
 }
 
+UBCLeaderboardProxy* UBCLeaderboardProxy::GetPlayersSocialLeaderboardIfExists(UBrainCloudWrapper* brainCloudWrapper, const FString& leaderboardId, const TArray<FString> profileIds)
+{
+	UBCLeaderboardProxy* Proxy = NewObject<UBCLeaderboardProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getLeaderboardService()->getPlayersSocialLeaderboardIfExists(leaderboardId, profileIds, Proxy);
+	return Proxy;
+}
+
 UBCLeaderboardProxy *UBCLeaderboardProxy::GetPlayersSocialLeaderboardByVersion(UBrainCloudWrapper *brainCloudWrapper, const FString &leaderboardId, const TArray<FString> profileIds, int32 versionId)
 {
 	UBCLeaderboardProxy *Proxy = NewObject<UBCLeaderboardProxy>();
 	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getLeaderboardService()->getPlayersSocialLeaderboardByVersion(leaderboardId, profileIds, versionId, Proxy);
+	return Proxy;
+}
+
+UBCLeaderboardProxy* UBCLeaderboardProxy::GetPlayersSocialLeaderboardByVersionIfExists(UBrainCloudWrapper* brainCloudWrapper, const FString& leaderboardId, const TArray<FString> profileIds, int32 versionId)
+{
+	UBCLeaderboardProxy* Proxy = NewObject<UBCLeaderboardProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getLeaderboardService()->getPlayersSocialLeaderboardByVersionIfExists(leaderboardId, profileIds, versionId, Proxy);
 	return Proxy;
 }
 
@@ -231,5 +287,12 @@ UBCLeaderboardProxy *UBCLeaderboardProxy::GetGroupLeaderboardViewByVersion(UBrai
 {
 	UBCLeaderboardProxy *Proxy = NewObject<UBCLeaderboardProxy>();
 	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getLeaderboardService()->getGroupLeaderboardViewByVersion(leaderboardId, groupId, versionId, sortOrder, beforeCount, afterCount, Proxy);
+	return Proxy;
+}
+
+UBCLeaderboardProxy* UBCLeaderboardProxy::PostScoreToDynamicLeaderboardUsingConfig(UBrainCloudWrapper* brainCloudWrapper, const FString& leaderboardId, int32 score, FString scoreData, FString configJson)
+{
+	UBCLeaderboardProxy* Proxy = NewObject<UBCLeaderboardProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getLeaderboardService()->postScoreToDynamicLeaderboardUsingConfig(leaderboardId, score, scoreData, configJson, Proxy);
 	return Proxy;
 }

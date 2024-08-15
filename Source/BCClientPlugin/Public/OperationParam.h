@@ -233,6 +233,8 @@ class BCCLIENTPLUGIN_API OperationParam
 	static const OperationParam LeaderboardServiceLeaderboardIds;
 	static const OperationParam LeaderboardServiceReplaceName;
 	static const OperationParam LeaderboardServiceScore;
+	static const OperationParam LeaderboardServiceScoreData;
+	static const OperationParam LeaderboardServiceConfigJson;
 	static const OperationParam LeaderboardServiceData;
 	static const OperationParam LeaderboardServiceEventName;
 	static const OperationParam LeaderboardServiceEventMultiplier;
