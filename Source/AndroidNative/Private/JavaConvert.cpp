@@ -5,6 +5,11 @@
 
 #if PLATFORM_ANDROID
 #include "Android/AndroidApplication.h"
+#else
+namespace FJavaWrapper
+{
+	jobject GameActivityThis = jobject{};
+}
 #endif
 
 bool AndroidNative_JavaConverter::FromJavaBool(const jboolean JavaBool)
@@ -28,8 +33,8 @@ TArray<bool> AndroidNative_JavaConverter::FromJavaBoolArray(const jbooleanArray&
 	{
 		TArray<bool> BoolArray;
 
-		const jboolean* JavaBoolArrayPtr{Env->GetBooleanArrayElements(JavaBoolArray, nullptr)};
-		const jsize ArrayLength{Env->GetArrayLength(JavaBoolArray)};
+		const jboolean* JavaBoolArrayPtr{ Env->GetBooleanArrayElements(JavaBoolArray, nullptr) };
+		const jsize ArrayLength{ Env->GetArrayLength(JavaBoolArray) };
 
 		for (jsize Index = 0; Index < ArrayLength; ++Index)
 		{
@@ -67,7 +72,7 @@ jbooleanArray AndroidNative_JavaConverter::ToJavaBoolArray(const TArray<bool>& B
 	if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
 	{
 		jbooleanArray JavaBoolArray = Env->NewBooleanArray(BoolArray.Num());
-		jboolean* JavaBoolArrayPtr{Env->GetBooleanArrayElements(JavaBoolArray, nullptr)};
+		jboolean* JavaBoolArrayPtr{ Env->GetBooleanArrayElements(JavaBoolArray, nullptr) };
 
 		for (TArray<bool>::SizeType Index = 0; Index < BoolArray.Num(); ++Index)
 		{
@@ -106,8 +111,8 @@ TArray<uint8> AndroidNative_JavaConverter::FromJavaByteArray(const jbyteArray Ja
 	{
 		TArray<uint8> ByteArray;
 
-		const jbyte* JavaByteArrayPtr{Env->GetByteArrayElements(JavaByteArray, nullptr)};
-		const jsize ArrayLength{Env->GetArrayLength(JavaByteArray)};
+		const jbyte* JavaByteArrayPtr{ Env->GetByteArrayElements(JavaByteArray, nullptr) };
+		const jsize ArrayLength{ Env->GetArrayLength(JavaByteArray) };
 
 		for (jsize Index = 0; Index < ArrayLength; ++Index)
 		{
@@ -145,7 +150,7 @@ jbyteArray AndroidNative_JavaConverter::ToJavaByteArray(const TArray<uint8>& Byt
 	if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
 	{
 		jbyteArray JavaByteArray = Env->NewByteArray(ByteArray.Num());
-		jbyte* JavaByteArrayPtr{Env->GetByteArrayElements(JavaByteArray, nullptr)};
+		jbyte* JavaByteArrayPtr{ Env->GetByteArrayElements(JavaByteArray, nullptr) };
 
 		for (TArray<uint8>::SizeType Index = 0; Index < ByteArray.Num(); ++Index)
 		{
@@ -184,8 +189,8 @@ TArray<UTF16CHAR> AndroidNative_JavaConverter::FromJavaCharArray(const jcharArra
 	{
 		TArray<UTF16CHAR> CharArray;
 
-		const jchar* JavaCharArrayPtr{Env->GetCharArrayElements(JavaCharArray, nullptr)};
-		const jsize ArrayLength{Env->GetArrayLength(JavaCharArray)};
+		const jchar* JavaCharArrayPtr{ Env->GetCharArrayElements(JavaCharArray, nullptr) };
+		const jsize ArrayLength{ Env->GetArrayLength(JavaCharArray) };
 
 		for (jsize Index = 0; Index < ArrayLength; ++Index)
 		{
@@ -222,8 +227,8 @@ jcharArray AndroidNative_JavaConverter::ToJavaCharArray(const TArray<UTF16CHAR>&
 #if PLATFORM_ANDROID
 	if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
 	{
-		jcharArray JavaCharArray{Env->NewCharArray(CharArray.Num())};
-		jchar* JavaCharArrayPtr{Env->GetCharArrayElements(JavaCharArray, nullptr)};
+		jcharArray JavaCharArray{ Env->NewCharArray(CharArray.Num()) };
+		jchar* JavaCharArrayPtr{ Env->GetCharArrayElements(JavaCharArray, nullptr) };
 
 		for (TArray<UTF16CHAR>::SizeType Index = 0; Index < CharArray.Num(); ++Index)
 		{
@@ -639,7 +644,7 @@ FString AndroidNative_JavaConverter::FromJavaString(const jstring& JavaString)
 	if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
 	{
 		const char* Characters = Env->GetStringUTFChars(JavaString, 0);
-		FString ReturnString(UTF8_TO_TCHAR(Characters));
+		FString ReturnString(const_cast<TCHAR*>(StringCast<TCHAR>(Characters).Get()));
 		Env->ReleaseStringUTFChars(JavaString, Characters);
 		return ReturnString;
 	}
@@ -663,7 +668,7 @@ TArray<FString> AndroidNative_JavaConverter::FromJavaStringArray(const jobjectAr
 		const jsize ArrayLength = Env->GetArrayLength(JavaStringArray);
 		for (jsize Index = 0; Index < ArrayLength; ++Index)
 		{
-			const jstring JavaString{static_cast<jstring>(Env->GetObjectArrayElement(JavaStringArray, Index))};
+			const jstring JavaString{ static_cast<jstring>(Env->GetObjectArrayElement(JavaStringArray, Index)) };
 			StringArray.Add(FromJavaString(JavaString));
 		}
 
@@ -686,7 +691,7 @@ jstring AndroidNative_JavaConverter::ToJavaString(const FString& String)
 	if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
 	{
 		const jstring LocalJavaString = Env->NewStringUTF(TCHAR_TO_UTF8(*String));
-		const jstring GlobalJavaString{static_cast<jstring>(Env->NewGlobalRef(LocalJavaString))};
+		const jstring GlobalJavaString{ static_cast<jstring>(Env->NewGlobalRef(LocalJavaString)) };
 		Env->DeleteLocalRef(LocalJavaString);
 		return GlobalJavaString;
 	}
@@ -706,7 +711,7 @@ jobjectArray AndroidNative_JavaConverter::ToJavaStringArray(const TArray<FString
 #if PLATFORM_ANDROID
 	if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
 	{
-		jobjectArray JavaStringArray{Env->NewObjectArray(StringArray.Num(), FJavaWrapper::JavaStringClass, nullptr)};
+		jobjectArray JavaStringArray{ Env->NewObjectArray(StringArray.Num(), FJavaWrapper::JavaStringClass, nullptr) };
 		for (TArray<FString>::SizeType Index = 0; Index < StringArray.Num(); ++Index)
 		{
 			Env->SetObjectArrayElement(JavaStringArray, Index, ToJavaString(StringArray[Index]));
