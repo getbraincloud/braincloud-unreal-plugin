@@ -6,23 +6,23 @@ using System.IO;
 
 public class AndroidNative : ModuleRules
 {
-	public AndroidNative(ReadOnlyTargetRules Target) : base(Target)
-	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+    public AndroidNative(ReadOnlyTargetRules Target) : base(Target)
+    {
+        PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		if (Target.Platform == UnrealTargetPlatform.Android)
-		{
-			PublicDependencyModuleNames.Add("Launch");
-			AdditionalPropertiesForReceipt.Add("AndroidPlugin", Path.Combine(ModuleDirectory, "AndroidNative_UPL_Android.xml"));
-		}
+        if (Target.Platform == UnrealTargetPlatform.Android)
+        {
+            PublicDependencyModuleNames.Add("Launch");
+            AdditionalPropertiesForReceipt.Add("AndroidPlugin", Path.Combine(ModuleDirectory, "AndroidNative_UPL_Android.xml"));
+        }
 
-		PublicDependencyModuleNames.AddRange(
-			new string[]
-			{
-				"CoreUObject",
-				"Engine",
-				"Core"
-			}
-		);
-	}
+        PublicDependencyModuleNames.AddRange(
+            new string[]
+            {
+                "CoreUObject",
+                "Engine",
+                "Core"
+            }
+        );
+    }
 }

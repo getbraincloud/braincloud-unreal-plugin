@@ -15,67 +15,67 @@ namespace SignatureHelper
 	/** Get the signature for Void type */
 	template <typename PassedType>
 	static FORCEINLINE TEnableIfSame<PassedType, void, const ANSICHAR*>
-	GetTypeSignature() { return "V"; }
+		GetTypeSignature() { return "V"; }
 
 	/** Get the signature for Bool type */
 	template <typename PassedType>
 	static FORCEINLINE TEnableIfSame<PassedType, bool, const ANSICHAR*>
-	GetTypeSignature() { return "Z"; }
+		GetTypeSignature() { return "Z"; }
 
 	/** Get the signature for Byte type */
 	template <typename PassedType>
 	static FORCEINLINE TEnableIfSame<PassedType, uint8, const ANSICHAR*>
-	GetTypeSignature() { return "B"; }
+		GetTypeSignature() { return "B"; }
 
 	/** Get the signature for Char type */
 	template <typename PassedType>
 	static FORCEINLINE TEnableIfSame<PassedType, UTF16CHAR, const ANSICHAR*>
-	GetTypeSignature() { return "C"; }
+		GetTypeSignature() { return "C"; }
 
 	/** Get the signature for Short type */
 	template <typename PassedType>
 	static FORCEINLINE TEnableIfSame<PassedType, short, const ANSICHAR*>
-	GetTypeSignature() { return "S"; }
+		GetTypeSignature() { return "S"; }
 
 	/** Get the signature for Int type */
 	template <typename PassedType>
 	static FORCEINLINE TEnableIfSame<PassedType, int32, const ANSICHAR*>
-	GetTypeSignature() { return "I"; }
+		GetTypeSignature() { return "I"; }
 
 	/** Get the signature for Long type */
 	template <typename PassedType>
 	static FORCEINLINE TEnableIfSame<PassedType, long, const ANSICHAR*>
-	GetTypeSignature() { return "J"; }
+		GetTypeSignature() { return "J"; }
 
 	/** Get the signature for Float type */
 	template <typename PassedType>
 	static FORCEINLINE TEnableIfSame<PassedType, float, const ANSICHAR*>
-	GetTypeSignature() { return "F"; }
+		GetTypeSignature() { return "F"; }
 
 	/** Get the signature for Double type */
 	template <typename PassedType>
 	static FORCEINLINE TEnableIfSame<PassedType, double, const ANSICHAR*>
-	GetTypeSignature() { return "D"; }
+		GetTypeSignature() { return "D"; }
 
 	/** Get the signature for FString type */
 	template <typename PassedType>
 	static FORCEINLINE TEnableIfSame<PassedType, FString, const ANSICHAR*>
-	GetTypeSignature() { return "Ljava/lang/String;"; }
+		GetTypeSignature() { return "Ljava/lang/String;"; }
 
 	/** Get the signature for Object Array type */
 	template <typename PassedType>
 	static FORCEINLINE TEnableIfSame<PassedType, jobjectArray, const ANSICHAR*>
-	GetTypeSignature() { return "[Ljava/lang/Object;"; }
+		GetTypeSignature() { return "[Ljava/lang/Object;"; }
 
 	/** Get the signature for Object type */
 	template <typename PassedType>
 	static FORCEINLINE TEnableIfSame<PassedType, jobject, const ANSICHAR*>
-	GetTypeSignature() { return "Ljava/lang/Object;"; }
+		GetTypeSignature() { return "Ljava/lang/Object;"; }
 
 	/** Get the signature for the type contained in TArray */
 	template <typename PassedType>
 	static FORCEINLINE typename TEnableIf<TIsTArray<PassedType>::Value, const ANSICHAR*>::Type
-	GetTypeSignature() { return TCHAR_TO_ANSI(*FString::Printf(TEXT("[%s"), *FString(GetTypeSignature<typename PassedType::ElementType>()))); }
+		GetTypeSignature() { return const_cast<ANSICHAR*>(StringCast<ANSICHAR>(*FString::Printf(TEXT("[%s"), *FString(GetTypeSignature<typename PassedType::ElementType>()))).Get()); }
 
 	/**
 	 * In case no arguments and type are specified
