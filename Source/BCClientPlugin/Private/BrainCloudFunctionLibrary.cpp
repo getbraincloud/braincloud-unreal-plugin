@@ -66,7 +66,7 @@ FBrainCloudAppDataStruct UBrainCloudFunctionLibrary::GetBCAppData()
 
             Result.AppId = configKeys.Contains(*AppIdKey) ? ConfigSection->Find(*AppIdKey)->GetValue() : TEXT("");
             Result.AppSecret = configKeys.Contains(*AppSecretKey) ? ConfigSection->Find(*AppSecretKey)->GetValue() : TEXT("");
-            Result.Version = configKeys.Contains(*AppVersionKey) ? ConfigSection->Find(*AppVersionKey)->GetValue() : TEXT("");
+            Result.Version = UBrainCloudFunctionLibrary::GetProjectVersion();
             Result.ServerUrl = configKeys.Contains(*ServerUrlKey) ? ConfigSection->Find(*ServerUrlKey)->GetValue() : TEXT("");
             Result.S2SKey = configKeys.Contains(*S2SKeyKey) ? ConfigSection->Find(*S2SKeyKey)->GetValue() : TEXT("");
             Result.S2SUrl = configKeys.Contains(*S2SUrlKey) ? ConfigSection->Find(*S2SUrlKey)->GetValue() : TEXT("");
@@ -106,10 +106,11 @@ void UBrainCloudFunctionLibrary::SetBCAppData(FBrainCloudAppDataStruct appData)
 
     FString ServerFullUrl = appData.ServerUrl + "/dispatcherv2";
     FString S2SFullUrl = appData.ServerUrl + "/s2sdispatcher";
+    FString projectVersion = UBrainCloudFunctionLibrary::GetProjectVersion();
 
     GConfig->SetString(*SectionName, TEXT("AppId"), *appData.AppId, ConfigPath);
     GConfig->SetString(*SectionName, TEXT("AppSecret"), *appData.AppSecret, ConfigPath);
-    GConfig->SetString(*SectionName, TEXT("Version"), *appData.Version, ConfigPath);
+    GConfig->SetString(*SectionName, TEXT("Version"), *projectVersion, ConfigPath);
     GConfig->SetString(*SectionName, TEXT("ServerUrl"), *ServerFullUrl, ConfigPath);
     GConfig->SetString(*SectionName, TEXT("S2SKey"), *appData.S2SKey, ConfigPath);
     GConfig->SetString(*SectionName, TEXT("S2SUrl"), *S2SFullUrl, ConfigPath);
@@ -167,8 +168,6 @@ FString UBrainCloudFunctionLibrary::GetSystemCountryCode()
     GetGeoInfo(geoId, 4, locationBuffer, 3, lcid);
 
     CountryCode = locationBuffer;
-#else
-    CountryCode = FInternationalization::Get().GetCurrentLocale()->GetRegion();
 #endif
 
     if (CountryCode.IsEmpty()) {
@@ -259,6 +258,31 @@ FString UBrainCloudFunctionLibrary::GetSystemLanguageCode()
         LanguageCode = FPlatformMisc::GetDefaultLanguage();
 
     return LanguageCode;
+}
+
+FString UBrainCloudFunctionLibrary::GetProjectVersion()
+{
+    FString AppVersion;
+    GConfig->GetString(
+        TEXT("/Script/EngineSettings.GeneralProjectSettings"),
+        TEXT("ProjectVersion"),
+        AppVersion,
+        GGameIni
+    );
+
+    return AppVersion;
+}
+
+FString UBrainCloudFunctionLibrary::GetProjectEnvironment()
+{
+    FBrainCloudAppDataStruct appData = GetBCAppData();
+
+    if (appData.ServerUrl == "https://api.braincloudservers.com/dispatcherv2") {
+        return "Prod";
+    }
+    else {
+        return "Internal";
+    }
 }
 
 

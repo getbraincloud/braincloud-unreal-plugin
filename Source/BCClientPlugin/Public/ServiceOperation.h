@@ -120,11 +120,15 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation FindUsersByUniversalIdStartingWith;
 	static const ServiceOperation FindUsersByNameStartingWith;
 	static const ServiceOperation GetSocialLeaderboard;
+	static const ServiceOperation GetSocialLeaderboardIfExists;
 	static const ServiceOperation GetSocialLeaderboardByVersion;
+	static const ServiceOperation GetSocialLeaderboardByVersionIfExists;
 	static const ServiceOperation GetMultiSocialLeaderboard;
 	static const ServiceOperation GetGlobalLeaderboard;
 	static const ServiceOperation GetGlobalLeaderboardPage;
+	static const ServiceOperation GetGlobalLeaderboardPageIfExists;
 	static const ServiceOperation GetGlobalLeaderboardView;
+	static const ServiceOperation GetGlobalLeaderboardViewIfExists;
 	static const ServiceOperation GetGlobalLeaderboardVersions;
 	static const ServiceOperation GetCompletedTournament;
 	static const ServiceOperation RewardTournament;
@@ -134,7 +138,9 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation GetGroupSocialLeaderboardByVersion;
 	static const ServiceOperation GetSummaryDataForProfileId;
 	static const ServiceOperation GetPlayersSocialLeaderboard;
+	static const ServiceOperation GetPlayersSocialLeaderboardIfExists;
 	static const ServiceOperation GetPlayersSocialLeaderboardByVersion;
+	static const ServiceOperation GetPlayersSocialLeaderboardByVersionIfExists;
 	static const ServiceOperation ListAllLeaderboards;
 	static const ServiceOperation GetGlobalLeaderboardEntryCount;
 	static const ServiceOperation RemovePlayerScore;
@@ -145,6 +151,7 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation PostScoreToDynamicGroupLeaderboard;
 	static const ServiceOperation RemoveGroupScore;
 	static const ServiceOperation GetGroupLeaderboardView;
+	static const ServiceOperation PostScoreDynamicUsingConfig;
 
 	//Global File
 	static const ServiceOperation GetFileInfo;
@@ -175,6 +182,7 @@ class BCCLIENTPLUGIN_API ServiceOperation
 
 	static const ServiceOperation Send;
 	static const ServiceOperation UpdateEventData;
+	static const ServiceOperation UpdateEventDataIfExists;
 	static const ServiceOperation DeleteSent;
 	static const ServiceOperation DeleteIncoming;
 	static const ServiceOperation DeleteIncomingEvents;

@@ -17,5 +17,5 @@ void FAndroidNativeModule::ShutdownModule()
 DEFINE_LOG_CATEGORY(LogAndroidNative);
 
 #undef LOCTEXT_NAMESPACE
-	
+
 IMPLEMENT_MODULE(FAndroidNativeModule, AndroidNative)
