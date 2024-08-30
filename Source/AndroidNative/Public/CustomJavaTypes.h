@@ -8,7 +8,7 @@
 /**
  * Used when a custom Java object needs to be passed as an argument with a custom signature
  */
-struct ANDROIDNATIVE_API FCustomJavaArgument
+ANDROIDNATIVE_API struct FCustomJavaArgument
 {
 	FCustomJavaArgument(jobject Value, FString Signature)
 		: Value(Value), Signature(Signature)

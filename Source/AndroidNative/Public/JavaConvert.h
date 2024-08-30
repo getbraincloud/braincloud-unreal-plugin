@@ -31,25 +31,25 @@ class _jfloatArray : public _jarray {};
 class _jdoubleArray : public _jarray {};
 class _jthrowable : public _jobject {};
 
-typedef _jobject*       jobject;
-typedef _jclass*        jclass;
-typedef _jstring*       jstring;
-typedef _jarray*        jarray;
-typedef _jobjectArray*  jobjectArray;
+typedef _jobject* jobject;
+typedef _jclass* jclass;
+typedef _jstring* jstring;
+typedef _jarray* jarray;
+typedef _jobjectArray* jobjectArray;
 typedef _jbooleanArray* jbooleanArray;
-typedef _jbyteArray*    jbyteArray;
-typedef _jcharArray*    jcharArray;
-typedef _jshortArray*   jshortArray;
-typedef _jintArray*     jintArray;
-typedef _jlongArray*    jlongArray;
-typedef _jfloatArray*   jfloatArray;
-typedef _jdoubleArray*  jdoubleArray;
-typedef _jthrowable*    jthrowable;
-typedef _jobject*       jweak;
+typedef _jbyteArray* jbyteArray;
+typedef _jcharArray* jcharArray;
+typedef _jshortArray* jshortArray;
+typedef _jintArray* jintArray;
+typedef _jlongArray* jlongArray;
+typedef _jfloatArray* jfloatArray;
+typedef _jdoubleArray* jdoubleArray;
+typedef _jthrowable* jthrowable;
+typedef _jobject* jweak;
 
 namespace FJavaWrapper
 {
-	ANDROIDNATIVE_API jobject GameActivityThis;
+	extern ANDROIDNATIVE_API jobject GameActivityThis;
 }
 #endif
 
@@ -147,7 +147,7 @@ namespace AndroidNative_JavaConverter
 
 	/** Convert TArray<float> to jfloatArray */
 	ANDROIDNATIVE_API jfloatArray ToJavaFloatArray(const TArray<float>& FloatArray);
-	
+
 
 	/** Convert jdouble to double */
 	ANDROIDNATIVE_API double FromJavaDouble(const jdouble JavaDouble);
