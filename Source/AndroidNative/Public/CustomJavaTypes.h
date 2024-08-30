@@ -33,7 +33,7 @@ protected:
 /**
  * Used to pass game activity
  */
-ANDROIDNATIVE_API struct FAndroidGameActivity : FCustomJavaArgument
+struct ANDROIDNATIVE_API FAndroidGameActivity : FCustomJavaArgument
 {
 	/** Use this constructor if you want to use the default game activity */
 	FAndroidGameActivity()
