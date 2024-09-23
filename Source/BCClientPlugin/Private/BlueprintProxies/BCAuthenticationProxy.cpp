@@ -27,6 +27,13 @@ void UBCAuthenticationProxy::ClearSavedProfileId(UBrainCloudWrapper *brainCloudW
     UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getClient()->getAuthenticationService()->clearSavedProfileId();
 }
 
+UBCAuthenticationProxy* UBCAuthenticationProxy::GetServerVersion(UBrainCloudWrapper* brainCloudWrapper)
+{
+    UBCAuthenticationProxy* Proxy = NewObject<UBCAuthenticationProxy>();
+    UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getClient()->getAuthenticationService()->getServerVersion(Proxy);
+    return Proxy;
+}
+
 UBCAuthenticationProxy *UBCAuthenticationProxy::AuthenticateAnonymous(UBrainCloudWrapper *brainCloudWrapper, bool forceCreate)
 {
     UBCAuthenticationProxy *Proxy = NewObject<UBCAuthenticationProxy>();

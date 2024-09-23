@@ -11,6 +11,7 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation Attach;
 	static const ServiceOperation Merge;
 	static const ServiceOperation Detach;
+	static const ServiceOperation GetServerVersion;
 	static const ServiceOperation ResetEmailPassword;
 	static const ServiceOperation ResetEmailPasswordAdvanced;
 	static const ServiceOperation ResetEmailPasswordWithExpiry;

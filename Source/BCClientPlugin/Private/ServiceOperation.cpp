@@ -14,6 +14,7 @@ const ServiceOperation ServiceOperation::Authenticate = ServiceOperation(TEXT("A
 const ServiceOperation ServiceOperation::Attach = ServiceOperation(TEXT("ATTACH"));
 const ServiceOperation ServiceOperation::Merge = ServiceOperation(TEXT("MERGE"));
 const ServiceOperation ServiceOperation::Detach = ServiceOperation(TEXT("DETACH"));
+const ServiceOperation ServiceOperation::GetServerVersion = ServiceOperation(TEXT("GET_SERVER_VERSION"));
 const ServiceOperation ServiceOperation::ResetEmailPassword = ServiceOperation(TEXT("RESET_EMAIL_PASSWORD"));
 const ServiceOperation ServiceOperation::ResetEmailPasswordAdvanced = ServiceOperation(TEXT("RESET_EMAIL_PASSWORD_ADVANCED"));
 const ServiceOperation ServiceOperation::ResetEmailPasswordWithExpiry = ServiceOperation(TEXT("RESET_EMAIL_PASSWORD_WITH_EXPIRY"));
