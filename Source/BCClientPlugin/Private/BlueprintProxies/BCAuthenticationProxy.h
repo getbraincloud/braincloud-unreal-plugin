@@ -40,6 +40,11 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     static void ClearSavedProfileId(UBrainCloudWrapper *brainCloudWrapper);
 
     /**
+    *  Gets the brainCloud server version.
+    */
+    UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
+    static UBCAuthenticationProxy* GetServerVersion(UBrainCloudWrapper* brainCloudWrapper);
+    /**
     * Authenticate a user anonymously with brainCloud - used for apps that don't want to bother
     * the user to login, or for users who are sensitive to their privacy
     *
@@ -50,7 +55,7 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     *
     * (Note: recommend using BCWrapper method instead.)
     */
-    UFUNCTION(BlueprintCallable, Category = "BrainCloud|Authentication")
+    UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *AuthenticateAnonymous(UBrainCloudWrapper *brainCloudWrapper, bool forceCreate);
 
     /**

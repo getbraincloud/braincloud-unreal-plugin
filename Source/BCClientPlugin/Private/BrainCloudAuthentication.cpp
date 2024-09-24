@@ -46,6 +46,17 @@ void BrainCloudAuthentication::clearSavedProfileId()
 	_profileId = "";
 }
 
+void BrainCloudAuthentication::getServerVersion(IServerCallback* callback)
+{
+	BrainCloudClient* brainCloudClientRef = _client;
+
+	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
+	message->SetStringField(OperationParam::AuthenticateServiceAuthenticateGameId.getValue(), brainCloudClientRef->getAppId());
+
+	ServerCall* sc = new ServerCall(ServiceName::AuthenticateV2, ServiceOperation::GetServerVersion, message, callback);
+	brainCloudClientRef->sendRequest(sc);
+}
+
 void BrainCloudAuthentication::authenticateAnonymous(bool forceCreate, IServerCallback *callback)
 {
 	authenticate(*_anonymousId, TEXT(""), EBCAuthType::Anonymous, "", forceCreate, "", callback);
