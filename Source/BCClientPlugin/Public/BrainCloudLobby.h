@@ -270,11 +270,25 @@ class BCCLIENTPLUGIN_API BrainCloudLobby : public IServerCallback
     * 
     * Service Name - lobby
 	* Service Operation - CANCEL_FIND_REQUEST
+    *
+    * @deprecated Please use cancelFindRequest with entryId parameter.
     * 
     * @param in_lobbyType the lobby type to cancel a find request for
 	* @param in_callback Method to be invoked when the server response is received.
     */
     void cancelFindRequest(const FString& in_lobbyType, IServerCallback* in_callback);
+
+    /**
+    * Cancel this members Find, Join and Searching of Lobbies
+    * 
+    * Service Name - lobby
+	* Service Operation - CANCEL_FIND_REQUEST
+    * 
+    * @param in_lobbyType the lobby type to cancel a find request for
+    * @param in_entryId Specific entry id to cancel. Optional.
+	* @param in_callback Method to be invoked when the server response is received.
+    */
+    void cancelFindRequest(const FString& in_lobbyType, const FString& in_entryId, IServerCallback* in_callback);
 
     /**
     * Retrieves the region settings for each of the given lobby types. Upon SuccessCallback or afterwards, call PingRegions to start retrieving appropriate data.  
