@@ -36,6 +36,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "BrainCloud|RTT")
 	static bool IsRTTEnabled(UBrainCloudWrapper *brainCloudWrapper);
 
+	/*
+	* Get the current RTT connection status
+	*/
+	UFUNCTION(BlueprintCallable, Category = "BrainCloud|RTT")
+	static const BCRTTConnectionStatus GetRTTConnectionStatus(UBrainCloudWrapper* brainCloudWrapper);
+
 	/**
 	* 
 	*/

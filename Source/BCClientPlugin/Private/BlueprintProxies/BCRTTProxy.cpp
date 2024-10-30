@@ -31,6 +31,11 @@ bool UBCRTTProxy::IsRTTEnabled(UBrainCloudWrapper *brainCloudWrapper)
 	return UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getRTTService()->isRTTEnabled();
 }
 
+const BCRTTConnectionStatus UBCRTTProxy::GetRTTConnectionStatus(UBrainCloudWrapper* brainCloudWrapper)
+{
+	return UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getRTTService()->getConnectionStatus();
+}
+
 void UBCRTTProxy::SetRTTHeartBeatSeconds(UBrainCloudWrapper *brainCloudWrapper, int32 in_value)
 {
 	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getRTTService()->setRTTHeartBeatSeconds(in_value);
