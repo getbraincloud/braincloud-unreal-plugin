@@ -368,7 +368,6 @@ void BrainCloudRTTComms::startReceivingWebSocket()
 	UE_LOG(LogBrainCloudComms, Log, TEXT("Setting up web socket with url %s "), *url);
 
 	setupWebSocket(url);
-	setupWebSocket(url);
 }
 
 void BrainCloudRTTComms::setupWebSocket(const FString &in_url)
@@ -395,7 +394,7 @@ void BrainCloudRTTComms::setupWebSocket(const FString &in_url)
 		m_connectedSocket->OnConnectComplete.AddDynamic(m_commsPtr, &UBCRTTCommsProxy::Websocket_OnOpen);
 		m_connectedSocket->OnReceiveData.AddDynamic(m_commsPtr, &UBCRTTCommsProxy::WebSocket_OnMessage);
 
-		m_connectedSocket->SetupSocket(in_url, m_client, m_isLoggingEnabled);
+		m_connectedSocket->SetupSocket(in_url, m_client, m_client->isLoggingEnabled());
 		m_connectedSocket->Connect();
 	}
 }
