@@ -266,13 +266,6 @@ class UBCLobbyProxy : public UBCBlueprintCallProxyBase
 
     /// <summary>
     /// Cancel this members Find, Join and Searching of Lobbies
-    /// @deprecated Please use CancelFindRequest with entryId parameter.
-    /// </summary>
-    UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Lobby")
-    static UBCLobbyProxy *CancelFindRequest(UBrainCloudWrapper *brainCloudWrapper, const FString &in_lobbyType);
-
-    /// <summary>
-    /// Cancel this members Find, Join and Searching of Lobbies
     /// </summary>
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Lobby")
     static UBCLobbyProxy *CancelFindRequest(UBrainCloudWrapper *brainCloudWrapper, const FString &in_lobbyType, const FString &in_entryId);
