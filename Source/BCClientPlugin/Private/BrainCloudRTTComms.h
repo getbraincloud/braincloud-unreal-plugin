@@ -128,4 +128,5 @@ class BrainCloudRTTComms : public IServerCallback
 	BCWebsocketStatus m_websocketStatus;
 	bool m_bIsConnected;
 	bool m_disconnectedWithReason = false;
+	bool m_isLoggingEnabled = false;
 };
