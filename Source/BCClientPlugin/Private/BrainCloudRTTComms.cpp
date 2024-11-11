@@ -432,7 +432,7 @@ void BrainCloudRTTComms::websocket_OnOpen()
 void BrainCloudRTTComms::webSocket_OnMessage(TArray<uint8> in_data)
 {
 	m_websocketStatus = BCWebsocketStatus::MESSAGE;
-	FString parsedMessage = ConvertUtilities::BCBytesToString(in_data.GetData(), in_data.Num());
+	FString parsedMessage = ConvertUtilities::BCBytesToString(in_data);
 	onRecv(parsedMessage);
 }
 
