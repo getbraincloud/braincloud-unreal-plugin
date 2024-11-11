@@ -1,17 +1,9 @@
 #include "ConvertUtilities.h"
 
-FString ConvertUtilities::BCBytesToString(const uint8 *in, int32 count)
+FString ConvertUtilities::BCBytesToString(const TArray<uint8>& in)
 {
-	FString result2;
-	result2.Empty(count);
-	while (count)
-	{
-        result2 += ANSICHAR(*in);
-		++in;
-		--count;
-	}
-	
-	return result2;
+	FUTF8ToTCHAR Converter(reinterpret_cast<const ANSICHAR*>(in.GetData()), in.Num());
+	return FString(Converter.Length(), Converter.Get());
 }
 
 int32 ConvertUtilities::BCStringToBytes(const FString &in_string, uint8 *out_bytes, int32 in_maxBufferSize)

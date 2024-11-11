@@ -133,10 +133,10 @@ UBCLobbyProxy *UBCLobbyProxy::UpdateSettings(UBrainCloudWrapper *brainCloudWrapp
 	return Proxy;
 }
 
-UBCLobbyProxy *UBCLobbyProxy::CancelFindRequest(UBrainCloudWrapper *brainCloudWrapper, const FString &in_lobbyType)
+UBCLobbyProxy *UBCLobbyProxy::CancelFindRequest(UBrainCloudWrapper *brainCloudWrapper, const FString &in_lobbyType, const FString &in_entryId)
 {
 	UBCLobbyProxy *Proxy = NewObject<UBCLobbyProxy>();
-	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getLobbyService()->cancelFindRequest(in_lobbyType, Proxy);
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getLobbyService()->cancelFindRequest(in_lobbyType, in_entryId, Proxy);
 	return Proxy;
 }
 

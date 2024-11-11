@@ -673,7 +673,9 @@ void BrainCloudRelayComms::onRSMG(const uint8* in_data, int in_size)
 {
     int rsmgPacketId = (int)netToHost(*(uint16*)in_data);
 
-    FString jsonString = ConvertUtilities::BCBytesToString(in_data + 2, in_size - 2);
+    TArray<uint8> dataArray(in_data + 2, in_size - 2);
+
+    FString jsonString = ConvertUtilities::BCBytesToString(dataArray);
     if (m_client->isLoggingEnabled())
     {
         UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RELAY System Msg: %s"), *jsonString);

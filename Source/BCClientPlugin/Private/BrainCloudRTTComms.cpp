@@ -60,7 +60,7 @@ void BrainCloudRTTComms::enableRTT(BCRTTConnectionType in_connectionType, IServe
 	
 	if(isRTTEnabled() || m_rttConnectionStatus == BCRTTConnectionStatus::CONNECTING)
 	{
-		return;
+		return; 
 	}
 	else
 	{
@@ -282,7 +282,7 @@ void BrainCloudRTTComms::send(const FString &in_message, bool in_allowLogging/* 
 	}
 
 	m_connectedSocket->SendText(in_message);
-	if (in_allowLogging && m_client->isLoggingEnabled())
+	if (in_allowLogging && isLoggingEnabled())
 		UE_LOG(LogBrainCloudComms, Log, TEXT("RTT SEND:  %s"), *in_message);
 
 }
@@ -372,33 +372,35 @@ void BrainCloudRTTComms::startReceivingWebSocket()
 void BrainCloudRTTComms::setupWebSocket(const FString &in_url)
 {
 	m_timeSinceLastRequest = 0;
-	// lazy load
-	if (m_connectedSocket == nullptr)
-	{
-		m_connectedSocket = NewObject<UWinWebSocketBase>();
-		m_connectedSocket->AddToRoot();
-	}
-
+	
 	// lazy load
 	if (m_commsPtr == nullptr)
 	{
 		m_commsPtr = NewObject<UBCRTTCommsProxy>();
 		m_commsPtr->AddToRoot();
+
+		m_commsPtr->SetRTTComms(this);
 	}
 
-	m_commsPtr->SetRTTComms(this);
-	m_connectedSocket->OnConnectError.AddDynamic(m_commsPtr, &UBCRTTCommsProxy::WebSocket_OnError);
-	m_connectedSocket->OnClosed.AddDynamic(m_commsPtr, &UBCRTTCommsProxy::WebSocket_OnClose);
-	m_connectedSocket->OnConnectComplete.AddDynamic(m_commsPtr, &UBCRTTCommsProxy::Websocket_OnOpen);
-	m_connectedSocket->OnReceiveData.AddDynamic(m_commsPtr, &UBCRTTCommsProxy::WebSocket_OnMessage);
+	// lazy load
+	if (m_connectedSocket == nullptr)
+	{
+		m_connectedSocket = NewObject<UWinWebSocketBase>();
+		m_connectedSocket->AddToRoot();
 
-	m_connectedSocket->SetupSocket(in_url, m_client, m_client->isLoggingEnabled());
-	m_connectedSocket->Connect();
+		m_connectedSocket->OnConnectError.AddDynamic(m_commsPtr, &UBCRTTCommsProxy::WebSocket_OnError);
+		m_connectedSocket->OnClosed.AddDynamic(m_commsPtr, &UBCRTTCommsProxy::WebSocket_OnClose);
+		m_connectedSocket->OnConnectComplete.AddDynamic(m_commsPtr, &UBCRTTCommsProxy::Websocket_OnOpen);
+		m_connectedSocket->OnReceiveData.AddDynamic(m_commsPtr, &UBCRTTCommsProxy::WebSocket_OnMessage);
+
+		m_connectedSocket->SetupSocket(in_url, m_client);
+		m_connectedSocket->Connect();
+	}
 }
 
 void BrainCloudRTTComms::webSocket_OnClose()
 {
-	if (m_client->isLoggingEnabled())
+	if (isLoggingEnabled())
 	{
 		UE_LOG(LogBrainCloudComms, Log, TEXT("Connection closed"));
 		
@@ -429,13 +431,13 @@ void BrainCloudRTTComms::websocket_OnOpen()
 void BrainCloudRTTComms::webSocket_OnMessage(TArray<uint8> in_data)
 {
 	m_websocketStatus = BCWebsocketStatus::MESSAGE;
-	FString parsedMessage = ConvertUtilities::BCBytesToString(in_data.GetData(), in_data.Num());
+	FString parsedMessage = ConvertUtilities::BCBytesToString(in_data);
 	onRecv(parsedMessage);
 }
 
 void BrainCloudRTTComms::webSocket_OnError(const FString &in_message)
 {
-	if (m_client->isLoggingEnabled())
+	if (isLoggingEnabled())
 		UE_LOG(LogBrainCloudComms, Log, TEXT("Error: %s"), *in_message);
 
 	m_websocketStatus = BCWebsocketStatus::SOCKETERROR;
@@ -457,7 +459,7 @@ void BrainCloudRTTComms::onRecv(const FString &in_message)
         m_heartBeatRecv = true;
     }
     
-	if (operation != "HEARTBEAT" && m_client->isLoggingEnabled())
+	if (operation != "HEARTBEAT" && isLoggingEnabled())
 		UE_LOG(LogBrainCloudComms, Log, TEXT("RTT RECV:: %s"), *in_message);
 
 	if (operation == "CONNECT")
@@ -599,4 +601,13 @@ void BrainCloudRTTComms::serverError(ServiceName serviceName, ServiceOperation s
 
 	//disconnect();
 	m_disconnectedWithReason = true;
+}
+
+bool BrainCloudRTTComms::isLoggingEnabled()
+{
+	if (ensure(m_client != nullptr)) {
+		return m_client->isLoggingEnabled();
+	}
+
+	return false;
 }

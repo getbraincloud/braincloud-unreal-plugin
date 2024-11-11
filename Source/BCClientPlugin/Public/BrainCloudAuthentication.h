@@ -34,6 +34,11 @@ public:
   void clearSavedProfileId();
 
   /**
+    *  Gets the brainCloud server version.
+    */
+  void getServerVersion(IServerCallback* callback);
+
+  /**
      * Authenticate a user anonymously with brainCloud - used for apps that don't want to bother
      * the user to login, or for users who are sensitive to their privacy
      *

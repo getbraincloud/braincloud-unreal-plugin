@@ -96,6 +96,8 @@ class BrainCloudRTTComms : public IServerCallback
 	void serverCallback(ServiceName serviceName, ServiceOperation serviceOperation, const FString &jsonData);
 	void serverError(ServiceName serviceName, ServiceOperation serviceOperation, int32 statusCode, int32 reasonCode, const FString &jsonError);
 
+	bool isLoggingEnabled();
+
 	// private vars
 	BrainCloudClient *m_client = nullptr;
 	IServerCallback *m_appCallback;
