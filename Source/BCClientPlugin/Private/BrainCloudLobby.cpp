@@ -236,10 +236,11 @@ void BrainCloudLobby::removeMember(const FString &in_lobbyID, const FString &in_
     _client->sendRequest(sc);
 }
 
-void BrainCloudLobby::cancelFindRequest(const FString& in_lobbyType, IServerCallback* in_callback)
+void BrainCloudLobby::cancelFindRequest(const FString& in_lobbyType, const FString& in_entryId, IServerCallback* in_callback)
 {
     TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
     message->SetStringField(OperationParam::LobbyRoomType.getValue(), in_lobbyType);
+    message->SetStringField(OperationParam::EntryId.getValue(), in_entryId);
 
     ServerCall* sc = new ServerCall(ServiceName::Lobby, ServiceOperation::CancelFindRequest, message, in_callback);
     _client->sendRequest(sc);

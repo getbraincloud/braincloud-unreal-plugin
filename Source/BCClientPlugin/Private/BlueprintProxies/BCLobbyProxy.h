@@ -268,7 +268,7 @@ class UBCLobbyProxy : public UBCBlueprintCallProxyBase
     /// Cancel this members Find, Join and Searching of Lobbies
     /// </summary>
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Lobby")
-    static UBCLobbyProxy *CancelFindRequest(UBrainCloudWrapper *brainCloudWrapper, const FString &in_lobbyType);
+    static UBCLobbyProxy *CancelFindRequest(UBrainCloudWrapper *brainCloudWrapper, const FString &in_lobbyType, const FString &in_entryId);
 
     /**
     * Retrieves the region settings for each of the given lobby types. Upon SuccessCallback or afterwards, call PingRegions to start retrieving appropriate data.  
