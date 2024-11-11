@@ -32,7 +32,7 @@ class BCCLIENTPLUGIN_API UWinWebSocketBase : public UObject
 public:
 	UWinWebSocketBase();
 
-	void SetupSocket(const FString& url, BrainCloudClient* in_client, bool debugLoggingEnabled);
+	void SetupSocket(const FString& url, BrainCloudClient* in_client);
 
 	void Connect();
 
@@ -64,6 +64,8 @@ private:
 	TArray<FString> mSendQueue;
 	TArray<TArray<uint8>> mSendQueueData;
 	bool mIsLoggingEnabled;
+
+	bool isLoggingEnabled();
 	
 };
 
