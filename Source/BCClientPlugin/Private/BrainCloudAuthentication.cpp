@@ -33,6 +33,7 @@ void BrainCloudAuthentication::initialize(const FString &profileId, const FStrin
 {
 	_profileId = profileId;
 	_anonymousId = anonymousId;
+	CompressResponses = true;
 }
 
 FString BrainCloudAuthentication::generateAnonymousId()

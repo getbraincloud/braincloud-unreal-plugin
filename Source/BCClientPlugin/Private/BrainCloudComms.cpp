@@ -2,6 +2,7 @@
 
 
 #include "BrainCloudComms.h"
+#include "ConvertUtilities.h"
 #include "BCClientPluginPrivatePCH.h"
 #include "IServerCallback.h"
 #include "IEventCallback.h"
@@ -37,6 +38,16 @@ BrainCloudComms::~BrainCloudComms()
 	DeregisterFileUploadCallback();
 	DeregisterGlobalErrorCallback();
 	DeregisterNetworkErrorCallback();
+}
+
+void BrainCloudComms::EnableCompression(bool compress)
+{
+	_supportsCompression = compress;
+}
+
+bool BrainCloudComms::IsCompressionEnabled()
+{
+	return _supportsCompression;
 }
 
 void BrainCloudComms::Initialize(const FString &serverURL, const FString &secretKey, const FString &appId)
@@ -280,7 +291,19 @@ TSharedRef<IHttpRequest> BrainCloudComms::SendPacket(PacketRef packet)
 	if (_isLoggingEnabled)
 		UE_LOG(LogBrainCloudComms, Log, TEXT("Sending request:%s\n"), *dataString);
 
-	httpRequest->SetContentAsString(dataString);
+	TArray<uint8> bytes = ConvertUtilities::BCStringToBytesArray(dataString);
+
+	bool compressMessage =	_supportsCompression &&
+							_clientSideCompressionThreshold &&
+							bytes.Num() >= _clientSideCompressionThreshold;
+
+
+	if (compressMessage) {
+		//compress the bytes here
+		bytes = ConvertUtilities::CompressBytes(bytes);
+	}
+
+	httpRequest->SetContent(bytes);
 
 	if (_secretKey.Len() > 0)
 	{
@@ -416,8 +439,21 @@ void BrainCloudComms::RunCallbacks()
 		else
 		{
 			EHttpRequestStatus::Type status = _activeRequest->GetStatus();
+
 			double elapsedTime = FPlatformTime::Seconds() - _requestSentTime;
 			bool isError = false;
+
+			FString requestStr = ConvertUtilities::BCBytesArrayToString(_activeRequest->GetContent());
+
+			TSharedRef<TJsonReader<TCHAR>> reader = TJsonReaderFactory<TCHAR>::Create(requestStr);
+			TSharedPtr<FJsonObject> jsonRequest = MakeShareable(new FJsonObject());
+
+			bool res = FJsonSerializer::Deserialize(reader, jsonRequest);
+			if (!res) {
+
+			}
+
+			UE_LOG(LogBrainCloudComms, Log, TEXT("Processing request :%s\n"), *requestStr);
 
 			//request was successful
 			if (status == EHttpRequestStatus::Succeeded)
@@ -865,6 +901,10 @@ void BrainCloudComms::FilterIncomingMessages(TSharedRef<ServerCall> servercall, 
 
 		if (isDataValid)
 		{
+			if ((*data)->HasField("compressIfLarger")) {
+				_clientSideCompressionThreshold = (*data)->GetIntegerField("compressIfLarger");
+			}
+
 			if (_heartbeatInterval == 0)
 			{
 				int32 sessionTimeout = (*data)->GetIntegerField(TEXT("playerSessionExpiry"));

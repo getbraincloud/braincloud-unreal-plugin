@@ -503,6 +503,8 @@ public:
   void setAnonymousId(const FString &anonymousId);
   void setProfileId(const FString &profileId);
 
+  bool CompressResponses = true;
+
 private:
   BrainCloudClient *_client = nullptr;
 

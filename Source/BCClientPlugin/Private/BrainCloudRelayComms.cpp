@@ -536,12 +536,6 @@ void BrainCloudRelayComms::send(int netId, const TSharedRef<FJsonObject>& json)
 
 void BrainCloudRelayComms::send(int netId, const FString& text)
 {
-    if (m_client->isLoggingEnabled())
-    {
-        //UE_LOG(LogBrainCloudRelayComms, Log, TEXT("RELAY SEND: %s"), *text);
-    }
-
-
     uint8 bytes[1024];
     int32 bytesLen = ConvertUtilities::BCStringToBytes(text, bytes, 1024);
 
