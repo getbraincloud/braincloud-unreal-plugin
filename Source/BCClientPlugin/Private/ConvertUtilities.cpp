@@ -60,7 +60,7 @@ FString ConvertUtilities::BCBytesArrayToString(const TArray<uint8> in_array)
 	return FUTF8ToTCHAR(reinterpret_cast<const ANSICHAR*>(in_array.GetData()), length).Get();
 }
 
-TArray<uint8> ConvertUtilities::CompressBytes(const TArray<uint8>& UncompressedData)
+TArray<uint8> ConvertUtilities::CompressBytes(const TArray<uint8>& UncompressedData, bool enableLogging)
 {
 	TArray<uint8> CompressedData;
 
@@ -72,7 +72,8 @@ TArray<uint8> ConvertUtilities::CompressBytes(const TArray<uint8>& UncompressedD
 		// Compress the data
 		if (FCompression::CompressMemory(NAME_Gzip, CompressedData.GetData(), CompressedSize, UncompressedData.GetData(), UncompressedData.Num(), COMPRESS_GZIP))
 		{
-			UE_LOG(LogTemp, Log, TEXT("Compress using GZIP successful"));
+			if(enableLogging)
+				UE_LOG(LogTemp, Log, TEXT("Compress using GZIP successful"));
 		}
 		else
 		{

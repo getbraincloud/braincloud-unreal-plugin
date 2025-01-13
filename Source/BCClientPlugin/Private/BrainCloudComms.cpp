@@ -302,7 +302,7 @@ TSharedRef<IHttpRequest> BrainCloudComms::SendPacket(PacketRef packet)
 		//compress the bytes here
 		httpRequest->SetHeader(TEXT("Content-Encoding"), TEXT("gzip"));
 		httpRequest->SetHeader(TEXT("Accept-Encoding"), TEXT("gzip"));
-		bytes = ConvertUtilities::CompressBytes(bytes);
+		bytes = ConvertUtilities::CompressBytes(bytes, _isLoggingEnabled);
 	}
 
 	httpRequest->SetContent(bytes);
