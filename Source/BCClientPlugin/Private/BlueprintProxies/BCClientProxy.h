@@ -13,6 +13,9 @@ class UBCClientProxy : public UBCBlueprintCallProxyBase
   public:
 	UBCClientProxy(const FObjectInitializer &ObjectInitializer);
 
+	UFUNCTION(BlueprintCallable, Category = "BrainCloud|Client")
+	static void EnableCompression(UBrainCloudWrapper* brainCloudWrapper, const bool compress);
+
 	/**
 	* Method initializes the BrainCloudClient.
 	*

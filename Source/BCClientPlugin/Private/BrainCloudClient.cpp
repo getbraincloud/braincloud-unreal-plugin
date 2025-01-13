@@ -94,6 +94,10 @@ BrainCloudClient::~BrainCloudClient()
 // Public Methods
 ////////////////////////////////////////////////////
 
+void BrainCloudClient::EnableCompression(bool compress) {
+	_brainCloudComms->EnableCompression(compress);
+}
+
 void BrainCloudClient::initialize(
 	const FString &serverUrl,
 	const FString &secretKey,
