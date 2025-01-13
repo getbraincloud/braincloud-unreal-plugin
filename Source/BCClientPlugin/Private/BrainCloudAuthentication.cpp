@@ -289,7 +289,7 @@ void BrainCloudAuthentication::authenticate(
 	message->SetStringField(OperationParam::AuthenticateServiceAuthenticateAuthenticationToken.getValue(), authenticationToken);
 	message->SetStringField(OperationParam::AuthenticateServiceAuthenticateAuthenticationType.getValue(), BCAuthType::EnumToString(authenticationType));
 	message->SetBoolField(OperationParam::AuthenticateServiceAuthenticateForceCreate.getValue(), forceCreate);
-// compressResponses?
+	message->SetBoolField(OperationParam::AuthenticateServiceAuthenticateCompressResponses.getValue(), CompressResponses);
     
 	message->SetStringField(OperationParam::AuthenticateServiceAuthenticateProfileId.getValue(), _profileId);
 	message->SetStringField(OperationParam::AuthenticateServiceAuthenticateAnonymousId.getValue(), _anonymousId);

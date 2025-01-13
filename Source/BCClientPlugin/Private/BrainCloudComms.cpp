@@ -288,18 +288,20 @@ TSharedRef<IHttpRequest> BrainCloudComms::SendPacket(PacketRef packet)
 	httpRequest->SetHeader(TEXT("X-Braincloud-PacketId"), packetIdStr);
 
 	FString dataString = GetDataString(packet, _packetId++);
+	dataString = ConvertUtilities::MinifyJson(dataString);
 	if (_isLoggingEnabled)
 		UE_LOG(LogBrainCloudComms, Log, TEXT("Sending request:%s\n"), *dataString);
 
 	TArray<uint8> bytes = ConvertUtilities::BCStringToBytesArray(dataString);
 
 	bool compressMessage =	_supportsCompression &&
-							_clientSideCompressionThreshold &&
+							_clientSideCompressionThreshold >= 0 &&
 							bytes.Num() >= _clientSideCompressionThreshold;
-
 
 	if (compressMessage) {
 		//compress the bytes here
+		httpRequest->SetHeader(TEXT("Content-Encoding"), TEXT("gzip"));
+		httpRequest->SetHeader(TEXT("Accept-Encoding"), TEXT("gzip"));
 		bytes = ConvertUtilities::CompressBytes(bytes);
 	}
 
@@ -361,10 +363,11 @@ FString BrainCloudComms::GetDataString(PacketRef packet, uint64 packetId)
 	}
 
 	TSharedRef<FJsonObject> jsonDataObject = MakeShareable(new FJsonObject());
-	jsonDataObject->SetArrayField(TEXT("messages"), messages);
+	
+	jsonDataObject->SetNumberField(TEXT("packetId"), packetId);
 	jsonDataObject->SetStringField(TEXT("sessionId"), _sessionId);
 	jsonDataObject->SetStringField(TEXT("gameId"), _appId);
-	jsonDataObject->SetNumberField(TEXT("packetId"), packetId);
+	jsonDataObject->SetArrayField(TEXT("messages"), messages);
 
 	FJsonSerializer::Serialize(jsonDataObject, writer);
 	return jsonStr;
@@ -391,7 +394,8 @@ void BrainCloudComms::CreateAndSendNextRequestBundle()
 			auto operation = itr->getOperation();
 			if (operation == ServiceOperation::Authenticate ||
 				operation == ServiceOperation::ResetEmailPassword ||
-				operation == ServiceOperation::ResetEmailPasswordAdvanced)
+				operation == ServiceOperation::ResetEmailPasswordAdvanced ||
+				operation == ServiceOperation::GetServerVersion)
 			{
 				isAuth = true;
 				break;
@@ -443,22 +447,11 @@ void BrainCloudComms::RunCallbacks()
 			double elapsedTime = FPlatformTime::Seconds() - _requestSentTime;
 			bool isError = false;
 
-			FString requestStr = ConvertUtilities::BCBytesArrayToString(_activeRequest->GetContent());
-
-			TSharedRef<TJsonReader<TCHAR>> reader = TJsonReaderFactory<TCHAR>::Create(requestStr);
-			TSharedPtr<FJsonObject> jsonRequest = MakeShareable(new FJsonObject());
-
-			bool res = FJsonSerializer::Deserialize(reader, jsonRequest);
-			if (!res) {
-
-			}
-
-			UE_LOG(LogBrainCloudComms, Log, TEXT("Processing request :%s\n"), *requestStr);
-
 			//request was successful
 			if (status == EHttpRequestStatus::Succeeded)
 			{
 				FHttpResponsePtr resp = _activeRequest->GetResponse();
+				FString encoding = resp->GetHeader("Content-Encoding");
 				if (resp.IsValid())
 				{
 					if (resp->GetResponseCode() == HttpCode::OK)

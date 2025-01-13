@@ -2,6 +2,10 @@
 #include "Serialization/MemoryWriter.h"
 #include "Serialization/MemoryReader.h"
 #include <Misc/Compression.h>
+#include <string>
+#include <zconf.h>
+#include "zlib.h"
+#include "Policies/CondensedJsonPrintPolicy.h"
 
 FString ConvertUtilities::BCBytesToString(const TArray<uint8>& in)
 {
@@ -25,36 +29,50 @@ int32 ConvertUtilities::BCStringToBytes(const FString &in_string, uint8 *out_byt
 
 TArray<uint8> ConvertUtilities::BCStringToBytesArray(const FString& in_string)
 {
-	FTCHARToUTF8 Converter(*in_string);
-	const char* Utf8String = Converter.Get();
-	int32 Utf8Length = Converter.Length();
+	std::string Utf8String = TCHAR_TO_UTF8(*in_string);
 
-	TArray<uint8> ByteArray;
-	ByteArray.Append(reinterpret_cast<const uint8*>(Utf8String), Utf8Length);
+	// Convert std::string to TArray<uint8>
+	TArray<uint8> Utf8Bytes;
+	Utf8Bytes.Append(reinterpret_cast<const uint8*>(Utf8String.c_str()), Utf8String.length());
 
-	return ByteArray;
+	return Utf8Bytes;
 }
 
 FString ConvertUtilities::BCBytesArrayToString(const TArray<uint8> in_array)
 {
-	return FUTF8ToTCHAR(reinterpret_cast<const ANSICHAR*>(in_array.GetData()), in_array.Num()).Get();
+	// Ensure the byte array isn't empty
+	if (in_array.Num() == 0)
+	{
+		return FString();
+	}
+
+	// Find the actual string length (up to the first null terminator)
+	int32 length = 0;
+	for (; length < in_array.Num(); ++length)
+	{
+		if (in_array[length] == 0)
+		{
+			break;
+		}
+	}
+
+	// Convert only the portion of the byte array up to the null terminator
+	return FUTF8ToTCHAR(reinterpret_cast<const ANSICHAR*>(in_array.GetData()), length).Get();
 }
 
-TArray<uint8> ConvertUtilities::CompressBytes(const TArray<uint8>& UncompressedData, FName CompressionFormat)
+TArray<uint8> ConvertUtilities::CompressBytes(const TArray<uint8>& UncompressedData)
 {
 	TArray<uint8> CompressedData;
 
 	if (UncompressedData.Num() > 0)
 	{
-		// Estimate the worst-case size for the compressed data
-		int32 CompressedSize = FCompression::CompressMemoryBound(CompressionFormat, UncompressedData.Num());
+		int32 CompressedSize = FCompression::CompressMemoryBound(NAME_Gzip, UncompressedData.Num());
 		CompressedData.SetNumUninitialized(CompressedSize);
 
 		// Compress the data
-		if (FCompression::CompressMemory(CompressionFormat, CompressedData.GetData(), CompressedSize, UncompressedData.GetData(), UncompressedData.Num()))
+		if (FCompression::CompressMemory(NAME_Gzip, CompressedData.GetData(), CompressedSize, UncompressedData.GetData(), UncompressedData.Num(), COMPRESS_GZIP))
 		{
-			// Resize the array to the actual compressed size
-			CompressedData.SetNum(CompressedSize);
+			UE_LOG(LogTemp, Log, TEXT("Compress using GZIP successful"));
 		}
 		else
 		{
@@ -67,23 +85,26 @@ TArray<uint8> ConvertUtilities::CompressBytes(const TArray<uint8>& UncompressedD
 	return CompressedData;
 }
 
-TArray<uint8> ConvertUtilities::DecompressBytes(const TArray<uint8>& CompressedData, int32 UncompressedSize, FName CompressionFormat)
+FString ConvertUtilities::MinifyJson(const FString& JsonString)
 {
-	TArray<uint8> DecompressedData;
-	DecompressedData.SetNumUninitialized(UncompressedSize);
+	// Parse JSON string into an object
+    TSharedPtr<FJsonObject> JsonObject;
+    TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonString);
 
-	if (CompressedData.Num() > 0)
-	{
-		// Decompress the data
-		if (!FCompression::UncompressMemory(CompressionFormat, DecompressedData.GetData(), UncompressedSize, CompressedData.GetData(), CompressedData.Num()))
-		{
-			// Handle decompression failure
-			DecompressedData.Empty();
-			UE_LOG(LogTemp, Error, TEXT("Failed to decompress data."));
-		}
-	}
+    if (FJsonSerializer::Deserialize(Reader, JsonObject) && JsonObject.IsValid())
+    {
+        // Serialize it back into a compact JSON string
+		FString CompactJsonString;
+		TSharedRef<TJsonWriter<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>> Writer = 
+			TJsonWriterFactory<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>::Create(&CompactJsonString);
 
-	return DecompressedData;
+		FJsonSerializer::Serialize(JsonObject.ToSharedRef(), Writer);
+
+        return CompactJsonString;
+    }
+
+    // If parsing fails, return the original string
+    return JsonString;
 }
 
 
