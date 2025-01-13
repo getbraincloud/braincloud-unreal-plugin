@@ -13,8 +13,22 @@ class UBCClientProxy : public UBCBlueprintCallProxyBase
   public:
 	UBCClientProxy(const FObjectInitializer &ObjectInitializer);
 
+
+	/**
+	* Enables / Disables compression of API requests, disabled by default
+	*
+	* Param - isEnabled Boolean to decide whether to enable or disable compression
+	*/
 	UFUNCTION(BlueprintCallable, Category = "BrainCloud|Client")
-	static void EnableCompression(UBrainCloudWrapper* brainCloudWrapper, const bool compress);
+	static void EnableCompressedRequests(UBrainCloudWrapper* brainCloudWrapper, const bool isEnabled);
+
+	/**
+	* Enables / Disables compression of API responses, disabled by default
+	*
+	* Param - isEnabled Boolean to decide whether to enable or disable compression
+	*/
+	UFUNCTION(BlueprintCallable, Category = "BrainCloud|Client")
+	static void EnableCompressedResponses(UBrainCloudWrapper* brainCloudWrapper, const bool isEnabled);
 
 	/**
 	* Method initializes the BrainCloudClient.

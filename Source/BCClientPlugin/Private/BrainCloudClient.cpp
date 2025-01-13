@@ -90,12 +90,20 @@ BrainCloudClient::~BrainCloudClient()
 	destroyService(_messagingService);
 }
 
+
+
 ////////////////////////////////////////////////////
 // Public Methods
 ////////////////////////////////////////////////////
 
-void BrainCloudClient::EnableCompression(bool compress) {
-	_brainCloudComms->EnableCompression(compress);
+void BrainCloudClient::EnableCompressedRequests(bool isEnabled)
+{
+	_brainCloudComms->EnableCompression(isEnabled);
+}
+
+void BrainCloudClient::EnableCompressedResponses(bool isEnabled)
+{
+	_authenticationService->CompressResponses = isEnabled;
 }
 
 void BrainCloudClient::initialize(
