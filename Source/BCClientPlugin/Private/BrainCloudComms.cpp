@@ -2,6 +2,7 @@
 
 
 #include "BrainCloudComms.h"
+#include "ConvertUtilities.h"
 #include "BCClientPluginPrivatePCH.h"
 #include "IServerCallback.h"
 #include "IEventCallback.h"
@@ -37,6 +38,16 @@ BrainCloudComms::~BrainCloudComms()
 	DeregisterFileUploadCallback();
 	DeregisterGlobalErrorCallback();
 	DeregisterNetworkErrorCallback();
+}
+
+void BrainCloudComms::EnableCompression(bool compress)
+{
+	_supportsCompression = compress;
+}
+
+bool BrainCloudComms::IsCompressionEnabled()
+{
+	return _supportsCompression;
 }
 
 void BrainCloudComms::Initialize(const FString &serverURL, const FString &secretKey, const FString &appId)
@@ -277,10 +288,24 @@ TSharedRef<IHttpRequest> BrainCloudComms::SendPacket(PacketRef packet)
 	httpRequest->SetHeader(TEXT("X-Braincloud-PacketId"), packetIdStr);
 
 	FString dataString = GetDataString(packet, _packetId++);
+	dataString = ConvertUtilities::MinifyJson(dataString);
 	if (_isLoggingEnabled)
 		UE_LOG(LogBrainCloudComms, Log, TEXT("Sending request:%s\n"), *dataString);
 
-	httpRequest->SetContentAsString(dataString);
+	TArray<uint8> bytes = ConvertUtilities::BCStringToBytesArray(dataString);
+
+	bool compressMessage =	_supportsCompression &&
+							_clientSideCompressionThreshold >= 0 &&
+							bytes.Num() >= _clientSideCompressionThreshold;
+
+	if (compressMessage) {
+		//compress the bytes here
+		httpRequest->SetHeader(TEXT("Content-Encoding"), TEXT("gzip"));
+		httpRequest->SetHeader(TEXT("Accept-Encoding"), TEXT("gzip"));
+		bytes = ConvertUtilities::CompressBytes(bytes, _isLoggingEnabled);
+	}
+
+	httpRequest->SetContent(bytes);
 
 	if (_secretKey.Len() > 0)
 	{
@@ -338,10 +363,11 @@ FString BrainCloudComms::GetDataString(PacketRef packet, uint64 packetId)
 	}
 
 	TSharedRef<FJsonObject> jsonDataObject = MakeShareable(new FJsonObject());
-	jsonDataObject->SetArrayField(TEXT("messages"), messages);
+	
+	jsonDataObject->SetNumberField(TEXT("packetId"), packetId);
 	jsonDataObject->SetStringField(TEXT("sessionId"), _sessionId);
 	jsonDataObject->SetStringField(TEXT("gameId"), _appId);
-	jsonDataObject->SetNumberField(TEXT("packetId"), packetId);
+	jsonDataObject->SetArrayField(TEXT("messages"), messages);
 
 	FJsonSerializer::Serialize(jsonDataObject, writer);
 	return jsonStr;
@@ -368,7 +394,8 @@ void BrainCloudComms::CreateAndSendNextRequestBundle()
 			auto operation = itr->getOperation();
 			if (operation == ServiceOperation::Authenticate ||
 				operation == ServiceOperation::ResetEmailPassword ||
-				operation == ServiceOperation::ResetEmailPasswordAdvanced)
+				operation == ServiceOperation::ResetEmailPasswordAdvanced ||
+				operation == ServiceOperation::GetServerVersion)
 			{
 				isAuth = true;
 				break;
@@ -416,6 +443,7 @@ void BrainCloudComms::RunCallbacks()
 		else
 		{
 			EHttpRequestStatus::Type status = _activeRequest->GetStatus();
+
 			double elapsedTime = FPlatformTime::Seconds() - _requestSentTime;
 			bool isError = false;
 
@@ -423,6 +451,7 @@ void BrainCloudComms::RunCallbacks()
 			if (status == EHttpRequestStatus::Succeeded)
 			{
 				FHttpResponsePtr resp = _activeRequest->GetResponse();
+				FString encoding = resp->GetHeader("Content-Encoding");
 				if (resp.IsValid())
 				{
 					if (resp->GetResponseCode() == HttpCode::OK)
@@ -865,6 +894,10 @@ void BrainCloudComms::FilterIncomingMessages(TSharedRef<ServerCall> servercall, 
 
 		if (isDataValid)
 		{
+			if ((*data)->HasField("compressIfLarger")) {
+				_clientSideCompressionThreshold = (*data)->GetIntegerField("compressIfLarger");
+			}
+
 			if (_heartbeatInterval == 0)
 			{
 				int32 sessionTimeout = (*data)->GetIntegerField(TEXT("playerSessionExpiry"));

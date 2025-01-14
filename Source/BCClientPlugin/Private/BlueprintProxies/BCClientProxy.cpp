@@ -12,6 +12,16 @@ UBCClientProxy::UBCClientProxy(const FObjectInitializer &ObjectInitializer)
 {
 }
 
+void UBCClientProxy::EnableCompressedRequests(UBrainCloudWrapper* brainCloudWrapper, const bool isEnabled)
+{
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getBCClient()->EnableCompressedRequests(isEnabled);
+}
+
+void UBCClientProxy::EnableCompressedResponses(UBrainCloudWrapper* brainCloudWrapper, const bool isEnabled)
+{
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getBCClient()->EnableCompressedResponses(isEnabled);
+}
+
 void UBCClientProxy::Initialize(
 	UBrainCloudWrapper *brainCloudWrapper,
 	const FString &serverUrl,

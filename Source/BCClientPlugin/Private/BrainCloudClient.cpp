@@ -90,9 +90,21 @@ BrainCloudClient::~BrainCloudClient()
 	destroyService(_messagingService);
 }
 
+
+
 ////////////////////////////////////////////////////
 // Public Methods
 ////////////////////////////////////////////////////
+
+void BrainCloudClient::EnableCompressedRequests(bool isEnabled)
+{
+	_brainCloudComms->EnableCompression(isEnabled);
+}
+
+void BrainCloudClient::EnableCompressedResponses(bool isEnabled)
+{
+	_authenticationService->CompressResponses = isEnabled;
+}
 
 void BrainCloudClient::initialize(
 	const FString &serverUrl,

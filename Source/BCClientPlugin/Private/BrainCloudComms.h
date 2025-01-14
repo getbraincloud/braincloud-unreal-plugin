@@ -96,6 +96,10 @@ class BrainCloudComms
 	void RetryCachedMessages();
 	void FlushCachedMessages(bool sendApiErrorCallbacks);
 
+	//Compression
+	void EnableCompression(bool compress);
+	bool IsCompressionEnabled();
+
   private:
 	void CreateAndSendNextRequestBundle();
 	PacketRef BuildPacket();
@@ -184,6 +188,10 @@ class BrainCloudComms
 	//caching
 	bool _cacheMessagesOnNetworkError = false;
 	bool _blockingQueue = false;
+
+	//compression
+	bool _supportsCompression = false;
+	int32 _clientSideCompressionThreshold = 50000;
 
 	//For kill switch
 	int32 _killSwitchThreshold = 11;
