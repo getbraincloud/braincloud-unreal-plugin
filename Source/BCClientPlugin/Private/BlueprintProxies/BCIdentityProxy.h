@@ -920,6 +920,19 @@ class UBCIdentityProxy : public UBCBlueprintCallProxyBase
 	static UBCIdentityProxy *GetIdentities(UBrainCloudWrapper *brainCloudWrapper);
 
 	/**
+	* Retrieves identity status for given identity type for this profile.
+	*
+	* Service Name - identity
+	* Service Operation - GET_IDENTITY_STATUS
+	*
+	* @param authenticationType Type of authentication
+	* @param externalAuthName The name of the external authentication mechanism (optional, used for custom authentication types)
+	* @param callback The method to be invoked when the server response is received
+	*/
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Identity")
+	static UBCIdentityProxy *GetIdentityStatus(UBrainCloudWrapper* brainCloudWrapper, EBCAuthType authenticationType, const FString& externalAuthName);
+
+	/**
 	* Retrieve list of expired identities
 	*
 	* Service Name - identity

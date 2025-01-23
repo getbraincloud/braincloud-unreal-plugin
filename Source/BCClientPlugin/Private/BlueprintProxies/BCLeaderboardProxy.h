@@ -546,6 +546,24 @@ class UBCLeaderboardProxy : public UBCBlueprintCallProxyBase
 	static UBCLeaderboardProxy *PostScoreToGroupLeaderboard(UBrainCloudWrapper *brainCloudWrapper, const FString &leaderboardId, const FString &groupId, int32 score, const FString &jsonOtherData);
 
 	/**
+	* Post the group's score to the given social leaderboard, dynamically creating the group leaderboard if it does not exist yet.
+	* To create new leaderboard, configJson must specify leaderboardType, rotationType, resetAt, and retainedCount, at a minimum, with support to optionally specify an expiry in minutes.
+	*
+	* Service Name - leaderboard
+	* Service Operation - POST_GROUP_SCORE_DYNAMIC_USING_CONFIG
+	*
+	* @param leaderboardId The leaderboard to post to.
+	* @param groupId The id of the group.
+	* @param score A score to post
+	* @param scoreData Optional user-defined data to post with the score.
+	* @param configJson Configuration for the leaderboard if it does not exist yet, specified as JSON object. The supporting configuration fields are listed in the following table of configJson fields.
+	* @param callback The method to be invoked when the server response is received
+	*/
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
+	static UBCLeaderboardProxy *PostScoreToDynamicGroupLeaderboardUsingConfig(UBrainCloudWrapper* brainCloudWrapper, const FString& leaderboardId, const FString& groupId, int32 score, const FString& scoreData,
+		const FString& configJson);
+
+	/**
 	* Removes score from group leaderboard
 	*
 	* Service Name - leaderboard

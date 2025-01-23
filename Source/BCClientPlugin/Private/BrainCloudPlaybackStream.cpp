@@ -76,3 +76,13 @@ void BrainCloudPlaybackStream::getRecentStreamsForTargetPlayer(const FString &ta
     ServerCall *sc = new ServerCall(ServiceName::PlaybackStream, ServiceOperation::GetRecentStreamsForTargetPlayer, message, callback);
     _client->sendRequest(sc);
 }
+
+void BrainCloudPlaybackStream::protectStreamUntil(const FString& playbackStreamId, int32 numDays, IServerCallback* callback)
+{
+    TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
+    message->SetStringField(OperationParam::PlaybackStreamServicePlaybackStreamId.getValue(), playbackStreamId);
+    message->SetNumberField(OperationParam::PlaybackStreamServiceNumDays.getValue(), numDays);
+
+    ServerCall* sc = new ServerCall(ServiceName::PlaybackStream, ServiceOperation::ProtectStreamUntil, message, callback);
+    _client->sendRequest(sc);
+}

@@ -49,6 +49,19 @@ class BCCLIENTPLUGIN_API BrainCloudMail
 	*/
 	void sendAdvancedEmailByAddress(const FString &emailAddress, const FString &jsonServiceParams, IServerCallback *callback = nullptr);
 
+	/**
+	* Sends an advanced email to the specified email addresses
+	*
+	* Service Name - mail
+	* Service Operation - SEND_ADVANCED_EMAIL_BY_ADDRESSES
+	*
+	* @param emailAddresses The list of addresses to send the email to
+	* @param jsonServiceParams Parameters to send to the email service. See the documentation for
+	*	a full list. http://getbraincloud.com/apidocs/apiref/#capi-mail
+	* @param callback The method to be invoked when the server response is received
+	*/
+	void sendAdvancedEmailByAddresses(const TArray<FString>& emailAddresses, const FString& jsonServiceParams, IServerCallback* callback = nullptr);
+
   private:
 	BrainCloudClient *_client = nullptr;
 };

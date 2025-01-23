@@ -33,3 +33,10 @@ UBCMailProxy *UBCMailProxy::SendAdvancedEmailByAddress(UBrainCloudWrapper *brain
 	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getMailService()->sendAdvancedEmailByAddress(emailAddress, jsonServiceParams, Proxy);
 	return Proxy;
 }
+
+UBCMailProxy* UBCMailProxy::SendAdvancedEmailByAddresses(UBrainCloudWrapper* brainCloudWrapper, const TArray<FString>& emailAddresses, const FString& jsonServiceParams)
+{
+	UBCMailProxy* Proxy = NewObject<UBCMailProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getMailService()->sendAdvancedEmailByAddresses(emailAddresses, jsonServiceParams, Proxy);
+	return Proxy;
+}

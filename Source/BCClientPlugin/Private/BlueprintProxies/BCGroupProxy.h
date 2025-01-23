@@ -411,6 +411,19 @@ class UBCGroupProxy : public UBCBlueprintCallProxyBase
 	static UBCGroupProxy *RemoveGroupMember(UBrainCloudWrapper *brainCloudWrapper, const FString &groupId, const FString &profileId);
 
 	/**
+	 * Set a group's access conditions.
+	 *
+	 * Service Name - group
+	 * Service Operation - UPDATE_GROUP_ACL
+	 *
+	 * @param groupId ID of the group.
+	 * @param acl The group's access control list. A null ACL implies default
+	 * @param callback The method to be invoked when the server response is received
+	 */
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Group")
+	static UBCGroupProxy *UpdateGroupAcl(UBrainCloudWrapper* brainCloudWrapper, const FString& groupId, UBrainCloudGroupACL* acl);
+
+	/**
 	 * Updates a group's data.
 	 *
 	 * Service Name - group
@@ -422,6 +435,20 @@ class UBCGroupProxy : public UBCBlueprintCallProxyBase
 	 */
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Group")
 	static UBCGroupProxy *UpdateGroupData(UBrainCloudWrapper *brainCloudWrapper, const FString &groupId, int32 version, const FString &jsonData);
+
+	/**
+	 * Update the acl settings for a group entity, enforcing ownership.
+	 *
+	 * Service Name - group
+	 * Service Operation - UPDATE_GROUP_ENTITY_ACL
+	 *
+	 * @param groupId ID of the group.
+	 * @param entityId ID of the entity to update.
+	 * @param acl The group's access control list. A null ACL implies default
+	 * @param callback The method to be invoked when the server response is received
+	 */
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Group")
+	static UBCGroupProxy *UpdateGroupEntityAcl(UBrainCloudWrapper* brainCloudWrapper, const FString& groupId, const FString& entityId, UBrainCloudGroupACL* acl);
 
 	/**
 	 * Update a group entity.

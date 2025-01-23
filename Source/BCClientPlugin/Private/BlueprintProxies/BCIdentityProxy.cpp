@@ -422,6 +422,13 @@ UBCIdentityProxy *UBCIdentityProxy::GetIdentities(UBrainCloudWrapper *brainCloud
 	return Proxy;
 }
 
+UBCIdentityProxy* UBCIdentityProxy::GetIdentityStatus(UBrainCloudWrapper* brainCloudWrapper, EBCAuthType authenticationType, const FString& externalAuthName)
+{
+	UBCIdentityProxy* Proxy = NewObject<UBCIdentityProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getIdentityService()->getIdentityStatus(authenticationType, externalAuthName, Proxy);
+	return Proxy;
+}
+
 UBCIdentityProxy *UBCIdentityProxy::GetExpiredIdentities(UBrainCloudWrapper *brainCloudWrapper)
 {
 	UBCIdentityProxy *Proxy = NewObject<UBCIdentityProxy>();

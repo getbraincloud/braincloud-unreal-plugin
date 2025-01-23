@@ -422,6 +422,31 @@ class BCCLIENTPLUGIN_API BrainCloudGroup
     void removeGroupMember(const FString &groupId, const FString &profileId, IServerCallback *callback = nullptr);
 
     /**
+     * Set a group's access conditions.
+     *
+     * Service Name - group
+     * Service Operation - UPDATE_GROUP_ACL
+     *
+     * @param groupId ID of the group.
+     * @param acl The group's access control list. A null ACL implies default
+     * @param callback The method to be invoked when the server response is received
+     */
+    void updateGroupAcl(const FString& groupId, UBrainCloudGroupACL* acl, IServerCallback* callback = nullptr);
+
+    /**
+     * Update the acl settings for a group entity, enforcing ownership.
+     *
+     * Service Name - group
+     * Service Operation - UPDATE_GROUP_ENTITY_ACL
+     *
+     * @param groupId ID of the group.
+     * @param entityId ID of the entity to update.
+     * @param acl The group's access control list. A null ACL implies default
+     * @param callback The method to be invoked when the server response is received
+     */
+    void updateGroupEntityAcl(const FString& groupId, const FString& entityId, UBrainCloudGroupACL* acl, IServerCallback* callback = nullptr);
+
+    /**
      * Updates a group's data.
      *
      * Service Name - group
