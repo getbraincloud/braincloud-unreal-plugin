@@ -24,6 +24,7 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation SwitchToParentProfile;
 	static const ServiceOperation GetChildProfiles;
 	static const ServiceOperation GetIdentities;
+	static const ServiceOperation GetIdentityStatus;
 	static const ServiceOperation GetExpiredIdentities;
 	static const ServiceOperation RefreshIdentity;
 	static const ServiceOperation ChangeEmailIdentity;
@@ -99,7 +100,9 @@ class BCCLIENTPLUGIN_API ServiceOperation
 
 	static const ServiceOperation GetFriendProfileInfoForExternalId;
 	static const ServiceOperation GetProfileInfoForCredential;
+	static const ServiceOperation GetProfileInfoForCredentialIfExists;
 	static const ServiceOperation GetProfileInfoForExternalAuthId;
+	static const ServiceOperation GetProfileInfoForExternalAuthIdIfExists;
 	static const ServiceOperation GetExternalIdForProfileId;
 	static const ServiceOperation ReadFriendEntity;
 	static const ServiceOperation ReadFriendsEntities;
@@ -150,6 +153,7 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation GetPlayerScoresFromLeaderboards;
 	static const ServiceOperation PostScoreToGroupLeaderboard;
 	static const ServiceOperation PostScoreToDynamicGroupLeaderboard;
+	static const ServiceOperation PostScoreToDynamicGroupLeaderboardUsingConfig;
 	static const ServiceOperation RemoveGroupScore;
 	static const ServiceOperation GetGroupLeaderboardView;
 	static const ServiceOperation PostScoreDynamicUsingConfig;
@@ -182,6 +186,7 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation ResetParentVC;
 
 	static const ServiceOperation Send;
+	static const ServiceOperation SendToProfiles;
 	static const ServiceOperation UpdateEventData;
 	static const ServiceOperation UpdateEventDataIfExists;
 	static const ServiceOperation DeleteSent;
@@ -268,6 +273,7 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation GetStreamSummariesForTargetPlayer;
 	static const ServiceOperation GetRecentStreamsForInitiatingPlayer;
 	static const ServiceOperation GetRecentStreamsForTargetPlayer;
+	static const ServiceOperation ProtectStreamUntil;
 
 	static const ServiceOperation GetUserInfo;
 
@@ -365,7 +371,9 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation RejectGroupJoinRequest;
 	static const ServiceOperation RemoveGroupMember;
 	static const ServiceOperation UpdateGroupData;
+	static const ServiceOperation UpdateGroupAcl;
 	static const ServiceOperation UpdateGroupEntity;
+	static const ServiceOperation UpdateGroupEntityAcl;
 	static const ServiceOperation UpdateGroupMember;
 	static const ServiceOperation UpdateGroupName;
 	static const ServiceOperation SetGroupOpen;
@@ -385,6 +393,7 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation SendBasicEmail;
 	static const ServiceOperation SendAdvancedEmail;
 	static const ServiceOperation SendAdvancedEmailByAddress;
+	static const ServiceOperation SendAdvancedEmailByAddresses;
 
 	//tournament
 	static const ServiceOperation GetTournamentStatus;

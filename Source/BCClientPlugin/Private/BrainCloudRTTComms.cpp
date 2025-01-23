@@ -67,6 +67,7 @@ void BrainCloudRTTComms::enableRTT(BCRTTConnectionType in_connectionType, IServe
 		m_connectionType = in_connectionType;
 		m_appCallback = callback;
 		m_client->getRTTService()->requestClientConnection(this);
+		m_rttConnectionStatus = BCRTTConnectionStatus::CONNECTING;
 	}
 }
 
@@ -81,6 +82,7 @@ void BrainCloudRTTComms::enableRTT(BCRTTConnectionType in_connectionType, UBCRTT
 		m_connectionType = in_connectionType;
 		m_appCallbackBP = callback;
 		m_client->getRTTService()->requestClientConnection(this);
+		m_rttConnectionStatus = BCRTTConnectionStatus::CONNECTING;
 	}
 }
 
@@ -201,7 +203,6 @@ void BrainCloudRTTComms::connectWebSocket()
 void BrainCloudRTTComms::disconnect()
 {
 	if (!isRTTEnabled()) return;
-	
 
 	m_rttConnectionStatus = BCRTTConnectionStatus::DISCONNECTING;
 	// clear everything
@@ -302,7 +303,6 @@ void BrainCloudRTTComms::processRegisteredListeners(const FString &in_service, c
 		{
 			m_appCallbackBP->serverError(ServiceName::RTTRegistration, ServiceOperation::Connect, 400, -1, "RTT Connection has been closed. Re-Enable RTT to re-establish connection : " + in_jsonMessage);
 		}
-		//disconnect();
 		m_disconnectedWithReason = true;
 		return;
 	}
@@ -348,7 +348,6 @@ void BrainCloudRTTComms::processRegisteredListeners(const FString &in_service, c
 		if (in_operation == TEXT("disconnect"))
 		{
 			// this may remove the callback
-			//disconnect();
 			m_disconnectedWithReason = true;
 		}
 	}
@@ -411,11 +410,7 @@ void BrainCloudRTTComms::webSocket_OnClose()
 			UE_LOG(LogBrainCloudComms, Log, TEXT("RTT: Disconnect "), *response);
 		}
 	}
-	if(!m_disconnectedWithReason)
-	{
-		disconnect();
-	}
-	m_disconnectedWithReason = true;
+	
 	m_websocketStatus = BCWebsocketStatus::CLOSED;
 	processRegisteredListeners(ServiceName::RTTRegistration.getValue().ToLower(), "error", UBrainCloudWrapper::buildErrorJson(403, ReasonCodes::RS_CLIENT_ERROR,"Could not connect at this time"));
 }
@@ -423,7 +418,6 @@ void BrainCloudRTTComms::webSocket_OnClose()
 void BrainCloudRTTComms::websocket_OnOpen()
 {
 	// first time connecting? send the server connection call
-	m_rttConnectionStatus = BCRTTConnectionStatus::CONNECTING;
 	m_websocketStatus = BCWebsocketStatus::OPEN;
 	send(buildConnectionRequest());
 }

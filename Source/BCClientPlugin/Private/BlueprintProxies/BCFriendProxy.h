@@ -27,6 +27,20 @@ class UBCFriendProxy : public UBCBlueprintCallProxyBase
 	static UBCFriendProxy *GetProfileInfoForCredential(UBrainCloudWrapper *brainCloudWrapper, const FString &externalId, EBCAuthType authenticationType);
 
 	/**
+	* Retrieves profile information for the specified user.
+	* Silently fails, if profile does not exist, just returns null and success, instead of an error.
+	*
+	* Service Name - friend
+	* Service Operation - GET_PROFILE_INFO_FOR_CREDENTIAL_IF_EXISTS
+	*
+	* @param externalId The users's external ID
+	* @param authenticationType The authentication type of the user ID
+	* @param callback Method to be invoked when the server response is received.
+	*/
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Friend")
+	static UBCFriendProxy *GetProfileInfoForCredentialIfExists(UBrainCloudWrapper* brainCloudWrapper, const FString& externalId, EBCAuthType authenticationType);
+
+	/**
 	* Retrieves profile information for the specified external auth user.
 	*
 	* Service Name - friend
@@ -37,6 +51,20 @@ class UBCFriendProxy : public UBCBlueprintCallProxyBase
 	*/
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Friend")
 	static UBCFriendProxy *GetProfileInfoForExternalAuthId(UBrainCloudWrapper *brainCloudWrapper, const FString &externalId, const FString &externalAuthType);
+
+	/**
+	* Retrieves profile information for the specified external auth user.
+	* Silently fails, if profile does not exist, just returns null and success, instead of an error.
+	*
+	* Service Name - friend
+	* Service Operation - GET_PROFILE_INFO_FOR_EXTERNAL_AUTH_ID_IF_EXISTS
+	*
+	* @param externalId External ID of the user to find
+	* @param externalAuthType The external authentication type used for this users's external ID
+	* @param callback Method to be invoked when the server response is received.
+	*/
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Friend")
+	static UBCFriendProxy *GetProfileInfoForExternalAuthIdIfExists(UBrainCloudWrapper* brainCloudWrapper, const FString& externalId, const FString& externalAuthType);
 
 	/**
 	* Retrieves the external ID for the specified user profile ID on the specified social platform.

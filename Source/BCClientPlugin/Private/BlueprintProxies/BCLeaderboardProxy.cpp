@@ -269,6 +269,13 @@ UBCLeaderboardProxy *UBCLeaderboardProxy::PostScoreToGroupLeaderboard(UBrainClou
 	return Proxy;
 }
 
+UBCLeaderboardProxy* UBCLeaderboardProxy::PostScoreToDynamicGroupLeaderboardUsingConfig(UBrainCloudWrapper* brainCloudWrapper, const FString& leaderboardId, const FString& groupId, int32 score, const FString& scoreData, const FString& configJson)
+{
+	UBCLeaderboardProxy* Proxy = NewObject<UBCLeaderboardProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getLeaderboardService()->postScoreToDynamicGroupLeaderboardUsingConfig(leaderboardId, groupId, score, scoreData, configJson, Proxy);
+	return Proxy;
+}
+
 UBCLeaderboardProxy *UBCLeaderboardProxy::RemoveGroupScore(UBrainCloudWrapper *brainCloudWrapper, const FString &leaderboardId, const FString &groupId, int32 score, int32 versionId)
 {
 	UBCLeaderboardProxy *Proxy = NewObject<UBCLeaderboardProxy>();

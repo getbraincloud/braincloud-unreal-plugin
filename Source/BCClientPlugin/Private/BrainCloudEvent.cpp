@@ -22,6 +22,17 @@ void BrainCloudEvent::sendEvent(const FString &toPlayerId, const FString &eventT
 	_client->sendRequest(sc);
 }
 
+void BrainCloudEvent::sendEventToProfiles(const TArray<FString>& toIds, const FString& eventType, const FString& jsonEventData, IServerCallback* callback)
+{
+	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
+	message->SetArrayField(OperationParam::EventServiceSendToIds.getValue(), JsonUtil::arrayToJsonArray(toIds));
+	message->SetStringField(OperationParam::EventServiceSendEventType.getValue(), eventType);
+	message->SetObjectField(OperationParam::EventServiceSendEventData.getValue(), JsonUtil::jsonStringToValue(jsonEventData));
+
+	ServerCall* sc = new ServerCall(ServiceName::Event, ServiceOperation::SendToProfiles, message, callback);
+	_client->sendRequest(sc);
+}
+
 void BrainCloudEvent::updateIncomingEventData(const FString &evId, const FString &jsonEventData, IServerCallback *callback)
 {
 	// See IEventService on the server to make sure these parameter names are in sync

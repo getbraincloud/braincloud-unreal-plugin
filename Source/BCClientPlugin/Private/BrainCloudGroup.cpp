@@ -361,6 +361,29 @@ void BrainCloudGroup::removeGroupMember(const FString &groupId, const FString &p
 	_client->sendRequest(sc);
 }
 
+void BrainCloudGroup::updateGroupAcl(const FString& groupId, UBrainCloudGroupACL* acl, IServerCallback* callback)
+{
+	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
+	message->SetStringField(OperationParam::GroupId.getValue(), groupId);
+	if (acl != nullptr)
+		message->SetObjectField(OperationParam::GroupAcl.getValue(), acl->toJsonObject());
+
+	ServerCall* sc = new ServerCall(ServiceName::Group, ServiceOperation::UpdateGroupAcl, message, callback);
+	_client->sendRequest(sc);
+}
+
+void BrainCloudGroup::updateGroupEntityAcl(const FString& groupId, const FString& entityId, UBrainCloudGroupACL* acl, IServerCallback* callback)
+{
+	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
+	message->SetStringField(OperationParam::GroupId.getValue(), groupId);
+	message->SetStringField(OperationParam::GroupEntityId.getValue(), entityId);
+	if (acl != nullptr)
+		message->SetObjectField(OperationParam::GroupAcl.getValue(), acl->toJsonObject());
+
+	ServerCall* sc = new ServerCall(ServiceName::Group, ServiceOperation::UpdateGroupEntityAcl, message, callback);
+	_client->sendRequest(sc);
+}
+
 void BrainCloudGroup::updateGroupData(const FString &groupId, int32 version, const FString &jsonData, IServerCallback *callback)
 {
 	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());

@@ -36,6 +36,28 @@ public:
   static UBCEventProxy *SendEvent(UBrainCloudWrapper *brainCloudWrapper, const FString &toPlayerId, const FString &eventType, const FString &jsonEventData);
 
   /**
+     * Sends an event to multiple users with the attached json data.
+     * Any events that have been sent to a player will show up in their
+     * incoming event mailbox. If the recordLocally flag is set to true,
+     * a copy of this event (with the exact same event id) will be stored
+     * in the sending player's "sent" event mailbox.
+     *
+     * Note that the list of sent and incoming events for a player is returned
+     * in the "ReadUserState" call (in the BrainCloudPlayer module).
+     *
+     * Service Name - Event
+     * Service Operation - SEND_EVENT_TO_PROFILES
+     *
+     * @param toPlayerId The id of the player who is being sent the event
+     * @param eventType The user-defined type of the event.
+     * @param jsonEventData The user-defined data for this event encoded in JSON.
+     * user's sent events mailbox.
+     * @param callback The method to be invoked when the server response is received
+     */
+  UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Event")
+  static UBCEventProxy *SendEventToProfiles(UBrainCloudWrapper* brainCloudWrapper, const TArray<FString>& toIds, const FString& eventType, const FString& jsonEventData);
+
+  /**
     * Updates an event in the player's incoming event mailbox.
     *
     * Service Name - Event

@@ -27,6 +27,7 @@ const ServiceOperation ServiceOperation::SwitchToChildProfile = ServiceOperation
 const ServiceOperation ServiceOperation::SwitchToParentProfile = ServiceOperation(TEXT("SWITCH_TO_PARENT_PROFILE"));
 const ServiceOperation ServiceOperation::GetChildProfiles = ServiceOperation(TEXT("GET_CHILD_PROFILES"));
 const ServiceOperation ServiceOperation::GetIdentities = ServiceOperation(TEXT("GET_IDENTITIES"));
+const ServiceOperation ServiceOperation::GetIdentityStatus = ServiceOperation(TEXT("GET_IDENTITY_STATUS"));
 const ServiceOperation ServiceOperation::GetExpiredIdentities = ServiceOperation(TEXT("GET_EXPIRED_IDENTITIES"));
 const ServiceOperation ServiceOperation::RefreshIdentity = ServiceOperation(TEXT("REFRESH_IDENTITY"));
 const ServiceOperation ServiceOperation::ChangeEmailIdentity = ServiceOperation(TEXT("CHANGE_EMAIL_IDENTITY"));
@@ -94,7 +95,9 @@ const ServiceOperation ServiceOperation::GetRunningOrQueuedCloudScripts = Servic
 
 const ServiceOperation ServiceOperation::GetFriendProfileInfoForExternalId = ServiceOperation(TEXT("GET_FRIEND_PROFILE_INFO_FOR_EXTERNAL_ID"));
 const ServiceOperation ServiceOperation::GetProfileInfoForCredential = ServiceOperation(TEXT("GET_PROFILE_INFO_FOR_CREDENTIAL"));
+const ServiceOperation ServiceOperation::GetProfileInfoForCredentialIfExists = ServiceOperation(TEXT("GET_PROFILE_INFO_FOR_CREDENTIAL_IF_EXISTS"));
 const ServiceOperation ServiceOperation::GetProfileInfoForExternalAuthId = ServiceOperation(TEXT("GET_PROFILE_INFO_FOR_EXTERNAL_AUTH_ID"));
+const ServiceOperation ServiceOperation::GetProfileInfoForExternalAuthIdIfExists = ServiceOperation(TEXT("GET_PROFILE_INFO_FOR_EXTERNAL_AUTH_ID_IF_EXISTS"));
 const ServiceOperation ServiceOperation::GetExternalIdForProfileId = ServiceOperation(TEXT("GET_EXTERNAL_ID_FOR_PROFILE_ID"));
 const ServiceOperation ServiceOperation::ReadFriendEntity = ServiceOperation(TEXT("READ_FRIEND_ENTITY"));
 const ServiceOperation ServiceOperation::ReadFriendsEntities = ServiceOperation(TEXT("READ_FRIENDS_ENTITIES"));
@@ -146,6 +149,7 @@ const ServiceOperation ServiceOperation::GetPlayerScores = ServiceOperation(TEXT
 const ServiceOperation ServiceOperation::GetPlayerScoresFromLeaderboards = ServiceOperation(TEXT("GET_PLAYER_SCORES_FROM_LEADERBOARDS"));
 const ServiceOperation ServiceOperation::PostScoreToGroupLeaderboard = ServiceOperation(TEXT("POST_GROUP_SCORE"));
 const ServiceOperation ServiceOperation::PostScoreToDynamicGroupLeaderboard = ServiceOperation(TEXT("POST_GROUP_SCORE_DYNAMIC"));
+const ServiceOperation ServiceOperation::PostScoreToDynamicGroupLeaderboardUsingConfig = ServiceOperation(TEXT("POST_GROUP_SCORE_DYNAMIC_USING_CONFIG"));
 const ServiceOperation ServiceOperation::RemoveGroupScore = ServiceOperation(TEXT("REMOVE_GROUP_SCORE"));
 const ServiceOperation ServiceOperation::GetGroupLeaderboardView = ServiceOperation(TEXT("GET_GROUP_LEADERBOARD_VIEW"));
 const ServiceOperation ServiceOperation::PostScoreDynamicUsingConfig = ServiceOperation(TEXT("POST_SCORE_DYNAMIC_USING_CONFIG"));
@@ -178,6 +182,7 @@ const ServiceOperation ServiceOperation::GetParentVC = ServiceOperation(TEXT("GE
 const ServiceOperation ServiceOperation::ResetParentVC = ServiceOperation(TEXT("RESET_PARENT_VC"));
 
 const ServiceOperation ServiceOperation::Send = ServiceOperation(TEXT("SEND"));
+const ServiceOperation ServiceOperation::SendToProfiles = ServiceOperation(TEXT("SEND_EVENT_TO_PROFILES"));
 const ServiceOperation ServiceOperation::UpdateEventData = ServiceOperation(TEXT("UPDATE_EVENT_DATA"));
 const ServiceOperation ServiceOperation::UpdateEventDataIfExists = ServiceOperation(TEXT("UPDATE_EVENT_DATA_IF_EXISTS"));
 const ServiceOperation ServiceOperation::DeleteSent = ServiceOperation(TEXT("DELETE_SENT"));
@@ -263,6 +268,7 @@ const ServiceOperation ServiceOperation::GetStreamSummariesForInitiatingPlayer =
 const ServiceOperation ServiceOperation::GetStreamSummariesForTargetPlayer = ServiceOperation(TEXT("GET_STREAM_SUMMARIES_FOR_TARGET_PLAYER"));
 const ServiceOperation ServiceOperation::GetRecentStreamsForInitiatingPlayer = ServiceOperation(TEXT("GET_RECENT_STREAMS_FOR_INITIATING_PLAYER"));
 const ServiceOperation ServiceOperation::GetRecentStreamsForTargetPlayer = ServiceOperation(TEXT("GET_RECENT_STREAMS_FOR_TARGET_PLAYER"));
+const ServiceOperation ServiceOperation::ProtectStreamUntil = ServiceOperation(TEXT("PROTECT_STREAM_UNTIL"));
 
 const ServiceOperation ServiceOperation::GetUserInfo = ServiceOperation(TEXT("GET_USER_INFO"));
 
@@ -362,7 +368,9 @@ const ServiceOperation ServiceOperation::RejectGroupInvitation = ServiceOperatio
 const ServiceOperation ServiceOperation::RejectGroupJoinRequest = ServiceOperation(TEXT("REJECT_GROUP_JOIN_REQUEST"));
 const ServiceOperation ServiceOperation::RemoveGroupMember = ServiceOperation(TEXT("REMOVE_GROUP_MEMBER"));
 const ServiceOperation ServiceOperation::UpdateGroupData = ServiceOperation(TEXT("UPDATE_GROUP_DATA"));
+const ServiceOperation ServiceOperation::UpdateGroupAcl = ServiceOperation(TEXT("UPDATE_GROUP_ACL"));
 const ServiceOperation ServiceOperation::UpdateGroupEntity = ServiceOperation(TEXT("UPDATE_GROUP_ENTITY_DATA"));
+const ServiceOperation ServiceOperation::UpdateGroupEntityAcl = ServiceOperation(TEXT("UPDATE_GROUP_ENTITY_ACL"));
 const ServiceOperation ServiceOperation::UpdateGroupMember = ServiceOperation(TEXT("UPDATE_GROUP_MEMBER"));
 const ServiceOperation ServiceOperation::UpdateGroupName = ServiceOperation(TEXT("UPDATE_GROUP_NAME"));
 const ServiceOperation ServiceOperation::SetGroupOpen = ServiceOperation(TEXT("SET_GROUP_OPEN"));
@@ -382,6 +390,7 @@ const ServiceOperation ServiceOperation::UpdateFileInfo = ServiceOperation(TEXT(
 const ServiceOperation ServiceOperation::SendBasicEmail = ServiceOperation(TEXT("SEND_BASIC_EMAIL"));
 const ServiceOperation ServiceOperation::SendAdvancedEmail = ServiceOperation(TEXT("SEND_ADVANCED_EMAIL"));
 const ServiceOperation ServiceOperation::SendAdvancedEmailByAddress = ServiceOperation(TEXT("SEND_ADVANCED_EMAIL_BY_ADDRESS"));
+const ServiceOperation ServiceOperation::SendAdvancedEmailByAddresses = ServiceOperation(TEXT("SEND_ADVANCED_EMAIL_BY_ADDRESSES"));
 
 //presence
 const ServiceOperation ServiceOperation::ForcePush = ServiceOperation(TEXT("FORCE_PUSH"));

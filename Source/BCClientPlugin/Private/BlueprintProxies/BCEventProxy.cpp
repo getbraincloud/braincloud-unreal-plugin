@@ -20,6 +20,13 @@ UBCEventProxy *UBCEventProxy::SendEvent(UBrainCloudWrapper *brainCloudWrapper, c
     return Proxy;
 }
 
+UBCEventProxy* UBCEventProxy::SendEventToProfiles(UBrainCloudWrapper* brainCloudWrapper, const TArray<FString>& toIds, const FString& eventType, const FString& jsonEventData)
+{
+    UBCEventProxy* Proxy = NewObject<UBCEventProxy>();
+    UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getEventService()->sendEventToProfiles(toIds, eventType, jsonEventData, Proxy);
+    return Proxy;
+}
+
 UBCEventProxy *UBCEventProxy::UpdateIncomingEventData(UBrainCloudWrapper *brainCloudWrapper, const FString &evId, const FString &jsonEventData)
 {
     UBCEventProxy *Proxy = NewObject<UBCEventProxy>();

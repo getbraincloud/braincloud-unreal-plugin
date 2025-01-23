@@ -96,4 +96,19 @@ class UBCPlaybackStreamProxy : public UBCBlueprintCallProxyBase
 	*/
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Playback Stream")
     static UBCPlaybackStreamProxy *GetRecentStreamsForTargetPlayer(UBrainCloudWrapper *brainCloudWrapper, const FString &targetPlayerId, int32 maxNumStreams);
+
+    /**
+     * Protects a playback stream from being purged (but not deleted) for the given number of days (from now).
+     * If the number of days given is less than the normal purge interval days (from createdAt), the longer protection date is applied.
+     * Can only be called by users involved in the playback stream.
+     *
+     * Service Name - PlaybackStream
+     * Service Operation - PROTECT_STREAM_UNTIL
+     *
+     * @param playbackStreamId Identifies the stream to protect.
+     * @param numDays The number of days the stream is to be protected (from now).
+     * @param callback The callback.
+     */
+    UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Playback Stream")
+    static UBCPlaybackStreamProxy *ProtectStreamUntil(UBrainCloudWrapper* brainCloudWrapper, const FString& playbackStreamId, int32 numDays);
 };

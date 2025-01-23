@@ -20,10 +20,24 @@ UBCFriendProxy *UBCFriendProxy::GetProfileInfoForCredential(UBrainCloudWrapper *
 	return Proxy;
 }
 
+UBCFriendProxy* UBCFriendProxy::GetProfileInfoForCredentialIfExists(UBrainCloudWrapper* brainCloudWrapper, const FString& externalId, EBCAuthType authenticationType)
+{
+	UBCFriendProxy* Proxy = NewObject<UBCFriendProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getFriendService()->getProfileInfoForCredentialIfExists(externalId, authenticationType, Proxy);
+	return Proxy;
+}
+
 UBCFriendProxy *UBCFriendProxy::GetProfileInfoForExternalAuthId(UBrainCloudWrapper *brainCloudWrapper, const FString &externalId, const FString &externalAuthType)
 {
 	UBCFriendProxy *Proxy = NewObject<UBCFriendProxy>();
 	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getFriendService()->getProfileInfoForExternalAuthId(externalId, externalAuthType, Proxy);
+	return Proxy;
+}
+
+UBCFriendProxy* UBCFriendProxy::GetProfileInfoForExternalAuthIdIfExists(UBrainCloudWrapper* brainCloudWrapper, const FString& externalId, const FString& externalAuthType)
+{
+	UBCFriendProxy* Proxy = NewObject<UBCFriendProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getFriendService()->getProfileInfoForExternalAuthIdIfExists(externalId, externalAuthType, Proxy);
 	return Proxy;
 }
 
