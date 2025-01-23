@@ -62,3 +62,10 @@ UBCPlaybackStreamProxy *UBCPlaybackStreamProxy::GetRecentStreamsForTargetPlayer(
     UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getPlaybackStreamService()->getRecentStreamsForTargetPlayer(targetPlayerId, maxNumStreams, Proxy);
     return Proxy;
 }
+
+UBCPlaybackStreamProxy* UBCPlaybackStreamProxy::ProtectStreamUntil(UBrainCloudWrapper* brainCloudWrapper, const FString& playbackStreamId, int32 numDays)
+{
+    UBCPlaybackStreamProxy* Proxy = NewObject<UBCPlaybackStreamProxy>();
+    UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getPlaybackStreamService()->protectStreamUntil(playbackStreamId, numDays, Proxy);
+    return Proxy;
+}

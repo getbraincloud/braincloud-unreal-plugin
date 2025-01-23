@@ -429,6 +429,23 @@ class BCCLIENTPLUGIN_API BrainCloudLeaderboard
                                            ESocialLeaderboardType leaderboardType, const FDateTime &rotationStart, int32 retainedCount, int32 numDaysToRotate, IServerCallback *callback = nullptr);
 
 	/**
+	* Post the group's score to the given social leaderboard, dynamically creating the group leaderboard if it does not exist yet. 
+	* To create new leaderboard, configJson must specify leaderboardType, rotationType, resetAt, and retainedCount, at a minimum, with support to optionally specify an expiry in minutes.
+	*
+	* Service Name - leaderboard
+	* Service Operation - POST_GROUP_SCORE_DYNAMIC_USING_CONFIG
+	*
+	* @param leaderboardId The leaderboard to post to.
+	* @param groupId The id of the group.
+	* @param score A score to post
+	* @param scoreData Optional user-defined data to post with the score.
+	* @param configJson Configuration for the leaderboard if it does not exist yet, specified as JSON object. The supporting configuration fields are listed in the following table of configJson fields.
+	* @param callback The method to be invoked when the server response is received
+	*/
+	void postScoreToDynamicGroupLeaderboardUsingConfig(const FString& leaderboardId, const FString& groupId, int32 score, const FString& scoreData, 
+									const FString &configJson, IServerCallback* callback = nullptr);
+
+	/**
 	* Removes a player's score from the leaderboard
 	*
 	* Service Name - leaderboard

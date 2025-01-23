@@ -922,6 +922,18 @@ class BCCLIENTPLUGIN_API BrainCloudIdentity
 	void getIdentities(IServerCallback *callback = nullptr);
 
 	/**
+	* Retrieves identity status for given identity type for this profile.
+	*
+	* Service Name - identity
+	* Service Operation - GET_IDENTITY_STATUS
+	*
+	* @param authenticationType Type of authentication
+	* @param externalAuthName The name of the external authentication mechanism (optional, used for custom authentication types)
+	* @param callback The method to be invoked when the server response is received
+	*/
+	void getIdentityStatus(EBCAuthType authenticationType, const FString& externalAuthName,IServerCallback* callback = nullptr);
+
+	/**
 	* Retrieve list of expired identities
 	*
 	* Service Name - identity

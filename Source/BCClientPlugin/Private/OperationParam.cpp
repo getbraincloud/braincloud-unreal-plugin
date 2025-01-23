@@ -154,6 +154,7 @@ const OperationParam OperationParam::OwnerId = OperationParam("ownerId");
 
 // Event Service - Send Params
 const OperationParam OperationParam::EventServiceSendToId = OperationParam("toId");
+const OperationParam OperationParam::EventServiceSendToIds = OperationParam("toIds");
 const OperationParam OperationParam::EventServiceSendEventType = OperationParam("eventType");
 const OperationParam OperationParam::EventServiceSendEventId = OperationParam("eventId");
 const OperationParam OperationParam::EventServiceSendEventData = OperationParam("eventData");
@@ -343,6 +344,7 @@ const OperationParam OperationParam::PlaybackStreamServicePlaybackStreamId = Ope
 const OperationParam OperationParam::PlaybackStreamServiceTargetPlayerId = OperationParam("targetPlayerId");
 const OperationParam OperationParam::PlaybackStreamServiceInitiatingPlayerId = OperationParam("initiatingPlayerId");
 const OperationParam OperationParam::PlaybackStreamServiceMaxNumberOfStreams = OperationParam("maxNumStreams");
+const OperationParam OperationParam::PlaybackStreamServiceNumDays = OperationParam("numDays");
 const OperationParam OperationParam::PlaybackStreamServiceIncludeSharedData = OperationParam("includeSharedData");
 const OperationParam OperationParam::PlaybackStreamServiceEventData = OperationParam("eventData");
 const OperationParam OperationParam::PlaybackStreamServiceSummary = OperationParam("summary");
@@ -426,6 +428,7 @@ const OperationParam OperationParam::GroupMaxReturn = OperationParam("maxReturn"
 
 const OperationParam OperationParam::ProfileId = OperationParam("profileId");
 const OperationParam OperationParam::EmailAddress = OperationParam("emailAddress");
+const OperationParam OperationParam::EmailAddresses = OperationParam("emailAddresses");
 const OperationParam OperationParam::Subject = OperationParam("subject");
 const OperationParam OperationParam::Body = OperationParam("body");
 const OperationParam OperationParam::ServiceParams = OperationParam("serviceParams");

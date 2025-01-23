@@ -272,6 +272,19 @@ void BrainCloudLeaderboard::postScoreToDynamicGroupLeaderboardDaysUTC(const FStr
 	_client->sendRequest(sc);
 }
 
+void BrainCloudLeaderboard::postScoreToDynamicGroupLeaderboardUsingConfig(const FString& leaderboardId, const FString& groupId, int32 score, const FString& scoreData, const FString& configJson, IServerCallback* callback)
+{
+	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
+	message->SetStringField(OperationParam::LeaderboardServiceLeaderboardId.getValue(), leaderboardId);
+	message->SetStringField(OperationParam::GroupId.getValue(), groupId);
+	message->SetNumberField(OperationParam::LeaderboardServiceScore.getValue(), score);
+	message->SetObjectField(OperationParam::LeaderboardServiceScoreData.getValue(), JsonUtil::jsonStringToValue(scoreData));
+	message->SetObjectField(OperationParam::LeaderboardServiceConfigJson.getValue(), JsonUtil::jsonStringToValue(configJson));
+
+	ServerCall* sc = new ServerCall(ServiceName::Leaderboard, ServiceOperation::PostScoreToDynamicGroupLeaderboardUsingConfig, message, callback);
+	_client->sendRequest(sc);
+}
+
 void BrainCloudLeaderboard::removePlayerScore(const FString &leaderboardId, int32 versionId, IServerCallback *callback)
 {
 	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());

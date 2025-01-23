@@ -134,6 +134,7 @@ class BCCLIENTPLUGIN_API OperationParam
 
 	// Event Service - Send Params
 	static const OperationParam EventServiceSendToId;
+	static const OperationParam EventServiceSendToIds;
 	static const OperationParam EventServiceSendEventType;
 	static const OperationParam EventServiceSendEventId;
 	static const OperationParam EventServiceSendEventData;
@@ -321,6 +322,7 @@ class BCCLIENTPLUGIN_API OperationParam
 	static const OperationParam PlaybackStreamServiceTargetPlayerId;
 	static const OperationParam PlaybackStreamServiceInitiatingPlayerId;
 	static const OperationParam PlaybackStreamServiceMaxNumberOfStreams;
+	static const OperationParam PlaybackStreamServiceNumDays;
 	static const OperationParam PlaybackStreamServiceIncludeSharedData;
 	static const OperationParam PlaybackStreamServiceEventData;
 	static const OperationParam PlaybackStreamServiceSummary;
@@ -424,6 +426,7 @@ class BCCLIENTPLUGIN_API OperationParam
 	//mail
 	static const OperationParam ProfileId;
 	static const OperationParam EmailAddress;
+	static const OperationParam EmailAddresses;
 	static const OperationParam Subject;
 	static const OperationParam Body;
 	static const OperationParam ServiceParams;

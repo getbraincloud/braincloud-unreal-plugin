@@ -368,6 +368,17 @@ void BrainCloudIdentity::getIdentities(IServerCallback *callback)
 	_client->sendRequest(sc);
 }
 
+void BrainCloudIdentity::getIdentityStatus(EBCAuthType authenticationType, const FString& externalAuthName, IServerCallback* callback)
+{
+	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
+
+	message->SetStringField(OperationParam::IdentityServiceAuthenticationType.getValue(), BCAuthType::EnumToString(authenticationType));
+	message->SetStringField(OperationParam::AuthenticateServiceAuthenticateExternalAuthName.getValue(), externalAuthName);
+
+	ServerCall* sc = new ServerCall(ServiceName::Identity, ServiceOperation::GetIdentityStatus, message, callback);
+	_client->sendRequest(sc);
+}
+
 void BrainCloudIdentity::getExpiredIdentities(IServerCallback *callback)
 {
 	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());

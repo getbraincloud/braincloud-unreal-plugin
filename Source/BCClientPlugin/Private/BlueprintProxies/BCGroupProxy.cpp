@@ -247,10 +247,24 @@ UBCGroupProxy *UBCGroupProxy::RemoveGroupMember(UBrainCloudWrapper *brainCloudWr
     return Proxy;
 }
 
+UBCGroupProxy* UBCGroupProxy::UpdateGroupAcl(UBrainCloudWrapper* brainCloudWrapper, const FString& groupId, UBrainCloudGroupACL* acl)
+{
+    UBCGroupProxy* Proxy = NewObject<UBCGroupProxy>();
+    UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getGroupService()->updateGroupAcl(groupId, acl, Proxy);
+    return Proxy;
+}
+
 UBCGroupProxy *UBCGroupProxy::UpdateGroupData(UBrainCloudWrapper *brainCloudWrapper, const FString &groupId, int32 version, const FString &jsonData)
 {
     UBCGroupProxy *Proxy = NewObject<UBCGroupProxy>();
     UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getGroupService()->updateGroupData(groupId, version, jsonData, Proxy);
+    return Proxy;
+}
+
+UBCGroupProxy* UBCGroupProxy::UpdateGroupEntityAcl(UBrainCloudWrapper* brainCloudWrapper, const FString& groupId, const FString& entityId, UBrainCloudGroupACL* acl)
+{
+    UBCGroupProxy* Proxy = NewObject<UBCGroupProxy>();
+    UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getGroupService()->updateGroupEntityAcl(groupId, entityId, acl, Proxy);
     return Proxy;
 }
 
