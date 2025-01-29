@@ -70,7 +70,7 @@ TArray<uint8> ConvertUtilities::CompressBytes(const TArray<uint8>& UncompressedD
 		CompressedData.SetNumUninitialized(CompressedSize);
 
 		// Compress the data
-		if (FCompression::CompressMemory(NAME_Gzip, CompressedData.GetData(), CompressedSize, UncompressedData.GetData(), UncompressedData.Num(), COMPRESS_GZIP))
+		if (FCompression::CompressMemory(NAME_Gzip, CompressedData.GetData(), CompressedSize, UncompressedData.GetData(), UncompressedData.Num()))
 		{
 			if(enableLogging)
 				UE_LOG(LogTemp, Log, TEXT("Compress using GZIP successful"));
