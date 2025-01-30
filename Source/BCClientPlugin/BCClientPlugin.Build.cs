@@ -35,8 +35,6 @@ public class BCClientPlugin : ModuleRules
                 {
                     "JsonUtilities",
                     "HTTP",
-                    "OnlineSubsystemUtils",
-                    "OnlineSubsystem",
                     "AndroidNative"
                 });
 
