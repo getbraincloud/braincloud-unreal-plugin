@@ -3,8 +3,6 @@
 #include "Serialization/MemoryReader.h"
 #include <Misc/Compression.h>
 #include <string>
-#include <zconf.h>
-#include "zlib.h"
 #include "Policies/CondensedJsonPrintPolicy.h"
 
 FString ConvertUtilities::BCBytesToString(const TArray<uint8>& in)
