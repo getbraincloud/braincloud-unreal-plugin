@@ -1,7 +1,7 @@
 {
   "FileVersion": 3,
   "Version": 29,
-  "VersionName": "5.5.0",
+  "VersionName": "5.5.1",
   "FriendlyName": "brainCloud",
   "Description": "brainCloud is a ready-made back-end platform for the development of feature-rich mobile+social games. For more information, go to getbraincloud.com.",
   "Category": "Network",
@@ -31,11 +31,6 @@
       "LoadingPhase": "PreDefault"
     },
     {
-      "Name": "OnlineSubsystemBrainCloud",
-      "Type": "Runtime",
-      "LoadingPhase": "PreDefault"
-    },
-    {
       "Name": "BCWidget",
       "Type": "EditorNoCommandlet",
       "LoadingPhase": "PreDefault",
@@ -49,16 +44,6 @@
       "Name": "BCCompatibility",
       "Type": "Editor",
       "LoadingPhase": "PreDefault"
-    }
-  ],
-  "Plugins": [
-    {
-      "Name": "OnlineSubsystem",
-      "Enabled": true
-    },
-    {
-      "Name": "OnlineSubsystemUtils",
-      "Enabled": true
     }
   ]
 }
