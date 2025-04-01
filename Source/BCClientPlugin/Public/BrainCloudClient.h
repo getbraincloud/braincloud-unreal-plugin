@@ -127,14 +127,21 @@ class BCCLIENTPLUGIN_API BrainCloudClient
 	~BrainCloudClient();
 
 	/**
-	* Enables / Disables compression of API requests, disabled by default
+	* Enables / Disables compression of both API requests and responses
+	*
+	* @param isEnabled Boolean to decide whether to enable or disable compression
+	*/
+	void EnableCompression(bool isEnabled);
+
+	/**
+	* Enables / Disables compression of API requests, enabled by default
 	*
 	* @param isEnabled Boolean to decide whether to enable or disable compression
 	*/
 	void EnableCompressedRequests(bool isEnabled);
 
 	/**
-	* Enables / Disables compression of API responses, disabled by default
+	* Enables / Disables compression of API responses, enabled by default
 	*
 	* @param isEnabled Boolean to decide whether to enable or disable compression
 	*/

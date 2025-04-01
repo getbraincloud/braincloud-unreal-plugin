@@ -190,7 +190,7 @@ class BrainCloudComms
 	bool _blockingQueue = false;
 
 	//compression
-	bool _supportsCompression = false;
+	bool _supportsCompression = true;
 	int32 _clientSideCompressionThreshold = 50000;
 
 	//For kill switch

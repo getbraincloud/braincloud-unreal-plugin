@@ -92,9 +92,18 @@ BrainCloudClient::~BrainCloudClient()
 
 
 
+
+
 ////////////////////////////////////////////////////
 // Public Methods
 ////////////////////////////////////////////////////
+
+
+void BrainCloudClient::EnableCompression(bool isEnabled)
+{
+	EnableCompressedRequests(isEnabled);
+	EnableCompressedResponses(isEnabled);
+}
 
 void BrainCloudClient::EnableCompressedRequests(bool isEnabled)
 {
