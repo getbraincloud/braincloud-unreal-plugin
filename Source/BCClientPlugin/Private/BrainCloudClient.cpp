@@ -23,7 +23,7 @@
 #include "Internationalization/Culture.h"
 
 // Define all static member variables.
-FString BrainCloudClient::s_brainCloudClientVersion = TEXT("5.5.1");
+FString BrainCloudClient::s_brainCloudClientVersion = TEXT("5.6.0");
 
 ////////////////////////////////////////////////////
 // (De)Constructors
@@ -92,9 +92,18 @@ BrainCloudClient::~BrainCloudClient()
 
 
 
+
+
 ////////////////////////////////////////////////////
 // Public Methods
 ////////////////////////////////////////////////////
+
+
+void BrainCloudClient::EnableCompression(bool isEnabled)
+{
+	EnableCompressedRequests(isEnabled);
+	EnableCompressedResponses(isEnabled);
+}
 
 void BrainCloudClient::EnableCompressedRequests(bool isEnabled)
 {
