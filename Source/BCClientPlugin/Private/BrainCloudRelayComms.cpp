@@ -444,7 +444,11 @@ void BrainCloudRelayComms::send(const TArray<uint8> &in_dataArr, uint64 in_playe
     // Allocate buffer
     auto totalSize = in_size + 11;
     auto pPacket = m_packetPool.alloc();
+#if ENGINE_MAJOR_VERSION >= 5 && ENGINE_MINOR_VERSION >= 5
+    pPacket->data.SetNum(totalSize,EAllowShrinking::No);
+#else
     pPacket->data.SetNum(totalSize, false);
+#endif
 
     // Size
     auto len = hostToNet((uint16)totalSize);
