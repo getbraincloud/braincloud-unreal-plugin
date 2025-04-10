@@ -122,7 +122,11 @@ void BrainCloud::RelayUDPSocket::send(const uint8* pData, int size)
 	int32 BytesSent = 0;
 
 	TArray<uint8> data;
+#if ENGINE_MAJOR_VERSION >= 5 && ENGINE_MINOR_VERSION >= 5
+	data.SetNum(size, EAllowShrinking::No);
+#else
 	data.SetNum(size, false);
+#endif
 	memcpy(data.GetData(), pData, size);
 	m_connectedSocket->SendTo(data.GetData(), size, BytesSent, *m_remoteAddr);
 
