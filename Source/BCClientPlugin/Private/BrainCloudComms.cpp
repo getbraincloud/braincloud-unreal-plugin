@@ -894,8 +894,8 @@ void BrainCloudComms::FilterIncomingMessages(TSharedRef<ServerCall> servercall, 
 
 		if (isDataValid)
 		{
-			if ((*data)->HasField("compressIfLarger")) {
-				_clientSideCompressionThreshold = (*data)->GetIntegerField("compressIfLarger");
+			if ((*data)->HasField(TEXT("compressIfLarger"))) {
+				_clientSideCompressionThreshold = (*data)->GetIntegerField(TEXT("compressIfLarger"));
 			}
 
 			if (_heartbeatInterval == 0)
