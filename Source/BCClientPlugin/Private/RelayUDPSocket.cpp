@@ -10,6 +10,7 @@
 #include <netinet/in.h>
 #endif
 
+#include "Runtime/Launch/Resources/Version.h"
 #include "SocketSubsystem.h"
 #include <Interfaces/IPv4/IPv4Address.h>
 #include <Common/UdpSocketBuilder.h>
