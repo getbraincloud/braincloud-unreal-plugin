@@ -6,7 +6,7 @@
 
 #include "BrainCloudWrapper.h"
 
-UBrainCloudWrapper *UBCWrapperProxy::DefaultBrainCloudInstance = nullptr;
+TWeakObjectPtr<UBrainCloudWrapper> UBCWrapperProxy::DefaultBrainCloudInstance = nullptr;
 
 UBCWrapperProxy::UBCWrapperProxy(const FObjectInitializer &ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -15,7 +15,7 @@ UBCWrapperProxy::UBCWrapperProxy(const FObjectInitializer &ObjectInitializer)
 
 UBrainCloudWrapper *UBCWrapperProxy::CreateBrainCloudWrapper(const FString &wrapperName)
 {
-	UBrainCloudWrapper *wrapper = NewObject<UBrainCloudWrapper>();
+	UBrainCloudWrapper* wrapper = NewObject<UBrainCloudWrapper>();
 	wrapper->setWrapperName(wrapperName);
 	return wrapper;
 }
@@ -30,7 +30,7 @@ void UBCWrapperProxy::SetDefaultBrainCloudInstance(UBrainCloudWrapper *brainClou
 
 void UBCWrapperProxy::ClearDefaultBrainCloudInstance()
 {
-	if (DefaultBrainCloudInstance != nullptr)
+	if (ensureAlways(DefaultBrainCloudInstance != nullptr))
 		DefaultBrainCloudInstance->RemoveFromRoot();
 	DefaultBrainCloudInstance = nullptr;
 }
@@ -45,7 +45,7 @@ UBrainCloudWrapper *UBCWrapperProxy::GetBrainCloudInstance(UBrainCloudWrapper *b
 	// Using a default state instance of brainCloud
 	else if (DefaultBrainCloudInstance != nullptr)
 	{
-		return DefaultBrainCloudInstance;
+		return DefaultBrainCloudInstance.Get();
 	}
 	// nullptr! wrapper isn't set!
 	else

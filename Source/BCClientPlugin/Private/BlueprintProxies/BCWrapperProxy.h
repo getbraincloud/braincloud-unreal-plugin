@@ -18,7 +18,7 @@ class UBCWrapperProxy : public UBCBlueprintCallProxyBase
   GENERATED_BODY()
 
 public:
-  static UBrainCloudWrapper *DefaultBrainCloudInstance;
+  static TWeakObjectPtr<UBrainCloudWrapper> DefaultBrainCloudInstance;
   UBCWrapperProxy(const FObjectInitializer &ObjectInitializer);
 
   /**
