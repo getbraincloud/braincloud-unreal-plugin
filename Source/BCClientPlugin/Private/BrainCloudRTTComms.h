@@ -88,7 +88,7 @@ class BrainCloudRTTComms : public IServerCallback
 	void setupWebSocket(const FString &in_url);
 
 	void setEndpointFromType(TArray<TSharedPtr<FJsonValue>> in_endpoints, FString in_socketType);
-	void onRecv(const FString &in_message);
+	void onRecv(FString in_message);
 
 	FString buildRTTRequestError(FString in_statusMessage);
 	
@@ -100,7 +100,7 @@ class BrainCloudRTTComms : public IServerCallback
 
 	// private vars
 	BrainCloudClient *m_client = nullptr;
-	IServerCallback *m_appCallback;
+	TWeakObjectPtr<IServerCallback> m_appCallback;
 	UBCRTTProxy *m_appCallbackBP;
 
 	TMap<FString, IRTTCallback *> m_registeredRTTCallbacks;

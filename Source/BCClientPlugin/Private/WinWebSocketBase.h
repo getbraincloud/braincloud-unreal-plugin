@@ -29,10 +29,14 @@ UCLASS(Blueprintable, BlueprintType)
 class BCCLIENTPLUGIN_API UWinWebSocketBase : public UObject
 {
 	GENERATED_BODY()
+
+protected:
+	void BeginDestroy() override;
+
 public:
 	UWinWebSocketBase();
 
-	void SetupSocket(const FString& url, BrainCloudClient* in_client);
+	void SetupSocket(const FString& url, BrainCloudClient* mClient);
 
 	void Connect();
 
@@ -42,7 +46,11 @@ public:
 
 	void SendData(const TArray<uint8>& data);
 
+	void ResetCallbacks();
+
 	bool IsConnected();
+
+	bool IsLoggingEnabled();
 
 	FWinWebSocketReceiveData OnReceiveData;
 
@@ -54,7 +62,7 @@ public:
 
 	FWinWebSocketConnectError OnConnectError;
 
-	IWinWebSocketBaseCallbacks* mCallbacks;
+	IWinWebSocketBaseCallbacks* mCallbacks = nullptr;
 
 private:
 	FString BytesToString(const void* Data, SIZE_T Size);
@@ -64,8 +72,6 @@ private:
 	TArray<FString> mSendQueue;
 	TArray<TArray<uint8>> mSendQueueData;
 	bool mIsLoggingEnabled;
-
-	bool isLoggingEnabled();
 	
 };
 
