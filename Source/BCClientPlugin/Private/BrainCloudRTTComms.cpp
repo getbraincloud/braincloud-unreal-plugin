@@ -209,13 +209,9 @@ void BrainCloudRTTComms::disconnect()
 	if (m_connectedSocket != nullptr && m_commsPtr != nullptr)
 	{
 		m_commsPtr->RemoveFromRoot();
+		m_connectedSocket->ResetCallbacks();
 		m_connectedSocket->Close();
 		m_connectedSocket->RemoveFromRoot();
-		//m_connectedSocket->OnConnectError.RemoveDynamic(m_commsPtr, &UBCRTTCommsProxy::WebSocket_OnError);
-		//m_connectedSocket->OnClosed.RemoveDynamic(m_commsPtr, &UBCRTTCommsProxy::WebSocket_OnClose);
-		//m_connectedSocket->OnConnectComplete.RemoveDynamic(m_commsPtr, &UBCRTTCommsProxy::Websocket_OnOpen);
-		//m_connectedSocket->OnReceiveData.RemoveDynamic(m_commsPtr, &UBCRTTCommsProxy::WebSocket_OnMessage);
-		m_connectedSocket->ResetCallbacks();
 	}
 
 	if (m_commsPtr)

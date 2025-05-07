@@ -100,7 +100,7 @@ class BrainCloudRTTComms : public IServerCallback
 
 	// private vars
 	BrainCloudClient *m_client = nullptr;
-	TWeakObjectPtr<IServerCallback> m_appCallback;
+	IServerCallback *m_appCallback;
 	UBCRTTProxy *m_appCallbackBP;
 
 	TMap<FString, IRTTCallback *> m_registeredRTTCallbacks;
