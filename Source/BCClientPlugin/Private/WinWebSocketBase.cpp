@@ -31,7 +31,7 @@ void UWinWebSocketBase::SetupSocket(const FString& url, BrainCloudClient* client
 	
 
 	if (url.IsEmpty()) {
-		if(mIsLoggingEnabled)
+		if(IsLoggingEnabled())
 		{
 			UE_LOG(WinWebSocket, Warning, TEXT("[WinWebSocket] URL is empty"));
 		}
@@ -43,6 +43,7 @@ void UWinWebSocketBase::SetupSocket(const FString& url, BrainCloudClient* client
 	WebSocket = FWebSocketsModule::Get().CreateWebSocket(url);
 
 	if (WebSocket.IsValid()) {
+
 		TWeakObjectPtr<UWinWebSocketBase> WeakThis = this;
 
 		WebSocket->OnMessage().AddLambda([WeakThis](const FString& data)
@@ -107,7 +108,7 @@ void UWinWebSocketBase::Connect()
 	if (WebSocket.IsValid() && !WebSocket->IsConnected())
 	{
 		WebSocket->Connect();
-		if(mIsLoggingEnabled)
+		if(IsLoggingEnabled())
 		{
 			UE_LOG(LogTemp, Log, TEXT("[WebSocket] Connecting..."));
 		}
