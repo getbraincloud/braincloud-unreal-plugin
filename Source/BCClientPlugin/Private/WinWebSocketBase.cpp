@@ -23,10 +23,10 @@ UWinWebSocketBase::UWinWebSocketBase()
 	FModuleManager::Get().LoadModuleChecked(TEXT("WebSockets"));
 }
 
-void UWinWebSocketBase::SetupSocket(const FString& url, BrainCloudClient* client)
+void UWinWebSocketBase::SetupSocket(const FString& url, BrainCloudClient* in_client)
 {
 
-	mClient = client;
+	mClient = in_client;
 	mIsLoggingEnabled = mClient->isLoggingEnabled();
 	
 

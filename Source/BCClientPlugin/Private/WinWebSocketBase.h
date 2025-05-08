@@ -36,7 +36,7 @@ protected:
 public:
 	UWinWebSocketBase();
 
-	void SetupSocket(const FString& url, BrainCloudClient* mClient);
+	void SetupSocket(const FString& url, BrainCloudClient* in_client);
 
 	void Connect();
 
