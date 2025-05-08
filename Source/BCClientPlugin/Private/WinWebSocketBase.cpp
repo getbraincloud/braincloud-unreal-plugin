@@ -164,7 +164,7 @@ bool UWinWebSocketBase::IsConnected()
 
 bool UWinWebSocketBase::IsLoggingEnabled()
 {
-	if (mClient != nullptr) {
+	if (ensureAlways(mClient != nullptr)) {
 		return mClient->isLoggingEnabled();
 	}
 
