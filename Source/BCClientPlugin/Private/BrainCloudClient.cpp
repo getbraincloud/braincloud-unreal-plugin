@@ -23,7 +23,7 @@
 #include "Internationalization/Culture.h"
 
 // Define all static member variables.
-FString BrainCloudClient::s_brainCloudClientVersion = TEXT("5.6.1");
+FString BrainCloudClient::s_brainCloudClientVersion = TEXT("5.6.2");
 
 ////////////////////////////////////////////////////
 // (De)Constructors
@@ -324,7 +324,7 @@ void BrainCloudClient::enableLogging(bool shouldEnable)
 
 bool BrainCloudClient::isLoggingEnabled()
 {
-	return _brainCloudComms->IsLoggingEnabled();
+	return _brainCloudComms != nullptr ? _brainCloudComms->IsLoggingEnabled() : false;
 }
 
 bool BrainCloudClient::isAuthenticated()
