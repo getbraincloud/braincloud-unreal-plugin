@@ -3,6 +3,21 @@
 
 #include "BrainCloudClient.h"
 
+void UWinWebSocketBase::BeginDestroy()
+{
+	if (WebSocket.IsValid()) {
+		WebSocket->OnClosed().Clear();
+		WebSocket->OnConnected().Clear();
+		WebSocket->OnMessage().Clear();
+		WebSocket->OnRawMessage().Clear();
+		WebSocket->OnConnectionError().Clear();
+		WebSocket->Close();
+		WebSocket.Reset();
+	}
+
+	Super::BeginDestroy();
+}
+
 UWinWebSocketBase::UWinWebSocketBase()
 {
 	FModuleManager::Get().LoadModuleChecked(TEXT("WebSockets"));
@@ -10,10 +25,11 @@ UWinWebSocketBase::UWinWebSocketBase()
 
 void UWinWebSocketBase::SetupSocket(const FString& url, BrainCloudClient* in_client)
 {
-	mClient = in_client != nullptr ? in_client : mClient;
-
+	mClient = ensureAlways(in_client != nullptr) ? in_client : mClient;
+	mIsLoggingEnabled = mClient->isLoggingEnabled();
+	
 	if (url.IsEmpty()) {
-		if(isLoggingEnabled())
+		if(IsLoggingEnabled())
 		{
 			UE_LOG(WinWebSocket, Warning, TEXT("[WinWebSocket] URL is empty"));
 		}
@@ -25,54 +41,57 @@ void UWinWebSocketBase::SetupSocket(const FString& url, BrainCloudClient* in_cli
 	WebSocket = FWebSocketsModule::Get().CreateWebSocket(url);
 
 	if (WebSocket.IsValid()) {
-		WebSocket->OnMessage().AddLambda([this](const FString& data)
+
+		TWeakObjectPtr<UWinWebSocketBase> WeakThis = this;
+
+		WebSocket->OnMessage().AddLambda([WeakThis](const FString& data)
 			{
-				if(OnReceiveMessage.IsBound()) OnReceiveMessage.Broadcast(data);
+				if(WeakThis->OnReceiveMessage.IsBound()) WeakThis->OnReceiveMessage.Broadcast(data);
 			});
 
-		WebSocket->OnRawMessage().AddLambda([this](const void* Data, SIZE_T Size, SIZE_T)
+		WebSocket->OnRawMessage().AddLambda([WeakThis](const void* Data, SIZE_T Size, SIZE_T)
 			{
 				
 				TArray<uint8> DataArray;
 				DataArray.Append((const uint8*)Data, Size);
 
-				if (mCallbacks) mCallbacks->OnReceiveData(DataArray);
-				if (OnReceiveData.IsBound()) OnReceiveData.Broadcast(DataArray);
+				if (WeakThis->mCallbacks) WeakThis->mCallbacks->OnReceiveData(DataArray);
+				if (WeakThis->OnReceiveData.IsBound()) WeakThis->OnReceiveData.Broadcast(DataArray);
 			});
 
-		WebSocket->OnConnected().AddLambda([this]()
+		WebSocket->OnConnected().AddLambda([WeakThis]()
 			{
-				if(isLoggingEnabled())
+				if (WeakThis->IsLoggingEnabled())
 				{
 					UE_LOG(WinWebSocket, Log, TEXT("[WinWebSocket] Connected"));
 				}
-				if (mCallbacks) mCallbacks->OnConnectComplete();
-				if (OnConnectComplete.IsBound()) OnConnectComplete.Broadcast();
+				if (WeakThis->mCallbacks) WeakThis->mCallbacks->OnConnectComplete();
+				if (WeakThis->OnConnectComplete.IsBound()) WeakThis->OnConnectComplete.Broadcast();
 			});
 
-		WebSocket->OnClosed().AddLambda([this](uint32 StatusCode, const FString& Reason, bool bWasClean)
+		WebSocket->OnClosed().AddLambda([WeakThis](uint32 StatusCode, const FString& Reason, bool bWasClean)
 			{
-				if(isLoggingEnabled())
+				if (WeakThis->IsLoggingEnabled())
 				{
 					UE_LOG(WinWebSocket, Log, TEXT("[WinWebSocket] Closed - StatusCode: %d Reason: %s WasClean: %s"), StatusCode, *Reason, bWasClean ? TEXT("true") : TEXT("false"));
 				}
-				if (mCallbacks) mCallbacks->OnClosed();
-				if (OnClosed.IsBound()) OnClosed.Broadcast();
+				if (WeakThis->mCallbacks) WeakThis->mCallbacks->OnClosed();
+				if (WeakThis->OnClosed.IsBound()) WeakThis->OnClosed.Broadcast();
 			});
 
-		WebSocket->OnConnectionError().AddLambda([this](const FString& reason)
+		WebSocket->OnConnectionError().AddLambda([WeakThis](const FString& reason)
 			{
-				if(isLoggingEnabled())
+				if(WeakThis->IsLoggingEnabled())
 				{
 					UE_LOG(WinWebSocket, Warning, TEXT("[WinWebSocket] Connection error: %s"), *reason);
 				}
-				if (mCallbacks) mCallbacks->OnConnectError(reason);
-				if (OnConnectError.IsBound()) OnConnectError.Broadcast(reason);
+				if (WeakThis->mCallbacks) WeakThis->mCallbacks->OnConnectError(reason);
+				if (WeakThis->OnConnectError.IsBound()) WeakThis->OnConnectError.Broadcast(reason);
 			});
 
 	}
 	else {
-		if(isLoggingEnabled())
+		if (IsLoggingEnabled())
 		{
 			UE_LOG(WinWebSocket, Warning, TEXT("[WinWebSocket] Couldn't setup"));
 		}
@@ -87,7 +106,7 @@ void UWinWebSocketBase::Connect()
 	if (WebSocket.IsValid() && !WebSocket->IsConnected())
 	{
 		WebSocket->Connect();
-		if(isLoggingEnabled())
+		if(IsLoggingEnabled())
 		{
 			UE_LOG(LogTemp, Log, TEXT("[WebSocket] Connecting..."));
 		}
@@ -120,9 +139,33 @@ void UWinWebSocketBase::SendData(const TArray<uint8>& data)
 	}
 }
 
+void UWinWebSocketBase::ResetCallbacks()
+{
+	if (mCallbacks) {
+		delete mCallbacks;
+		mCallbacks = nullptr;
+	}
+
+	OnClosed.Clear();
+	OnReceiveMessage.Clear();
+	OnReceiveData.Clear();
+	OnConnectComplete.Clear();
+	OnConnectError.Clear();
+
+}
+
 bool UWinWebSocketBase::IsConnected()
 {
 	return WebSocket.IsValid() && WebSocket->IsConnected();
+}
+
+bool UWinWebSocketBase::IsLoggingEnabled()
+{
+	if (ensureAlways(mClient != nullptr)) {
+		return mClient->isLoggingEnabled();
+	}
+
+	return mIsLoggingEnabled;
 }
 
 FString UWinWebSocketBase::BytesToString(const void* Data, SIZE_T Size)
@@ -136,13 +179,4 @@ FString UWinWebSocketBase::BytesToString(const void* Data, SIZE_T Size)
 	}
 
 	return message;
-}
-
-bool UWinWebSocketBase::isLoggingEnabled()
-{
-	if (ensure(mClient != nullptr)) {
-		return mClient->isLoggingEnabled();
-	}
-
-	return false;
 }

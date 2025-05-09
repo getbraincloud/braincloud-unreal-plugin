@@ -209,12 +209,9 @@ void BrainCloudRTTComms::disconnect()
 	if (m_connectedSocket != nullptr && m_commsPtr != nullptr)
 	{
 		m_commsPtr->RemoveFromRoot();
+		m_connectedSocket->ResetCallbacks();
 		m_connectedSocket->Close();
 		m_connectedSocket->RemoveFromRoot();
-		m_connectedSocket->OnConnectError.RemoveDynamic(m_commsPtr, &UBCRTTCommsProxy::WebSocket_OnError);
-		m_connectedSocket->OnClosed.RemoveDynamic(m_commsPtr, &UBCRTTCommsProxy::WebSocket_OnClose);
-		m_connectedSocket->OnConnectComplete.RemoveDynamic(m_commsPtr, &UBCRTTCommsProxy::Websocket_OnOpen);
-		m_connectedSocket->OnReceiveData.RemoveDynamic(m_commsPtr, &UBCRTTCommsProxy::WebSocket_OnMessage);
 	}
 
 	if (m_commsPtr)
@@ -438,10 +435,18 @@ void BrainCloudRTTComms::webSocket_OnError(const FString &in_message)
 	processRegisteredListeners(ServiceName::RTTRegistration.getValue().ToLower(), "disconnect", UBrainCloudWrapper::buildErrorJson(403, ReasonCodes::RS_CLIENT_ERROR, in_message));
 }
 
-void BrainCloudRTTComms::onRecv(const FString &in_message)
+void BrainCloudRTTComms::onRecv(FString in_message)
 {
 	// deserialize and push broadcast to the correct m_registeredRTTCallbacks
 	TSharedPtr<FJsonObject> jsonData = JsonUtil::jsonStringToValue(in_message);
+
+	if (!jsonData.IsValid())
+	{
+		if (isLoggingEnabled())
+			UE_LOG(LogBrainCloudComms, Log, TEXT("Failed to parse incoming JSON message: %s"), *in_message);
+		return;
+	}
+
 	FString service = jsonData->HasField(TEXT("service")) ? jsonData->GetStringField(TEXT("service")) : "";
 	FString operation = jsonData->HasField(TEXT("operation")) ? jsonData->GetStringField(TEXT("operation")) : "";
 	TSharedPtr<FJsonObject> innerData = nullptr;
@@ -472,9 +477,11 @@ void BrainCloudRTTComms::onRecv(const FString &in_message)
 	else if (operation == "DISCONNECT")
 	{
 		m_disconnectedWithReason = true;
-		m_disconnectJson->SetStringField("reason", innerData->GetStringField(TEXT("reason")));
-		m_disconnectJson->SetNumberField("reasonCode", innerData->GetNumberField(TEXT("reasonCode")));
-		m_disconnectJson->SetStringField("severity", "ERROR");
+		if (ensureAlways(innerData != nullptr)) {
+			m_disconnectJson->SetStringField("reason", innerData->GetStringField(TEXT("reason")));
+			m_disconnectJson->SetNumberField("reasonCode", innerData->GetNumberField(TEXT("reasonCode")));
+			m_disconnectJson->SetStringField("severity", "ERROR");
+		}
 	}
 
 	if (bIsInnerDataValid)

@@ -560,7 +560,7 @@ class BCCLIENTPLUGIN_API BrainCloudClient
 	void overrideLanguageCode(const FString &languageCode) { _language = languageCode; }
 
   protected:
-	void initializeComms(const char *serverUrl, const char *appId, const TMap<FString, FString> &secretMap);
+
 	BrainCloudComms *_brainCloudComms = nullptr;
 	BrainCloudRTTComms *_brainCloudRTTComms = nullptr;
 	BrainCloudRelayComms *_brainCloudRelayComms = nullptr;
