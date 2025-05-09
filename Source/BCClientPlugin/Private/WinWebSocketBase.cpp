@@ -25,11 +25,9 @@ UWinWebSocketBase::UWinWebSocketBase()
 
 void UWinWebSocketBase::SetupSocket(const FString& url, BrainCloudClient* in_client)
 {
-
-	mClient = in_client;
+	mClient = ensureAlways(in_client != nullptr) ? in_client : mClient;
 	mIsLoggingEnabled = mClient->isLoggingEnabled();
 	
-
 	if (url.IsEmpty()) {
 		if(IsLoggingEnabled())
 		{
@@ -152,7 +150,6 @@ void UWinWebSocketBase::ResetCallbacks()
 	OnReceiveMessage.Clear();
 	OnReceiveData.Clear();
 	OnConnectComplete.Clear();
-	OnConnectError.Clear();
 	OnConnectError.Clear();
 
 }
