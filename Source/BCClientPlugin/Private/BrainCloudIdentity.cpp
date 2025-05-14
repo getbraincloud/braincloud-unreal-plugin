@@ -67,7 +67,7 @@ void BrainCloudIdentity::attachAdvancedIdentity(EBCAuthType authenticationType, 
 
 	if(OperationParam::isOptionalParamValid(extraJson))
 	{
-		message->SetStringField(OperationParam::AuthenticateServiceAuthenticateExtraJson.getValue(), extraJson);
+		message->SetObjectField(OperationParam::AuthenticateServiceAuthenticateExtraJson.getValue(), JsonUtil::jsonStringToValue(extraJson));
 	}
 
 	if(OperationParam::isOptionalParamValid(ids.authenticationSubType))
@@ -88,7 +88,7 @@ void BrainCloudIdentity::mergeAdvancedIdentity(EBCAuthType authenticationType, c
 
 	if(OperationParam::isOptionalParamValid(extraJson))
 	{
-		message->SetStringField(OperationParam::AuthenticateServiceAuthenticateExtraJson.getValue(), extraJson);
+		message->SetObjectField(OperationParam::AuthenticateServiceAuthenticateExtraJson.getValue(), JsonUtil::jsonStringToValue(extraJson));
 	}
 
 	if(OperationParam::isOptionalParamValid(ids.authenticationSubType))
@@ -109,7 +109,7 @@ void BrainCloudIdentity::detachAdvancedIdentity(EBCAuthType authenticationType, 
 
 	if(OperationParam::isOptionalParamValid(extraJson))
 	{
-		message->SetStringField(OperationParam::AuthenticateServiceAuthenticateExtraJson.getValue(), extraJson);
+		message->SetObjectField(OperationParam::AuthenticateServiceAuthenticateExtraJson.getValue(), JsonUtil::jsonStringToValue(extraJson));
 	}
 
 	ServerCall *sc = new ServerCall(ServiceName::Identity, ServiceOperation::Detach, message, callback);

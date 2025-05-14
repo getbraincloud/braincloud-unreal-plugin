@@ -30,7 +30,7 @@ void UBCWrapperProxy::SetDefaultBrainCloudInstance(UBrainCloudWrapper *brainClou
 
 void UBCWrapperProxy::ClearDefaultBrainCloudInstance()
 {
-	if (ensureAlways(DefaultBrainCloudInstance != nullptr))
+	if (DefaultBrainCloudInstance.IsValid())
 		DefaultBrainCloudInstance->RemoveFromRoot();
 	DefaultBrainCloudInstance = nullptr;
 }

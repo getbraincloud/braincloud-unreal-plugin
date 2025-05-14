@@ -294,11 +294,11 @@ void BrainCloudRTTComms::processRegisteredListeners(const FString &in_service, c
 		// error callback!
 		if (m_appCallback != nullptr)
 		{
-			m_appCallback->serverError(ServiceName::RTTRegistration, ServiceOperation::Connect, 400, -1, "RTT Connection has been closed. Re-Enable RTT to re-establish connection : " + in_jsonMessage);
+			m_appCallback->serverError(ServiceName::RTTRegistration, ServiceOperation::Connect, 400, -1, in_jsonMessage);
 		}
 		else if (m_appCallbackBP != nullptr)
 		{
-			m_appCallbackBP->serverError(ServiceName::RTTRegistration, ServiceOperation::Connect, 400, -1, "RTT Connection has been closed. Re-Enable RTT to re-establish connection : " + in_jsonMessage);
+			m_appCallbackBP->serverError(ServiceName::RTTRegistration, ServiceOperation::Connect, 400, -1, in_jsonMessage);
 		}
 		m_disconnectedWithReason = true;
 		return;
