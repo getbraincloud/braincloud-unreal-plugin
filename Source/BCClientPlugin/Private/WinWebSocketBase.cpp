@@ -11,7 +11,6 @@ void UWinWebSocketBase::BeginDestroy()
 		WebSocket->OnMessage().Clear();
 		WebSocket->OnRawMessage().Clear();
 		WebSocket->OnConnectionError().Clear();
-		WebSocket->Close();
 		WebSocket.Reset();
 	}
 
