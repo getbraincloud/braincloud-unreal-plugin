@@ -305,7 +305,7 @@ void BrainCloudAuthentication::authenticate(
 
 	if(OperationParam::isOptionalParamValid(in_extraJson))
 	{
-		message->SetStringField(OperationParam::AuthenticateServiceAuthenticateExtraJson.getValue(), in_extraJson);
+		message->SetObjectField(OperationParam::AuthenticateServiceAuthenticateExtraJson.getValue(), JsonUtil::jsonStringToValue(in_extraJson));
 	}
 	
 	FString countryCode = brainCloudClientRef->getCountryCode();
