@@ -19,6 +19,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWinWebSocketConnectError, const FSt
 class IWinWebSocketBaseCallbacks
 {
 public:
+	virtual ~IWinWebSocketBaseCallbacks() {}
 	virtual void OnConnectError(const FString& error) = 0;
 	virtual void OnClosed() = 0;
 	virtual void OnConnectComplete() = 0;
