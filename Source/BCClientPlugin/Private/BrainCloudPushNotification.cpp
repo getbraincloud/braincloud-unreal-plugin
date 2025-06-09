@@ -7,6 +7,7 @@
 #include "ServerCall.h"
 #include "JsonUtil.h"
 #include "BCPlatform.h"
+#include "ReasonCodes.h"
 
 BrainCloudPushNotification::BrainCloudPushNotification(BrainCloudClient *client) : _client(client) {}
 
@@ -34,6 +35,26 @@ void BrainCloudPushNotification::registerPushNotificationDeviceToken(EBCPlatform
 
 void BrainCloudPushNotification::registerPushNotificationDeviceToken(const FString &type, const FString &token, IServerCallback *callback)
 {
+    const int32 STATUS_CODE = 400;
+
+    if (token.IsEmpty())
+    {
+        if (callback != nullptr)
+        {
+            FString errorString = FString::Printf(
+                TEXT("{\"status\":%d,\"reason_code\":%d,\"message\":\"Invalid device token: %s\"}"),
+                STATUS_CODE, ReasonCodes::INVALID_DEVICE_TOKEN, *token);
+
+            callback->serverError(
+                ServiceName::PushNotification,
+                ServiceOperation::Register,
+                STATUS_CODE,
+                ReasonCodes::INVALID_DEVICE_TOKEN,
+                errorMessage);
+        }
+        return;
+    }
+
 	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
 	message->SetStringField(OperationParam::PushNotificationRegisterParamDeviceType.getValue(), type);
 	message->SetStringField(OperationParam::PushNotificationRegisterParamDeviceToken.getValue(), token);
