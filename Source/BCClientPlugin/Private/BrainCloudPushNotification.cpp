@@ -50,7 +50,7 @@ void BrainCloudPushNotification::registerPushNotificationDeviceToken(const FStri
                 ServiceOperation::Register,
                 STATUS_CODE,
                 ReasonCodes::INVALID_DEVICE_TOKEN,
-                errorMessage);
+                errorString);
         }
         return;
     }
