@@ -288,6 +288,12 @@ void UBrainCloudWrapper::smartSwitchAuthenticatePlaystationNetwork(const FString
     getIdentitiesCallback(smartCallback);
 }
 
+void UBrainCloudWrapper::smartSwitchAuthenticatePlaystationNetwork5(const FString &psnAccountId, const FString &psnAuthToken, bool in_forceCreate, IServerCallback *in_callback)
+{
+    SmartSwitchAuthenticateCallback *smartCallback = new SmartSwitchAuthenticateCallback(this, EBCAuthType::PlaystationNetwork5, psnAccountId, psnAuthToken, in_forceCreate, in_callback);
+    getIdentitiesCallback(smartCallback);
+}
+
 void UBrainCloudWrapper::smartSwitchAuthenticateGameCenter(const FString &gameCenterId, bool in_forceCreate, IServerCallback *in_callback)
 {
     FString emptyToken = TEXT("");
