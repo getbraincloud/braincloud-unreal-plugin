@@ -166,12 +166,12 @@ void BrainCloudIdentity::detachOculusIdentity(const FString &oculusId, bool cont
 
 void BrainCloudIdentity::attachPlaystationNetworkIdentity(const FString &accountId, const FString &authenticationToken, IServerCallback *callback)
 {
-	attachIdentity(accountId, authenticationToken, EBCAuthType::Facebook, callback);
+	attachIdentity(accountId, authenticationToken, EBCAuthType::PlaystationNetwork, callback);
 }
 
 void BrainCloudIdentity::mergePlaystationNetworkIdentity(const FString &accountId, const FString &authenticationToken, IServerCallback *callback)
 {
-	mergeIdentity(accountId, authenticationToken, EBCAuthType::Facebook, callback);
+	mergeIdentity(accountId, authenticationToken, EBCAuthType::PlaystationNetwork, callback);
 }
 
 void BrainCloudIdentity::detachPlaystationNetworkIdentity(const FString &accountId, bool continueAnon, IServerCallback *callback)
