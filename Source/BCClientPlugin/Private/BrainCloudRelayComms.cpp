@@ -259,8 +259,15 @@ void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, cons
         default:
         {
             socketCleanup();
-            FString message = FString::Format(TEXT("Protocol Unimplemented {0}"), { m_connectionType });
-            queueErrorEvent(message);
+            //FString message = FString::Printf(TEXT("Protocol Unimplemented %hhd"),  m_connectionType );
+            //queueErrorEvent(message);
+            switch (m_connectionType)
+            {
+                case BCRelayConnectionType::TCP: queueErrorEvent("Protocol Unimplemented TCP"); break;
+                case BCRelayConnectionType::UDP: queueErrorEvent("Protocol Unimplemented TCP"); break;
+                case BCRelayConnectionType::WEBSOCKET: queueErrorEvent("Protocol Unimplemented WEBSOCKET"); break;
+                default: queueErrorEvent("Protocol Unimplemented unknown");
+            }
             break;
         }
     }
