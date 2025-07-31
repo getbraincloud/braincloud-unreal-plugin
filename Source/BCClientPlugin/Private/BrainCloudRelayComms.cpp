@@ -259,7 +259,8 @@ void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, cons
         default:
         {
             socketCleanup();
-            queueErrorEvent(FString::Printf(TEXT("Protocol Unimplemented %s"), m_connectionType));
+            FString message = FString::Format(TEXT("Protocol Unimplemented {0}"), { m_connectionType });
+            queueErrorEvent(message);
             break;
         }
     }
