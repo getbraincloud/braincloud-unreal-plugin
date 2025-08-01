@@ -8,6 +8,8 @@
 #include "JsonUtil.h"
 #include "BCPlatform.h"
 #include "ReasonCodes.h"
+#include "TimerManager.h"
+#include "Engine/World.h"
 
 BrainCloudPushNotification::BrainCloudPushNotification(BrainCloudClient *client) : _client(client) {}
 
@@ -41,18 +43,25 @@ void BrainCloudPushNotification::registerPushNotificationDeviceToken(const FStri
     {
         if (callback != nullptr)
         {
-            FString errorString = FString::Printf(
-                TEXT("{\"status\":%d,\"reason_code\":%d,\"message\":\"Invalid device token: %s\"}"),
-                STATUS_CODE, ReasonCodes::INVALID_DEVICE_TOKEN, *token);
+			//We cant execute async callbacks right away so we have to wait a frame in order to execute it.
+			FTimerHandle TimerHandle;
+			GWorld->GetTimerManager().SetTimer(TimerHandle, [=]()
+			{
+				FString errorString = FString::Printf(
+					TEXT("{\"status\":%d,\"reason_code\":%d,\"message\":\"Invalid device token: %s\"}"),
+					STATUS_CODE, ReasonCodes::INVALID_DEVICE_TOKEN, *token);
 
-            callback->serverError(
-                ServiceName::PushNotification,
-                ServiceOperation::Register,
-                STATUS_CODE,
-                ReasonCodes::INVALID_DEVICE_TOKEN,
-                errorString);
+				callback->serverError(
+					ServiceName::PushNotification,
+					ServiceOperation::Register,
+					STATUS_CODE,
+					ReasonCodes::INVALID_DEVICE_TOKEN,
+					*errorString);
+			},
+			0.01f,
+			false);
         }
-        return;
+        
     }
 
 	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
