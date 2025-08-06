@@ -62,14 +62,15 @@ void BrainCloudPushNotification::registerPushNotificationDeviceToken(const FStri
 			false);
         }
         
-    }
+	}
+	else {
+		TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
+		message->SetStringField(OperationParam::PushNotificationRegisterParamDeviceType.getValue(), type);
+		message->SetStringField(OperationParam::PushNotificationRegisterParamDeviceToken.getValue(), token);
 
-	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
-	message->SetStringField(OperationParam::PushNotificationRegisterParamDeviceType.getValue(), type);
-	message->SetStringField(OperationParam::PushNotificationRegisterParamDeviceToken.getValue(), token);
-
-	ServerCall *sc = new ServerCall(ServiceName::PushNotification, ServiceOperation::Register, message, callback);
-	_client->sendRequest(sc);
+		ServerCall* sc = new ServerCall(ServiceName::PushNotification, ServiceOperation::Register, message, callback);
+		_client->sendRequest(sc);
+	}
 }
 
 void BrainCloudPushNotification::sendSimplePushNotification(const FString &toProfileId, const FString &message, IServerCallback *callback)
