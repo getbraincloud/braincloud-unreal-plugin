@@ -40,6 +40,11 @@
 
 #define VERBOSE_LOG 0
 
+#define ENUM_DISPLAY(EnumValue) \
+    *StaticEnum<std::decay_t<decltype(EnumValue)>>() \
+        ->GetDisplayNameTextByValue((int64)(EnumValue)) \
+        .ToString()
+
 static const int CONTROL_BYTES_SIZE = 1;
 static const int MAX_PACKET_ID_HISTORY = 60 * 10; // So we last 10 seconds at 60 fps
 
@@ -224,6 +229,8 @@ void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, cons
     m_trackedPacketIds.Empty();
     m_trackedPacketIds.SetNum(4);
 
+    UE_LOG(LogBrainCloudRelayComms, Log, TEXT("Connecting with socket type: %s"), ENUM_DISPLAY(m_connectionType));
+
     switch (m_connectionType)
     {
         case BCRelayConnectionType::WEBSOCKET:
@@ -259,15 +266,7 @@ void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, cons
         default:
         {
             socketCleanup();
-            //FString message = FString::Printf(TEXT("Protocol Unimplemented %hhd"),  m_connectionType );
-            //queueErrorEvent(message);
-            switch (m_connectionType)
-            {
-                case BCRelayConnectionType::TCP: queueErrorEvent("Protocol Unimplemented TCP"); break;
-                case BCRelayConnectionType::UDP: queueErrorEvent("Protocol Unimplemented TCP"); break;
-                case BCRelayConnectionType::WEBSOCKET: queueErrorEvent("Protocol Unimplemented WEBSOCKET"); break;
-                default: queueErrorEvent("Protocol Unimplemented unknown");
-            }
+            queueErrorEvent(FString::Printf(TEXT("Protocol Unimplemented %s"), ENUM_DISPLAY(m_connectionType)));
             break;
         }
     }
