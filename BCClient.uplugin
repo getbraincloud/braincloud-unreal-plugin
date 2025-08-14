@@ -18,7 +18,8 @@
     {
       "Name": "AndroidNative",
       "Type": "Runtime",
-      "LoadingPhase": "PreDefault"
+      "LoadingPhase": "PreDefault",
+      "WhitelistPlatforms": [ "Android" ]
     },
     {
       "Name": "BCClientPlugin",
