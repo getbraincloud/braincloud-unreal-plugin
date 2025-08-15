@@ -10,6 +10,7 @@
 #include "Internationalization/Internationalization.h"
 #include "AndroidNativeLibrary.h"
 #include <iostream>
+#include "Misc/FileHelper.h"
 
 
 #if PLATFORM_WINDOWS
@@ -89,15 +90,24 @@ void UBrainCloudFunctionLibrary::SetBCAppData(FBrainCloudAppDataStruct appData)
     FString ConfigPath = FPaths::ProjectConfigDir();
     ConfigPath += Filename;
 
+
+#if ENGINE_MAJOR_VERSION == 5
+    ConfigPath = FConfigCacheIni::NormalizeConfigIniPath(FPaths::ProjectConfigDir() + *Filename);
+#endif
+
+    //Make sure config file exists first
+    if (!FPaths::FileExists(ConfigPath)) {
+        FFileHelper::SaveStringToFile(TEXT(""), *ConfigPath);
+    }
+
+    GConfig->LoadFile(ConfigPath);
+
 #if (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 4)
     const FConfigSection* ConfigSection = GConfig->GetSection(*SectionName, false, ConfigPath);
 #else
     FConfigSection* ConfigSection = GConfig->GetSectionPrivate(*SectionName, false, true, ConfigPath);
 #endif
 
-#if ENGINE_MAJOR_VERSION == 5
-    ConfigPath = FConfigCacheIni::NormalizeConfigIniPath(FPaths::ProjectConfigDir() + *Filename);
-#endif
 
     if (GConfig->DoesSectionExist(*SectionName, ConfigPath))
     {
@@ -117,7 +127,7 @@ void UBrainCloudFunctionLibrary::SetBCAppData(FBrainCloudAppDataStruct appData)
 
     GConfig->Flush(false, ConfigPath);
 
-    UE_LOG(LogBrainCloud, Warning, TEXT("App Data saved to config file, please restart Unreal Editor for changes to take effect"));
+    UE_LOG(LogBrainCloud, Warning, TEXT("App Data saved to config file at %s, please restart Unreal Editor for changes to take effect"), *ConfigPath);
 }
 
 void UBrainCloudFunctionLibrary::CopyToClipboard(const FString& TextString)

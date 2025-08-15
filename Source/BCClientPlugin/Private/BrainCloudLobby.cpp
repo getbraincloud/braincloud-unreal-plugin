@@ -10,6 +10,8 @@
 #include "JsonUtil.h"
 #include "JsonObjectConverter.h"
 #include "Serialization/JsonSerializer.h"
+#include "TimerManager.h"
+#include "Engine/World.h"
 
 BrainCloudLobby::BrainCloudLobby(BrainCloudClient *client)
  : _client(client)
@@ -307,10 +309,17 @@ void BrainCloudLobby::pingRegions(IServerCallback* in_callback)
         // call the server error right away!
         if (in_callback != nullptr)
         {
-            UE_LOG(LogBrainCloudComms, Log, TEXT("calling error has callback"));
-            FString messageJson = UBrainCloudWrapper::buildErrorJson(400, ReasonCodes::MISSING_REQUIRED_PARAMETER, 
-                "No Regions to Ping. Please call GetRegionsForLobbies and await the response before calling PingRegions.");
-            in_callback->serverError(ServiceName::Lobby, ServiceOperation::GetRegionsForLobbies, 400, ReasonCodes::MISSING_REQUIRED_PARAMETER, messageJson);
+            //We cant execute async callbacks right away so we have to wait a frame in order to execute it.
+            FTimerHandle TimerHandle;
+            GWorld->GetTimerManager().SetTimer(TimerHandle, [=]()
+            {
+                UE_LOG(LogBrainCloudComms, Log, TEXT("calling error has callback"));
+                FString messageJson = UBrainCloudWrapper::buildErrorJson(400, ReasonCodes::MISSING_REQUIRED_PARAMETER, 
+                    "No Regions to Ping. Please call GetRegionsForLobbies and await the response before calling PingRegions.");
+                in_callback->serverError(ServiceName::Lobby, ServiceOperation::GetRegionsForLobbies, 400, ReasonCodes::MISSING_REQUIRED_PARAMETER, messageJson);
+            },
+            0.01f,
+            false);
         }
     }
 }

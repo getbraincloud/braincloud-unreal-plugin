@@ -8,6 +8,8 @@
 #include "JsonUtil.h"
 #include "BCPlatform.h"
 #include "ReasonCodes.h"
+#include "TimerManager.h"
+#include "Engine/World.h"
 
 BrainCloudPushNotification::BrainCloudPushNotification(BrainCloudClient *client) : _client(client) {}
 
@@ -41,26 +43,34 @@ void BrainCloudPushNotification::registerPushNotificationDeviceToken(const FStri
     {
         if (callback != nullptr)
         {
-            FString errorString = FString::Printf(
-                TEXT("{\"status\":%d,\"reason_code\":%d,\"message\":\"Invalid device token: %s\"}"),
-                STATUS_CODE, ReasonCodes::INVALID_DEVICE_TOKEN, *token);
+			//We cant execute async callbacks right away so we have to wait a frame in order to execute it.
+			FTimerHandle TimerHandle;
+			GWorld->GetTimerManager().SetTimer(TimerHandle, [=]()
+			{
+				FString errorString = FString::Printf(
+					TEXT("{\"status\":%d,\"reason_code\":%d,\"message\":\"Invalid device token: %s\"}"),
+					STATUS_CODE, ReasonCodes::INVALID_DEVICE_TOKEN, *token);
 
-            callback->serverError(
-                ServiceName::PushNotification,
-                ServiceOperation::Register,
-                STATUS_CODE,
-                ReasonCodes::INVALID_DEVICE_TOKEN,
-                errorString);
+				callback->serverError(
+					ServiceName::PushNotification,
+					ServiceOperation::Register,
+					STATUS_CODE,
+					ReasonCodes::INVALID_DEVICE_TOKEN,
+					*errorString);
+			},
+			0.01f,
+			false);
         }
-        return;
-    }
+        
+	}
+	else {
+		TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
+		message->SetStringField(OperationParam::PushNotificationRegisterParamDeviceType.getValue(), type);
+		message->SetStringField(OperationParam::PushNotificationRegisterParamDeviceToken.getValue(), token);
 
-	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
-	message->SetStringField(OperationParam::PushNotificationRegisterParamDeviceType.getValue(), type);
-	message->SetStringField(OperationParam::PushNotificationRegisterParamDeviceToken.getValue(), token);
-
-	ServerCall *sc = new ServerCall(ServiceName::PushNotification, ServiceOperation::Register, message, callback);
-	_client->sendRequest(sc);
+		ServerCall* sc = new ServerCall(ServiceName::PushNotification, ServiceOperation::Register, message, callback);
+		_client->sendRequest(sc);
+	}
 }
 
 void BrainCloudPushNotification::sendSimplePushNotification(const FString &toProfileId, const FString &message, IServerCallback *callback)

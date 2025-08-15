@@ -94,6 +94,12 @@ void SmartSwitchAuthenticateCallback::serverCallback(ServiceName serviceName, Se
     }
     break;
 
+    case EBCAuthType::PlaystationNetwork5:
+    {
+        m_wrapper->getBCClient()->getAuthenticationService()->authenticatePlaystation5(m_userId, m_token, m_forceCreate, m_callback);
+    }
+    break;
+
     case EBCAuthType::GameCenter:
     {
         m_wrapper->getBCClient()->getAuthenticationService()->authenticateGameCenter(m_userId, m_forceCreate, m_callback);

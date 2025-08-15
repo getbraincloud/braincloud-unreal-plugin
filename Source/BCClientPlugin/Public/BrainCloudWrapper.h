@@ -439,8 +439,7 @@ class BCCLIENTPLUGIN_API UBrainCloudWrapper : public UObject, public IServerCall
      */
     void smartSwitchAuthenticateOculus(const FString &oculusUserId, const FString &oculusNonce, bool forceCreate, IServerCallback *callback = NULL);
 
-
-        /*
+    /*
      * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
      * In event the current session was previously an anonymous account, the smart switch will delete that profile.
      * Use this function to keep a clean designflow from anonymous to signed profiles
@@ -458,6 +457,25 @@ class BCCLIENTPLUGIN_API UBrainCloudWrapper : public UObject, public IServerCall
      *
      */
     void smartSwitchAuthenticatePlaystationNetwork(const FString &psnAccountId, const FString &psnAuthToken, bool forceCreate, IServerCallback *callback = NULL);
+
+       /*
+     * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
+     * In event the current session was previously an anonymous account, the smart switch will delete that profile.
+     * Use this function to keep a clean designflow from anonymous to signed profiles
+     *
+     * Authenticate the user with brainCloud using their PSN Credentials for Playstation 5 users specifically
+     *
+     * Service Name - Authenticate
+     * Service Operation - Authenticate
+     *
+     * @param psnAccountId The PSN account id of the user
+     * @param psnAuthToken The validated token from the Playstation SDK
+     *   (that will be further validated when sent to the bC service)
+     * @param forceCreate Should a new profile be created for this user if the account does not exist?
+     * @param callback The method to be invoked when the server response is received
+     *
+     */
+    void smartSwitchAuthenticatePlaystationNetwork5(const FString &psnAccountId, const FString &psnAuthToken, bool forceCreate, IServerCallback *callback = NULL);
 
     /*
      * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
