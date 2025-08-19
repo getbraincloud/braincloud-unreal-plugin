@@ -37,9 +37,10 @@ public:
      * @param jsonEntityData    The entity's data as a json string.
      * @param jsonEntityAcl The entity's access control list as an IAcl object. A null acl implies default
      * permissions which make the entity readable/writeable by only the player.
+     * @param in_version The version of the entity to update. Use -1 to indicate the newest version
      * @param callback The method to be invoked when the server response is received
      */
-  void updateEntity(const FString &entityId, const FString &entityType, const FString &jsonEntityData, IAcl *jsonEntityAcl, IServerCallback *callback);
+  void updateEntity(const FString &entityId, const FString &entityType, const FString &jsonEntityData, IAcl *jsonEntityAcl, int32 in_version, IServerCallback *callback);
 
   /** Method to get a specific entity.
     *

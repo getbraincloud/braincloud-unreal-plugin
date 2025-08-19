@@ -48,13 +48,14 @@ void BrainCloudEntity::getEntitiesByType(const FString &entityType, IServerCallb
     _client->sendRequest(sc);
 }
 
-void BrainCloudEntity::updateEntity(const FString &entityId, const FString &entityType, const FString &jsonEntityData, IAcl *jsonEntityAcl, IServerCallback *callback)
+void BrainCloudEntity::updateEntity(const FString &entityId, const FString &entityType, const FString &jsonEntityData, IAcl *jsonEntityAcl, int32 in_version, IServerCallback *callback)
 {
     TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
     message->SetStringField(OperationParam::EntityServiceEntityId.getValue(), entityId);
     message->SetStringField(OperationParam::EntityServiceEntityType.getValue(), entityType);
     message->SetObjectField(OperationParam::EntityServiceData.getValue(), JsonUtil::jsonStringToValue(jsonEntityData));
     message->SetObjectField(OperationParam::EntityServiceAcl.getValue(), jsonEntityAcl->toJsonObject());
+    message->SetNumberField(OperationParam::EntityServiceVersion.getValue(), in_version);
 
     ServerCall *sc = new ServerCall(ServiceName::Entity, ServiceOperation::Update, message, callback);
     _client->sendRequest(sc);

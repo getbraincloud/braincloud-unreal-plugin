@@ -20,10 +20,10 @@ UBCEntityProxy *UBCEntityProxy::CreateEntity(UBrainCloudWrapper *brainCloudWrapp
     return Proxy;
 }
 
-UBCEntityProxy *UBCEntityProxy::UpdateEntity(UBrainCloudWrapper *brainCloudWrapper, const FString &entityId, const FString &entityType, const FString &jsonEntityData, UBrainCloudACL *jsonEntityAcl)
+UBCEntityProxy *UBCEntityProxy::UpdateEntity(UBrainCloudWrapper *brainCloudWrapper, const FString &entityId, const FString &entityType, const FString &jsonEntityData, UBrainCloudACL *jsonEntityAcl, int32 in_version)
 {
     UBCEntityProxy *Proxy = NewObject<UBCEntityProxy>();
-    UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getEntityService()->updateEntity(entityId, entityType, jsonEntityData, jsonEntityAcl, Proxy);
+    UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getEntityService()->updateEntity(entityId, entityType, jsonEntityData, jsonEntityAcl, in_version, Proxy);
     return Proxy;
 }
 
