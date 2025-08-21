@@ -39,10 +39,11 @@ class UBCEntityProxy : public UBCBlueprintCallProxyBase
     * Param - entityType The entity type as defined by the user
     * Param - jsonEntityData    The entity's data as a json string.
     * Param - jsonEntityAcl The entity's access control list as an IAcl object. A null acl implies default
+    * Param - in_version The version of the entity to update. Use -1 to indicate the newest version
     * permissions which make the entity readable/writeable by only the player.
     */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Entity")
-    static UBCEntityProxy *UpdateEntity(UBrainCloudWrapper *brainCloudWrapper, const FString &entityId, const FString &entityType, const FString &jsonEntityData, UBrainCloudACL *jsonEntityAcl);
+    static UBCEntityProxy *UpdateEntity(UBrainCloudWrapper *brainCloudWrapper, const FString &entityId, const FString &entityType, const FString &jsonEntityData, UBrainCloudACL *jsonEntityAcl, int32 in_version);
 
     /** 
     * Method retreives a singleton entity on the server. If the entity doesn't exist, null is returned.

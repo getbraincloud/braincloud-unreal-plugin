@@ -25,6 +25,7 @@ void FBCWidgetModule::StartupModule()
 #endif
 
     if (GConfig) {
+        GConfig->LoadFile(ConfigPath);
         #if (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 4)
         const FConfigSection* ConfigSection = GConfig->GetSection(*SectionName, false, ConfigPath);
         #else
