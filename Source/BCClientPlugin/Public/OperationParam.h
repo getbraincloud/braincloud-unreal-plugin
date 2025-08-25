@@ -455,6 +455,8 @@ class BCCLIENTPLUGIN_API OperationParam
 
 	//app store
 	static const OperationParam AppStoreId;
+	static const OperationParam IAPId;
+	static const OperationParam Payload;
 	static const OperationParam AppStoreJsonReceiptData;
 	static const OperationParam AppStoreUserCurrency;
 	static const OperationParam AppStoreCategory;
