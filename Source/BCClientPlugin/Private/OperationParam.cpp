@@ -477,6 +477,8 @@ const OperationParam OperationParam::CustomEntityServiceShardKeyJson = Operation
 
 //app store
 const OperationParam OperationParam::AppStoreId = OperationParam("storeId");
+const OperationParam OperationParam::IAPId = OperationParam("iapId");
+const OperationParam OperationParam::Payload = OperationParam("payload");
 const OperationParam OperationParam::AppStoreJsonReceiptData = OperationParam("receiptData");
 const OperationParam OperationParam::AppStoreUserCurrency = OperationParam("userCurrency");
 const OperationParam OperationParam::AppStoreCategory = OperationParam("category");

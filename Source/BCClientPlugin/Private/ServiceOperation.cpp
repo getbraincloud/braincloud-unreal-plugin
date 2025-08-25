@@ -430,6 +430,7 @@ const ServiceOperation ServiceOperation::VerifyPurchase = ServiceOperation(TEXT(
 const ServiceOperation ServiceOperation::GetEligiblePromotions = ServiceOperation(TEXT("ELIGIBLE_PROMOTIONS"));
 const ServiceOperation ServiceOperation::GetSalesInventory = ServiceOperation(TEXT("GET_INVENTORY"));
 const ServiceOperation ServiceOperation::StartPurchase = ServiceOperation(TEXT("START_PURCHASE"));
+const ServiceOperation ServiceOperation::CachePurchasePayload = ServiceOperation(TEXT("CACHE_PURCHASE_PAYLOAD_CONTEXT"));
 const ServiceOperation ServiceOperation::FinalizePurchase = ServiceOperation(TEXT("FINALIZE_PURCHASE"));
 const ServiceOperation ServiceOperation::RefreshPromotions = ServiceOperation(TEXT("REFRESH_PROMOTIONS"));
 
