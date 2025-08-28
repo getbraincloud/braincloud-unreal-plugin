@@ -76,7 +76,7 @@ class UBCPlayerStateProxy : public UBCBlueprintCallProxyBase
     /**
     * @deprecated Use updateUserName instead - to be removed September 2021
     */
-    UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Player State")
+    UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", DeprecatedFunction, DeprecationMessage = "This function has been deprecated. Please use updateUserName instead"), Category = "BrainCloud|Player State")
     static UBCPlayerStateProxy *UpdateName(UBrainCloudWrapper *brainCloudWrapper, FString name);
 
     /**

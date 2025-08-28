@@ -306,10 +306,10 @@ class UBCLeaderboardProxy : public UBCBlueprintCallProxyBase
 	/**
 	 * @deprecated Please use PostScoreToDynamicLeaderboardUTC instead. Will be removed March 2021
 	 */
-	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", DeprecatedFunction, DeprecationMessage = "This function has been deprecated. Please use PostScoreToDynamicLeaderboardUTC instead"), Category = "BrainCloud|Leaderboard")
 	static UBCLeaderboardProxy *PostScoreToDynamicLeaderboard(UBrainCloudWrapper *brainCloudWrapper, FString leaderboardId, int32 score, FString jsonData,
 															  ESocialLeaderboardType leaderboardType, ERotationType rotationType, FDateTime rotationStart, int32 retainedCount);
-
+	
 	/**
 	* Post the players score to the given social leaderboard.
 	* Pass leaderboard config data to dynamically create if necessary.
@@ -335,10 +335,10 @@ class UBCLeaderboardProxy : public UBCBlueprintCallProxyBase
 	/**
 	 * @deprecated Please use PostScoreToDynamicGroupLeaderboardUTC instead. Will be removed March 2021
 	 */
-	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", DeprecatedFunction, DeprecationMessage = "This function has been deprecated. Please use PostScoreToDynamicGroupLeaderboardUTC instead"), Category = "BrainCloud|Leaderboard")
 	static UBCLeaderboardProxy *PostScoreToDynamicGroupLeaderboard(UBrainCloudWrapper *brainCloudWrapper, FString leaderboardId, const FString &groupId, int32 score, FString jsonData,
 															  ESocialLeaderboardType leaderboardType, ERotationType rotationType, FDateTime rotationStart, int32 retainedCount);
-
+	
 	/**
 	* Posts score to group leaderbopard and dynamically creates if necessary.
 	* leaderboardType, rotationReset, retainedCount and rotationType are required.
@@ -363,10 +363,10 @@ class UBCLeaderboardProxy : public UBCBlueprintCallProxyBase
 	/**
 	 * @deprecated Please use PostScoreToDynamicLeaderboardDaysUTC instead. Will be removed March 2021
 	 */
-	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", DeprecatedFunction, DeprecationMessage = "This function has been deprecated. Please use PostScoreToDynamicLeaderboardDaysUTC instead"), Category = "BrainCloud|Leaderboard")
 	static UBCLeaderboardProxy *PostScoreToDynamicLeaderboardDays(UBrainCloudWrapper *brainCloudWrapper, FString leaderboardId, int32 score, FString jsonData,
 																  ESocialLeaderboardType leaderboardType, FDateTime rotationStart, int32 retainedCount, int32 numDaysToRotate);
-
+	
 	/**
 	* Post the players score to the given social leaderboard.
 	* Pass leaderboard config data to dynamically create if necessary.

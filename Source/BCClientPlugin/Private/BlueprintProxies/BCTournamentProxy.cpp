@@ -73,14 +73,14 @@ UBCTournamentProxy *UBCTournamentProxy::LeaveTournament(UBrainCloudWrapper *brai
 UBCTournamentProxy *UBCTournamentProxy::PostTournamentScore(UBrainCloudWrapper *brainCloudWrapper, const FString &leaderboardId, int32 score, const FString &jsonData, const struct FDateTime roundStartedTime)
 {
 	UBCTournamentProxy *Proxy = NewObject<UBCTournamentProxy>();
-	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getTournamentService()->postTournamentScore(leaderboardId, score, jsonData, roundStartedTime, Proxy);
+	//UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getTournamentService()->postTournamentScore(leaderboardId, score, jsonData, roundStartedTime, Proxy);
 	return Proxy;
 }
 
 UBCTournamentProxy *UBCTournamentProxy::PostTournamentScoreWithResults(UBrainCloudWrapper *brainCloudWrapper, const FString &leaderboardId, int32 score, const FString &jsonData, FDateTime roundStartedTime, ESortOrder sort, int32 beforeCount, int32 afterCount, float initialScore)
 {
 	UBCTournamentProxy *Proxy = NewObject<UBCTournamentProxy>();
-	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getTournamentService()->postTournamentScoreWithResults(leaderboardId, score, jsonData, roundStartedTime, sort, beforeCount, afterCount, initialScore, Proxy);
+	//UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getTournamentService()->postTournamentScoreWithResults(leaderboardId, score, jsonData, roundStartedTime, sort, beforeCount, afterCount, initialScore, Proxy);
 	return Proxy;
 }
 

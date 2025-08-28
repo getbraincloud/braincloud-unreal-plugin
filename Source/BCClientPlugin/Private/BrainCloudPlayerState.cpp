@@ -57,11 +57,6 @@ void BrainCloudPlayerState::updateUserName(const FString &name, IServerCallback 
     _client->sendRequest(sc);   
 }
 
-void BrainCloudPlayerState::updateName(const FString &name, IServerCallback *callback)
-{
-    updateUserName(name, callback);
-}
-
 void BrainCloudPlayerState::updateSummaryFriendData(const FString &jsonSummaryData, IServerCallback *callback)
 {
     TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
@@ -173,12 +168,6 @@ void BrainCloudPlayerState::updateLanguageCode(const FString &languageCode, ISer
 
     ServerCall *sc = new ServerCall(ServiceName::PlayerState, ServiceOperation::UpdateLanguageCode, message, callback);
     _client->sendRequest(sc);
-}
-
-
-const FString &BrainCloudPlayerState::getPlayerName()
-{
-    return _userName;
 }
 
 const FString &BrainCloudPlayerState::getUserName()
