@@ -131,7 +131,7 @@ public:
     * @param in_callback The method to be invoked when the server response is received
     */
   UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|AppStore")
-  static UBCAppStoreProxy *CachePurchaseContext(UBrainCloudWrapper* brainCloudWrapper, const FString& storeId, const FString& iapId, const FString& payload);
+  static UBCAppStoreProxy *CachePurchasePayloadContext(UBrainCloudWrapper* brainCloudWrapper, const FString& storeId, const FString& iapId, const FString& payload);
 
   /**
     * Finalize A Two Staged Purchase Transaction

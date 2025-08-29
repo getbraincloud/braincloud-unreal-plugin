@@ -62,14 +62,14 @@ void BrainCloudAppStore::startPurchase(const FString &in_storeId, const FString 
     _client->sendRequest(sc);
 }
 
-void BrainCloudAppStore::cachePurchaseContext(const FString& in_storeId, const FString& iapId, const FString& payload, IServerCallback* callback)
+void BrainCloudAppStore::cachePurchasePayloadContext(const FString& in_storeId, const FString& iapId, const FString& payload, IServerCallback* callback)
 {
     TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
     message->SetStringField(OperationParam::AppStoreId.getValue(), in_storeId);
     message->SetStringField(OperationParam::IAPId.getValue(), iapId);
     message->SetObjectField(OperationParam::Payload.getValue(), JsonUtil::jsonStringToValue(payload));
 
-    ServerCall* sc = new ServerCall(ServiceName::AppStore, ServiceOperation::CachePurchasePayload, message, callback);
+    ServerCall* sc = new ServerCall(ServiceName::AppStore, ServiceOperation::CachePurchasePayloadContext, message, callback);
     _client->sendRequest(sc);
 }
 

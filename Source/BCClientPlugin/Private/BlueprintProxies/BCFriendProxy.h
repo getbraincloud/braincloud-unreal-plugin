@@ -110,10 +110,6 @@ class UBCFriendProxy : public UBCBlueprintCallProxyBase
 	static UBCFriendProxy *ReadFriendsEntities(UBrainCloudWrapper *brainCloudWrapper, const FString &entityType);
 
 	/**
-	* @deprecated Use readAllUserStats instead
-	*/
-
-	/**
 	* Finds a list of users matching the search text by performing an exact match search
 	*
 	* Service Name - friend

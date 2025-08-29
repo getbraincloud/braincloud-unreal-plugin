@@ -350,13 +350,6 @@ class BCCLIENTPLUGIN_API BrainCloudLeaderboard
 
 
 	/**
-	 * @deprecated Please use PostScoreToDynamicLeaderboardUTC instead. Will be removed March 2021
-	 */
-	void postScoreToDynamicLeaderboard(const FString &leaderboardId, int32 score, const FString &jsonData,
-									   ESocialLeaderboardType leaderboardType, ERotationType rotationType, const FDateTime &rotationStart, int32 retainedCount, IServerCallback *callback = nullptr);
-
-
-	/**
 	 * Post the players score to the given social leaderboard.
 	 * Pass leaderboard config data to dynamically create if necessary.
 	 * You can optionally send a user-defined json string of data
@@ -377,12 +370,6 @@ class BCCLIENTPLUGIN_API BrainCloudLeaderboard
 	 */
 	void postScoreToDynamicLeaderboardUTC(const FString &leaderboardId, int32 score, const FString &jsonData,
 									   ESocialLeaderboardType leaderboardType, ERotationType rotationType, const int64 &rotationStart, int32 retainedCount, IServerCallback *callback = nullptr);
-
-	/**
-	 * @deprecated Please use PostScoreToDynamicLeaderboardDaysUTC instead. Will be removed March 2021
-	 */
-	void postScoreToDynamicLeaderboardDays(const FString &leaderboardId, int32 score, const FString &jsonData,
-										   ESocialLeaderboardType leaderboardType, const FDateTime &rotationStart, int32 retainedCount, int32 numDaysToRotate, IServerCallback *callback = nullptr);
 
 	/**
 	* Post the players score to the given social leaderboard.
@@ -606,11 +593,6 @@ class BCCLIENTPLUGIN_API BrainCloudLeaderboard
 	*/
 	void postScoreToGroupLeaderboard(const FString &leaderboardId, const FString &groupId, int32 score, const FString &jsonOtherData, IServerCallback *callback = nullptr);
 	
-	/**
-	 * @deprecated Please use PostScoreToDynamicGroupLeaderboardUTC instead. Will be removed March 2021
-	 */
-	void postScoreToDynamicGroupLeaderboard(const FString &leaderboardId, const FString &groupId, int32 score, const FString &jsonOtherData,ESocialLeaderboardType leaderboardType, ERotationType rotationType, const FDateTime &rotationStart, int32 retainedCount, IServerCallback *callback = nullptr);
-
 	/**
 	* Post the group score to the given group leaderboard and dynamically create if necessary. LeaderboardType, rotationType, rotationReset, and retainedCount are required.
 	*

@@ -171,47 +171,6 @@ void BrainCloudLeaderboard::postScore(const FString &leaderboardId, int32 score,
 	_client->sendRequest(sc);
 }
 
-void BrainCloudLeaderboard::postScoreToDynamicLeaderboard(const FString &leaderboardId, int32 score, const FString &jsonData,
-														  ESocialLeaderboardType leaderboardType, ERotationType rotationType, const FDateTime &rotationStart,
-														  int32 retainedCount, IServerCallback *callback)
-{
-	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
-	message->SetStringField(OperationParam::LeaderboardServiceLeaderboardId.getValue(), leaderboardId);
-	message->SetNumberField(OperationParam::LeaderboardServiceScore.getValue(), score);
-	message->SetObjectField(OperationParam::LeaderboardServiceData.getValue(), JsonUtil::jsonStringToValue(jsonData));
-
-	message->SetStringField(OperationParam::LeaderboardServiceLeaderboardType.getValue(), *leaderboardTypeToString(leaderboardType));
-	message->SetStringField(OperationParam::LeaderboardServiceRotationType.getValue(), *leaderboardRotationTypeToString(rotationType));
-
-	if (rotationStart > FDateTime::Now())
-		message->SetNumberField(OperationParam::LeaderboardServiceRotationResetTime.getValue(), rotationStart.ToUnixTimestamp() * 1000);
-
-	message->SetNumberField(OperationParam::LeaderboardServiceRetainedCount.getValue(), retainedCount);
-
-	ServerCall *sc = new ServerCall(ServiceName::Leaderboard, ServiceOperation::PostScoreDynamic, message, callback);
-	_client->sendRequest(sc);
-}
-
-void BrainCloudLeaderboard::postScoreToDynamicLeaderboardDays(const FString &leaderboardId, int32 score, const FString &jsonData,
-															  ESocialLeaderboardType leaderboardType, const FDateTime &rotationStart, int32 retainedCount, int32 numDaysToRotate, IServerCallback *callback)
-{
-	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
-	message->SetStringField(OperationParam::LeaderboardServiceLeaderboardId.getValue(), leaderboardId);
-	message->SetNumberField(OperationParam::LeaderboardServiceScore.getValue(), score);
-	message->SetObjectField(OperationParam::LeaderboardServiceData.getValue(), JsonUtil::jsonStringToValue(jsonData));
-	message->SetStringField(OperationParam::LeaderboardServiceLeaderboardType.getValue(), *leaderboardTypeToString(leaderboardType));
-	message->SetStringField(OperationParam::LeaderboardServiceRotationType.getValue(), "DAYS");
-	message->SetNumberField(OperationParam::NumDaysToRotate.getValue(), numDaysToRotate);
-
-	if (rotationStart > FDateTime::Now())
-		message->SetNumberField(OperationParam::LeaderboardServiceRotationResetTime.getValue(), rotationStart.ToUnixTimestamp() * 1000);
-
-	message->SetNumberField(OperationParam::LeaderboardServiceRetainedCount.getValue(), retainedCount);
-
-	ServerCall *sc = new ServerCall(ServiceName::Leaderboard, ServiceOperation::PostScoreDynamic, message, callback);
-	_client->sendRequest(sc);
-}
-
 void BrainCloudLeaderboard::postScoreToDynamicLeaderboardUTC(const FString &leaderboardId, int32 score, const FString &jsonData,
 														  ESocialLeaderboardType leaderboardType, ERotationType rotationType, const int64 &rotationStart,
 														  int32 retainedCount, IServerCallback *callback)
@@ -414,26 +373,6 @@ void BrainCloudLeaderboard::postScoreToGroupLeaderboard(const FString &leaderboa
 	message->SetObjectField(OperationParam::LeaderboardServiceData.getValue(), JsonUtil::jsonStringToValue(jsonOtherData));
 
 	ServerCall *sc = new ServerCall(ServiceName::Leaderboard, ServiceOperation::PostScoreToGroupLeaderboard, message, callback);
-	_client->sendRequest(sc);
-}
-
-void BrainCloudLeaderboard::postScoreToDynamicGroupLeaderboard(const FString &leaderboardId, const FString &groupId, int32 score, const FString &jsonOtherData,ESocialLeaderboardType leaderboardType, 
-																ERotationType rotationType, const FDateTime &rotationStart, int32 retainedCount, IServerCallback *callback)
-{
-	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
-	message->SetStringField(OperationParam::LeaderboardServiceLeaderboardId.getValue(), leaderboardId);
-	message->SetStringField(OperationParam::GroupId.getValue(), groupId);
-	message->SetNumberField(OperationParam::LeaderboardServiceScore.getValue(), score);
-	message->SetObjectField(OperationParam::LeaderboardServiceData.getValue(), JsonUtil::jsonStringToValue(jsonOtherData));
-	message->SetStringField(OperationParam::LeaderboardServiceLeaderboardType.getValue(), *leaderboardTypeToString(leaderboardType));
-
-	if (rotationStart > FDateTime::Now())
-	message->SetStringField(OperationParam::LeaderboardServiceRotationType.getValue(), *leaderboardRotationTypeToString(rotationType));
-
-	message->SetNumberField(OperationParam::LeaderboardServiceRotationResetTime.getValue(), rotationStart.ToUnixTimestamp() * 1000);
-	message->SetNumberField(OperationParam::LeaderboardServiceScore.getValue(), retainedCount);
-
-	ServerCall *sc = new ServerCall(ServiceName::Leaderboard, ServiceOperation::PostScoreToDynamicGroupLeaderboard, message, callback);
 	_client->sendRequest(sc);
 }
 

@@ -450,7 +450,7 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation GetSalesInventory;
 	static const ServiceOperation GetSalesInventoryByCategory;
 	static const ServiceOperation StartPurchase;
-	static const ServiceOperation CachePurchasePayload;
+	static const ServiceOperation CachePurchasePayloadContext;
 	static const ServiceOperation FinalizePurchase;
 	static const ServiceOperation RefreshPromotions;
 

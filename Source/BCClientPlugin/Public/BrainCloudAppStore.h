@@ -121,7 +121,7 @@ public:
     * @param payload The payload retrieved for the IAP product after the GetSalesInventory method.
     * @param in_callback The method to be invoked when the server response is received
     */
-  void cachePurchaseContext(const FString& in_storeId, const FString& iapId, const FString& payload, IServerCallback* callback = nullptr);
+  void cachePurchasePayloadContext(const FString& in_storeId, const FString& iapId, const FString& payload, IServerCallback* callback = nullptr);
 
   /**
     * Finalize A Two Staged Purchase Transaction
