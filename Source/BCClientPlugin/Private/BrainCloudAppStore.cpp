@@ -69,7 +69,7 @@ void BrainCloudAppStore::cachePurchasePayloadContext(const FString& in_storeId, 
     message->SetStringField(OperationParam::IAPId.getValue(), iapId);
     message->SetObjectField(OperationParam::Payload.getValue(), JsonUtil::jsonStringToValue(payload));
 
-    ServerCall* sc = new ServerCall(ServiceName::AppStore, ServiceOperation::CachePurchasePayload, message, callback);
+    ServerCall* sc = new ServerCall(ServiceName::AppStore, ServiceOperation::CachePurchasePayloadContext, message, callback);
     _client->sendRequest(sc);
 }
 
