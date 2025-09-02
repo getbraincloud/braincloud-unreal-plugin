@@ -36,10 +36,34 @@ class BCCLIENTPLUGIN_API BrainCloudLobby : public IServerCallback
     * @param in_otherUserCxIds array of other user Connection Ids to bring when the lobby is found
 	* @param in_callback Method to be invoked when the server response is received.
     */
+    [[deprecated("Use the findLobby function that does not contain the in_timeoutSecs parameter")]]
     void findLobby(const FString &in_roomType, int32 in_rating, int32 in_maxSteps,
                    const FString &in_algoJson, const FString &in_filterJson, int32 in_timeoutSecs,
                    bool in_isReady, const FString &in_extraJson, const FString &in_teamCode, const TArray<FString> &in_otherUserCxIds,
                    IServerCallback *in_callback);
+
+    /**
+    * Finds a lobby matching the specified parameters
+    *
+    * Service Name - lobby
+    * Service Operation - FIND_LOBBY
+    *
+    * @param in_roomType type of room
+    * @param in_rating rating of the room
+    * @param in_maxSteps max iterations to search for a lobby
+    * @param in_algoJson json string of the search algorithm to use
+    * @param in_filterJson json string of the filter to be passed on
+    * @param in_timeoutSecs numberOfseconds before timing out
+    * @param in_isReady when lobby is found, place this user as "Ready"
+    * @param in_extraJson json string for extra customization
+    * @param in_teamCode team code
+    * @param in_otherUserCxIds array of other user Connection Ids to bring when the lobby is found
+    * @param in_callback Method to be invoked when the server response is received.
+    */
+    void findLobby(const FString& in_roomType, int32 in_rating, int32 in_maxSteps,
+        const FString& in_algoJson, const FString& in_filterJson,
+        bool in_isReady, const FString& in_extraJson, const FString& in_teamCode, const TArray<FString>& in_otherUserCxIds,
+        IServerCallback* in_callback);
 
   /**
     * Finds a lobby matching the specified parameters WITH PING DATA.  GetRegionsForLobbies and PingRegions must be successfully responded to prior to calling.
