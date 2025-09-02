@@ -23,6 +23,7 @@ BrainCloudLobby::BrainCloudLobby(BrainCloudClient *client)
      _http = &FHttpModule::Get();
  }
 
+
 void BrainCloudLobby::findLobby(const FString &in_roomType, int32 in_rating, int32 in_maxSteps,
                                 const FString &in_algoJson, const FString &in_filterJson, int32 in_timeoutSecs,
                                 bool in_isReady, const FString &in_extraJson, const FString &in_teamCode, const TArray<FString> &in_otherUserCxIds,
@@ -41,6 +42,23 @@ void BrainCloudLobby::findLobby(const FString &in_roomType, int32 in_rating, int
     message->SetArrayField(OperationParam::LobbyOtherUserCxIds.getValue(), JsonUtil::arrayToJsonArray(in_otherUserCxIds));
 
     ServerCall *sc = new ServerCall(ServiceName::Lobby, ServiceOperation::FindLobby, message, in_callback);
+    _client->sendRequest(sc);
+}
+
+void BrainCloudLobby::findLobby(const FString& in_roomType, int32 in_rating, int32 in_maxSteps, const FString& in_algoJson, const FString& in_filterJson, bool in_isReady, const FString& in_extraJson, const FString& in_teamCode, const TArray<FString>& in_otherUserCxIds, IServerCallback* in_callback)
+{
+    TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
+    message->SetStringField(OperationParam::LobbyRoomType.getValue(), in_roomType);
+    message->SetNumberField(OperationParam::LobbyRating.getValue(), in_rating);
+    message->SetNumberField(OperationParam::LobbyMaxSteps.getValue(), in_maxSteps);
+    message->SetObjectField(OperationParam::LobbyAlgorithm.getValue(), JsonUtil::jsonStringToValue(in_algoJson));
+    message->SetObjectField(OperationParam::LobbyFilterJson.getValue(), JsonUtil::jsonStringToValue(in_filterJson));
+    message->SetBoolField(OperationParam::LobbyIsReady.getValue(), in_isReady);
+    message->SetObjectField(OperationParam::LobbyExtraJson.getValue(), JsonUtil::jsonStringToValue(in_extraJson));
+    message->SetStringField(OperationParam::LobbyTeamCode.getValue(), in_teamCode);
+    message->SetArrayField(OperationParam::LobbyOtherUserCxIds.getValue(), JsonUtil::arrayToJsonArray(in_otherUserCxIds));
+
+    ServerCall* sc = new ServerCall(ServiceName::Lobby, ServiceOperation::FindLobby, message, in_callback);
     _client->sendRequest(sc);
 }
 

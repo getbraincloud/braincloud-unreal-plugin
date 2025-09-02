@@ -33,7 +33,7 @@ class UBCLobbyProxy : public UBCBlueprintCallProxyBase
     */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Lobby")
     static UBCLobbyProxy *FindLobby(UBrainCloudWrapper *brainCloudWrapper, const FString &in_roomType, int32 in_rating, int32 in_maxSteps,
-                                    const FString &in_algoJson, const FString &in_filterJson, int32 in_timeoutSecs,
+                                    const FString &in_algoJson, const FString &in_filterJson,
                                     bool in_isReady, const FString &in_extraJson, const FString &in_teamCode, const TArray<FString> &in_otherUserCxIds);
 
     /**
