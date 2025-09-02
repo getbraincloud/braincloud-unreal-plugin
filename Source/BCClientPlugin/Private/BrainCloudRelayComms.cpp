@@ -327,9 +327,13 @@ int BrainCloudRelayComms::getPing() const
     return m_ping;
 }
 
-void BrainCloudRelayComms::setPingInterval(int in_intervalMS)
+void BrainCloudRelayComms::setPingInterval(int in_intervalSeconds)
 {
-    m_pingInterval = (double)in_intervalMS / 1000.0f;
+    if (in_intervalSeconds > 999) {
+        UE_LOG(LogBrainCloud, Warning, TEXT("SetPingInterval values should be in seconds. Passed in values >999 are automatically converted to seconds"));
+        in_intervalSeconds /= 1000;
+    }
+    m_pingInterval = (double)in_intervalSeconds;
 }
 
 const FString& BrainCloudRelayComms::getOwnerProfileId() const
