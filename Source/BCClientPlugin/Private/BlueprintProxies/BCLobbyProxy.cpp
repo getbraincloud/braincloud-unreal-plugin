@@ -13,12 +13,10 @@ UBCLobbyProxy::UBCLobbyProxy(const FObjectInitializer &ObjectInitializer)
 {
 }
 
-UBCLobbyProxy *UBCLobbyProxy::FindLobby(UBrainCloudWrapper *brainCloudWrapper, const FString &in_roomType, int32 in_rating, int32 in_maxSteps,
-										const FString &in_algoJson, const FString &in_filterJson, int32 in_timeoutSecs,
-										bool in_isReady, const FString &in_extraJson, const FString &in_teamCode, const TArray<FString> &in_otherUserCxIds)
+UBCLobbyProxy* UBCLobbyProxy::FindLobby(UBrainCloudWrapper* brainCloudWrapper, const FString& in_roomType, int32 in_rating, int32 in_maxSteps, const FString& in_algoJson, const FString& in_filterJson, bool in_isReady, const FString& in_extraJson, const FString& in_teamCode, const TArray<FString>& in_otherUserCxIds)
 {
-	UBCLobbyProxy *Proxy = NewObject<UBCLobbyProxy>();
-	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getLobbyService()->findLobby(in_roomType, in_rating, in_maxSteps, in_algoJson, in_filterJson, in_timeoutSecs, in_isReady, in_extraJson, in_teamCode, in_otherUserCxIds, Proxy);
+	UBCLobbyProxy* Proxy = NewObject<UBCLobbyProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getLobbyService()->findLobby(in_roomType, in_rating, in_maxSteps, in_algoJson, in_filterJson, in_isReady, in_extraJson, in_teamCode, in_otherUserCxIds, Proxy);
 	return Proxy;
 }
 

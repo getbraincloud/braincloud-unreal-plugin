@@ -75,10 +75,6 @@ class BCCLIENTPLUGIN_API BrainCloudPlayerState
     */
     void updateUserName(const FString &name, IServerCallback *callback);
 
-    /**
-    * @deprecated Use updateUserName instead - to be removed September 2021
-    */
-    void updateName(const FString &name, IServerCallback *callback);
 
     /**
     * Updates the "friend summary data" associated with the logged in user.
@@ -228,11 +224,6 @@ class BCCLIENTPLUGIN_API BrainCloudPlayerState
     */
     void updateLanguageCode(const FString &languageCode, IServerCallback *callback);
 
-
-    /**
-	* @deprecated Use getUserName instead - removal after September 1 2017
-	*/
-    const FString &getPlayerName();
 
     /**
     * Gets a cached value of the currently authenticated user's name

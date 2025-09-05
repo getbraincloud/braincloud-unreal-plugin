@@ -42,7 +42,7 @@ public:
     void socketCleanup();
     bool isConnected() const;
     int getPing() const;
-    void setPingInterval(int in_intervalMS);
+    void setPingInterval(int in_intervalSeconds);
     const FString& getOwnerProfileId() const;
     const FString& getProfileIdForNetId(int in_netId) const;
     int getNetIdForProfileId(const FString& in_profileId) const;

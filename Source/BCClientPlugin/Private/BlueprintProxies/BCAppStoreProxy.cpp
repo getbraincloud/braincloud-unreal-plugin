@@ -48,6 +48,13 @@ UBCAppStoreProxy *UBCAppStoreProxy::StartPurchase(UBrainCloudWrapper *brainCloud
     return Proxy;
 }
 
+UBCAppStoreProxy* UBCAppStoreProxy::CachePurchasePayloadContext(UBrainCloudWrapper* brainCloudWrapper, const FString& storeId, const FString& iapId, const FString& payload)
+{
+    UBCAppStoreProxy* Proxy = NewObject<UBCAppStoreProxy>();
+    UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getAppStoreService()->cachePurchasePayloadContext(storeId, iapId, payload, Proxy);
+    return Proxy;
+}
+
 UBCAppStoreProxy *UBCAppStoreProxy::FinalizePurchase(UBrainCloudWrapper *brainCloudWrapper, const FString &storeId, const FString &transactionId, const FString &transactionData)
 {
     UBCAppStoreProxy *Proxy = NewObject<UBCAppStoreProxy>();

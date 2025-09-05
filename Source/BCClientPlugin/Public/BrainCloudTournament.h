@@ -111,15 +111,6 @@ class BCCLIENTPLUGIN_API BrainCloudTournament
 	*/
 	void leaveTournament(const FString &leaderboardId, IServerCallback *callback = nullptr);
 
-	/**
-	* @deprecated will be removed March 2021, Use postTournamentScoreUTC instead
-	*/
-	void postTournamentScore(const FString &leaderboardId, int32 score, const FString &jsonData, const struct FDateTime roundStartedTime, IServerCallback *callback = nullptr);
-
-	/**
-	* @deprecated will be removed March 2021, Use postTournamentScoreWithResultsUTC instead
-	*/
-	void postTournamentScoreWithResults(const FString &leaderboardId, int32 score, const FString &jsonData, const FDateTime roundStartedTime, ESortOrder sort, int32 beforeCount, int32 afterCount, float initialScore, IServerCallback *callback);
 
 	/**
 	* Post the users score to the leaderboard
