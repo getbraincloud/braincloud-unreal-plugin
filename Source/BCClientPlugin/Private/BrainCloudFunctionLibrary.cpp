@@ -44,7 +44,7 @@ FBrainCloudAppDataStruct UBrainCloudFunctionLibrary::GetBCAppData()
     FString ConfigPath = FPaths::ProjectConfigDir();
     ConfigPath += Filename;
 
-#if ENGINE_MAJOR_VERSION == 5
+#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION > 1
 
     ConfigPath = FConfigCacheIni::NormalizeConfigIniPath(FPaths::ProjectConfigDir() + *Filename);
 
@@ -91,7 +91,7 @@ void UBrainCloudFunctionLibrary::SetBCAppData(FBrainCloudAppDataStruct appData)
     ConfigPath += Filename;
 
 
-#if ENGINE_MAJOR_VERSION == 5
+#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION > 1
     ConfigPath = FConfigCacheIni::NormalizeConfigIniPath(FPaths::ProjectConfigDir() + *Filename);
 #endif
 
