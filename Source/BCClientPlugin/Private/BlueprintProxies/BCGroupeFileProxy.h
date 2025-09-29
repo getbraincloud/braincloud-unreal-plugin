@@ -1,4 +1,6 @@
-﻿#pragma once
+// Copyright 2025 bitHeads, Inc. All Rights Reserved.
+
+#pragma once
 #include "CoreMinimal.h"
 #include "BCBlueprintCallProxyBase.h"
 #include "BrainCloudGroupACL.h"

@@ -1,4 +1,6 @@
-﻿// Georgy Treshchev 2024.
+// Copyright 2025 bitHeads, Inc. All Rights Reserved.
+
+// Georgy Treshchev 2024.
 
 #pragma once
 
