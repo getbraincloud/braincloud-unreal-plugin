@@ -1,4 +1,4 @@
-// Copyright 2018 bitHeads, Inc. All Rights Reserved.
+// Copyright 2025 bitHeads, Inc. All Rights Reserved.
 
 #pragma once
 enum class BCRelayConnectionType : uint8;

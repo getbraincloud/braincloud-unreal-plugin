@@ -1,3 +1,5 @@
+// Copyright 2025 bitHeads, Inc. All Rights Reserved.
+
 #include "RelayWebSocket.h"
 #include "WinWebSocketBase.h"
 #include <ConvertUtilities.h>

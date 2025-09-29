@@ -1,5 +1,4 @@
-// Copyright 2018 bitHeads, Inc. All Rights Reserved.
-
+// Copyright 2025 bitHeads, Inc. All Rights Reserved.
 
 #include "BrainCloudClient.h"
 #include "BCClientPluginPrivatePCH.h"

@@ -1,3 +1,5 @@
+// Copyright 2025 bitHeads, Inc. All Rights Reserved.
+
 #include "ConvertUtilities.h"
 #include "Serialization/MemoryWriter.h"
 #include "Serialization/MemoryReader.h"
