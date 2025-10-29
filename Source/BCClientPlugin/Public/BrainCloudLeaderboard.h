@@ -24,7 +24,7 @@ enum class ERotationType : uint8
 
 // this name collides with enum 'ESortOrder' in Plugins/Experimental/VirtualCamera
 UENUM(BlueprintType)
-enum class ESortOrder : uint8
+enum class EBCSortOrder : uint8
 {
     HIGH_TO_LOW UMETA(DisplayName = "High to Low"),
     LOW_TO_HIGH UMETA(DisplayName = "Low to High")
@@ -177,7 +177,7 @@ class BCCLIENTPLUGIN_API BrainCloudLeaderboard
 	* @param endIndex The index at which to end the page.
 	* @param callback The method to be invoked when the server response is received
 	*/
-	void getGlobalLeaderboardPage(const FString &leaderboardId, ESortOrder sortOrder, int32 startIndex, int32 endIndex, IServerCallback *callback = nullptr);
+	void getGlobalLeaderboardPage(const FString &leaderboardId, EBCSortOrder sortOrder, int32 startIndex, int32 endIndex, IServerCallback *callback = nullptr);
 
 	/**
 	* Method returns a page of global leaderboard results.
@@ -198,7 +198,7 @@ class BCCLIENTPLUGIN_API BrainCloudLeaderboard
 	* @param endIndex The index at which to end the page.
 	* @param callback The method to be invoked when the server response is received
 	*/
-	void getGlobalLeaderboardPageIfExists(const FString& leaderboardId, ESortOrder sortOrder, int32 startIndex, int32 endIndex, IServerCallback* callback = nullptr);
+	void getGlobalLeaderboardPageIfExists(const FString& leaderboardId, EBCSortOrder sortOrder, int32 startIndex, int32 endIndex, IServerCallback* callback = nullptr);
 
 	/**
 	* Method returns a page of global leaderboard results.
@@ -215,7 +215,7 @@ class BCCLIENTPLUGIN_API BrainCloudLeaderboard
 	* @param versionId The historical version to retrieve.
 	* @param callback The method to be invoked when the server response is received
 	*/
-	void getGlobalLeaderboardPageByVersion(const FString &leaderboardId, ESortOrder sortOrder, int32 startIndex, int32 endIndex, int32 versionId, IServerCallback *callback = nullptr);
+	void getGlobalLeaderboardPageByVersion(const FString &leaderboardId, EBCSortOrder sortOrder, int32 startIndex, int32 endIndex, int32 versionId, IServerCallback *callback = nullptr);
 
 	/**
 	* Method returns a page of global leaderboard results.
@@ -234,7 +234,7 @@ class BCCLIENTPLUGIN_API BrainCloudLeaderboard
 	* @param versionId The historical version to retrieve.
 	* @param callback The method to be invoked when the server response is received
 	*/
-	void getGlobalLeaderboardPageByVersionIfExists(const FString& leaderboardId, ESortOrder sortOrder, int32 startIndex, int32 endIndex, int32 versionId, IServerCallback* callback = nullptr);
+	void getGlobalLeaderboardPageByVersionIfExists(const FString& leaderboardId, EBCSortOrder sortOrder, int32 startIndex, int32 endIndex, int32 versionId, IServerCallback* callback = nullptr);
 
 	/**
 	* Method returns a view of global leaderboard results that centers on the current player.
@@ -251,7 +251,7 @@ class BCCLIENTPLUGIN_API BrainCloudLeaderboard
 	* @param afterCount The count of number of players after the current player to include.
 	* @param callback The method to be invoked when the server response is received
 	*/
-	void getGlobalLeaderboardView(const FString &leaderboardId, ESortOrder sortOrder, int32 beforeCount, int32 afterCount, IServerCallback *callback = nullptr);
+	void getGlobalLeaderboardView(const FString &leaderboardId, EBCSortOrder sortOrder, int32 beforeCount, int32 afterCount, IServerCallback *callback = nullptr);
 
 	/**
 	* Method returns a view of global leaderboard results that centers on the current player.
@@ -270,7 +270,7 @@ class BCCLIENTPLUGIN_API BrainCloudLeaderboard
 	* @param afterCount The count of number of players after the current player to include.
 	* @param callback The method to be invoked when the server response is received
 	*/
-	void getGlobalLeaderboardViewIfExists(const FString& leaderboardId, ESortOrder sortOrder, int32 beforeCount, int32 afterCount, IServerCallback* callback = nullptr);
+	void getGlobalLeaderboardViewIfExists(const FString& leaderboardId, EBCSortOrder sortOrder, int32 beforeCount, int32 afterCount, IServerCallback* callback = nullptr);
 
 	/**
 	* Method returns a view of global leaderboard results that centers on the current player.
@@ -287,7 +287,7 @@ class BCCLIENTPLUGIN_API BrainCloudLeaderboard
 	* @param versionId The historical version to retrieve.
 	* @param callback The method to be invoked when the server response is received
 	*/
-	void getGlobalLeaderboardViewByVersion(const FString &leaderboardId, ESortOrder sortOrder, int32 beforeCount, int32 afterCount,
+	void getGlobalLeaderboardViewByVersion(const FString &leaderboardId, EBCSortOrder sortOrder, int32 beforeCount, int32 afterCount,
 										   int32 versionId, IServerCallback *callback = nullptr);
 
 	/**
@@ -307,7 +307,7 @@ class BCCLIENTPLUGIN_API BrainCloudLeaderboard
 	* @param versionId The historical version to retrieve.
 	* @param callback The method to be invoked when the server response is received
 	*/
-	void getGlobalLeaderboardViewByVersionIfExists(const FString& leaderboardId, ESortOrder sortOrder, int32 beforeCount, int32 afterCount,
+	void getGlobalLeaderboardViewByVersionIfExists(const FString& leaderboardId, EBCSortOrder sortOrder, int32 beforeCount, int32 afterCount,
 		int32 versionId, IServerCallback* callback = nullptr);
 
 	/**
@@ -641,7 +641,7 @@ class BCCLIENTPLUGIN_API BrainCloudLeaderboard
 	* @param in_afterCount count of players after current player to include
 	* @param in_callback The method to be invoked when the server response is received
 	*/
-	void getGroupLeaderboardView(const FString &leaderboardId, const FString &groupId, ESortOrder sortOrder, int32 beforeCount, int32 afterCount, IServerCallback *callback = nullptr);
+	void getGroupLeaderboardView(const FString &leaderboardId, const FString &groupId, EBCSortOrder sortOrder, int32 beforeCount, int32 afterCount, IServerCallback *callback = nullptr);
 
 	/**
 	* Retrieve a view of the group leaderboard surrounding the current group by the version
@@ -657,7 +657,7 @@ class BCCLIENTPLUGIN_API BrainCloudLeaderboard
 	* @param in_afterCount count of players after current player to include
 	* @param in_callback The method to be invoked when the server response is received
 	*/
-	void getGroupLeaderboardViewByVersion(const FString &leaderboardId, const FString &groupId, int32 versionId, ESortOrder sortOrder, int32 beforeCount, int32 afterCount, IServerCallback *callback = nullptr);
+	void getGroupLeaderboardViewByVersion(const FString &leaderboardId, const FString &groupId, int32 versionId, EBCSortOrder sortOrder, int32 beforeCount, int32 afterCount, IServerCallback *callback = nullptr);
 
 	/**
 	* Post the player's score to the given social leaderboard, 
@@ -702,5 +702,5 @@ class BCCLIENTPLUGIN_API BrainCloudLeaderboard
 
 	FString leaderboardTypeToString(ESocialLeaderboardType type);
 	FString leaderboardRotationTypeToString(ERotationType type);
-	FString leaderboardSortOrderToString(ESortOrder type);
+	FString leaderboardSortOrderToString(EBCSortOrder type);
 };

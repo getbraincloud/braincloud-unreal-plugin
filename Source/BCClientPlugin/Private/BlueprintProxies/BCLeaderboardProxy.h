@@ -137,7 +137,7 @@ class UBCLeaderboardProxy : public UBCBlueprintCallProxyBase
 	* Param - endIndex The index at which to end the page.
 	*/
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
-	static UBCLeaderboardProxy *GetGlobalLeaderboardPage(UBrainCloudWrapper *brainCloudWrapper, FString leaderboardId, ESortOrder sortOrder, int32 startIndex, int32 endIndex);
+	static UBCLeaderboardProxy *GetGlobalLeaderboardPage(UBrainCloudWrapper *brainCloudWrapper, FString leaderboardId, EBCSortOrder sortOrder, int32 startIndex, int32 endIndex);
 
 	/**
 	* Method returns a page of global leaderboard results.
@@ -158,7 +158,7 @@ class UBCLeaderboardProxy : public UBCBlueprintCallProxyBase
 	* Param - endIndex The index at which to end the page.
 	*/
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
-	static UBCLeaderboardProxy* GetGlobalLeaderboardPageIfExists(UBrainCloudWrapper* brainCloudWrapper, FString leaderboardId, ESortOrder sortOrder, int32 startIndex, int32 endIndex);
+	static UBCLeaderboardProxy* GetGlobalLeaderboardPageIfExists(UBrainCloudWrapper* brainCloudWrapper, FString leaderboardId, EBCSortOrder sortOrder, int32 startIndex, int32 endIndex);
 
 	/**
 	* Method returns a page of global leaderboard results.
@@ -175,7 +175,7 @@ class UBCLeaderboardProxy : public UBCBlueprintCallProxyBase
 	* Param - versionId The historical version to retrieve.
 	*/
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
-	static UBCLeaderboardProxy *GetGlobalLeaderboardPageByVersion(UBrainCloudWrapper *brainCloudWrapper, FString leaderboardId, ESortOrder sortOrder, int32 startIndex, int32 endIndex, int32 versionId);
+	static UBCLeaderboardProxy *GetGlobalLeaderboardPageByVersion(UBrainCloudWrapper *brainCloudWrapper, FString leaderboardId, EBCSortOrder sortOrder, int32 startIndex, int32 endIndex, int32 versionId);
 
 	/**
 	* Method returns a page of global leaderboard results.
@@ -194,7 +194,7 @@ class UBCLeaderboardProxy : public UBCBlueprintCallProxyBase
 	* Param - versionId The historical version to retrieve.
 	*/
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
-	static UBCLeaderboardProxy* GetGlobalLeaderboardPageByVersionIfExists(UBrainCloudWrapper* brainCloudWrapper, FString leaderboardId, ESortOrder sortOrder, int32 startIndex, int32 endIndex, int32 versionId);
+	static UBCLeaderboardProxy* GetGlobalLeaderboardPageByVersionIfExists(UBrainCloudWrapper* brainCloudWrapper, FString leaderboardId, EBCSortOrder sortOrder, int32 startIndex, int32 endIndex, int32 versionId);
 
 	/**
 	* Method returns a view of global leaderboard results that centers on the current player.
@@ -211,7 +211,7 @@ class UBCLeaderboardProxy : public UBCBlueprintCallProxyBase
 	* Param - afterCount The count of number of players after the current player to include.
 	*/
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
-	static UBCLeaderboardProxy *GetGlobalLeaderboardView(UBrainCloudWrapper *brainCloudWrapper, FString leaderboardId, ESortOrder sortOrder, int32 beforeCount, int32 afterCount);
+	static UBCLeaderboardProxy *GetGlobalLeaderboardView(UBrainCloudWrapper *brainCloudWrapper, FString leaderboardId, EBCSortOrder sortOrder, int32 beforeCount, int32 afterCount);
 
 	/**
 	* Method returns a view of global leaderboard results that centers on the current player.
@@ -230,7 +230,7 @@ class UBCLeaderboardProxy : public UBCBlueprintCallProxyBase
 	* Param - afterCount The count of number of players after the current player to include.
 	*/
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
-	static UBCLeaderboardProxy* GetGlobalLeaderboardViewIfExists(UBrainCloudWrapper* brainCloudWrapper, FString leaderboardId, ESortOrder sortOrder, int32 beforeCount, int32 afterCount);
+	static UBCLeaderboardProxy* GetGlobalLeaderboardViewIfExists(UBrainCloudWrapper* brainCloudWrapper, FString leaderboardId, EBCSortOrder sortOrder, int32 beforeCount, int32 afterCount);
 
 	/**
 	* Method returns a view of global leaderboard results that centers on the current player.
@@ -247,7 +247,7 @@ class UBCLeaderboardProxy : public UBCBlueprintCallProxyBase
 	* Param - versionId The historical version to retrieve.
 	*/
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
-	static UBCLeaderboardProxy *GetGlobalLeaderboardViewByVersion(UBrainCloudWrapper *brainCloudWrapper, FString leaderboardId, ESortOrder sortOrder, int32 beforeCount, int32 afterCount, int32 versionId);
+	static UBCLeaderboardProxy *GetGlobalLeaderboardViewByVersion(UBrainCloudWrapper *brainCloudWrapper, FString leaderboardId, EBCSortOrder sortOrder, int32 beforeCount, int32 afterCount, int32 versionId);
 
 	/**
 	* Method returns a view of global leaderboard results that centers on the current player.
@@ -266,7 +266,7 @@ class UBCLeaderboardProxy : public UBCBlueprintCallProxyBase
 	* Param - versionId The historical version to retrieve.
 	*/
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
-	static UBCLeaderboardProxy* GetGlobalLeaderboardViewByVersionIfExists(UBrainCloudWrapper* brainCloudWrapper, FString leaderboardId, ESortOrder sortOrder, int32 beforeCount, int32 afterCount, int32 versionId);
+	static UBCLeaderboardProxy* GetGlobalLeaderboardViewByVersionIfExists(UBrainCloudWrapper* brainCloudWrapper, FString leaderboardId, EBCSortOrder sortOrder, int32 beforeCount, int32 afterCount, int32 versionId);
 
 	/**
 	* Gets the number of entries in a global leaderboard
@@ -591,7 +591,7 @@ class UBCLeaderboardProxy : public UBCBlueprintCallProxyBase
 	* @param callback The method to be invoked when the server response is received
 	*/
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
-	static UBCLeaderboardProxy *GetGroupLeaderboardView(UBrainCloudWrapper *brainCloudWrapper, const FString &leaderboardId, const FString &groupId, ESortOrder sortOrder, int32 beforeCount, int32 afterCount);
+	static UBCLeaderboardProxy *GetGroupLeaderboardView(UBrainCloudWrapper *brainCloudWrapper, const FString &leaderboardId, const FString &groupId, EBCSortOrder sortOrder, int32 beforeCount, int32 afterCount);
 
 	/**
 	* Retrieve a view of the group leaderboard surrounding the current group by the version
@@ -607,7 +607,7 @@ class UBCLeaderboardProxy : public UBCBlueprintCallProxyBase
 	* @param afterCount count of players after current player to include
 	*/
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Leaderboard")
-	static UBCLeaderboardProxy *GetGroupLeaderboardViewByVersion(UBrainCloudWrapper *brainCloudWrapper, const FString &leaderboardId, const FString &groupId, int32 versionId, ESortOrder sortOrder, int32 beforeCount, int32 afterCount);
+	static UBCLeaderboardProxy *GetGroupLeaderboardViewByVersion(UBrainCloudWrapper *brainCloudWrapper, const FString &leaderboardId, const FString &groupId, int32 versionId, EBCSortOrder sortOrder, int32 beforeCount, int32 afterCount);
 
 	/**
 	* Post the player's score to the given social leaderboard,
