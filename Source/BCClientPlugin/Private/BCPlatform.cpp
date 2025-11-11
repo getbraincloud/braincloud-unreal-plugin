@@ -10,13 +10,13 @@ FString BCPlatform::EnumToString(EBCPlatform platform)
     case EBCPlatform::GOOGLE_PLAY_ANDROID:
         return TEXT("ANG");
     case EBCPlatform::AMAZON_ANDROID:
-        return TEXT("Amazon");
+        return TEXT("AMAZON");
     case EBCPlatform::BLACKBERRY:
         return TEXT("BB");
     case EBCPlatform::FACEBOOK:
         return TEXT("FB");
     case EBCPlatform::OCULUS:
-        return TEXT("Oculus");
+        return TEXT("OCULUS");
     case EBCPlatform::IOS:
         return TEXT("IOS");
     case EBCPlatform::LINUX_PLATFORM:
