@@ -99,6 +99,7 @@ const OperationParam OperationParam::ItemCatalogServicePageOffset = OperationPar
 const OperationParam OperationParam::UserItemsDefId = OperationParam("defId");
 const OperationParam OperationParam::UserItemsQuantity = OperationParam("quantity");
 const OperationParam OperationParam::UserItemsIncludeDef = OperationParam("includeDef");
+const OperationParam OperationParam::UserItemsIncludePromotionDetails = OperationParam("includePromotionDetails");
 const OperationParam OperationParam::UserItemsItemId = OperationParam("itemId");
 const OperationParam OperationParam::UserItemsCriteria = OperationParam("criteria");
 const OperationParam OperationParam::UserItemsContext = OperationParam("context");
@@ -108,6 +109,7 @@ const OperationParam OperationParam::UserItemsImmediate = OperationParam("immedi
 const OperationParam OperationParam::UserItemsVersion = OperationParam("version");
 const OperationParam OperationParam::UserItemsShopId = OperationParam("shopId");
 const OperationParam OperationParam::UserItemsNewItemData = OperationParam("newItemData");
+const OperationParam OperationParam::UserItemsOptionsJson = OperationParam("optionsJson");
 
 // Async Match Service - Async Match Params
 const OperationParam OperationParam::AsyncMatchServicePlayers = OperationParam("players");
