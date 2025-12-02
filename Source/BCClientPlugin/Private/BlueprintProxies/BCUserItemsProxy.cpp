@@ -20,10 +20,31 @@ UBCUserItemsProxy::UBCUserItemsProxy(const FObjectInitializer &ObjectInitializer
 		return Proxy;
 	}
 
+	UBCUserItemsProxy* UBCUserItemsProxy::AwardUserItemWithOptions(UBrainCloudWrapper* brainCloudWrapper, const FString& defId, int quantity, bool includeDef, const FString& optionsJson)
+	{
+		UBCUserItemsProxy* Proxy = NewObject<UBCUserItemsProxy>();
+		UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getUserItemsService()->awardUserItemWithOptions(defId, quantity, includeDef, optionsJson, Proxy);
+		return Proxy;
+	}
+
 	UBCUserItemsProxy *UBCUserItemsProxy::DropUserItem(UBrainCloudWrapper *brainCloudWrapper, const FString &defId, int quantity, bool includeDef)
 	{
 		UBCUserItemsProxy *Proxy = NewObject<UBCUserItemsProxy>();
 		UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getUserItemsService()->dropUserItem(defId, quantity, includeDef, Proxy);
+		return Proxy;
+	}
+
+	UBCUserItemsProxy* UBCUserItemsProxy::GetItemsOnPromotion(UBrainCloudWrapper* brainCloudWrapper, const FString& shopId, bool includeDef, bool includePromotionDetails)
+	{
+		UBCUserItemsProxy* Proxy = NewObject<UBCUserItemsProxy>();
+		UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getUserItemsService()->getItemsOnPromotion(shopId, includeDef, includePromotionDetails, Proxy);
+		return Proxy;
+	}
+
+	UBCUserItemsProxy* UBCUserItemsProxy::GetItemPromotionDetails(UBrainCloudWrapper* brainCloudWrapper, const FString& defId, const FString& shopId, bool includeDef, bool includePromotionDetails)
+	{
+		UBCUserItemsProxy* Proxy = NewObject<UBCUserItemsProxy>();
+		UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getUserItemsService()->getItemPromotionDetails(defId, shopId, includeDef, includePromotionDetails, Proxy);
 		return Proxy;
 	}
 
@@ -59,6 +80,13 @@ UBCUserItemsProxy::UBCUserItemsProxy(const FObjectInitializer &ObjectInitializer
 	{
 		UBCUserItemsProxy *Proxy = NewObject<UBCUserItemsProxy>();
 		UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getUserItemsService()->purchaseUserItem(defId, quantity, shopId, includeDef, Proxy);
+		return Proxy;
+	}
+
+	UBCUserItemsProxy* UBCUserItemsProxy::PurchaseUserItemsWithOptions(UBrainCloudWrapper* brainCloudWrapper, const FString& defId, int quantity, const FString& shopId, bool includeDef, const FString& optionsJson)
+	{
+		UBCUserItemsProxy* Proxy = NewObject<UBCUserItemsProxy>();
+		UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getUserItemsService()->purchaseUserItemsWithOptions(defId, quantity, shopId, includeDef, optionsJson, Proxy);
 		return Proxy;
 	}
 

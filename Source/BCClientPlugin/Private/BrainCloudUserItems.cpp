@@ -28,7 +28,7 @@ BrainCloudUserItems::BrainCloudUserItems(BrainCloudClient *client) : _client(cli
         message->SetBoolField(OperationParam::UserItemsIncludeDef.getValue(), includeDef);
         message->SetObjectField(OperationParam::UserItemsOptionsJson.getValue(), JsonUtil::jsonStringToValue(optionsJson));
 
-        ServerCall* sc = new ServerCall(ServiceName::UserItems, ServiceOperation::AwardUserItemWithOptions, message, callback);
+        ServerCall* sc = new ServerCall(ServiceName::UserItems, ServiceOperation::AwardUserItem, message, callback);
         _client->sendRequest(sc);
     }
 

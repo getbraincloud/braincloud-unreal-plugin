@@ -33,7 +33,7 @@ class BCCLIENTPLUGIN_API BrainCloudUserItems
     * to the current or default language.
     *
     * Service Name - UserItems
-    * Service Operation - AWARD_USER_ITEM_WITH_OPTIONS
+    * Service Operation - AWARD_USER_ITEM
     *
     * @param defId The unique id of the item definition to award.
     * @param quantity The quantity of the item to award.
