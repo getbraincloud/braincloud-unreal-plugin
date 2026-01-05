@@ -43,12 +43,17 @@ BrainCloudUserItems::BrainCloudUserItems(BrainCloudClient *client) : _client(cli
         _client->sendRequest(sc);
     }
 
-    void BrainCloudUserItems::getItemsOnPromotion(const FString& shopId, bool includeDef, bool includePromotionDetails, IServerCallback* callback)
+    void BrainCloudUserItems::getItemsOnPromotion(const FString& shopId, bool includeDef, bool includePromotionDetails, const FString& optionsJson, IServerCallback* callback)
     {
         TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
         message->SetStringField(OperationParam::UserItemsShopId.getValue(), shopId);
         message->SetBoolField(OperationParam::UserItemsIncludeDef.getValue(), includeDef);
         message->SetBoolField(OperationParam::UserItemsIncludePromotionDetails.getValue(), includePromotionDetails);
+        
+        if(OperationParam::isOptionalParamValid(optionsJson))
+        {
+            message->SetObjectField(OperationParam::UserItemsOptionsJson.getValue(), JsonUtil::jsonStringToValue(optionsJson));
+        }
 
         ServerCall* sc = new ServerCall(ServiceName::UserItems, ServiceOperation::GetItemsOnPromotion, message, callback);
         _client->sendRequest(sc);

@@ -78,12 +78,13 @@ class UBCUserItemsProxy : public UBCBlueprintCallProxyBase
     *
     * @param shopId The id identifying the store the item is from, if applicable.
     * @param includeDef If true, the associated item definition info of the promotional items will be included in the response.
-    * @param includePromotionDetails If true, the promotion details of the eligible promotions will be included in the response.
+    * @param includePromotionDetails If true, the promotion details of the eligible promotions will be included in the response
+	* @param optionsJson Optional support for specifying additional options. Currently supporting option 'category' to include only catalog items configured with the specified category, if desired.
     * @param callback The method to be invoked when the server response is received
     *
     */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|UserItems")
-    static UBCUserItemsProxy* GetItemsOnPromotion(UBrainCloudWrapper* brainCloudWrapper, const FString& shopId, bool includeDef, bool includePromotionDetails);
+    static UBCUserItemsProxy* GetItemsOnPromotion(UBrainCloudWrapper* brainCloudWrapper, const FString& shopId, bool includeDef, bool includePromotionDetails, const FString& optionsJson = TEXT(""));
 
     /*
     * Returns list of promotional details for the specified item definition

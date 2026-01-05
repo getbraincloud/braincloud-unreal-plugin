@@ -34,10 +34,10 @@ UBCUserItemsProxy::UBCUserItemsProxy(const FObjectInitializer &ObjectInitializer
 		return Proxy;
 	}
 
-	UBCUserItemsProxy* UBCUserItemsProxy::GetItemsOnPromotion(UBrainCloudWrapper* brainCloudWrapper, const FString& shopId, bool includeDef, bool includePromotionDetails)
+	UBCUserItemsProxy* UBCUserItemsProxy::GetItemsOnPromotion(UBrainCloudWrapper* brainCloudWrapper, const FString& shopId, bool includeDef, bool includePromotionDetails, const FString& optionsJson)
 	{
 		UBCUserItemsProxy* Proxy = NewObject<UBCUserItemsProxy>();
-		UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getUserItemsService()->getItemsOnPromotion(shopId, includeDef, includePromotionDetails, Proxy);
+		UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getUserItemsService()->getItemsOnPromotion(shopId, includeDef, includePromotionDetails, optionsJson, Proxy);
 		return Proxy;
 	}
 
