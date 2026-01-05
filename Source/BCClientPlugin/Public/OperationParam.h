@@ -355,6 +355,7 @@ class BCCLIENTPLUGIN_API OperationParam
 	static const OperationParam UserItemsDefId;
 	static const OperationParam UserItemsQuantity;
 	static const OperationParam UserItemsIncludeDef;
+	static const OperationParam UserItemsIncludePromotionDetails;
 	static const OperationParam UserItemsItemId;
 	static const OperationParam UserItemsCriteria;
 	static const OperationParam UserItemsContext;
@@ -364,6 +365,7 @@ class BCCLIENTPLUGIN_API OperationParam
 	static const OperationParam UserItemsVersion;
 	static const OperationParam UserItemsShopId;
 	static const OperationParam UserItemsNewItemData;
+	static const OperationParam UserItemsOptionsJson;
 
 	// Redemption Code
 	static const OperationParam RedemptionCodeServiceScanCode;

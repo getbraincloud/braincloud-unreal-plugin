@@ -486,7 +486,10 @@ const ServiceOperation ServiceOperation::GetLobbyInstancesWithPingData = Service
 
 // user inventory management
 const ServiceOperation ServiceOperation::AwardUserItem = ServiceOperation("AWARD_USER_ITEM");
+const ServiceOperation ServiceOperation::AwardUserItemWithOptions = ServiceOperation("AWARD_USER_ITEM_WITH_OPTIONS");
 const ServiceOperation ServiceOperation::DropUserItem = ServiceOperation("DROP_USER_ITEM");
+const ServiceOperation ServiceOperation::GetItemsOnPromotion = ServiceOperation("GET_ITEMS_ON_PROMOTION");
+const ServiceOperation ServiceOperation::GetItemPromotionDetails = ServiceOperation("GET_ITEM_PROMOTION_DETAILS");
 const ServiceOperation ServiceOperation::GetUserItemsPage = ServiceOperation("GET_USER_ITEMS_PAGE");
 const ServiceOperation ServiceOperation::GetUserItemsPageOffset = ServiceOperation("GET_USER_ITEMS_PAGE_OFFSET");
 const ServiceOperation ServiceOperation::GetUserItem = ServiceOperation("GET_USER_ITEM");

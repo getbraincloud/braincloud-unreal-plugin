@@ -20,7 +20,19 @@ BrainCloudUserItems::BrainCloudUserItems(BrainCloudClient *client) : _client(cli
         _client->sendRequest(sc);
     }
 
-	void BrainCloudUserItems::dropUserItem(const FString &itemId, int quantity, bool includeDef, IServerCallback *callback)
+    void BrainCloudUserItems::awardUserItemWithOptions(const FString& defId, int quantity, bool includeDef, const FString& optionsJson, IServerCallback* callback)
+    {
+        TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
+        message->SetStringField(OperationParam::UserItemsDefId.getValue(), defId);
+        message->SetNumberField(OperationParam::UserItemsQuantity.getValue(), quantity);
+        message->SetBoolField(OperationParam::UserItemsIncludeDef.getValue(), includeDef);
+        message->SetObjectField(OperationParam::UserItemsOptionsJson.getValue(), JsonUtil::jsonStringToValue(optionsJson));
+
+        ServerCall* sc = new ServerCall(ServiceName::UserItems, ServiceOperation::AwardUserItem, message, callback);
+        _client->sendRequest(sc);
+    }
+
+    void BrainCloudUserItems::dropUserItem(const FString &itemId, int quantity, bool includeDef, IServerCallback *callback)
     {
         TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
         message->SetStringField(OperationParam::UserItemsItemId.getValue(), itemId);
@@ -31,7 +43,35 @@ BrainCloudUserItems::BrainCloudUserItems(BrainCloudClient *client) : _client(cli
         _client->sendRequest(sc);
     }
 
-	void BrainCloudUserItems::getUserItemsPage(const FString &context, bool includeDef, IServerCallback *callback)
+    void BrainCloudUserItems::getItemsOnPromotion(const FString& shopId, bool includeDef, bool includePromotionDetails, const FString& optionsJson, IServerCallback* callback)
+    {
+        TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
+        message->SetStringField(OperationParam::UserItemsShopId.getValue(), shopId);
+        message->SetBoolField(OperationParam::UserItemsIncludeDef.getValue(), includeDef);
+        message->SetBoolField(OperationParam::UserItemsIncludePromotionDetails.getValue(), includePromotionDetails);
+        
+        if(OperationParam::isOptionalParamValid(optionsJson))
+        {
+            message->SetObjectField(OperationParam::UserItemsOptionsJson.getValue(), JsonUtil::jsonStringToValue(optionsJson));
+        }
+
+        ServerCall* sc = new ServerCall(ServiceName::UserItems, ServiceOperation::GetItemsOnPromotion, message, callback);
+        _client->sendRequest(sc);
+    }
+
+    void BrainCloudUserItems::getItemPromotionDetails(const FString& defId, const FString& shopId, bool includeDef, bool includePromotionDetails, IServerCallback* callback)
+    {
+        TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
+        message->SetStringField(OperationParam::UserItemsDefId.getValue(), defId);
+        message->SetStringField(OperationParam::UserItemsShopId.getValue(), shopId);
+        message->SetBoolField(OperationParam::UserItemsIncludeDef.getValue(), includeDef);
+        message->SetBoolField(OperationParam::UserItemsIncludePromotionDetails.getValue(), includePromotionDetails);
+
+        ServerCall* sc = new ServerCall(ServiceName::UserItems, ServiceOperation::GetItemPromotionDetails, message, callback);
+        _client->sendRequest(sc);
+    }
+
+    void BrainCloudUserItems::getUserItemsPage(const FString &context, bool includeDef, IServerCallback *callback)
     {
         TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
         message->SetObjectField(OperationParam::UserItemsContext.getValue(), JsonUtil::jsonStringToValue(context));
@@ -86,7 +126,27 @@ BrainCloudUserItems::BrainCloudUserItems(BrainCloudClient *client) : _client(cli
         _client->sendRequest(sc);
     }
 
-	void BrainCloudUserItems::receiveUserItemFrom(const FString &profileId, const FString &itemId, IServerCallback *callback)
+    void BrainCloudUserItems::purchaseUserItemsWithOptions(
+        const FString& defId, 
+        int quantity, 
+        const FString& shopId, 
+        bool includeDef, 
+        const FString& optionsJson, 
+        IServerCallback* callback
+    )
+    {
+        TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
+        message->SetStringField(OperationParam::UserItemsDefId.getValue(), defId);
+        message->SetNumberField(OperationParam::UserItemsQuantity.getValue(), quantity);
+        message->SetStringField(OperationParam::UserItemsShopId.getValue(), shopId);
+        message->SetBoolField(OperationParam::UserItemsIncludeDef.getValue(), includeDef);
+        message->SetObjectField(OperationParam::UserItemsOptionsJson.getValue(), JsonUtil::jsonStringToValue(optionsJson));
+
+        ServerCall* sc = new ServerCall(ServiceName::UserItems, ServiceOperation::PurchaseUserItem, message, callback);
+        _client->sendRequest(sc);
+    }
+
+    void BrainCloudUserItems::receiveUserItemFrom(const FString &profileId, const FString &itemId, IServerCallback *callback)
     {
         TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
         message->SetStringField(OperationParam::UserItemsProfileId.getValue(), profileId);
