@@ -1,5 +1,4 @@
-// Copyright 2025 bitHeads, Inc. All Rights Reserved.
-
+// Copyright 2026 bitHeads, Inc. All Rights Reserved.
 #pragma once
 class BCCLIENTPLUGIN_API ReasonCodes {
 public:
@@ -527,6 +526,12 @@ public:
     static const int32 ITEM_IMAGE_EXISTS = 40792;
     static const int32 INVALID_SEGMENT_ID_LIST = 40793;
     static const int32 I3D_ERROR = 40794;
+    static const int32 INVALID_START_TIME = 40795;
+    static const int32 ITEM_TYPE_NOT_APPLICABLE = 40796;
+    static const int32 ITEM_PURCHASE_LIST_PRICE_DISABLED = 40797;
+    static const int32 BUNDLE_DEF_INVALID = 40798;
+    static const int32 ITEM_MAX_STACKABLE_ERROR = 40799;
+    static const int32 ITEM_PROMOTION_MAX_PURCHASES_ERROR = 40800;
     static const int32 REQUEST_FAILED = 40801;
     static const int32 RESET_QUESTS_FAILED = 40802;
     static const int32 RESET_ALL_QUESTS_AND_MILESTONES_FAILED = 40803;
@@ -549,6 +554,7 @@ public:
     static const int32 VERSION_MISMATCH = 40821;
     static const int32 UNSUPPORTED_CRITERIA_FOR_SHARDED_COLLECTIONS = 40822;
     static const int32 USER_RATE_LIMIT_EXCEEDED = 40823;
+    static const int32 PROMOTION_CONFIG_INCOMPLETE = 40824;
     static const int32 STEAM_ERROR = 40830;
     static const int32 AZURE_AD_NOT_CONFIGURED = 40831;
     static const int32 INVALID_LEADERBOARD_TOURNAMENT_SETTING = 40840;
