@@ -156,7 +156,21 @@ BrainCloudUserItems::BrainCloudUserItems(BrainCloudClient *client) : _client(cli
         _client->sendRequest(sc);
     }
 
-	void BrainCloudUserItems::sellUserItem(const FString &itemId, int version, int quantity, const FString &shopId, bool includeDef, IServerCallback *callback)
+void BrainCloudUserItems::openBundle(const FString& itemId, int version, int quantity, bool includeDef,
+    const FString& optionsJson, IServerCallback* callback)
+{
+        TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
+        message->SetStringField(OperationParam::UserItemsItemId.getValue(), itemId);
+        message->SetNumberField(OperationParam::UserItemsVersion.getValue(), version);
+        message->SetNumberField(OperationParam::UserItemsQuantity.getValue(), quantity);
+        message->SetBoolField(OperationParam::UserItemsIncludeDef.getValue(), includeDef);
+        message->SetObjectField(OperationParam::UserItemsOptionsJson.getValue(), JsonUtil::jsonStringToValue(optionsJson));
+        
+        ServerCall *sc = new ServerCall(ServiceName::UserItems, ServiceOperation::OpenBundle, message, callback);
+        _client->sendRequest(sc);
+}
+
+void BrainCloudUserItems::sellUserItem(const FString &itemId, int version, int quantity, const FString &shopId, bool includeDef, IServerCallback *callback)
     {
         TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
         message->SetStringField(OperationParam::UserItemsItemId.getValue(), itemId);

@@ -97,7 +97,15 @@ UBCUserItemsProxy::UBCUserItemsProxy(const FObjectInitializer &ObjectInitializer
 		return Proxy;
 	}
 
-	UBCUserItemsProxy *UBCUserItemsProxy::SellUserItem(UBrainCloudWrapper *brainCloudWrapper, const FString &itemId, int version, int quantity, const FString &shopId, bool includeDef)
+	UBCUserItemsProxy* UBCUserItemsProxy::OpenBundle(UBrainCloudWrapper* brainCloudWrapper, const FString& itemId,
+		int version, int quantity, bool includeDef, const FString& optionsJson)
+	{
+		UBCUserItemsProxy* Proxy = NewObject<UBCUserItemsProxy>();
+		UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getUserItemsService()->openBundle(itemId, version, quantity, includeDef, optionsJson, Proxy);
+		return Proxy;
+	}
+
+UBCUserItemsProxy *UBCUserItemsProxy::SellUserItem(UBrainCloudWrapper *brainCloudWrapper, const FString &itemId, int version, int quantity, const FString &shopId, bool includeDef)
 	{
 		UBCUserItemsProxy *Proxy = NewObject<UBCUserItemsProxy>();
 		UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getUserItemsService()->sellUserItem(itemId, version, quantity, shopId, includeDef, Proxy);

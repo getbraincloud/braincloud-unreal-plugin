@@ -501,6 +501,7 @@ const ServiceOperation ServiceOperation::UpdateUserItemData = ServiceOperation("
 const ServiceOperation ServiceOperation::UseUserItem = ServiceOperation("USE_USER_ITEM");
 const ServiceOperation ServiceOperation::PublishUserItemToBlackchain = ServiceOperation("PUBLISH_USER_ITEM_TO_BLOCKCHAIN");
 const ServiceOperation ServiceOperation::RefreshBlockchainUserItems = ServiceOperation("REFRESH_BLOCKCHAIN_USER_ITEMS");
+const ServiceOperation ServiceOperation::OpenBundle = ServiceOperation("OPEN_BUNDLE");
 
 //item catalog
 const ServiceOperation ServiceOperation::GetCatalogItemDefinition = ServiceOperation("GET_CATALOG_ITEM_DEFINITION");
