@@ -524,6 +524,7 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation UseUserItem;
 	static const ServiceOperation PublishUserItemToBlackchain;
 	static const ServiceOperation RefreshBlockchainUserItems;
+	static const ServiceOperation OpenBundle;
 
 	static const ServiceOperation GetBlockchainItems;
 	static const ServiceOperation GetUniqs;

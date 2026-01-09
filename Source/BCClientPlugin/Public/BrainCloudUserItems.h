@@ -211,6 +211,34 @@ class BCCLIENTPLUGIN_API BrainCloudUserItems
     * @param callback The method to be invoked when the server response is received
     */
 	void receiveUserItemFrom(const FString &profileId, const FString &itemId, IServerCallback *callback = nullptr);
+	
+	/*
+	 * Opens a quantity of a bundle user item.Applicable user items will be 
+     * created and any currencies awarded. 
+     * NOTE: Supported only for user items based on BUNDLE type catalog items.
+     *
+     * Service Name - UserItems
+     * Service Operation - OpenBundle
+     *
+	 * @param itemId ID uniquely identifying the user item to be sold.
+	 * @param version Version of the user' BUNDLE type item being opened. Pass
+	 * -1 for any version.
+	 * @param quantity Quantity of the item being sold. Quantity greater than
+	 * 1 only applicable if stackable item.
+	 * @param includeDef Flag set to true to include the associated item 
+	 * definition for any user items created, plus if any user item quantity 
+	 * remains for bundle user item being opened; false if not required.
+	 * @param optionsJson Optional support for specifying 'blockIfExceedItemMaxStackable' 
+	 * indicating how to process the award if the defId is for a stackable item
+	 * with a max stackable quantity and the specified quantity to award is too
+	 * high. If true and the quantity is too high, the call is blocked and an 
+	 * error is returned. If false (default) and quantity is too high, the 
+	 * quantity is adjusted to the allowed maximum and the quantity not awarded
+	 * is reported in response key 'itemsNotAwarded' - unless the adjusted 
+	 * quantity would be 0, in which case the call is blocked and an error is
+	 * returned.
+	 */
+	void openBundle(const FString &itemId, int version, int quantity, bool includeDef, const FString &optionsJson, IServerCallback *callback = nullptr);
 
     /*
     * Allows a quantity of a specified user item to be sold. 
