@@ -1,4 +1,4 @@
-// Copyright 2018 bitHeads, Inc. All Rights Reserved.
+// Copyright 2026 bitHeads, Inc. All Rights Reserved.
 
 #include "BrainCloudMail.h"
 #include "BCClientPluginPrivatePCH.h"

@@ -1,4 +1,4 @@
-// Copyright 2018 bitHeads, Inc. All Rights Reserved.
+// Copyright 2026 bitHeads, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -6,7 +6,7 @@ class BrainCloudClient;
 class IServerCallback;
 
 // defined in Leaderboard, beware name conflict in Experimental Plugin Virtual Camera
-enum class ESortOrder : uint8;
+enum class EBCSortOrder : uint8;
 
 
 class BCCLIENTPLUGIN_API BrainCloudTournament
@@ -142,7 +142,7 @@ class BCCLIENTPLUGIN_API BrainCloudTournament
 	* @param initialScore
 	* @param callback The method to be invoked when the server response is received
 	*/
-	void postTournamentScoreWithResultsUTC(const FString &leaderboardId, int32 score, const FString &jsonData, int64 roundStartTimeUTC, ESortOrder sort, int32 beforeCount, int32 afterCount, float initialScore, IServerCallback *callback);
+	void postTournamentScoreWithResultsUTC(const FString &leaderboardId, int32 score, const FString &jsonData, int64 roundStartTimeUTC, EBCSortOrder sort, int32 beforeCount, int32 afterCount, float initialScore, IServerCallback *callback);
 
 
 	/**
@@ -170,5 +170,5 @@ class BCCLIENTPLUGIN_API BrainCloudTournament
 
   private:
 	BrainCloudClient *_client = nullptr;
-	FString tournamentSortOrderToString(ESortOrder type);
+	FString tournamentSortOrderToString(EBCSortOrder type);
 };

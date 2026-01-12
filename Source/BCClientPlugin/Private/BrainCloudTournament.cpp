@@ -1,4 +1,4 @@
-// Copyright 2018 bitHeads, Inc. All Rights Reserved.
+// Copyright 2026 bitHeads, Inc. All Rights Reserved.
 
 #include "BrainCloudTournament.h"
 #include "BCClientPluginPrivatePCH.h"
@@ -102,7 +102,7 @@ void BrainCloudTournament::postTournamentScoreUTC(const FString &leaderboardId, 
 	_client->sendRequest(sc);
 }
 
-void BrainCloudTournament::postTournamentScoreWithResultsUTC(const FString &leaderboardId, int32 score, const FString &jsonData, int64 roundStartTimeUTC, ESortOrder sort, int32 beforeCount, int32 afterCount, float initialScore, IServerCallback *callback)
+void BrainCloudTournament::postTournamentScoreWithResultsUTC(const FString &leaderboardId, int32 score, const FString &jsonData, int64 roundStartTimeUTC, EBCSortOrder sort, int32 beforeCount, int32 afterCount, float initialScore, IServerCallback *callback)
 {
 	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
 	message->SetStringField(OperationParam::LeaderboardId.getValue(), leaderboardId);
@@ -140,13 +140,13 @@ void BrainCloudTournament::viewReward(const FString &leaderboardId, int32 versio
 	_client->sendRequest(sc);
 }
 
-FString BrainCloudTournament::tournamentSortOrderToString(ESortOrder type)
+FString BrainCloudTournament::tournamentSortOrderToString(EBCSortOrder type)
 {
 	switch (type)
 	{
-	case ESortOrder::HIGH_TO_LOW:
+	case EBCSortOrder::HIGH_TO_LOW:
 		return "HIGH_TO_LOW";
-	case ESortOrder::LOW_TO_HIGH:
+	case EBCSortOrder::LOW_TO_HIGH:
 		return "LOW_TO_HIGH";
 	}
 	return "TYPE_NOT_FOUND";

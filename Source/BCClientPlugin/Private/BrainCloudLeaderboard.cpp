@@ -1,4 +1,4 @@
-// Copyright 2018 bitHeads, Inc. All Rights Reserved.
+// Copyright 2026 bitHeads, Inc. All Rights Reserved.
 
 #include "BrainCloudLeaderboard.h"
 #include "BCClientPluginPrivatePCH.h"
@@ -62,17 +62,17 @@ void BrainCloudLeaderboard::getMultiSocialLeaderboard(const TArray<FString> &lea
 	_client->sendRequest(sc);
 }
 
-void BrainCloudLeaderboard::getGlobalLeaderboardPage(const FString &leaderboardId, ESortOrder sortOrder, int32 startIndex, int32 endIndex, IServerCallback *callback)
+void BrainCloudLeaderboard::getGlobalLeaderboardPage(const FString &leaderboardId, EBCSortOrder sortOrder, int32 startIndex, int32 endIndex, IServerCallback *callback)
 {
 	getGlobalLeaderboardPageByVersion(leaderboardId, sortOrder, startIndex, endIndex, -1, callback);
 }
 
-void BrainCloudLeaderboard::getGlobalLeaderboardPageIfExists(const FString& leaderboardId, ESortOrder sortOrder, int32 startIndex, int32 endIndex, IServerCallback* callback)
+void BrainCloudLeaderboard::getGlobalLeaderboardPageIfExists(const FString& leaderboardId, EBCSortOrder sortOrder, int32 startIndex, int32 endIndex, IServerCallback* callback)
 {
 	getGlobalLeaderboardPageByVersionIfExists(leaderboardId, sortOrder, startIndex, endIndex, -1, callback);
 }
 
-void BrainCloudLeaderboard::getGlobalLeaderboardPageByVersion(const FString &leaderboardId, ESortOrder sortOrder, int32 startIndex, int32 endIndex, int32 versionId, IServerCallback *callback)
+void BrainCloudLeaderboard::getGlobalLeaderboardPageByVersion(const FString &leaderboardId, EBCSortOrder sortOrder, int32 startIndex, int32 endIndex, int32 versionId, IServerCallback *callback)
 {
 	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
 	message->SetStringField(OperationParam::LeaderboardServiceLeaderboardId.getValue(), leaderboardId);
@@ -87,7 +87,7 @@ void BrainCloudLeaderboard::getGlobalLeaderboardPageByVersion(const FString &lea
 	_client->sendRequest(sc);
 }
 
-void BrainCloudLeaderboard::getGlobalLeaderboardPageByVersionIfExists(const FString& leaderboardId, ESortOrder sortOrder, int32 startIndex, int32 endIndex, int32 versionId, IServerCallback* callback)
+void BrainCloudLeaderboard::getGlobalLeaderboardPageByVersionIfExists(const FString& leaderboardId, EBCSortOrder sortOrder, int32 startIndex, int32 endIndex, int32 versionId, IServerCallback* callback)
 {
 	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
 	message->SetStringField(OperationParam::LeaderboardServiceLeaderboardId.getValue(), leaderboardId);
@@ -102,17 +102,17 @@ void BrainCloudLeaderboard::getGlobalLeaderboardPageByVersionIfExists(const FStr
 	_client->sendRequest(sc);
 }
 
-void BrainCloudLeaderboard::getGlobalLeaderboardView(const FString &leaderboardId, ESortOrder sortOrder, int32 beforeCount, int32 afterCount, IServerCallback *callback)
+void BrainCloudLeaderboard::getGlobalLeaderboardView(const FString &leaderboardId, EBCSortOrder sortOrder, int32 beforeCount, int32 afterCount, IServerCallback *callback)
 {
 	getGlobalLeaderboardViewByVersion(leaderboardId, sortOrder, beforeCount, afterCount, -1, callback);
 }
 
-void BrainCloudLeaderboard::getGlobalLeaderboardViewIfExists(const FString& leaderboardId, ESortOrder sortOrder, int32 beforeCount, int32 afterCount, IServerCallback* callback)
+void BrainCloudLeaderboard::getGlobalLeaderboardViewIfExists(const FString& leaderboardId, EBCSortOrder sortOrder, int32 beforeCount, int32 afterCount, IServerCallback* callback)
 {
 	getGlobalLeaderboardViewByVersionIfExists(leaderboardId, sortOrder, beforeCount, afterCount, -1, callback);
 }
 
-void BrainCloudLeaderboard::getGlobalLeaderboardViewByVersion(const FString &leaderboardId, ESortOrder sortOrder, int32 beforeCount, int32 afterCount, int32 versionId, IServerCallback *callback)
+void BrainCloudLeaderboard::getGlobalLeaderboardViewByVersion(const FString &leaderboardId, EBCSortOrder sortOrder, int32 beforeCount, int32 afterCount, int32 versionId, IServerCallback *callback)
 {
 	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
 	message->SetStringField(OperationParam::LeaderboardServiceLeaderboardId.getValue(), leaderboardId);
@@ -127,7 +127,7 @@ void BrainCloudLeaderboard::getGlobalLeaderboardViewByVersion(const FString &lea
 	_client->sendRequest(sc);
 }
 
-void BrainCloudLeaderboard::getGlobalLeaderboardViewByVersionIfExists(const FString& leaderboardId, ESortOrder sortOrder, int32 beforeCount, int32 afterCount, int32 versionId, IServerCallback* callback)
+void BrainCloudLeaderboard::getGlobalLeaderboardViewByVersionIfExists(const FString& leaderboardId, EBCSortOrder sortOrder, int32 beforeCount, int32 afterCount, int32 versionId, IServerCallback* callback)
 {
 	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
 	message->SetStringField(OperationParam::LeaderboardServiceLeaderboardId.getValue(), leaderboardId);
@@ -408,7 +408,7 @@ void BrainCloudLeaderboard::removeGroupScore(const FString &leaderboardId, const
 	_client->sendRequest(sc);
 }
 
-void BrainCloudLeaderboard::getGroupLeaderboardView(const FString &leaderboardId, const FString &groupId, ESortOrder sortOrder, int32 beforeCount, int32 afterCount, IServerCallback *callback)
+void BrainCloudLeaderboard::getGroupLeaderboardView(const FString &leaderboardId, const FString &groupId, EBCSortOrder sortOrder, int32 beforeCount, int32 afterCount, IServerCallback *callback)
 {
 	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
 	message->SetStringField(OperationParam::LeaderboardServiceLeaderboardId.getValue(), leaderboardId);
@@ -421,7 +421,7 @@ void BrainCloudLeaderboard::getGroupLeaderboardView(const FString &leaderboardId
 	_client->sendRequest(sc);
 }
 
-void BrainCloudLeaderboard::getGroupLeaderboardViewByVersion(const FString &leaderboardId, const FString &groupId, int32 versionId, ESortOrder sortOrder, int32 beforeCount, int32 afterCount, IServerCallback *callback)
+void BrainCloudLeaderboard::getGroupLeaderboardViewByVersion(const FString &leaderboardId, const FString &groupId, int32 versionId, EBCSortOrder sortOrder, int32 beforeCount, int32 afterCount, IServerCallback *callback)
 {
 	TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
 	message->SetStringField(OperationParam::LeaderboardServiceLeaderboardId.getValue(), leaderboardId);
@@ -481,13 +481,13 @@ FString BrainCloudLeaderboard::leaderboardRotationTypeToString(ERotationType typ
 	return "TYPE_NOT_FOUND";
 }
 
-FString BrainCloudLeaderboard::leaderboardSortOrderToString(ESortOrder type)
+FString BrainCloudLeaderboard::leaderboardSortOrderToString(EBCSortOrder type)
 {
 	switch (type)
 	{
-	case ESortOrder::HIGH_TO_LOW:
+	case EBCSortOrder::HIGH_TO_LOW:
 		return "HIGH_TO_LOW";
-	case ESortOrder::LOW_TO_HIGH:
+	case EBCSortOrder::LOW_TO_HIGH:
 		return "LOW_TO_HIGH";
 	}
 	return "TYPE_NOT_FOUND";

@@ -1,3 +1,5 @@
+// Copyright 2026 bitHeads, Inc. All Rights Reserved.
+
 #include "BrainCloudRelay.h"
 #include "BCClientPluginPrivatePCH.h"
 #include "BrainCloudClient.h"

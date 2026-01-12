@@ -1,3 +1,5 @@
+// Copyright 2026 bitHeads, Inc. All Rights Reserved.
+
 #include "WinWebSocketBase.h"
 #include <ConvertUtilities.h>
 

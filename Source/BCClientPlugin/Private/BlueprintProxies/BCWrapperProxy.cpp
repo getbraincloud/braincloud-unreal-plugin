@@ -1,4 +1,4 @@
-// Copyright 2015 bitHeads, Inc. All Rights Reserved.
+// Copyright 2026 bitHeads, Inc. All Rights Reserved.
 
 #include "BCWrapperProxy.h"
 #include "BCClientPluginPrivatePCH.h"

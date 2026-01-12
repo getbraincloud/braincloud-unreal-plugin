@@ -1,4 +1,6 @@
-﻿#include "BCGroupeFileProxy.h"
+// Copyright 2026 bitHeads, Inc. All Rights Reserved.
+
+#include "BCGroupeFileProxy.h"
 
 #include "BCWrapperProxy.h"
 #include "BrainCloudWrapper.h"

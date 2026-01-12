@@ -1,4 +1,4 @@
-// Copyright 2020 bitHeads, Inc. All Rights Reserved.
+// Copyright 2026 bitHeads, Inc. All Rights Reserved.
 
 #include "BrainCloudRelayComms.h"
 #include "ConvertUtilities.h"

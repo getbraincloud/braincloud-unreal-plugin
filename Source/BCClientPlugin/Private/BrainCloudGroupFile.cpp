@@ -1,4 +1,6 @@
-﻿#include "BrainCloudGroupFile.h"
+// Copyright 2026 bitHeads, Inc. All Rights Reserved.
+
+#include "BrainCloudGroupFile.h"
 
 #include "BrainCloudClient.h"
 #include "JsonUtil.h"

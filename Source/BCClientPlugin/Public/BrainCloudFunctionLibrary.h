@@ -1,4 +1,4 @@
-// Copyright 2018 bitHeads, Inc. All Rights Reserved.
+// Copyright 2026 bitHeads, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -48,7 +48,7 @@ public:
 		works for various cultures
 		For example, the tag en stands for English; es-419 for Latin American Spanish; rm-sursilv for Romansh Sursilvan;
 		sr-Cyrl for Serbian written in Cyrillic script; nan-Hant-TW for Min Nan Chinese using traditional Han characters, as spoken in Taiwan;
-		and gsw-u-sd-chzh for Zürich German.
+		and gsw-u-sd-chzh for Zï¿½rich German.
 
 	*/
 	UFUNCTION(BlueprintCallable, Category = "BrainCloud Utility")

@@ -1,4 +1,6 @@
-﻿#pragma once
+// Copyright 2026 bitHeads, Inc. All Rights Reserved.
+
+#pragma once
 
 class BrainCloudClient;
 class IServerCallback;

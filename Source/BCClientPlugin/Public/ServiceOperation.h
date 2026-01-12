@@ -1,4 +1,4 @@
-// Copyright 2018 bitHeads, Inc. All Rights Reserved.
+// Copyright 2026 bitHeads, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -509,7 +509,10 @@ class BCCLIENTPLUGIN_API ServiceOperation
 
 	//UserItemsManagement
 	static const ServiceOperation AwardUserItem;
+	static const ServiceOperation AwardUserItemWithOptions;
 	static const ServiceOperation DropUserItem;
+	static const ServiceOperation GetItemsOnPromotion;
+	static const ServiceOperation GetItemPromotionDetails;
 	static const ServiceOperation GetUserItemsPage;
 	static const ServiceOperation GetUserItemsPageOffset;
 	static const ServiceOperation GetUserItem;

@@ -1,5 +1,4 @@
-// Copyright 2018 bitHeads, Inc. All Rights Reserved.
-
+// Copyright 2026 bitHeads, Inc. All Rights Reserved.
 
 #include "BrainCloudClient.h"
 #include "BCClientPluginPrivatePCH.h"
@@ -23,7 +22,7 @@
 #include "Internationalization/Culture.h"
 
 // Define all static member variables.
-FString BrainCloudClient::s_brainCloudClientVersion = TEXT("5.8.1");
+FString BrainCloudClient::s_brainCloudClientVersion = TEXT("5.9.0");
 
 ////////////////////////////////////////////////////
 // (De)Constructors
