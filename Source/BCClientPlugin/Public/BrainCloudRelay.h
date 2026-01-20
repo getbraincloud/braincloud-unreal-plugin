@@ -21,10 +21,10 @@ public:
     BrainCloudRelay(BrainCloudClient *in_client, BrainCloudRelayComms *in_comms);
 
     /**
-     * Start a connection, based on connection type to 
+     * Start a connection, based on connection type to
      * brainClouds Relay Servers. Connect options come in
      * from ROOM_ASSIGNED lobby callback.
-     * 
+     *
      * @param connectionType
      * @param host
      * @param port
@@ -35,13 +35,13 @@ public:
     void connect(BCRelayConnectionType in_connectionType, const FString &host, int port, const FString &passcode, const FString &lobbyId, IRelayConnectCallback *in_callback);
 
     /**
-         * Disconnects from the relay server
-         */
+     * Disconnects from the relay server
+     */
     void disconnect();
 
     /**
-         * Requests to end the current match on the relay server
-         */
+     * Requests to end the current match on the relay server
+     */
     void endMatch(FString jsonPayload);
 
     /**
@@ -140,7 +140,7 @@ public:
      *   profileId: "..."
      * }
      */
-    void registerSystemCallback(IRelaySystemCallback* in_callback);
+    void registerSystemCallback(IRelaySystemCallback *in_callback);
     void registerSystemCallback(UBCBlueprintRelaySystemCallProxyBase *in_callback);
     void deregisterSystemCallback();
 

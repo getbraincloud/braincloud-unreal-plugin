@@ -25,17 +25,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "BrainCloud Utility")
 	static void SetBCAppData(FBrainCloudAppDataStruct appData);
 
-	/** 
+	/**
 		utility to copy string to system clipboard
 	*/
-    UFUNCTION(BlueprintCallable, Category = "BrainCloud Utility")
-    static void CopyToClipboard(const FString & TextString);
+	UFUNCTION(BlueprintCallable, Category = "BrainCloud Utility")
+	static void CopyToClipboard(const FString &TextString);
 
 	/**
 		parses server url
 	*/
-    UFUNCTION(BlueprintCallable, Category = "BrainCloud Utility")
-	static bool ValidateAndExtractURL(const FString& InputURL, FString& OutURL);
+	UFUNCTION(BlueprintCallable, Category = "BrainCloud Utility")
+	static bool ValidateAndExtractURL(const FString &InputURL, FString &OutURL);
 
 	/**
 		Platform dependent get the region

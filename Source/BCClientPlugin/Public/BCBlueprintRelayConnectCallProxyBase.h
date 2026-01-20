@@ -5,8 +5,8 @@
 #include "IRelayConnectCallback.h"
 #include "BCBlueprintRelayConnectCallProxyBase.generated.h"
 
-//Delegates for interface
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBrainCloudRelayConnectCallbackDelegate, const FString&, response);
+// Delegates for interface
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBrainCloudRelayConnectCallbackDelegate, const FString &, response);
 
 UCLASS(MinimalAPI)
 class UBCBlueprintRelayConnectCallProxyBase : public UObject, public IRelayConnectCallback
@@ -15,15 +15,15 @@ class UBCBlueprintRelayConnectCallProxyBase : public UObject, public IRelayConne
 
 public:
     UBCBlueprintRelayConnectCallProxyBase(const FObjectInitializer &ObjectInitializer) { this->AddToRoot(); }
-    
-    //Response delegates
+
+    // Response delegates
     UPROPERTY(BlueprintAssignable)
     FBrainCloudRelayConnectCallbackDelegate OnRelayConnectSuccessCallback;
 
     UPROPERTY(BlueprintAssignable)
     FBrainCloudRelayConnectCallbackDelegate OnRelayConnectFailureCallback;
 
-    //callbacks
+    // callbacks
     void relayConnectSuccess(const FString &response)
     {
         OnRelayConnectSuccessCallback.Broadcast(response);

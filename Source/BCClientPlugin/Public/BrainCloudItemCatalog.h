@@ -9,7 +9,7 @@ class IServerCallback;
 
 class BCCLIENTPLUGIN_API BrainCloudItemCatalog
 {
-  public:
+public:
 	BrainCloudItemCatalog(BrainCloudClient *client);
 
 	/**
@@ -24,7 +24,7 @@ class BCCLIENTPLUGIN_API BrainCloudItemCatalog
 	void getCatalogItemDefinition(const FString &defId, IServerCallback *callback = nullptr);
 
 	/**
-	 * Retrieve page of catalog items from the server, with language fields limited to the 
+	 * Retrieve page of catalog items from the server, with language fields limited to the
 	 * text for the current or default language.
 	 *
 	 * Service Name - itemCatalog
@@ -35,11 +35,11 @@ class BCCLIENTPLUGIN_API BrainCloudItemCatalog
 	void getCatalogItemsPage(const FString &context, IServerCallback *callback = nullptr);
 
 	/*
-     *Gets the page of catalog items from the 
-     *server based on the encoded context and 
-     *specified page offset, with language fields 
-     *limited to the text for the current or default 
-     *language.
+	 *Gets the page of catalog items from the
+	 *server based on the encoded context and
+	 *specified page offset, with language fields
+	 *limited to the text for the current or default
+	 *language.
 	 *
 	 * Service Name - ItemCatalog
 	 * Service Operation - GET_CATALOG_ITEMS_PAGE_OFFSET
@@ -49,6 +49,6 @@ class BCCLIENTPLUGIN_API BrainCloudItemCatalog
 	 */
 	void getCatalogItemsPageOffset(const FString &context, int pageOffset, IServerCallback *callback = nullptr);
 
-	private:
+private:
 	BrainCloudClient *_client = nullptr;
 };

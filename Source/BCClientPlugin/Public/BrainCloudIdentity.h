@@ -8,84 +8,84 @@ class BrainCloudClient;
 class IServerCallback;
 class BCCLIENTPLUGIN_API BrainCloudIdentity
 {
-  public:
+public:
 	BrainCloudIdentity(BrainCloudClient *client);
 
 	/**
-		 * Attaches the given block chain public key identity to the current profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - ATTACH_BLOCKCHAIN_IDENTITY
-		 *
-		 * @param blockchainConfig
-		 * @param publicKey
-		 * @param successCallback The success callback
-		 * @param errorCallback The failure callback.
-		 * @param cbObject The user object sent to the callback
-		 */
+	 * Attaches the given block chain public key identity to the current profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - ATTACH_BLOCKCHAIN_IDENTITY
+	 *
+	 * @param blockchainConfig
+	 * @param publicKey
+	 * @param successCallback The success callback
+	 * @param errorCallback The failure callback.
+	 * @param cbObject The user object sent to the callback
+	 */
 	void attachBlockchainIdentity(const FString &blockchainConfig, const FString &publicKey, IServerCallback *callback = nullptr);
 
 	/**
-		 * Detaches the blockchain identity to the current profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - ATTACH_BLOCKCHAIN_IDENTITY
-		 *
-		 * @param blockchainConfig
-		 * @param successCallback The success callback
-		 * @param errorCallback The failure callback.
-		 * @param cbObject The user object sent to the callback
-		 */
+	 * Detaches the blockchain identity to the current profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - ATTACH_BLOCKCHAIN_IDENTITY
+	 *
+	 * @param blockchainConfig
+	 * @param successCallback The success callback
+	 * @param errorCallback The failure callback.
+	 * @param cbObject The user object sent to the callback
+	 */
 	void detachBlockchainIdentity(const FString &blockchainId, IServerCallback *callback = nullptr);
 
 	/**
-		 * Attach the user's Facebook credentials to the current profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - Attach
-		 *
-		 * @param in_facebookId The facebook id of the user
-		 * @param in_authenticationToken The validated token from the Facebook SDK
-		 *   (that will be further validated when sent to the bC service)
-		 * @param in_callback The method to be invoked when the server response is received
-		 *
-		 * Errors to watch for:  SWITCHING_PROFILES - this means that the Facebook identity you provided
-		 * already points to a different profile.  You will likely want to offer the user the
-		 * choice to *SWITCH* to that profile, or *MERGE* the profiles.
-		 *
-		 * To switch profiles, call ClearSavedProfileID() and call AuthenticateFacebook().
-		 */
+	 * Attach the user's Facebook credentials to the current profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Attach
+	 *
+	 * @param in_facebookId The facebook id of the user
+	 * @param in_authenticationToken The validated token from the Facebook SDK
+	 *   (that will be further validated when sent to the bC service)
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 * Errors to watch for:  SWITCHING_PROFILES - this means that the Facebook identity you provided
+	 * already points to a different profile.  You will likely want to offer the user the
+	 * choice to *SWITCH* to that profile, or *MERGE* the profiles.
+	 *
+	 * To switch profiles, call ClearSavedProfileID() and call AuthenticateFacebook().
+	 */
 	void attachFacebookIdentity(const FString &facebookId, const FString &authenticationToken, IServerCallback *callback = nullptr);
 
 	/**
-		 * Merge the profile associated with the provided Facebook credentials with the
-		 * current profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - Merge
-		 *
-		 * @param in_facebookId The facebook id of the user
-		 * @param in_authenticationToken The validated token from the Facebook SDK
-		 *   (that will be further validated when sent to the bC service)
-		 * @param in_callback The method to be invoked when the server response is received
-		 *
-		 */
+	 * Merge the profile associated with the provided Facebook credentials with the
+	 * current profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Merge
+	 *
+	 * @param in_facebookId The facebook id of the user
+	 * @param in_authenticationToken The validated token from the Facebook SDK
+	 *   (that will be further validated when sent to the bC service)
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 */
 	void mergeFacebookIdentity(const FString &facebookId, const FString &authenticationToken, IServerCallback *callback = nullptr);
 
 	/**
-		 * Detach the Facebook identity from this profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - Detach
-		 *
-		 * @param in_facebookId The facebook id of the user
-		 * @param in_continueAnon Proceed even if the profile will revert to anonymous?
-		 * @param in_callback The method to be invoked when the server response is received
-		 *
-		 * Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set in_continueAnon to false, and
-		 * disconnecting this identity would result in the profile being anonymous (which means that
-		 * the profile wouldn't be retrievable if the user loses their device)
-		 */
+	 * Detach the Facebook identity from this profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Detach
+	 *
+	 * @param in_facebookId The facebook id of the user
+	 * @param in_continueAnon Proceed even if the profile will revert to anonymous?
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 * Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set in_continueAnon to false, and
+	 * disconnecting this identity would result in the profile being anonymous (which means that
+	 * the profile wouldn't be retrievable if the user loses their device)
+	 */
 	void detachFacebookIdentity(const FString &facebookId, bool continueAnon, IServerCallback *callback = nullptr);
 
 	/*
@@ -191,51 +191,51 @@ class BCCLIENTPLUGIN_API BrainCloudIdentity
 	void detachAdvancedIdentity(EBCAuthType authenticationType, const FString &externalId, bool continueAnon, const FString &extraJson, IServerCallback *callback = nullptr);
 
 	/**
-         * Attach the user's Ultra credentials to the current profile.
-         *
-         * Service Name - identity
-         * Service Operation - Attach
-         *
-         * @param in_ultraUsername it's what the user uses to log into the Ultra endpoint initially
-         * @param in_ultraIdToken The "id_token" taken from Ultra's JWT.
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         * Errors to watch for:  SWITCHING_PROFILES - this means that the Ultra identity you provided
-         * already points to a different profile.  You will likely want to offer the user the
-         * choice to *SWITCH* to that profile, or *MERGE* the profiles.
-         *
-         * To switch profiles, call ClearSavedProfileID() and call AuthenticateApple().
-         */
-	void attachUltraIdentity(const FString &in_ultraUsername,const FString &in_ultraIdToken, IServerCallback *in_callback = nullptr);
+	 * Attach the user's Ultra credentials to the current profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Attach
+	 *
+	 * @param in_ultraUsername it's what the user uses to log into the Ultra endpoint initially
+	 * @param in_ultraIdToken The "id_token" taken from Ultra's JWT.
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 * Errors to watch for:  SWITCHING_PROFILES - this means that the Ultra identity you provided
+	 * already points to a different profile.  You will likely want to offer the user the
+	 * choice to *SWITCH* to that profile, or *MERGE* the profiles.
+	 *
+	 * To switch profiles, call ClearSavedProfileID() and call AuthenticateApple().
+	 */
+	void attachUltraIdentity(const FString &in_ultraUsername, const FString &in_ultraIdToken, IServerCallback *in_callback = nullptr);
 
 	/**
-         * Merge the profile associated with the provided Ultra credentials with the
-         * current profile.
-         *
-         * Service Name - identity
-         * Service Operation - Merge
-         *
-         * @param in_ultraUsername it's what the user uses to log into the Ultra endpoint initially
-         * @param in_ultraIdToken The "id_token" taken from Ultra's JWT.
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         */
+	 * Merge the profile associated with the provided Ultra credentials with the
+	 * current profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Merge
+	 *
+	 * @param in_ultraUsername it's what the user uses to log into the Ultra endpoint initially
+	 * @param in_ultraIdToken The "id_token" taken from Ultra's JWT.
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 */
 	void mergeUltraIdentity(const FString &in_ultraUsername, const FString &in_ultraIdToken, IServerCallback *in_callback = nullptr);
 
 	/**
-         * Detach the Ultra identity from this profile.
-         *
-         * Service Name - identity
-         * Service Operation - Detach
-         *
-         * @param in_ultraUsername it's what the user uses to log into the Ultra endpoint initially
-         * @param in_continueAnon Proceed even if the profile will revert to anonymous?
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         * Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set in_continueAnon to false, and
-         * disconnecting this identity would result in the profile being anonymous (which means that
-         * the profile wouldn't be retrievable if the user loses their device)
-         */
+	 * Detach the Ultra identity from this profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Detach
+	 *
+	 * @param in_ultraUsername it's what the user uses to log into the Ultra endpoint initially
+	 * @param in_continueAnon Proceed even if the profile will revert to anonymous?
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 * Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set in_continueAnon to false, and
+	 * disconnecting this identity would result in the profile being anonymous (which means that
+	 * the profile wouldn't be retrievable if the user loses their device)
+	 */
 	void detachUltraIdentity(const FString &in_ultraUsername, bool in_continueAnon, IServerCallback *in_callback = nullptr);
 
 	/**
@@ -254,7 +254,7 @@ class BCCLIENTPLUGIN_API BrainCloudIdentity
 	 *
 	 * To switch profiles, call ClearSavedProfileID() and call AuthenticateNintendo().
 	 */
-	void attachNintendoIdentity(const FString &in_accountId,const FString &in_authToken, IServerCallback *in_callback = nullptr);
+	void attachNintendoIdentity(const FString &in_accountId, const FString &in_authToken, IServerCallback *in_callback = nullptr);
 
 	/**
 	 * Merge the profile associated with the provided Nintendo credentials with the
@@ -285,55 +285,54 @@ class BCCLIENTPLUGIN_API BrainCloudIdentity
 	 * the profile wouldn't be retrievable if the user loses their device)
 	 */
 	void detachNintendoIdentity(const FString &in_accountId, bool in_continueAnon, IServerCallback *in_callback = nullptr);
-	
+
 	/**
-		 * Attach the user's Oculus credentials to the current profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - Attach
-		 *
-		 * @param in_oculusId The oculus id of the user
-		 * @param in_oculusNonce The validated token from the Oculus SDK
-		 * @param in_callback The method to be invoked when the server response is received
-		 *
-		 * Errors to watch for:  SWITCHING_PROFILES - this means that the Oculus identity you provided
-		 * already points to a different profile.  You will likely want to offer the user the
-		 * choice to *SWITCH* to that profile, or *MERGE* the profiles.
-		 *
-		 * To switch profiles, call ClearSavedProfileID() and call AuthenticateOculus().
-		 */
+	 * Attach the user's Oculus credentials to the current profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Attach
+	 *
+	 * @param in_oculusId The oculus id of the user
+	 * @param in_oculusNonce The validated token from the Oculus SDK
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 * Errors to watch for:  SWITCHING_PROFILES - this means that the Oculus identity you provided
+	 * already points to a different profile.  You will likely want to offer the user the
+	 * choice to *SWITCH* to that profile, or *MERGE* the profiles.
+	 *
+	 * To switch profiles, call ClearSavedProfileID() and call AuthenticateOculus().
+	 */
 	void attachOculusIdentity(const FString &oculusId, const FString &oculusNonce, IServerCallback *callback = nullptr);
 
 	/**
-		 * Merge the profile associated with the provided Oculus credentials with the
-		 * current profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - Merge
-		 *
-		 * @param in_oculusId The oculus id of the user
-		 * @param in_oculusNonce The validated token from the Oculus SDK
-		 * @param in_callback The method to be invoked when the server response is received
-		 *
-		 */
+	 * Merge the profile associated with the provided Oculus credentials with the
+	 * current profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Merge
+	 *
+	 * @param in_oculusId The oculus id of the user
+	 * @param in_oculusNonce The validated token from the Oculus SDK
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 */
 	void mergeOculusIdentity(const FString &oculusId, const FString &oculusNonce, IServerCallback *callback = nullptr);
 
 	/**
-		 * Detach the Oculus identity from this profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - Detach
-		 *
-		 * @param in_oculusId The oculus id of the user
-		 * @param in_continueAnon Proceed even if the profile will revert to anonymous?
-		 * @param in_callback The method to be invoked when the server response is received
-		 *
-		 * Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set in_continueAnon to false, and
-		 * disconnecting this identity would result in the profile being anonymous (which means that
-		 * the profile wouldn't be retrievable if the user loses their device)
-		 */
+	 * Detach the Oculus identity from this profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Detach
+	 *
+	 * @param in_oculusId The oculus id of the user
+	 * @param in_continueAnon Proceed even if the profile will revert to anonymous?
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 * Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set in_continueAnon to false, and
+	 * disconnecting this identity would result in the profile being anonymous (which means that
+	 * the profile wouldn't be retrievable if the user loses their device)
+	 */
 	void detachOculusIdentity(const FString &oculusId, bool continueAnon, IServerCallback *callback = nullptr);
-
 
 	/*
 	 * Attach the user's PSN credentials to the current profile.
@@ -384,7 +383,7 @@ class BCCLIENTPLUGIN_API BrainCloudIdentity
 	 * the profile wouldn't be retrievable if the user loses their device)
 	 */
 	void detachPlaystationNetworkIdentity(const FString &psnAccountId, bool continueAnon, IServerCallback *callback = nullptr);
-	
+
 	/*
 	 * Attach the user's PSN credentials to the current profile for Playstation 5 users specifically.
 	 *
@@ -434,647 +433,646 @@ class BCCLIENTPLUGIN_API BrainCloudIdentity
 	 * the profile wouldn't be retrievable if the user loses their device)
 	 */
 	void detachPlaystation5Identity(const FString &psnAccountId, bool continueAnon, IServerCallback *callback = nullptr);
-	
+
 	/**
-		 * Attach a Game Center identity to the current profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - Attach
-		 *
-		 * @param in_gameCenterId The player's game center id  (use the playerID property from the local GKPlayer object)
-		 * @param in_callback The method to be invoked when the server response is received
-		 *
-		 * Errors to watch for:  SWITCHING_PROFILES - this means that the Game Center identity you provided
-		 * already points to a different profile.  You will likely want to offer the player the
-		 * choice to *SWITCH* to that profile, or *MERGE* the profiles.
-		 *
-		 * To switch profiles, call ClearSavedProfileID() and call this method again.
-		 *
-		 */
+	 * Attach a Game Center identity to the current profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Attach
+	 *
+	 * @param in_gameCenterId The player's game center id  (use the playerID property from the local GKPlayer object)
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 * Errors to watch for:  SWITCHING_PROFILES - this means that the Game Center identity you provided
+	 * already points to a different profile.  You will likely want to offer the player the
+	 * choice to *SWITCH* to that profile, or *MERGE* the profiles.
+	 *
+	 * To switch profiles, call ClearSavedProfileID() and call this method again.
+	 *
+	 */
 	void attachGameCenterIdentity(const FString &gameCenterId, IServerCallback *callback = nullptr);
 
 	/**
-		 * Merge the profile associated with the specified Game Center identity with the current profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - Merge
-		 *
-		 * @param in_gameCenterId The player's game center id  (use the playerID property from the local GKPlayer object)
-		 * @param in_callback The method to be invoked when the server response is received
-		 */
+	 * Merge the profile associated with the specified Game Center identity with the current profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Merge
+	 *
+	 * @param in_gameCenterId The player's game center id  (use the playerID property from the local GKPlayer object)
+	 * @param in_callback The method to be invoked when the server response is received
+	 */
 	void mergeGameCenterIdentity(const FString &gameCenterId, IServerCallback *callback = nullptr);
 
 	/**
-		 * Detach the Game Center identity from the current profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - Detach
-		 *
-		 * @param in_gameCenterId The player's game center id  (use the playerID property from the local GKPlayer object)
-		 * @param in_continueAnon Proceed even if the profile will revert to anonymous?
-		 * @param in_callback The method to be invoked when the server response is received
-		 *
-		 * Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set in_continueAnon to false, and
-		 * disconnecting this identity would result in the profile being anonymous (which means that
-		 * the profile wouldn't be retrievable if the user loses their device)
-		 */
+	 * Detach the Game Center identity from the current profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Detach
+	 *
+	 * @param in_gameCenterId The player's game center id  (use the playerID property from the local GKPlayer object)
+	 * @param in_continueAnon Proceed even if the profile will revert to anonymous?
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 * Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set in_continueAnon to false, and
+	 * disconnecting this identity would result in the profile being anonymous (which means that
+	 * the profile wouldn't be retrievable if the user loses their device)
+	 */
 	void detachGameCenterIdentity(const FString &gameCenterId, bool continueAnon, IServerCallback *callback = nullptr);
 
 	/**
-		 * Attach a Email and Password identity to the current profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - Attach
-		 *
-		 * @param in_email The user's e-mail address
-		 * @param in_password The user's password
-		 * @param in_callback The method to be invoked when the server response is received
-		 *
-		 * Errors to watch for:  SWITCHING_PROFILES - this means that the email address you provided
-		 * already points to a different profile.  You will likely want to offer the user the
-		 * choice to *SWITCH* to that profile, or *MERGE* the profiles.
-		 *
-		 * To switch profiles, call ClearSavedProfileID() and then call AuthenticateEmailPassword().
-		 */
+	 * Attach a Email and Password identity to the current profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Attach
+	 *
+	 * @param in_email The user's e-mail address
+	 * @param in_password The user's password
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 * Errors to watch for:  SWITCHING_PROFILES - this means that the email address you provided
+	 * already points to a different profile.  You will likely want to offer the user the
+	 * choice to *SWITCH* to that profile, or *MERGE* the profiles.
+	 *
+	 * To switch profiles, call ClearSavedProfileID() and then call AuthenticateEmailPassword().
+	 */
 	void attachEmailIdentity(const FString &email, const FString &password, IServerCallback *callback = nullptr);
 
 	/**
-		 * Merge the profile associated with the provided e=mail with the current profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - Merge
-		 *
-		 * @param in_email The user's e-mail address
-		 * @param in_password The user's password
-		 * @param in_callback The method to be invoked when the server response is received
-		 *
-		 */
+	 * Merge the profile associated with the provided e=mail with the current profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Merge
+	 *
+	 * @param in_email The user's e-mail address
+	 * @param in_password The user's password
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 */
 	void mergeEmailIdentity(const FString &email, const FString &password, IServerCallback *callback = nullptr);
 
 	/**
-		 * Detach the e-mail identity from the current profile
-		 *
-		 * Service Name - identity
-		 * Service Operation - Detach
-		 *
-		 * @param in_email The user's e-mail address
-		 * @param in_continueAnon Proceed even if the profile will revert to anonymous?
-		 * @param in_callback The method to be invoked when the server response is received
-		 *
-		 * Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set in_continueAnon to false, and
-		 * disconnecting this identity would result in the profile being anonymous (which means that
-		 * the profile wouldn't be retrievable if the user loses their device)
-		 */
+	 * Detach the e-mail identity from the current profile
+	 *
+	 * Service Name - identity
+	 * Service Operation - Detach
+	 *
+	 * @param in_email The user's e-mail address
+	 * @param in_continueAnon Proceed even if the profile will revert to anonymous?
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 * Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set in_continueAnon to false, and
+	 * disconnecting this identity would result in the profile being anonymous (which means that
+	 * the profile wouldn't be retrievable if the user loses their device)
+	 */
 	void detachEmailIdentity(const FString &email, bool continueAnon, IServerCallback *callback = nullptr);
 
 	/**
-		 * Attach a Universal (userid + password) identity to the current profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - Attach
-		 *
-		 * @param in_userId The user's userid
-		 * @param in_password The user's password
-		 * @param in_callback The method to be invoked when the server response is received
-		 *
-		 * Errors to watch for:  SWITCHING_PROFILES - this means that the email address you provided
-		 * already points to a different profile.  You will likely want to offer the user the
-		 * choice to *SWITCH* to that profile, or *MERGE* the profiles.
-		 *
-		 * To switch profiles, call ClearSavedProfileID() and then call AuthenticateEmailPassword().
-		 */
+	 * Attach a Universal (userid + password) identity to the current profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Attach
+	 *
+	 * @param in_userId The user's userid
+	 * @param in_password The user's password
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 * Errors to watch for:  SWITCHING_PROFILES - this means that the email address you provided
+	 * already points to a different profile.  You will likely want to offer the user the
+	 * choice to *SWITCH* to that profile, or *MERGE* the profiles.
+	 *
+	 * To switch profiles, call ClearSavedProfileID() and then call AuthenticateEmailPassword().
+	 */
 	void attachUniversalIdentity(const FString &userId, const FString &password, IServerCallback *callback = nullptr);
 
 	/**
-		 * Merge the profile associated with the provided userId with the current profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - Merge
-		 *
-		 * @param in_userId The user's userid
-		 * @param in_password The user's password
-		 * @param in_callback The method to be invoked when the server response is received
-		 */
+	 * Merge the profile associated with the provided userId with the current profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Merge
+	 *
+	 * @param in_userId The user's userid
+	 * @param in_password The user's password
+	 * @param in_callback The method to be invoked when the server response is received
+	 */
 	void mergeUniversalIdentity(const FString &userId, const FString &password, IServerCallback *callback = nullptr);
 
 	/**
-		 * Detach the universal identity from the current profile
-		 *
-		 * Service Name - identity
-		 * Service Operation - Detach
-		 *
-		 * @param in_userId The user's userid
-		 * @param in_continueAnon Proceed even if the profile will revert to anonymous?
-		 * @param in_callback The method to be invoked when the server response is received
-		 *
-		 * Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set in_continueAnon to false, and
-		 * disconnecting this identity would result in the profile being anonymous (which means that
-		 * the profile wouldn't be retrievable if the user loses their device)
-		 */
+	 * Detach the universal identity from the current profile
+	 *
+	 * Service Name - identity
+	 * Service Operation - Detach
+	 *
+	 * @param in_userId The user's userid
+	 * @param in_continueAnon Proceed even if the profile will revert to anonymous?
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 * Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set in_continueAnon to false, and
+	 * disconnecting this identity would result in the profile being anonymous (which means that
+	 * the profile wouldn't be retrievable if the user loses their device)
+	 */
 	void detachUniversalIdentity(const FString &userId, bool continueAnon, IServerCallback *callback = nullptr);
 
 	/**
-		 * Attach a Steam (userid + steamsessionticket) identity to the current profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - Attach
-		 *
-		 * @param in_steamId String representation of 64 bit steam id
-		 * @param in_sessionTicket The user's session ticket (hex encoded)
-		 * @param in_callback The method to be invoked when the server response is received
-		 *
-		 * Errors to watch for:  SWITCHING_PROFILES - this means that the email address you provided
-		 * already points to a different profile.  You will likely want to offer the user the
-		 * choice to *SWITCH* to that profile, or *MERGE* the profiles.
-		 *
-		 * To switch profiles, call ClearSavedProfileID() and then call AuthenticateSteam().
-		 */
+	 * Attach a Steam (userid + steamsessionticket) identity to the current profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Attach
+	 *
+	 * @param in_steamId String representation of 64 bit steam id
+	 * @param in_sessionTicket The user's session ticket (hex encoded)
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 * Errors to watch for:  SWITCHING_PROFILES - this means that the email address you provided
+	 * already points to a different profile.  You will likely want to offer the user the
+	 * choice to *SWITCH* to that profile, or *MERGE* the profiles.
+	 *
+	 * To switch profiles, call ClearSavedProfileID() and then call AuthenticateSteam().
+	 */
 	void attachSteamIdentity(const FString &steamId, const FString &sessionTicket, IServerCallback *callback = nullptr);
 
 	/**
-		 * Merge the profile associated with the provided steam userid with the current profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - Merge
-		 *
-		 * @param in_steamId String representation of 64 bit steam id
-		 * @param in_sessionTicket The user's session ticket (hex encoded)
-		 * @param in_callback The method to be invoked when the server response is received
-		 *
-		 */
+	 * Merge the profile associated with the provided steam userid with the current profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Merge
+	 *
+	 * @param in_steamId String representation of 64 bit steam id
+	 * @param in_sessionTicket The user's session ticket (hex encoded)
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 */
 	void mergeSteamIdentity(const FString &steamId, const FString &sessionTicket, IServerCallback *callback = nullptr);
 
 	/**
-		 * Detach the steam identity from the current profile
-		 *
-		 * Service Name - identity
-		 * Service Operation - Detach
-		 *
-		 * @param in_steamId String representation of 64 bit steam id
-		 * @param in_continueAnon Proceed even if the profile will revert to anonymous?
-		 * @param in_callback The method to be invoked when the server response is received
-		 *
-		 * Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set in_continueAnon to false, and
-		 * disconnecting this identity would result in the profile being anonymous (which means that
-		 * the profile wouldn't be retrievable if the user loses their device)
-		 */
+	 * Detach the steam identity from the current profile
+	 *
+	 * Service Name - identity
+	 * Service Operation - Detach
+	 *
+	 * @param in_steamId String representation of 64 bit steam id
+	 * @param in_continueAnon Proceed even if the profile will revert to anonymous?
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 * Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set in_continueAnon to false, and
+	 * disconnecting this identity would result in the profile being anonymous (which means that
+	 * the profile wouldn't be retrievable if the user loses their device)
+	 */
 	void detachSteamIdentity(const FString &steamId, bool continueAnon, IServerCallback *callback = nullptr);
 
 	/**
-		 * Attach the user's Google credentials to the current profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - Attach
-		 *
-		 * @param in_googleId The Google id of the user
-		 * @param in_authenticationToken The validated token from the Google SDK
-		 *   (that will be further validated when sent to the bC service)
-		 * @param in_callback The method to be invoked when the server response is received
-		 *
-		 * Errors to watch for:  SWITCHING_PROFILES - this means that the Google identity you provided
-		 * already points to a different profile.  You will likely want to offer the user the
-		 * choice to *SWITCH* to that profile, or *MERGE* the profiles.
-		 *
-		 * To switch profiles, call ClearSavedProfileID() and call AuthenticateGoogle().
-		 */
+	 * Attach the user's Google credentials to the current profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Attach
+	 *
+	 * @param in_googleId The Google id of the user
+	 * @param in_authenticationToken The validated token from the Google SDK
+	 *   (that will be further validated when sent to the bC service)
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 * Errors to watch for:  SWITCHING_PROFILES - this means that the Google identity you provided
+	 * already points to a different profile.  You will likely want to offer the user the
+	 * choice to *SWITCH* to that profile, or *MERGE* the profiles.
+	 *
+	 * To switch profiles, call ClearSavedProfileID() and call AuthenticateGoogle().
+	 */
 	void attachGoogleIdentity(const FString &googleUserId, const FString &serverAuthCode, IServerCallback *callback = nullptr);
 
 	/**
-		 * Merge the profile associated with the provided Google credentials with the
-		 * current profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - Merge
-		 *
-		 * @param in_googleId The Google id of the user
-		 * @param in_authenticationToken The validated token from the Google SDK
-		 *   (that will be further validated when sent to the bC service)
-		 * @param in_callback The method to be invoked when the server response is received
-		 *
-		 */
+	 * Merge the profile associated with the provided Google credentials with the
+	 * current profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Merge
+	 *
+	 * @param in_googleId The Google id of the user
+	 * @param in_authenticationToken The validated token from the Google SDK
+	 *   (that will be further validated when sent to the bC service)
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 */
 	void mergeGoogleIdentity(const FString &googleUserId, const FString &serverAuthCode, IServerCallback *callback = nullptr);
 
 	/*
-		 * Detach the Google identity from this profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - Detach
-		 *
-		 * @param in_googleId The Google id of the user
-		 * @param in_continueAnon Proceed even if the profile will revert to anonymous?
-		 * @param in_callback The method to be invoked when the server response is received
-		 *
-		 * Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set in_continueAnon to false, and
-		 * disconnecting this identity would result in the profile being anonymous (which means that
-		 * the profile wouldn't be retrievable if the user loses their device)
-		 */
+	 * Detach the Google identity from this profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Detach
+	 *
+	 * @param in_googleId The Google id of the user
+	 * @param in_continueAnon Proceed even if the profile will revert to anonymous?
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 * Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set in_continueAnon to false, and
+	 * disconnecting this identity would result in the profile being anonymous (which means that
+	 * the profile wouldn't be retrievable if the user loses their device)
+	 */
 	void detachGoogleIdentity(const FString &googleUserId, bool continueAnon, IServerCallback *callback = nullptr);
 
 	/**
-		 * Attach the user's Google credentials to the current profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - Attach
-		 *
-		 * @param in_googleId The Google id of the user
-		 * @param in_authenticationToken The validated token from the Google SDK
-		 *   (that will be further validated when sent to the bC service)
-		 * @param in_callback The method to be invoked when the server response is received
-		 *
-		 * Errors to watch for:  SWITCHING_PROFILES - this means that the Google identity you provided
-		 * already points to a different profile.  You will likely want to offer the user the
-		 * choice to *SWITCH* to that profile, or *MERGE* the profiles.
-		 *
-		 * To switch profiles, call ClearSavedProfileID() and call AuthenticateGoogle().
-		 */
+	 * Attach the user's Google credentials to the current profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Attach
+	 *
+	 * @param in_googleId The Google id of the user
+	 * @param in_authenticationToken The validated token from the Google SDK
+	 *   (that will be further validated when sent to the bC service)
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 * Errors to watch for:  SWITCHING_PROFILES - this means that the Google identity you provided
+	 * already points to a different profile.  You will likely want to offer the user the
+	 * choice to *SWITCH* to that profile, or *MERGE* the profiles.
+	 *
+	 * To switch profiles, call ClearSavedProfileID() and call AuthenticateGoogle().
+	 */
 	void attachGoogleOpenIdIdentity(const FString &googleUserAccountEmail, const FString &IdToken, IServerCallback *callback = nullptr);
 
 	/**
-		 * Merge the profile associated with the provided Google credentials with the
-		 * current profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - Merge
-		 *
-		 * @param in_googleId The Google id of the user
-		 * @param in_authenticationToken The validated token from the Google SDK
-		 *   (that will be further validated when sent to the bC service)
-		 * @param in_callback The method to be invoked when the server response is received
-		 *
-		 */
+	 * Merge the profile associated with the provided Google credentials with the
+	 * current profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Merge
+	 *
+	 * @param in_googleId The Google id of the user
+	 * @param in_authenticationToken The validated token from the Google SDK
+	 *   (that will be further validated when sent to the bC service)
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 */
 	void mergeGoogleOpenIdIdentity(const FString &googleUserAccountEmail, const FString &IdToken, IServerCallback *callback = nullptr);
 
 	/*
-		 * Detach the Google identity from this profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - Detach
-		 *
-		 * @param in_googleId The Google id of the user
-		 * @param in_continueAnon Proceed even if the profile will revert to anonymous?
-		 * @param in_callback The method to be invoked when the server response is received
-		 *
-		 * Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set in_continueAnon to false, and
-		 * disconnecting this identity would result in the profile being anonymous (which means that
-		 * the profile wouldn't be retrievable if the user loses their device)
-		 */
+	 * Detach the Google identity from this profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Detach
+	 *
+	 * @param in_googleId The Google id of the user
+	 * @param in_continueAnon Proceed even if the profile will revert to anonymous?
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 * Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set in_continueAnon to false, and
+	 * disconnecting this identity would result in the profile being anonymous (which means that
+	 * the profile wouldn't be retrievable if the user loses their device)
+	 */
 	void detachGoogleOpenIdIdentity(const FString &googleUserAccountEmail, bool continueAnon, IServerCallback *callback = nullptr);
 
 	/**
-		 * Attach the user's Apple credentials to the current profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - Attach
-		 *
-		 * @param in_appleId The appleid of the user
-		 * @param in_authenticationToken The validated token from the Apple SDK
-		 *   (that will be further validated when sent to the bC service)
-		 * @param in_callback The method to be invoked when the server response is received
-		 *
-		 * Errors to watch for:  SWITCHING_PROFILES - this means that the Apple identity you provided
-		 * already points to a different profile.  You will likely want to offer the user the
-		 * choice to *SWITCH* to that profile, or *MERGE* the profiles.
-		 *
-		 * To switch profiles, call ClearSavedProfileID() and call AuthenticateApple().
-		 */
+	 * Attach the user's Apple credentials to the current profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Attach
+	 *
+	 * @param in_appleId The appleid of the user
+	 * @param in_authenticationToken The validated token from the Apple SDK
+	 *   (that will be further validated when sent to the bC service)
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 * Errors to watch for:  SWITCHING_PROFILES - this means that the Apple identity you provided
+	 * already points to a different profile.  You will likely want to offer the user the
+	 * choice to *SWITCH* to that profile, or *MERGE* the profiles.
+	 *
+	 * To switch profiles, call ClearSavedProfileID() and call AuthenticateApple().
+	 */
 	void attachAppleIdentity(const FString &appleUserId, const FString &identityToken, IServerCallback *callback = nullptr);
 
 	/**
-		 * Merge the profile associated with the provided Apple credentials with the
-		 * current profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - Merge
-		 *
-		 * @param in_appleId The apple id of the user
-		 * @param in_authenticationToken The validated token from the Apple SDK
-		 *   (that will be further validated when sent to the bC service)
-		 * @param in_callback The method to be invoked when the server response is received
-		 *
-		 */
+	 * Merge the profile associated with the provided Apple credentials with the
+	 * current profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Merge
+	 *
+	 * @param in_appleId The apple id of the user
+	 * @param in_authenticationToken The validated token from the Apple SDK
+	 *   (that will be further validated when sent to the bC service)
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 */
 	void mergeAppleIdentity(const FString &appleUserId, const FString &identityToken, IServerCallback *callback = nullptr);
 
 	/**
-		 * Detach the Apple identity from this profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - Detach
-		 *
-		 * @param in_appleId The apple id of the user
-		 * @param in_continueAnon Proceed even if the profile will revert to anonymous?
-		 * @param in_callback The method to be invoked when the server response is received
-		 *
-		 * Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set in_continueAnon to false, and
-		 * disconnecting this identity would result in the profile being anonymous (which means that
-		 * the profile wouldn't be retrievable if the user loses their device)
-		 */
+	 * Detach the Apple identity from this profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Detach
+	 *
+	 * @param in_appleId The apple id of the user
+	 * @param in_continueAnon Proceed even if the profile will revert to anonymous?
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 * Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set in_continueAnon to false, and
+	 * disconnecting this identity would result in the profile being anonymous (which means that
+	 * the profile wouldn't be retrievable if the user loses their device)
+	 */
 	void detachAppleIdentity(const FString &appleUserId, bool continueAnon, IServerCallback *callback = nullptr);
 
 	/**
-		 * Attach the user's Twitter credentials to the current profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - Attach
-		 *
-		 * @param in_twitterId The Twitter id of the user
-		 * @param in_authenticationToken The authentication token derived from the twitter APIs
-		 * @param in_secret The secret given when attempting to link with Twitter
-		 * @param in_callback The method to be invoked when the server response is received
-		 *
-		 * Errors to watch for:  SWITCHING_PROFILES - this means that the Twitter identity you provided
-		 * already points to a different profile.  You will likely want to offer the user the
-		 * choice to *SWITCH* to that profile, or *MERGE* the profiles.
-		 *
-		 * To switch profiles, call ClearSavedProfileID() and call AuthenticateTwitter().
-		 */
+	 * Attach the user's Twitter credentials to the current profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Attach
+	 *
+	 * @param in_twitterId The Twitter id of the user
+	 * @param in_authenticationToken The authentication token derived from the twitter APIs
+	 * @param in_secret The secret given when attempting to link with Twitter
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 * Errors to watch for:  SWITCHING_PROFILES - this means that the Twitter identity you provided
+	 * already points to a different profile.  You will likely want to offer the user the
+	 * choice to *SWITCH* to that profile, or *MERGE* the profiles.
+	 *
+	 * To switch profiles, call ClearSavedProfileID() and call AuthenticateTwitter().
+	 */
 	void attachTwitterIdentity(const FString &twitterId, const FString &authenticationToken, const FString &secret, IServerCallback *callback = nullptr);
 
 	/**
-		 * Merge the profile associated with the provided Twitter credentials with the
-		 * current profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - Merge
-		 *
-		 * @param in_twitterId The Twitter id of the user
-		 * @param in_authenticationToken The authentication token derived from the twitter APIs
-		 * @param in_secret The secret given when attempting to link with Twitter
-		 * @param in_callback The method to be invoked when the server response is received
-		 *
-		 */
+	 * Merge the profile associated with the provided Twitter credentials with the
+	 * current profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Merge
+	 *
+	 * @param in_twitterId The Twitter id of the user
+	 * @param in_authenticationToken The authentication token derived from the twitter APIs
+	 * @param in_secret The secret given when attempting to link with Twitter
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 */
 	void mergeTwitterIdentity(const FString &twitterId, const FString &authenticationToken, const FString &secret, IServerCallback *callback = nullptr);
 
 	/**
-		 * Detach the Twitter identity from this profile.
-		 *
-		 * Service Name - identity
-		 * Service Operation - Detach
-		 *
-		 * @param in_twitterId The Twitter id of the user
-		 * @param in_continueAnon Proceed even if the profile will revert to anonymous?
-		 * @param in_callback The method to be invoked when the server response is received
-		 *
-		 * Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set in_continueAnon to false, and
-		 * disconnecting this identity would result in the profile being anonymous (which means that
-		 * the profile wouldn't be retrievable if the user loses their device)
-		 */
+	 * Detach the Twitter identity from this profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Detach
+	 *
+	 * @param in_twitterId The Twitter id of the user
+	 * @param in_continueAnon Proceed even if the profile will revert to anonymous?
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 * Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set in_continueAnon to false, and
+	 * disconnecting this identity would result in the profile being anonymous (which means that
+	 * the profile wouldn't be retrievable if the user loses their device)
+	 */
 	void detachTwitterIdentity(const FString &twitterId, bool continueAnon, IServerCallback *callback = nullptr);
 
 	/**
-		* Attach the user's Parse credentials to the current profile.
-		*
-		* Service Name - identity
-		* Service Operation - Attach
-		*
-		* @param in_parseId The Parse id of the user
-		* @param in_authenticationToken The validated token from Parse
-		*   (that will be further validated when sent to the bC service)
-		* @param in_callback The method to be invoked when the server response is received
-		*
-		* Errors to watch for:  SWITCHING_PROFILES - this means that the Google identity you provided
-		* already points to a different profile.  You will likely want to offer the user the
-		* choice to *SWITCH* to that profile, or *MERGE* the profiles.
-		*
-		* To switch profiles, call ClearSavedProfileID() and call AuthenticateParse().
-		*/
+	 * Attach the user's Parse credentials to the current profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Attach
+	 *
+	 * @param in_parseId The Parse id of the user
+	 * @param in_authenticationToken The validated token from Parse
+	 *   (that will be further validated when sent to the bC service)
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 * Errors to watch for:  SWITCHING_PROFILES - this means that the Google identity you provided
+	 * already points to a different profile.  You will likely want to offer the user the
+	 * choice to *SWITCH* to that profile, or *MERGE* the profiles.
+	 *
+	 * To switch profiles, call ClearSavedProfileID() and call AuthenticateParse().
+	 */
 	void attachParseIdentity(const FString &parseId, const FString &authenticationToken, IServerCallback *callback = nullptr);
 
 	/**
-		* Merge the profile associated with the provided Parse credentials with the
-		* current profile.
-		*
-		* Service Name - identity
-		* Service Operation - Merge
-		*
-		* @param in_parseId The Parse id of the user
-		* @param in_authenticationToken The validated token from Parse
-		*   (that will be further validated when sent to the bC service)
-		* @param in_callback The method to be invoked when the server response is received
-		*
-		*/
+	 * Merge the profile associated with the provided Parse credentials with the
+	 * current profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Merge
+	 *
+	 * @param in_parseId The Parse id of the user
+	 * @param in_authenticationToken The validated token from Parse
+	 *   (that will be further validated when sent to the bC service)
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 */
 	void mergeParseIdentity(const FString &parseId, const FString &authenticationToken, IServerCallback *callback = nullptr);
 
 	/*
-		* Detach the Google identity from this profile.
-		*
-		* Service Name - identity
-		* Service Operation - Detach
-		*
-		* @param in_parseId The Parse id of the user
-		* @param in_continueAnon Proceed even if the profile will revert to anonymous?
-		* @param in_callback The method to be invoked when the server response is received
-		*
-		* Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set in_continueAnon to false, and
-		* disconnecting this identity would result in the profile being anonymous (which means that
-		* the profile wouldn't be retrievable if the user loses their device)
-		*/
+	 * Detach the Google identity from this profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - Detach
+	 *
+	 * @param in_parseId The Parse id of the user
+	 * @param in_continueAnon Proceed even if the profile will revert to anonymous?
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 * Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set in_continueAnon to false, and
+	 * disconnecting this identity would result in the profile being anonymous (which means that
+	 * the profile wouldn't be retrievable if the user loses their device)
+	 */
 	void detachParseIdentity(const FString &parseId, bool continueAnon, IServerCallback *callback = nullptr);
 
 	/**
-		 * Switch to a Child Profile
-		 *
-		 * Service Name - identity
-		 * Service Operation - SWITCH_TO_CHILD_PROFILE
-		 *
-		 * @param in_childProfileId The profileId of the child profile to switch to
-		 * If null and forceCreate is true a new profile will be created
-		 * @param in_childAppId The appId of the child app to switch to
-		 * @param in_forceCreate Should a new profile be created if it does not exist?
-		 * @param in_callback The method to be invoked when the server response is received
-		 */
+	 * Switch to a Child Profile
+	 *
+	 * Service Name - identity
+	 * Service Operation - SWITCH_TO_CHILD_PROFILE
+	 *
+	 * @param in_childProfileId The profileId of the child profile to switch to
+	 * If null and forceCreate is true a new profile will be created
+	 * @param in_childAppId The appId of the child app to switch to
+	 * @param in_forceCreate Should a new profile be created if it does not exist?
+	 * @param in_callback The method to be invoked when the server response is received
+	 */
 	void switchToChildProfile(const FString &childProfileId, const FString &childGameId, bool forceCreate, IServerCallback *callback = nullptr);
 
 	/**
-		 * Switches to a child profile of an app when only one profile exists
-		 * If multiple profiles exist this returns an error
-		 *
-		 * Service Name - identity
-		 * Service Operation - SWITCH_TO_CHILD_PROFILE
-		 *
-		 * @param in_childAppId The App ID of the child app to switch to
-		 * @param in_forceCreate Should a new profile be created if it does not exist?
-		 * @param in_callback The method to be invoked when the server response is received
-		 */
+	 * Switches to a child profile of an app when only one profile exists
+	 * If multiple profiles exist this returns an error
+	 *
+	 * Service Name - identity
+	 * Service Operation - SWITCH_TO_CHILD_PROFILE
+	 *
+	 * @param in_childAppId The App ID of the child app to switch to
+	 * @param in_forceCreate Should a new profile be created if it does not exist?
+	 * @param in_callback The method to be invoked when the server response is received
+	 */
 	void switchToSingletonChildProfile(const FString &childGameId, bool forceCreate, IServerCallback *callback = nullptr);
 
 	/**
-		 * Switch to a Parent Profile
-		 *
-		 * Service Name - identity
-		 * Service Operation - SWITCH_TO_PARENT_PROFILE
-		 *
-		 * @param in_parentLevelName The level of the parent to switch to
-		 * If null and forceCreate is true a new profile will be created
-		 * @param in_callback The method to be invoked when the server response is received
-		 */
+	 * Switch to a Parent Profile
+	 *
+	 * Service Name - identity
+	 * Service Operation - SWITCH_TO_PARENT_PROFILE
+	 *
+	 * @param in_parentLevelName The level of the parent to switch to
+	 * If null and forceCreate is true a new profile will be created
+	 * @param in_callback The method to be invoked when the server response is received
+	 */
 	void switchToParentProfile(const FString &parentLevelName, IServerCallback *callback = nullptr);
 
 	/**
-		 * Returns a list of all child profiles in child Apps
-		 *
-		 * Service Name - identity
-		 * Service Operation - GET_CHILD_PROFILES
-		 *
-		 * @param in_includeSummaryData Whether to return the summary friend data along with this call
-		 * @param in_callback The method to be invoked when the server response is received
-		 */
+	 * Returns a list of all child profiles in child Apps
+	 *
+	 * Service Name - identity
+	 * Service Operation - GET_CHILD_PROFILES
+	 *
+	 * @param in_includeSummaryData Whether to return the summary friend data along with this call
+	 * @param in_callback The method to be invoked when the server response is received
+	 */
 	void getChildProfiles(bool includeSummaryData, IServerCallback *callback = nullptr);
 
 	/**
-		* Retrieve list of identities
-		*
-		* Service Name - identity
-		* Service Operation - GET_IDENTITIES
-		*
-		* @param in_callback The method to be invoked when the server response is received
-		*/
+	 * Retrieve list of identities
+	 *
+	 * Service Name - identity
+	 * Service Operation - GET_IDENTITIES
+	 *
+	 * @param in_callback The method to be invoked when the server response is received
+	 */
 	void getIdentities(IServerCallback *callback = nullptr);
 
 	/**
-	* Retrieves identity status for given identity type for this profile.
-	*
-	* Service Name - identity
-	* Service Operation - GET_IDENTITY_STATUS
-	*
-	* @param authenticationType Type of authentication
-	* @param externalAuthName The name of the external authentication mechanism (optional, used for custom authentication types)
-	* @param callback The method to be invoked when the server response is received
-	*/
-	void getIdentityStatus(EBCAuthType authenticationType, const FString& externalAuthName,IServerCallback* callback = nullptr);
+	 * Retrieves identity status for given identity type for this profile.
+	 *
+	 * Service Name - identity
+	 * Service Operation - GET_IDENTITY_STATUS
+	 *
+	 * @param authenticationType Type of authentication
+	 * @param externalAuthName The name of the external authentication mechanism (optional, used for custom authentication types)
+	 * @param callback The method to be invoked when the server response is received
+	 */
+	void getIdentityStatus(EBCAuthType authenticationType, const FString &externalAuthName, IServerCallback *callback = nullptr);
 
 	/**
-		* Retrieve list of expired identities
-		*
-		* Service Name - identity
-		* Service Operation - GET_EXPIRED_IDENTITIES
-		*
-		* @param in_callback The method to be invoked when the server response is received
-		*/
+	 * Retrieve list of expired identities
+	 *
+	 * Service Name - identity
+	 * Service Operation - GET_EXPIRED_IDENTITIES
+	 *
+	 * @param in_callback The method to be invoked when the server response is received
+	 */
 	void getExpiredIdentities(IServerCallback *callback = nullptr);
 
 	/**
-	* Refreshes an identity for this player
-	*
-	* Service Name - identity
-	* Service Operation - REFRESH_IDENTITY
-	*
-	* @param externalId User ID
-	* @param authenticationToken Password or client side token
-	* @param authenticationType Type of authentication
-	* @param callback The method to be invoked when the server response is received
-	*/
+	 * Refreshes an identity for this player
+	 *
+	 * Service Name - identity
+	 * Service Operation - REFRESH_IDENTITY
+	 *
+	 * @param externalId User ID
+	 * @param authenticationToken Password or client side token
+	 * @param authenticationType Type of authentication
+	 * @param callback The method to be invoked when the server response is received
+	 */
 	void refreshIdentity(const FString &externalId, const FString &authenticationToken, EBCAuthType authenticationType, IServerCallback *callback = nullptr);
 
 	/**
-		* Allows email identity email address to be changed
-		*
-		* Service Name - identity
-		* Service Operation - CHANGE_EMAIL_IDENTITY
-		*
-		* @param in_oldEmailAddress Old email address
-	    * @param in_password Password for identity
-	    * @param in_newEmailAddress New email address
-	    * @param in_updateContactEmail Whether to update contact email in profile
-	    * @param in_callback The method to be invoked when the server response is received
-	    *
-		*/
+	 * Allows email identity email address to be changed
+	 *
+	 * Service Name - identity
+	 * Service Operation - CHANGE_EMAIL_IDENTITY
+	 *
+	 * @param in_oldEmailAddress Old email address
+	 * @param in_password Password for identity
+	 * @param in_newEmailAddress New email address
+	 * @param in_updateContactEmail Whether to update contact email in profile
+	 * @param in_callback The method to be invoked when the server response is received
+	 *
+	 */
 	void changeEmailIdentity(const FString &oldEmailAddress, const FString &password, const FString &newEmailAddress,
 							 bool updateContactEmail, IServerCallback *callback = nullptr);
 
 	/**
-	* Attach a new identity to a parent app
-	*
-	* Service Name - identity
-	* Service Operation - ATTACH_PARENT_WITH_IDENTITY
-	*
-	* @param externalId The users id for the new credentials
-	* @param authenticationToken The password/token
-	* @param forceCreate Should a new profile be created if it does not exist?
-	* @param authenticationType Type of identity
-	* @param externalAuthName Optional - if attaching an external identity
-	* @param callback The method to be invoked when the server response is received
-	*/
+	 * Attach a new identity to a parent app
+	 *
+	 * Service Name - identity
+	 * Service Operation - ATTACH_PARENT_WITH_IDENTITY
+	 *
+	 * @param externalId The users id for the new credentials
+	 * @param authenticationToken The password/token
+	 * @param forceCreate Should a new profile be created if it does not exist?
+	 * @param authenticationType Type of identity
+	 * @param externalAuthName Optional - if attaching an external identity
+	 * @param callback The method to be invoked when the server response is received
+	 */
 	void attachParentWithIdentity(const FString &externalId, const FString &authenticationToken, EBCAuthType authenticationType,
 								  const FString &externalAuthName, bool forceCreate, IServerCallback *callback = nullptr);
 
 	/**
-		 * Detaches parent from this user's profile
-		 *
-		 * Service Name - identity
-		 * Service Operation - DETACH_PARENT
-		 *
-		 * @param successCallback The success callback
-		 * @param errorCallback The failure callback.
-		 * @param cbObject The user object sent to the callback
-		 */
+	 * Detaches parent from this user's profile
+	 *
+	 * Service Name - identity
+	 * Service Operation - DETACH_PARENT
+	 *
+	 * @param successCallback The success callback
+	 * @param errorCallback The failure callback.
+	 * @param cbObject The user object sent to the callback
+	 */
 	void detachParent(IServerCallback *callback);
 
 	/**
-	* Attaches a peer identity to this player's profile
-	*
-	* Service Name - identity
-	* Service Operation - ATTACH_PEER_PROFILE
-	*
-	* @param peer Name of the peer to connect to
-	* @param externalId The users id for the new credentials
-	* @param authenticationToken The password/token
-	* @param authenticationType Type of identity
-	* @param externalAuthName Optional - if attaching an external identity
-	* @param forceCreate Should a new profile be created if it does not exist?
-	* @param callback The method to be invoked when the server response is received
-	*/
+	 * Attaches a peer identity to this player's profile
+	 *
+	 * Service Name - identity
+	 * Service Operation - ATTACH_PEER_PROFILE
+	 *
+	 * @param peer Name of the peer to connect to
+	 * @param externalId The users id for the new credentials
+	 * @param authenticationToken The password/token
+	 * @param authenticationType Type of identity
+	 * @param externalAuthName Optional - if attaching an external identity
+	 * @param forceCreate Should a new profile be created if it does not exist?
+	 * @param callback The method to be invoked when the server response is received
+	 */
 	void attachPeerProfile(const FString &peer, const FString &externalId, const FString &authenticationToken, EBCAuthType authenticationType,
 						   const FString &externalAuthName, bool forceCreate, IServerCallback *callback);
 
 	/**
-		 * Detaches a peer identity from this user's profile
-		 *
-		 * Service Name - identity
-		 * Service Operation - DETACH_PEER
-		 *
-		 * @param peer Name of the peer to connect to
-		 * @param successCallback The success callback
-		 * @param errorCallback The failure callback.
-		 * @param cbObject The user object sent to the callback
-		 */
+	 * Detaches a peer identity from this user's profile
+	 *
+	 * Service Name - identity
+	 * Service Operation - DETACH_PEER
+	 *
+	 * @param peer Name of the peer to connect to
+	 * @param successCallback The success callback
+	 * @param errorCallback The failure callback.
+	 * @param cbObject The user object sent to the callback
+	 */
 	void detachPeer(const FString &peer, IServerCallback *callback);
 
 	/**
-		 * Returns a list of peer profiles attached to this user
-		 *
-		 * Service Name - identity
-		 * Service Operation - GET_PEER_PROFILES
-		 *
-		 * @param successCallback The success callback
-		 * @param errorCallback The failure callback.
-		 * @param cbObject The user object sent to the callback
-		 */
+	 * Returns a list of peer profiles attached to this user
+	 *
+	 * Service Name - identity
+	 * Service Operation - GET_PEER_PROFILES
+	 *
+	 * @param successCallback The success callback
+	 * @param errorCallback The failure callback.
+	 * @param cbObject The user object sent to the callback
+	 */
 	void getPeerProfiles(IServerCallback *callback);
 
 	/**
-		 * Attaches a univeral id to the current profile with no login capability.
-		 *
-		 * Service Name - identity
-		 * Service Operation - AttachNonLoginUniversalId
-		 *
-		 * @param in_externalId the id that's been connected with
-		 * @param in_callback The method to be invoked when the server response is received
-		 */
+	 * Attaches a univeral id to the current profile with no login capability.
+	 *
+	 * Service Name - identity
+	 * Service Operation - AttachNonLoginUniversalId
+	 *
+	 * @param in_externalId the id that's been connected with
+	 * @param in_callback The method to be invoked when the server response is received
+	 */
 	void attachNonLoginUniversalId(const FString &externalId, IServerCallback *callback);
 
 	/**
-	* update universal id of current profile
-	*
-	* Service Name - identity
-	* Service Operation - UPDATE_UNIVERSAL_ID_LOGIN
-	*
-	* @param externalId the id connected with 
-	* @param callback The method to be invoked when the server response is received
-	*/
+	 * update universal id of current profile
+	 *
+	 * Service Name - identity
+	 * Service Operation - UPDATE_UNIVERSAL_ID_LOGIN
+	 *
+	 * @param externalId the id connected with
+	 * @param callback The method to be invoked when the server response is received
+	 */
 	void updateUniversalIDLogin(const FString &externalId, IServerCallback *callback);
 
-
-  private:
+private:
 	BrainCloudClient *_client = nullptr;
 
 	void attachIdentity(const FString &externalId, const FString &authenticationToken, EBCAuthType authenticationType, IServerCallback *callback = nullptr);

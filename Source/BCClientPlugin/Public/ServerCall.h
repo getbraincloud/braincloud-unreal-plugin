@@ -14,7 +14,7 @@
 class BCCLIENTPLUGIN_API ServerCall
 {
 
-  public:
+public:
 	ServerCall(ServiceName serviceName, ServiceOperation serviceOperation, TSharedRef<FJsonObject> data, IServerCallback *callback = nullptr);
 	virtual ~ServerCall();
 
@@ -25,7 +25,7 @@ class BCCLIENTPLUGIN_API ServerCall
 	bool getIsEndOfBundle() const { return _isEndOfBundle; }
 	void setIsEndOfBundle(bool isEndOfBundle) { _isEndOfBundle = isEndOfBundle; }
 
-  private:
+private:
 	IServerCallback *_callback;
 	TSharedPtr<FJsonObject> _data;
 	ServiceOperation _operation;

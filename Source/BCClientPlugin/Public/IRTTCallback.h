@@ -4,8 +4,8 @@
 
 class BCCLIENTPLUGIN_API IRTTCallback
 {
-  public:
-    /**
-     */
-    virtual void rttCallback(const FString &jsonData) = 0;
+public:
+  /**
+   */
+  virtual void rttCallback(const FString &jsonData) = 0;
 };

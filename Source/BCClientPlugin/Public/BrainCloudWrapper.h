@@ -26,613 +26,612 @@ class ServiceOperation;
 UCLASS(BlueprintType)
 class BCCLIENTPLUGIN_API UBrainCloudWrapper : public UObject, public IServerCallback
 {
-    GENERATED_BODY()
+     GENERATED_BODY()
 
-  public:
-    UBrainCloudWrapper();
-    UBrainCloudWrapper(FString wrapperName);
-    virtual void BeginDestroy() override;
+public:
+     UBrainCloudWrapper();
+     UBrainCloudWrapper(FString wrapperName);
+     virtual void BeginDestroy() override;
 
-    /**
-     * Method initializes the BrainCloudClient.
-     *
-     * @param serverURL The url to the brainCloud server
-     * @param secretKey The secret key for your app
-     * @param appId The app's id
-     * @param version The app's version
-     */
-    void initialize(FString serverUrl, FString secretKey, FString appId, FString version);
+     /**
+      * Method initializes the BrainCloudClient.
+      *
+      * @param serverURL The url to the brainCloud server
+      * @param secretKey The secret key for your app
+      * @param appId The app's id
+      * @param version The app's version
+      */
+     void initialize(FString serverUrl, FString secretKey, FString appId, FString version);
 
-    /**
-     * Method initializes the BrainCloudClient with multiple app/secret
-     * Used when needed to switch between child and parent apps
-     *
-     * @param serverURL The url to the brainCloud server
-     * @param appIdSecretMap The map of <appid, secretKey>
-     * @param defaultAppId the default app id we start with
-     * @param version The app's version
-     * @param companyName company name used in the keycheain for storing anonymous and profile ids. Pick anything
-     * @param appName app name used in the keychain for storing anonymous and profile ids. Pick anything
-     * 
-     */
-    void initializeWithApps(FString serverUrl, FString appId, TMap<FString, FString> secretMap, FString appVersion, FString companyName, FString appName);
+     /**
+      * Method initializes the BrainCloudClient with multiple app/secret
+      * Used when needed to switch between child and parent apps
+      *
+      * @param serverURL The url to the brainCloud server
+      * @param appIdSecretMap The map of <appid, secretKey>
+      * @param defaultAppId the default app id we start with
+      * @param version The app's version
+      * @param companyName company name used in the keycheain for storing anonymous and profile ids. Pick anything
+      * @param appName app name used in the keychain for storing anonymous and profile ids. Pick anything
+      *
+      */
+     void initializeWithApps(FString serverUrl, FString appId, TMap<FString, FString> secretMap, FString appVersion, FString companyName, FString appName);
 
-    /**
-         * Authenticate a user anonymously with brainCloud - used for apps that don't want to bother
-         * the user to login, or for users who are sensitive to their privacy
-         *
-         * Service Name - Authenticate
-         * Service Operation - Authenticate
-         *
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         */
-    void authenticateAnonymous(IServerCallback *callback = nullptr, bool forceCreate = true);
-
-    /*
-         * Authenticate the user with a custom Email and Password.  Note that the client app
-         * is responsible for collecting (and storing) the e-mail and potentially password
-         * (for convenience) in the client data.  For the greatest security,
-         * force the user to re-enter their * password at each login.
-         * (Or at least give them that option).
-         *
-         * Note that the password sent from the client to the server is protected via SSL.
-         *
-         * Service Name - Authenticate
-         * Service Operation - Authenticate
-         *
-         * @param in_email  The e-mail address of the user
-         * @param in_password  The password of the user
-         * @param forceCreate Should a new profile be created for this user if the account does not exist?
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         */
-    void authenticateEmailPassword(FString email, FString password, bool forceCreate, IServerCallback *callback = nullptr);
-
-    /**
-         * Authenticate the user via cloud code (which in turn validates the supplied credentials against an external system).
-         * This allows the developer to extend brainCloud authentication to support other backend authentication systems.
-         *
-         * Service Name - Authenticate
-         * Server Operation - Authenticate
-         *
-         * @param in_userid The user id
-         * @param in_token The user token (password etc)
-         * @param in_externalAuthName The name of the cloud script to call for external authentication
-         * @param in_force Should a new profile be created for this user if the account does not exist?
-         *
-         * @returns   performs the in_success callback on success, in_failure callback on failure
-         */
-    void authenticateExternal(FString userid, FString token, FString externalAuthName, bool forceCreate, IServerCallback *callback = nullptr);
-
-    /*
-         * Authenticate the user with brainCloud using their Facebook Credentials
-         *
-         * Service Name - Authenticate
-         * Service Operation - Authenticate
-         *
-         * @param in_fbUserId The facebook id of the user
-         * @param in_fbAuthToken The validated token from the Facebook SDK
-         *   (that will be further validated when sent to the bC service)
-         * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         */
-    void authenticateFacebook(FString fbUserId, FString fbAuthToken, bool forceCreate, IServerCallback *callback = nullptr);
-
-    /*
-     * Authenticate the user with brainCloud using their FacebookLimited Credentials
-     *
-     * Service Name - Authenticate
-     * Service Operation - Authenticate
-     *
-     * @param fbUserId The facebookLimited id of the user
-     * @param fbAuthToken The validated token from the Facebook SDK
-     *   (that will be further validated when sent to the bC service)
-     * @param forceCreate Should a new profile be created for this user if the account does not exist?
-     * @param callback The method to be invoked when the server response is received
-     *
-     */
-    void authenticateFacebookLimited(FString fbLimitedUserId, FString fbAuthToken, bool forceCreate, IServerCallback *callback = nullptr);
-
-    /*
-         * Authenticate the user with brainCloud using their Oculus Credentials
-         *
-         * Service Name - Authenticate
-         * Service Operation - Authenticate
-         *
-         * @param in_oculusUserId The oculus id of the user
-         * @param in_oculusNonce oculus token from the Oculus SDK
-         * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         */
-    void authenticateOculus(FString oculusUserId, FString oculusNonce, bool forceCreate, IServerCallback *callback = nullptr);
-
-
-    /*
-     * Authenticate the user specifically for Playstation 4 with brainCloud using their psn account id and auth token
-     *
-     * Service Name - Authenticate
-     * Service Operation - Authenticate
-     *
-     * @param psnAccountId The account id of the user
-     * @param psnAuthToken The validated token from the Playstation SDK
-     *   (that will be further validated when sent to the bC service)
-     * @param forceCreate Should a new profile be created for this user if the account does not exist?
-     * @param callback The method to be invoked when the server response is received
-     *
-     */
-    void authenticatePlaystationNetwork(FString psnAccountId, FString psnAuthToken, bool forceCreate, IServerCallback *callback = nullptr);
+     /**
+      * Authenticate a user anonymously with brainCloud - used for apps that don't want to bother
+      * the user to login, or for users who are sensitive to their privacy
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param in_callback The method to be invoked when the server response is received
+      *
+      */
+     void authenticateAnonymous(IServerCallback *callback = nullptr, bool forceCreate = true);
 
      /*
-     * Authenticate the user specifically for Playstation 5 with brainCloud using their psn account id and auth token
-     *
-     * Service Name - Authenticate
-     * Service Operation - Authenticate
-     *
-     * @param psnAccountId The account id of the user
-     * @param psnAuthToken The validated token from the Playstation SDK
-     *   (that will be further validated when sent to the bC service)
-     * @param forceCreate Should a new profile be created for this user if the account does not exist?
-     * @param callback The method to be invoked when the server response is received
-     *
-     */
+      * Authenticate the user with a custom Email and Password.  Note that the client app
+      * is responsible for collecting (and storing) the e-mail and potentially password
+      * (for convenience) in the client data.  For the greatest security,
+      * force the user to re-enter their * password at each login.
+      * (Or at least give them that option).
+      *
+      * Note that the password sent from the client to the server is protected via SSL.
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param in_email  The e-mail address of the user
+      * @param in_password  The password of the user
+      * @param forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param in_callback The method to be invoked when the server response is received
+      *
+      */
+     void authenticateEmailPassword(FString email, FString password, bool forceCreate, IServerCallback *callback = nullptr);
+
+     /**
+      * Authenticate the user via cloud code (which in turn validates the supplied credentials against an external system).
+      * This allows the developer to extend brainCloud authentication to support other backend authentication systems.
+      *
+      * Service Name - Authenticate
+      * Server Operation - Authenticate
+      *
+      * @param in_userid The user id
+      * @param in_token The user token (password etc)
+      * @param in_externalAuthName The name of the cloud script to call for external authentication
+      * @param in_force Should a new profile be created for this user if the account does not exist?
+      *
+      * @returns   performs the in_success callback on success, in_failure callback on failure
+      */
+     void authenticateExternal(FString userid, FString token, FString externalAuthName, bool forceCreate, IServerCallback *callback = nullptr);
+
+     /*
+      * Authenticate the user with brainCloud using their Facebook Credentials
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param in_fbUserId The facebook id of the user
+      * @param in_fbAuthToken The validated token from the Facebook SDK
+      *   (that will be further validated when sent to the bC service)
+      * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param in_callback The method to be invoked when the server response is received
+      *
+      */
+     void authenticateFacebook(FString fbUserId, FString fbAuthToken, bool forceCreate, IServerCallback *callback = nullptr);
+
+     /*
+      * Authenticate the user with brainCloud using their FacebookLimited Credentials
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param fbUserId The facebookLimited id of the user
+      * @param fbAuthToken The validated token from the Facebook SDK
+      *   (that will be further validated when sent to the bC service)
+      * @param forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param callback The method to be invoked when the server response is received
+      *
+      */
+     void authenticateFacebookLimited(FString fbLimitedUserId, FString fbAuthToken, bool forceCreate, IServerCallback *callback = nullptr);
+
+     /*
+      * Authenticate the user with brainCloud using their Oculus Credentials
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param in_oculusUserId The oculus id of the user
+      * @param in_oculusNonce oculus token from the Oculus SDK
+      * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param in_callback The method to be invoked when the server response is received
+      *
+      */
+     void authenticateOculus(FString oculusUserId, FString oculusNonce, bool forceCreate, IServerCallback *callback = nullptr);
+
+     /*
+      * Authenticate the user specifically for Playstation 4 with brainCloud using their psn account id and auth token
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param psnAccountId The account id of the user
+      * @param psnAuthToken The validated token from the Playstation SDK
+      *   (that will be further validated when sent to the bC service)
+      * @param forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param callback The method to be invoked when the server response is received
+      *
+      */
+     void authenticatePlaystationNetwork(FString psnAccountId, FString psnAuthToken, bool forceCreate, IServerCallback *callback = nullptr);
+
+     /*
+      * Authenticate the user specifically for Playstation 5 with brainCloud using their psn account id and auth token
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param psnAccountId The account id of the user
+      * @param psnAuthToken The validated token from the Playstation SDK
+      *   (that will be further validated when sent to the bC service)
+      * @param forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param callback The method to be invoked when the server response is received
+      *
+      */
      void authenticatePlaystation5(FString psnAccountId, FString psnAuthToken, bool forceCreate, IServerCallback *callback = nullptr);
- 
-    /*
-         * Authenticate the user using their Game Center id
-         *
-         * Service Name - Authenticate
-         * Service Operation - Authenticate
-         *
-         * @param in_gameCenterId The player's game center id  (use the playerID property from the local GKPlayer object)
-         * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
-         * @param in_success The method to call in event of successful login
-         * @param in_failure The method to call in the event of an error during authentication
-         *
-         * @returns   performs the in_success callback on success, in_failure callback on failure
-         *
-         */
-    void authenticateGameCenter(FString gameCenterId, bool forceCreate, IServerCallback *callback = nullptr);
 
-    /*
-         * Authenticate the user using a google userid(email address) and google authentication token.
-         *
-         * Service Name - Authenticate
-         * Service Operation - Authenticate
-         *
-         * @param in_googleUserId  String representation of google+ userid (email)
-         * @param in_serverAuthCode The authentication token derived via the google apis.
-         * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         * @returns   performs the in_success callback on success, in_failure callback on failure
-         *
-         */
-    void authenticateGoogle(FString googleUserId, FString ServerAuthCode, bool forceCreate, IServerCallback *callback = nullptr);
+     /*
+      * Authenticate the user using their Game Center id
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param in_gameCenterId The player's game center id  (use the playerID property from the local GKPlayer object)
+      * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param in_success The method to call in event of successful login
+      * @param in_failure The method to call in the event of an error during authentication
+      *
+      * @returns   performs the in_success callback on success, in_failure callback on failure
+      *
+      */
+     void authenticateGameCenter(FString gameCenterId, bool forceCreate, IServerCallback *callback = nullptr);
 
-    /*
-         * Authenticate the user using a google openId
-         *
-         * Service Name - Authenticate
-         * Service Operation - Authenticate
-         *
-         * @param in_googleUserAccountEmail  String representation of google+ userid (email)
-         * @param in_IdToken  The authentication token derived via the google apis.
-         * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         * @returns   performs the in_success callback on success, in_failure callback on failure
-         *
-         */
-    void authenticateGoogleOpenId(FString googleUserAccountEmail, FString IdToken, bool forceCreate, IServerCallback *callback = nullptr);
+     /*
+      * Authenticate the user using a google userid(email address) and google authentication token.
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param in_googleUserId  String representation of google+ userid (email)
+      * @param in_serverAuthCode The authentication token derived via the google apis.
+      * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param in_callback The method to be invoked when the server response is received
+      *
+      * @returns   performs the in_success callback on success, in_failure callback on failure
+      *
+      */
+     void authenticateGoogle(FString googleUserId, FString ServerAuthCode, bool forceCreate, IServerCallback *callback = nullptr);
 
-    /*
-         * Authenticate the user using a google userid(email address) and google authentication token.
-         *
-         * Service Name - Authenticate
-         * Service Operation - Authenticate
-         *
-         * @param in_appleUserId  String of the apple accounts user Id OR email
-         * @param in_identityToken  The authentication token confirming users identity
-         * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
-         * @param in_callback The method to be invoked when the server response is received
-         */
-    void authenticateApple(FString appleUserId, FString identityToken, bool forceCreate, IServerCallback *callback = nullptr);
+     /*
+      * Authenticate the user using a google openId
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param in_googleUserAccountEmail  String representation of google+ userid (email)
+      * @param in_IdToken  The authentication token derived via the google apis.
+      * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param in_callback The method to be invoked when the server response is received
+      *
+      * @returns   performs the in_success callback on success, in_failure callback on failure
+      *
+      */
+     void authenticateGoogleOpenId(FString googleUserAccountEmail, FString IdToken, bool forceCreate, IServerCallback *callback = nullptr);
 
-    /*
-         * Authenticate the user using a steam userid and session ticket (without any validation on the userid).
-         *
-         * Service Name - Authenticate
-         * Service Operation - Authenticate
-         *
-         * @param in_userid  String representation of 64 bit steam id
-         * @param in_sessionticket  The session ticket of the user (hex encoded)
-         * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         * @returns   performs the in_success callback on success, in_failure callback on failure
-         *
-         */
-    void authenticateSteam(FString userid, FString sessionticket, bool forceCreate, IServerCallback *callback = nullptr);
+     /*
+      * Authenticate the user using a google userid(email address) and google authentication token.
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param in_appleUserId  String of the apple accounts user Id OR email
+      * @param in_identityToken  The authentication token confirming users identity
+      * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param in_callback The method to be invoked when the server response is received
+      */
+     void authenticateApple(FString appleUserId, FString identityToken, bool forceCreate, IServerCallback *callback = nullptr);
 
-    /*
-         * Authenticate the user using a Twitter userid, authentication token, and secret from Twitter.
-         *
-         * Service Name - Authenticate
-         * Service Operation - Authenticate
-         *
-         * @param in_userid  String representation of Twitter userid
-         * @param in_token  The authentication token derived via the Twitter apis.
-         * @param in_secret  The secret given when attempting to link with Twitter
-         * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         * @returns   performs the in_success callback on success, in_failure callback on failure
-         *
-         */
-    void authenticateTwitter(FString userid, FString token, FString secret, bool forceCreate, IServerCallback *callback = nullptr);
+     /*
+      * Authenticate the user using a steam userid and session ticket (without any validation on the userid).
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param in_userid  String representation of 64 bit steam id
+      * @param in_sessionticket  The session ticket of the user (hex encoded)
+      * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param in_callback The method to be invoked when the server response is received
+      *
+      * @returns   performs the in_success callback on success, in_failure callback on failure
+      *
+      */
+     void authenticateSteam(FString userid, FString sessionticket, bool forceCreate, IServerCallback *callback = nullptr);
 
-    /*
-         * Authenticate the user using a userid and password (without any validation on the userid).
-         * Similar to AuthenticateEmailPassword - except that that method has additional features to
-         * allow for e-mail validation, password resets, etc.
-         *
-         * Service Name - Authenticate
-         * Service Operation - Authenticate
-         *
-         * @param in_userid  The User Id of the user
-         * @param in_password  The password of the user
-         * @param forceCreate Should a new profile be created for this user if the account does not exist?
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         */
-    void authenticateUniversal(FString userid, FString password, bool forceCreate, IServerCallback *callback = nullptr);
+     /*
+      * Authenticate the user using a Twitter userid, authentication token, and secret from Twitter.
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param in_userid  String representation of Twitter userid
+      * @param in_token  The authentication token derived via the Twitter apis.
+      * @param in_secret  The secret given when attempting to link with Twitter
+      * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param in_callback The method to be invoked when the server response is received
+      *
+      * @returns   performs the in_success callback on success, in_failure callback on failure
+      *
+      */
+     void authenticateTwitter(FString userid, FString token, FString secret, bool forceCreate, IServerCallback *callback = nullptr);
 
- /**
- * A generic Authenticate method that translates to the same as calling a specific one, except it takes an extraJson
- * that will be passed along to pre- or post- hooks.
- *
- * Service Name - Authenticate
- * Service Operation - Authenticate
- *
- * @param in_authenticationType Universal, Email, Facebook, etc
- * @param in_ids Auth IDs structure
- * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
- * @param in_extraJson Additional to piggyback along with the call, to be picked up by pre- or post- hooks. Leave empty string for no extraJson.
- * @param in_callback The method to be invoked when the server response is received
- */
- void authenticateAdvanced(EBCAuthType in_authenticationType, const FAuthenticationIds &in_ids, bool in_forceCreate, const FString &in_extraJson, IServerCallback * in_callback = NULL);
+     /*
+      * Authenticate the user using a userid and password (without any validation on the userid).
+      * Similar to AuthenticateEmailPassword - except that that method has additional features to
+      * allow for e-mail validation, password resets, etc.
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param in_userid  The User Id of the user
+      * @param in_password  The password of the user
+      * @param forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param in_callback The method to be invoked when the server response is received
+      *
+      */
+     void authenticateUniversal(FString userid, FString password, bool forceCreate, IServerCallback *callback = nullptr);
 
-  /**
-         * Authenticate the user for Ultra.
-         *
-         * Service Name - Authenticate
-         * Server Operation - Authenticate
-         *
-         * @param in_ultraUsername it's what the user uses to log into the Ultra endpoint initially
-         * @param in_ultraIdToken The "id_token" taken from Ultra's JWT.
-         * @param in_force Should a new profile be created for this user if the account does not exist?
-         * @param in_callback The method to be invoked when the server response is received
-         */
- void authenticateUltra(const FString& in_ultraUsername, const FString& in_ultraIdToken, bool in_forceCreate, IServerCallback * in_callback = NULL);
- 
- /**
-  * Authenticate the user using their Nintendo account id and an auth token
-  *
-  * Service Name - Authenticate
-  * Service Operation - Authenticate
-  *
-  * @param in_accountId The user's Nintendo account id
-  * @param in_authToken The user's Nintendo auth token
-  * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
-  * @param in_callback The method to be invoked when the server response is received
-  */
- void authenticateNintendo(const FString &in_accountId,const FString &in_authToken, bool in_forceCreate, IServerCallback * in_callback = NULL);
+     /**
+      * A generic Authenticate method that translates to the same as calling a specific one, except it takes an extraJson
+      * that will be passed along to pre- or post- hooks.
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param in_authenticationType Universal, Email, Facebook, etc
+      * @param in_ids Auth IDs structure
+      * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param in_extraJson Additional to piggyback along with the call, to be picked up by pre- or post- hooks. Leave empty string for no extraJson.
+      * @param in_callback The method to be invoked when the server response is received
+      */
+     void authenticateAdvanced(EBCAuthType in_authenticationType, const FAuthenticationIds &in_ids, bool in_forceCreate, const FString &in_extraJson, IServerCallback *in_callback = NULL);
 
-  /*
-    * Authenticate the user using a handoffId and a token 
-    *
-    * Service Name - Authenticate
-    * Service Operation - Authenticate
-    *
-    * @param handoffId braincloud handoff id generated from cloud script
-    * @param securityToken The security token entered byt the user
-    * @param callback The method to be invoked when the server response is received
-    */
-  void authenticateHandoff(FString &handoffId, FString &securityToken, bool forceCreate, IServerCallback *callback = nullptr);
+     /**
+      * Authenticate the user for Ultra.
+      *
+      * Service Name - Authenticate
+      * Server Operation - Authenticate
+      *
+      * @param in_ultraUsername it's what the user uses to log into the Ultra endpoint initially
+      * @param in_ultraIdToken The "id_token" taken from Ultra's JWT.
+      * @param in_force Should a new profile be created for this user if the account does not exist?
+      * @param in_callback The method to be invoked when the server response is received
+      */
+     void authenticateUltra(const FString &in_ultraUsername, const FString &in_ultraIdToken, bool in_forceCreate, IServerCallback *in_callback = NULL);
 
-    /*
-         * Authenticate the user using a handoffCode
-         *
-         * Service Name - Authenticate
-         * Service Operation - Authenticate
-         *
-         * @param in_handoffCode the code we generate in cloudcode
-         * @param in_callback The method to be invoked when the server response is received
-         */
-  void authenticateSettopHandoff(FString &handoffCode, IServerCallback *callback = nullptr);
+     /**
+      * Authenticate the user using their Nintendo account id and an auth token
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param in_accountId The user's Nintendo account id
+      * @param in_authToken The user's Nintendo auth token
+      * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param in_callback The method to be invoked when the server response is received
+      */
+     void authenticateNintendo(const FString &in_accountId, const FString &in_authToken, bool in_forceCreate, IServerCallback *in_callback = NULL);
 
-    /*
-         * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
-         * In event the current session was previously an anonymous account, the smart switch will delete that profile.
-         * Use this function to keep a clean designflow from anonymous to signed profiles
-         *
-         * Authenticate the user with a custom Email and Password.  Note that the client app
-         * is responsible for collecting (and storing) the e-mail and potentially password
-         * (for convenience) in the client data.  For the greatest security,
-         * force the user to re-enter their * password at each login.
-         * (Or at least give them that option).
-         *
-         * Note that the password sent from the client to the server is protected via SSL.
-         *
-         * Service Name - Authenticate
-         * Service Operation - Authenticate
-         *
-         * @param in_email  The e-mail address of the user
-         * @param in_password  The password of the user
-         * @param forceCreate Should a new profile be created for this user if the account does not exist?
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         */
-    void smartSwitchAuthenticateEmailPassword(const FString &email, const FString &password, bool forceCreate, IServerCallback *callback = NULL);
+     /*
+      * Authenticate the user using a handoffId and a token
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param handoffId braincloud handoff id generated from cloud script
+      * @param securityToken The security token entered byt the user
+      * @param callback The method to be invoked when the server response is received
+      */
+     void authenticateHandoff(FString &handoffId, FString &securityToken, bool forceCreate, IServerCallback *callback = nullptr);
 
-    /**
-         * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
-         * In event the current session was previously an anonymous account, the smart switch will delete that profile.
-         * Use this function to keep a clean designflow from anonymous to signed profiles
-         *
-         * Authenticate the user via cloud code (which in turn validates the supplied credentials against an external system).
-         * This allows the developer to extend brainCloud authentication to support other backend authentication systems.
-         *
-         * Service Name - Authenticate
-         * Server Operation - Authenticate
-         *
-         * @param in_userid The user id
-         * @param in_token The user token (password etc)
-         * @param in_externalAuthName The name of the cloud script to call for external authentication
-         * @param in_force Should a new profile be created for this user if the account does not exist?
-         *
-         * @returns   performs the in_success callback on success, in_failure callback on failure
-         */
-    void smartSwitchAuthenticateExternal(const FString &userid, const FString &token, const FString &externalAuthName, bool forceCreate, IServerCallback *callback = NULL);
+     /*
+      * Authenticate the user using a handoffCode
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param in_handoffCode the code we generate in cloudcode
+      * @param in_callback The method to be invoked when the server response is received
+      */
+     void authenticateSettopHandoff(FString &handoffCode, IServerCallback *callback = nullptr);
 
-    /*
-         * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
-         * In event the current session was previously an anonymous account, the smart switch will delete that profile.
-         * Use this function to keep a clean designflow from anonymous to signed profiles
-         *
-         * Authenticate the user with brainCloud using their Facebook Credentials
-         *
-         * Service Name - Authenticate
-         * Service Operation - Authenticate
-         *
-         * @param in_fbUserId The facebook id of the user
-         * @param in_fbAuthToken The validated token from the Facebook SDK
-         *   (that will be further validated when sent to the bC service)
-         * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         */
-    void smartSwitchAuthenticateFacebook(const FString &fbUserId, const FString &fbAuthToken, bool forceCreate, IServerCallback *callback = NULL);
+     /*
+      * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
+      * In event the current session was previously an anonymous account, the smart switch will delete that profile.
+      * Use this function to keep a clean designflow from anonymous to signed profiles
+      *
+      * Authenticate the user with a custom Email and Password.  Note that the client app
+      * is responsible for collecting (and storing) the e-mail and potentially password
+      * (for convenience) in the client data.  For the greatest security,
+      * force the user to re-enter their * password at each login.
+      * (Or at least give them that option).
+      *
+      * Note that the password sent from the client to the server is protected via SSL.
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param in_email  The e-mail address of the user
+      * @param in_password  The password of the user
+      * @param forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param in_callback The method to be invoked when the server response is received
+      *
+      */
+     void smartSwitchAuthenticateEmailPassword(const FString &email, const FString &password, bool forceCreate, IServerCallback *callback = NULL);
 
-    /*
-     * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
-     * In event the current session was previously an anonymous account, the smart switch will delete that profile.
-     * Use this function to keep a clean designflow from anonymous to signed profiles
-     *
-     * Authenticate the user with brainCloud using their FacebookLimited Credentials
-     *
-     * Service Name - Authenticate
-     * Service Operation - Authenticate
-     *
-     * @param fbUserId The facebookLimited id of the user
-     * @param fbAuthToken The validated token from the Facebook SDK
-     *   (that will be further validated when sent to the bC service)
-     * @param forceCreate Should a new profile be created for this user if the account does not exist?
-     * @param callback The method to be invoked when the server response is received
-     *
-     */
-    void smartSwitchAuthenticateFacebookLimited(const FString &fbLimitedUserId, const FString &fbAuthToken, bool forceCreate, IServerCallback *callback = NULL);
+     /**
+      * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
+      * In event the current session was previously an anonymous account, the smart switch will delete that profile.
+      * Use this function to keep a clean designflow from anonymous to signed profiles
+      *
+      * Authenticate the user via cloud code (which in turn validates the supplied credentials against an external system).
+      * This allows the developer to extend brainCloud authentication to support other backend authentication systems.
+      *
+      * Service Name - Authenticate
+      * Server Operation - Authenticate
+      *
+      * @param in_userid The user id
+      * @param in_token The user token (password etc)
+      * @param in_externalAuthName The name of the cloud script to call for external authentication
+      * @param in_force Should a new profile be created for this user if the account does not exist?
+      *
+      * @returns   performs the in_success callback on success, in_failure callback on failure
+      */
+     void smartSwitchAuthenticateExternal(const FString &userid, const FString &token, const FString &externalAuthName, bool forceCreate, IServerCallback *callback = NULL);
 
-    /*
-         * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
-         * In event the current session was previously an anonymous account, the smart switch will delete that profile.
-         * Use this function to keep a clean designflow from anonymous to signed profiles
-         *
-         * Authenticate the user with brainCloud using their Oculus Credentials
-         *
-         * Service Name - Authenticate
-         * Service Operation - Authenticate
-         *
-         * @param in_oculusUserId The oculus id of the user
-         * @param in_oculusNonce oculus token from the Oculus SDK
-         * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         */
-    void smartSwitchAuthenticateOculus(const FString &oculusUserId, const FString &oculusNonce, bool forceCreate, IServerCallback *callback = NULL);
+     /*
+      * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
+      * In event the current session was previously an anonymous account, the smart switch will delete that profile.
+      * Use this function to keep a clean designflow from anonymous to signed profiles
+      *
+      * Authenticate the user with brainCloud using their Facebook Credentials
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param in_fbUserId The facebook id of the user
+      * @param in_fbAuthToken The validated token from the Facebook SDK
+      *   (that will be further validated when sent to the bC service)
+      * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param in_callback The method to be invoked when the server response is received
+      *
+      */
+     void smartSwitchAuthenticateFacebook(const FString &fbUserId, const FString &fbAuthToken, bool forceCreate, IServerCallback *callback = NULL);
 
-    /*
-     * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
-     * In event the current session was previously an anonymous account, the smart switch will delete that profile.
-     * Use this function to keep a clean designflow from anonymous to signed profiles
-     *
-     * Authenticate the user with brainCloud using their PSN Credentials
-     *
-     * Service Name - Authenticate
-     * Service Operation - Authenticate
-     *
-     * @param psnAccountId The PSN account id of the user
-     * @param psnAuthToken The validated token from the Playstation SDK
-     *   (that will be further validated when sent to the bC service)
-     * @param forceCreate Should a new profile be created for this user if the account does not exist?
-     * @param callback The method to be invoked when the server response is received
-     *
-     */
-    void smartSwitchAuthenticatePlaystationNetwork(const FString &psnAccountId, const FString &psnAuthToken, bool forceCreate, IServerCallback *callback = NULL);
+     /*
+      * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
+      * In event the current session was previously an anonymous account, the smart switch will delete that profile.
+      * Use this function to keep a clean designflow from anonymous to signed profiles
+      *
+      * Authenticate the user with brainCloud using their FacebookLimited Credentials
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param fbUserId The facebookLimited id of the user
+      * @param fbAuthToken The validated token from the Facebook SDK
+      *   (that will be further validated when sent to the bC service)
+      * @param forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param callback The method to be invoked when the server response is received
+      *
+      */
+     void smartSwitchAuthenticateFacebookLimited(const FString &fbLimitedUserId, const FString &fbAuthToken, bool forceCreate, IServerCallback *callback = NULL);
 
-       /*
-     * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
-     * In event the current session was previously an anonymous account, the smart switch will delete that profile.
-     * Use this function to keep a clean designflow from anonymous to signed profiles
-     *
-     * Authenticate the user with brainCloud using their PSN Credentials for Playstation 5 users specifically
-     *
-     * Service Name - Authenticate
-     * Service Operation - Authenticate
-     *
-     * @param psnAccountId The PSN account id of the user
-     * @param psnAuthToken The validated token from the Playstation SDK
-     *   (that will be further validated when sent to the bC service)
-     * @param forceCreate Should a new profile be created for this user if the account does not exist?
-     * @param callback The method to be invoked when the server response is received
-     *
-     */
-    void smartSwitchAuthenticatePlaystationNetwork5(const FString &psnAccountId, const FString &psnAuthToken, bool forceCreate, IServerCallback *callback = NULL);
+     /*
+      * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
+      * In event the current session was previously an anonymous account, the smart switch will delete that profile.
+      * Use this function to keep a clean designflow from anonymous to signed profiles
+      *
+      * Authenticate the user with brainCloud using their Oculus Credentials
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param in_oculusUserId The oculus id of the user
+      * @param in_oculusNonce oculus token from the Oculus SDK
+      * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param in_callback The method to be invoked when the server response is received
+      *
+      */
+     void smartSwitchAuthenticateOculus(const FString &oculusUserId, const FString &oculusNonce, bool forceCreate, IServerCallback *callback = NULL);
 
-    /*
-         * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
-         * In event the current session was previously an anonymous account, the smart switch will delete that profile.
-         * Use this function to keep a clean designflow from anonymous to signed profiles
-         *
-         * Authenticate the user using their Game Center id
-         *
-         * Service Name - Authenticate
-         * Service Operation - Authenticate
-         *
-         * @param in_gameCenterId The player's game center id  (use the playerID property from the local GKPlayer object)
-         * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
-         * @param in_success The method to call in event of successful login
-         * @param in_failure The method to call in the event of an error during authentication
-         *
-         * @returns   performs the in_success callback on success, in_failure callback on failure
-         *
-         */
-    void smartSwitchAuthenticateGameCenter(const FString &gameCenterId, bool forceCreate, IServerCallback *callback = NULL);
+     /*
+      * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
+      * In event the current session was previously an anonymous account, the smart switch will delete that profile.
+      * Use this function to keep a clean designflow from anonymous to signed profiles
+      *
+      * Authenticate the user with brainCloud using their PSN Credentials
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param psnAccountId The PSN account id of the user
+      * @param psnAuthToken The validated token from the Playstation SDK
+      *   (that will be further validated when sent to the bC service)
+      * @param forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param callback The method to be invoked when the server response is received
+      *
+      */
+     void smartSwitchAuthenticatePlaystationNetwork(const FString &psnAccountId, const FString &psnAuthToken, bool forceCreate, IServerCallback *callback = NULL);
 
-    /*
-         * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
-         * In event the current session was previously an anonymous account, the smart switch will delete that profile.
-         * Use this function to keep a clean designflow from anonymous to signed profiles
-         *
-         * Authenticate the user using a google userid(email address) and google authentication token.
-         *
-         * Service Name - Authenticate
-         * Service Operation - Authenticate
-         *
-         * @param in_userid  String representation of google+ userid (email)
-         * @param in_token  The authentication token derived via the google apis.
-         * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         * @returns   performs the in_success callback on success, in_failure callback on failure
-         *
-         */
-    void smartSwitchAuthenticateGoogle(const FString &userid, const FString &token, bool forceCreate, IServerCallback *callback = NULL);
+     /*
+      * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
+      * In event the current session was previously an anonymous account, the smart switch will delete that profile.
+      * Use this function to keep a clean designflow from anonymous to signed profiles
+      *
+      * Authenticate the user with brainCloud using their PSN Credentials for Playstation 5 users specifically
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param psnAccountId The PSN account id of the user
+      * @param psnAuthToken The validated token from the Playstation SDK
+      *   (that will be further validated when sent to the bC service)
+      * @param forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param callback The method to be invoked when the server response is received
+      *
+      */
+     void smartSwitchAuthenticatePlaystationNetwork5(const FString &psnAccountId, const FString &psnAuthToken, bool forceCreate, IServerCallback *callback = NULL);
 
-    /*
-         * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
-         * In event the current session was previously an anonymous account, the smart switch will delete that profile.
-         * Use this function to keep a clean designflow from anonymous to signed profiles
-         *
-         * Authenticate the user using a google userid(email address) and google authentication token.
-         *
-         * Service Name - Authenticate
-         * Service Operation - Authenticate
-         *
-         * @param in_userid  String representation of google+ userid (email)
-         * @param in_token  The authentication token derived via the google apis.
-         * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         * @returns   performs the in_success callback on success, in_failure callback on failure
-         *
-         */
-    void smartSwitchAuthenticateGoogleOpenId(const FString &googleUserAccountEmail, const FString &IdToken, bool forceCreate, IServerCallback *callback = NULL);
+     /*
+      * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
+      * In event the current session was previously an anonymous account, the smart switch will delete that profile.
+      * Use this function to keep a clean designflow from anonymous to signed profiles
+      *
+      * Authenticate the user using their Game Center id
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param in_gameCenterId The player's game center id  (use the playerID property from the local GKPlayer object)
+      * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param in_success The method to call in event of successful login
+      * @param in_failure The method to call in the event of an error during authentication
+      *
+      * @returns   performs the in_success callback on success, in_failure callback on failure
+      *
+      */
+     void smartSwitchAuthenticateGameCenter(const FString &gameCenterId, bool forceCreate, IServerCallback *callback = NULL);
 
-    /*
-         * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
-         * In event the current session was previously an anonymous account, the smart switch will delete that profile.
-         * Use this function to keep a clean designflow from anonymous to signed profiles
-         *
-         * Authenticate the user using a google userid(email address) and google authentication token.
-         *
-         * Service Name - Authenticate
-         * Service Operation - Authenticate
-         *
-         * @param in_userid  String representation of apple+ userid (email)
-         * @param in_token  The authentication token derived via the apple apis.
-         * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         * @returns   performs the in_success callback on success, in_failure callback on failure
-         *
-         */
-    void smartSwitchAuthenticateApple(const FString &appleUserId, const FString &identityToken, bool forceCreate, IServerCallback *callback = NULL);
+     /*
+      * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
+      * In event the current session was previously an anonymous account, the smart switch will delete that profile.
+      * Use this function to keep a clean designflow from anonymous to signed profiles
+      *
+      * Authenticate the user using a google userid(email address) and google authentication token.
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param in_userid  String representation of google+ userid (email)
+      * @param in_token  The authentication token derived via the google apis.
+      * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param in_callback The method to be invoked when the server response is received
+      *
+      * @returns   performs the in_success callback on success, in_failure callback on failure
+      *
+      */
+     void smartSwitchAuthenticateGoogle(const FString &userid, const FString &token, bool forceCreate, IServerCallback *callback = NULL);
 
-    /*
-         * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
-         * In event the current session was previously an anonymous account, the smart switch will delete that profile.
-         * Use this function to keep a clean designflow from anonymous to signed profiles
-         *
-         * Authenticate the user using a steam userid and session ticket (without any validation on the userid).
-         *
-         * Service Name - Authenticate
-         * Service Operation - Authenticate
-         *
-         * @param in_userid  String representation of 64 bit steam id
-         * @param in_sessionticket  The session ticket of the user (hex encoded)
-         * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         * @returns   performs the in_success callback on success, in_failure callback on failure
-         *
-         */
-    void smartSwitchAuthenticateSteam(const FString &userid, const FString &sessionticket, bool forceCreate, IServerCallback *callback = NULL);
+     /*
+      * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
+      * In event the current session was previously an anonymous account, the smart switch will delete that profile.
+      * Use this function to keep a clean designflow from anonymous to signed profiles
+      *
+      * Authenticate the user using a google userid(email address) and google authentication token.
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param in_userid  String representation of google+ userid (email)
+      * @param in_token  The authentication token derived via the google apis.
+      * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param in_callback The method to be invoked when the server response is received
+      *
+      * @returns   performs the in_success callback on success, in_failure callback on failure
+      *
+      */
+     void smartSwitchAuthenticateGoogleOpenId(const FString &googleUserAccountEmail, const FString &IdToken, bool forceCreate, IServerCallback *callback = NULL);
 
-    /*
-         * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
-         * In event the current session was previously an anonymous account, the smart switch will delete that profile.
-         * Use this function to keep a clean designflow from anonymous to signed profiles
-         *
-         * Authenticate the user using a Twitter userid, authentication token, and secret from Twitter.
-         *
-         * Service Name - Authenticate
-         * Service Operation - Authenticate
-         *
-         * @param in_userid  String representation of Twitter userid
-         * @param in_token  The authentication token derived via the Twitter apis.
-         * @param in_secret  The secret given when attempting to link with Twitter
-         * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         * @returns   performs the in_success callback on success, in_failure callback on failure
-         *
-         */
-    void smartSwitchAuthenticateTwitter(const FString &userid, const FString &token, const FString &secret, bool forceCreate, IServerCallback *callback = NULL);
+     /*
+      * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
+      * In event the current session was previously an anonymous account, the smart switch will delete that profile.
+      * Use this function to keep a clean designflow from anonymous to signed profiles
+      *
+      * Authenticate the user using a google userid(email address) and google authentication token.
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param in_userid  String representation of apple+ userid (email)
+      * @param in_token  The authentication token derived via the apple apis.
+      * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param in_callback The method to be invoked when the server response is received
+      *
+      * @returns   performs the in_success callback on success, in_failure callback on failure
+      *
+      */
+     void smartSwitchAuthenticateApple(const FString &appleUserId, const FString &identityToken, bool forceCreate, IServerCallback *callback = NULL);
 
-    /*
-         * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
-         * In event the current session was previously an anonymous account, the smart switch will delete that profile.
-         * Use this function to keep a clean designflow from anonymous to signed profiles
-         *
-         * Authenticate the user using a userid and password (without any validation on the userid).
-         * Similar to AuthenticateEmailPassword - except that that method has additional features to
-         * allow for e-mail validation, password resets, etc.
-         *
-         * Service Name - Authenticate
-         * Service Operation - Authenticate
-         *
-         * @param in_userid  The User Id of the user
-         * @param in_password  The password of the user
-         * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         */
-    void smartSwitchAuthenticateUniversal(const FString &userid, const FString &password, bool forceCreate, IServerCallback *callback = NULL);
- 
+     /*
+      * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
+      * In event the current session was previously an anonymous account, the smart switch will delete that profile.
+      * Use this function to keep a clean designflow from anonymous to signed profiles
+      *
+      * Authenticate the user using a steam userid and session ticket (without any validation on the userid).
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param in_userid  String representation of 64 bit steam id
+      * @param in_sessionticket  The session ticket of the user (hex encoded)
+      * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param in_callback The method to be invoked when the server response is received
+      *
+      * @returns   performs the in_success callback on success, in_failure callback on failure
+      *
+      */
+     void smartSwitchAuthenticateSteam(const FString &userid, const FString &sessionticket, bool forceCreate, IServerCallback *callback = NULL);
+
+     /*
+      * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
+      * In event the current session was previously an anonymous account, the smart switch will delete that profile.
+      * Use this function to keep a clean designflow from anonymous to signed profiles
+      *
+      * Authenticate the user using a Twitter userid, authentication token, and secret from Twitter.
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param in_userid  String representation of Twitter userid
+      * @param in_token  The authentication token derived via the Twitter apis.
+      * @param in_secret  The secret given when attempting to link with Twitter
+      * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param in_callback The method to be invoked when the server response is received
+      *
+      * @returns   performs the in_success callback on success, in_failure callback on failure
+      *
+      */
+     void smartSwitchAuthenticateTwitter(const FString &userid, const FString &token, const FString &secret, bool forceCreate, IServerCallback *callback = NULL);
+
+     /*
+      * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
+      * In event the current session was previously an anonymous account, the smart switch will delete that profile.
+      * Use this function to keep a clean designflow from anonymous to signed profiles
+      *
+      * Authenticate the user using a userid and password (without any validation on the userid).
+      * Similar to AuthenticateEmailPassword - except that that method has additional features to
+      * allow for e-mail validation, password resets, etc.
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param in_userid  The User Id of the user
+      * @param in_password  The password of the user
+      * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param in_callback The method to be invoked when the server response is received
+      *
+      */
+     void smartSwitchAuthenticateUniversal(const FString &userid, const FString &password, bool forceCreate, IServerCallback *callback = NULL);
+
      /*
       * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
       * In event the current session was previously an anonymous account, the smart switch will delete that profile.
@@ -650,367 +649,367 @@ class BCCLIENTPLUGIN_API UBrainCloudWrapper : public UObject, public IServerCall
       * @param in_extraJson Additional to piggyback along with the call, to be picked up by pre- or post- hooks. Leave empty string for no extraJson.
       * @param in_callback The method to be invoked when the server response is received
       */
-    void smartSwitchAuthenticateAdvanced(EBCAuthType in_authenticationType, const FAuthenticationIds &in_ids, bool in_forceCreate, const FString &in_extraJson, IServerCallback * in_callback = NULL);
+     void smartSwitchAuthenticateAdvanced(EBCAuthType in_authenticationType, const FAuthenticationIds &in_ids, bool in_forceCreate, const FString &in_extraJson, IServerCallback *in_callback = NULL);
 
-      /*
-         * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
-         * In event the current session was previously an anonymous account, the smart switch will delete that profile.
-         * Use this function to keep a clean designflow from anonymous to signed profiles
-         *
-         * Authenticate the user for Ultra.
-         *
-         * Service Name - Authenticate
-         * Server Operation - Authenticate
-         *
-         * @param in_ultraUsername it's what the user uses to log into the Ultra endpoint initially
-         * @param in_ultraIdToken The "id_token" taken from Ultra's JWT.
-         * @param in_force Should a new profile be created for this user if the account does not exist?
-         * @param in_callback The method to be invoked when the server response is received
-         */
-    void smartSwitchAuthenticateUltra(const FString &in_ultraUsername,const FString &in_ultraIdToken, bool in_forceCreate, IServerCallback * in_callback = NULL);
+     /*
+      * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
+      * In event the current session was previously an anonymous account, the smart switch will delete that profile.
+      * Use this function to keep a clean designflow from anonymous to signed profiles
+      *
+      * Authenticate the user for Ultra.
+      *
+      * Service Name - Authenticate
+      * Server Operation - Authenticate
+      *
+      * @param in_ultraUsername it's what the user uses to log into the Ultra endpoint initially
+      * @param in_ultraIdToken The "id_token" taken from Ultra's JWT.
+      * @param in_force Should a new profile be created for this user if the account does not exist?
+      * @param in_callback The method to be invoked when the server response is received
+      */
+     void smartSwitchAuthenticateUltra(const FString &in_ultraUsername, const FString &in_ultraIdToken, bool in_forceCreate, IServerCallback *in_callback = NULL);
 
-      /**
-       * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
-       * In event the current session was previously an anonymous account, the smart switch will delete that profile.
-       * Use this function to keep a clean design flow from anonymous to signed profiles
-       *
-       * Authenticate the user for Nintendo.
-       *
-       * Service Name - Authenticate
-       * Service Operation - Authenticate
-       *
-       * @param in_accountId  The user's Nintendo account id
-       * @param in_authToken The user's Nintendo auth token
-       * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
-       * @param in_callback The method to be invoked when the server response is received
-       */
-    void smartSwitchAuthenticateNintendo(const FString &in_accountId,const FString &in_authToken, bool in_forceCreate, IServerCallback * in_callback = NULL);
- 
-    /**
-         * Reset Email password - Sends a password reset email to the specified address
-         *
-         * Service Name - Authenticate
-         * Operation - ResetEmailPassword
-         *
-         * @param in_externalId The email address to send the reset email to.
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         * Note the follow error reason codes:
-         *
-         * SECURITY_ERROR (40209) - If the email address cannot be found.
-         */
-    void resetEmailPassword(const FString &email, IServerCallback *callback);
+     /**
+      * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
+      * In event the current session was previously an anonymous account, the smart switch will delete that profile.
+      * Use this function to keep a clean design flow from anonymous to signed profiles
+      *
+      * Authenticate the user for Nintendo.
+      *
+      * Service Name - Authenticate
+      * Service Operation - Authenticate
+      *
+      * @param in_accountId  The user's Nintendo account id
+      * @param in_authToken The user's Nintendo auth token
+      * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
+      * @param in_callback The method to be invoked when the server response is received
+      */
+     void smartSwitchAuthenticateNintendo(const FString &in_accountId, const FString &in_authToken, bool in_forceCreate, IServerCallback *in_callback = NULL);
 
-    /**
-         * Reset Email password with service parameters - Sends a password reset email to
-         * the specified address
-         *
-         * Service Name - Authenticate
-         * Operation - ResetEmailPasswordAdvanced
-         *
-         * @param appId the applicationId
-         * @param in_emailAddress The email address to send the reset email to.
-         * @param in_serviceParams - parameters to send to the email service. See documentation for
-         * full list. http://getbraincloud.com/apidocs/apiref/#capi-mail
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         * Note the follow error reason codes:
-         *
-         * SECURITY_ERROR (40209) - If the email address cannot be found.
-         */
-    void resetEmailPasswordAdvanced(const FString &emailAddress, const FString &in_serviceParams, IServerCallback *callback);
+     /**
+      * Reset Email password - Sends a password reset email to the specified address
+      *
+      * Service Name - Authenticate
+      * Operation - ResetEmailPassword
+      *
+      * @param in_externalId The email address to send the reset email to.
+      * @param in_callback The method to be invoked when the server response is received
+      *
+      * Note the follow error reason codes:
+      *
+      * SECURITY_ERROR (40209) - If the email address cannot be found.
+      */
+     void resetEmailPassword(const FString &email, IServerCallback *callback);
 
-    /**
-         * Reset Email password - Sends a password reset email to the specified address
-         *
-         * Service Name - Authenticate
-         * Operation - ResetEmailPassword
-         *
-         * @param in_externalId The email address to send the reset email to.
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         * Note the follow error reason codes:
-         *
-         * SECURITY_ERROR (40209) - If the email address cannot be found.
-         */
-  void resetEmailPasswordWithExpiry(const FString &in_email, int32 in_tokenTtlInMinutes, IServerCallback *in_callback);
+     /**
+      * Reset Email password with service parameters - Sends a password reset email to
+      * the specified address
+      *
+      * Service Name - Authenticate
+      * Operation - ResetEmailPasswordAdvanced
+      *
+      * @param appId the applicationId
+      * @param in_emailAddress The email address to send the reset email to.
+      * @param in_serviceParams - parameters to send to the email service. See documentation for
+      * full list. http://getbraincloud.com/apidocs/apiref/#capi-mail
+      * @param in_callback The method to be invoked when the server response is received
+      *
+      * Note the follow error reason codes:
+      *
+      * SECURITY_ERROR (40209) - If the email address cannot be found.
+      */
+     void resetEmailPasswordAdvanced(const FString &emailAddress, const FString &in_serviceParams, IServerCallback *callback);
 
-    /**
-         * Reset Email password with service parameters - Sends a password reset email to
-         * the specified address
-         *
-         * Service Name - Authenticate
-         * Operation - ResetEmailPasswordAdvanced
-         *
-         * @param appId the applicationId
-         * @param in_emailAddress The email address to send the reset email to.
-         * @param in_serviceParams - parameters to send to the email service. See documentation for
-         * full list. http://getbraincloud.com/apidocs/apiref/#capi-mail
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         * Note the follow error reason codes:
-         *
-         * SECURITY_ERROR (40209) - If the email address cannot be found.
-         */
-  void resetEmailPasswordAdvancedWithExpiry(const FString &in_emailAddress, const FString &in_serviceParams, int32 in_tokenTtlInMinutes, IServerCallback *in_callback);
+     /**
+      * Reset Email password - Sends a password reset email to the specified address
+      *
+      * Service Name - Authenticate
+      * Operation - ResetEmailPassword
+      *
+      * @param in_externalId The email address to send the reset email to.
+      * @param in_callback The method to be invoked when the server response is received
+      *
+      * Note the follow error reason codes:
+      *
+      * SECURITY_ERROR (40209) - If the email address cannot be found.
+      */
+     void resetEmailPasswordWithExpiry(const FString &in_email, int32 in_tokenTtlInMinutes, IServerCallback *in_callback);
 
-    /**
-         * Reset Email password - Sends a password reset email to the specified address
-         *
-         * Service Name - Authenticate
-         * Operation - ResetEmailPassword
-         *
-         * @param in_externalId The email address to send the reset email to.
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         * Note the follow error reason codes:
-         *
-         * SECURITY_ERROR (40209) - If the email address cannot be found.
-         */ 
-  void resetUniversalIdPassword(const FString &in_universalId, IServerCallback *in_callback);
+     /**
+      * Reset Email password with service parameters - Sends a password reset email to
+      * the specified address
+      *
+      * Service Name - Authenticate
+      * Operation - ResetEmailPasswordAdvanced
+      *
+      * @param appId the applicationId
+      * @param in_emailAddress The email address to send the reset email to.
+      * @param in_serviceParams - parameters to send to the email service. See documentation for
+      * full list. http://getbraincloud.com/apidocs/apiref/#capi-mail
+      * @param in_callback The method to be invoked when the server response is received
+      *
+      * Note the follow error reason codes:
+      *
+      * SECURITY_ERROR (40209) - If the email address cannot be found.
+      */
+     void resetEmailPasswordAdvancedWithExpiry(const FString &in_emailAddress, const FString &in_serviceParams, int32 in_tokenTtlInMinutes, IServerCallback *in_callback);
 
-      /**
-         * Reset Email password with service parameters - Sends a password reset email to
-         * the specified address
-         *
-         * Service Name - Authenticate
-         * Operation - ResetEmailPasswordAdvanced
-         *
-         * @param appId the applicationId
-         * @param in_emailAddress The email address to send the reset email to.
-         * @param in_serviceParams - parameters to send to the email service. See documentation for
-         * full list. http://getbraincloud.com/apidocs/apiref/#capi-mail
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         * Note the follow error reason codes:
-         *
-         * SECURITY_ERROR (40209) - If the email address cannot be found.
-         */ 
-  void resetUniversalIdPasswordAdvanced(const FString &in_universalId, const FString &in_serviceParams, IServerCallback *in_callback);
+     /**
+      * Reset Email password - Sends a password reset email to the specified address
+      *
+      * Service Name - Authenticate
+      * Operation - ResetEmailPassword
+      *
+      * @param in_externalId The email address to send the reset email to.
+      * @param in_callback The method to be invoked when the server response is received
+      *
+      * Note the follow error reason codes:
+      *
+      * SECURITY_ERROR (40209) - If the email address cannot be found.
+      */
+     void resetUniversalIdPassword(const FString &in_universalId, IServerCallback *in_callback);
 
-    /**
-         * Reset Email password - Sends a password reset email to the specified address
-         *
-         * Service Name - Authenticate
-         * Operation - ResetEmailPassword
-         *
-         * @param in_externalId The email address to send the reset email to.
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         * Note the follow error reason codes:
-         *
-         * SECURITY_ERROR (40209) - If the email address cannot be found.
-         */ 
-  void resetUniversalIdPasswordWithExpiry(const FString &in_universalId, int32 in_tokenTtlInMinutes, IServerCallback *in_callback);
+     /**
+      * Reset Email password with service parameters - Sends a password reset email to
+      * the specified address
+      *
+      * Service Name - Authenticate
+      * Operation - ResetEmailPasswordAdvanced
+      *
+      * @param appId the applicationId
+      * @param in_emailAddress The email address to send the reset email to.
+      * @param in_serviceParams - parameters to send to the email service. See documentation for
+      * full list. http://getbraincloud.com/apidocs/apiref/#capi-mail
+      * @param in_callback The method to be invoked when the server response is received
+      *
+      * Note the follow error reason codes:
+      *
+      * SECURITY_ERROR (40209) - If the email address cannot be found.
+      */
+     void resetUniversalIdPasswordAdvanced(const FString &in_universalId, const FString &in_serviceParams, IServerCallback *in_callback);
 
-      /**
-         * Reset Email password with service parameters - Sends a password reset email to
-         * the specified address
-         *
-         * Service Name - Authenticate
-         * Operation - ResetEmailPasswordAdvanced
-         *
-         * @param appId the applicationId
-         * @param in_emailAddress The email address to send the reset email to.
-         * @param in_serviceParams - parameters to send to the email service. See documentation for
-         * full list. http://getbraincloud.com/apidocs/apiref/#capi-mail
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         * Note the follow error reason codes:
-         *
-         * SECURITY_ERROR (40209) - If the email address cannot be found.
-         */ 
-  void resetUniversalIdPasswordAdvancedWithExpiry(const FString &in_universalId, const FString &in_serviceParams, int32 in_tokenTtlInMinutes, IServerCallback *in_callback);
+     /**
+      * Reset Email password - Sends a password reset email to the specified address
+      *
+      * Service Name - Authenticate
+      * Operation - ResetEmailPassword
+      *
+      * @param in_externalId The email address to send the reset email to.
+      * @param in_callback The method to be invoked when the server response is received
+      *
+      * Note the follow error reason codes:
+      *
+      * SECURITY_ERROR (40209) - If the email address cannot be found.
+      */
+     void resetUniversalIdPasswordWithExpiry(const FString &in_universalId, int32 in_tokenTtlInMinutes, IServerCallback *in_callback);
 
-    const FString &getAnonymousId() const;
-    const FString &getProfileId() const;
-    void setAnonymousId(const FString &anonymousId);
-    void setProfileId(const FString &profileId);
+     /**
+      * Reset Email password with service parameters - Sends a password reset email to
+      * the specified address
+      *
+      * Service Name - Authenticate
+      * Operation - ResetEmailPasswordAdvanced
+      *
+      * @param appId the applicationId
+      * @param in_emailAddress The email address to send the reset email to.
+      * @param in_serviceParams - parameters to send to the email service. See documentation for
+      * full list. http://getbraincloud.com/apidocs/apiref/#capi-mail
+      * @param in_callback The method to be invoked when the server response is received
+      *
+      * Note the follow error reason codes:
+      *
+      * SECURITY_ERROR (40209) - If the email address cannot be found.
+      */
+     void resetUniversalIdPasswordAdvancedWithExpiry(const FString &in_universalId, const FString &in_serviceParams, int32 in_tokenTtlInMinutes, IServerCallback *in_callback);
 
-    /**
-         * Re-authenticates the user with brainCloud
-         *
-         * @param in_callback The method to be invoked when the server response is received
-         *
-         */
-    void reconnect(IServerCallback *callback = nullptr);
+     const FString &getAnonymousId() const;
+     const FString &getProfileId() const;
+     void setAnonymousId(const FString &anonymousId);
+     void setProfileId(const FString &profileId);
 
-    void logoutOnApplicationQuit(bool forgetUser, IServerCallback* in_callback);
+     /**
+      * Re-authenticates the user with brainCloud
+      *
+      * @param in_callback The method to be invoked when the server response is received
+      *
+      */
+     void reconnect(IServerCallback *callback = nullptr);
 
-    void logout(bool forgetUser, IServerCallback* in_callback);
-    /**
-     * Run callbacks, to be called once per frame from your main thread
-     */
-    void runCallbacks();
+     void logoutOnApplicationQuit(bool forgetUser, IServerCallback *in_callback);
 
-    BrainCloudClient *getClient() { return _client; }
-    BrainCloudTimeUtils *getUtil() { return _client->getUtil(); }
+     void logout(bool forgetUser, IServerCallback *in_callback);
+     /**
+      * Run callbacks, to be called once per frame from your main thread
+      */
+     void runCallbacks();
 
-    //Service Getters
-    BrainCloudLeaderboard *getLeaderboardService() { return _client->getLeaderboardService(); }
-    BrainCloudPlayerState *getPlayerStateService() { return _client->getPlayerStateService(); }
-    BrainCloudGamification *getGamificationService() { return _client->getGamificationService(); }
-    BrainCloudGlobalEntity *getGlobalEntityService() { return _client->getGlobalEntityService(); }
-    BrainCloudGlobalStatistics *getGlobalStatisticsService() { return _client->getGlobalStatisticsService(); }
-    BrainCloudEntity *getEntityService() { return _client->getEntityService(); }
-    BrainCloudPlayerStatistics *getPlayerStatisticsService() { return _client->getPlayerStatisticsService(); }
-    BrainCloudTime *getTimeService() { return _client->getTimeService(); }
-    BrainCloudPlayerStatisticsEvent *getPlayerStatisticsEventService() { return _client->getPlayerStatisticsEventService(); }
-    BrainCloudIdentity *getIdentityService() { return _client->getIdentityService(); }
-    BrainCloudItemCatalog *getItemCatalogService() { return _client->getItemCatalogService(); }
-    BrainCloudUserItems *getUserItemsService() { return _client->getUserItemsService(); }
-    BrainCloudEvent *getEventService() { return _client->getEventService(); }
-    BrainCloudS3Handling *getS3HandlingService() { return _client->getS3HandlingService(); }
-    BrainCloudScript *getScriptService() { return _client->getScriptService(); }
-    BrainCloudAsyncMatch *getAsyncMatchService() { return _client->getAsyncMatchService(); }
-    BrainCloudFriend *getFriendService() { return _client->getFriendService(); }
-    BrainCloudGlobalApp *getGlobalAppService() { return _client->getGlobalAppService(); }
-    BrainCloudMatchmaking *getMatchmakingService() { return _client->getMatchmakingService(); }
-    BrainCloudOneWayMatch *getOneWayMatchService() { return _client->getOneWayMatchService(); }
-    BrainCloudPlaybackStream *getPlaybackStreamService() { return _client->getPlaybackStreamService(); }
-    BrainCloudPushNotification *getPushNotificationService() { return _client->getPushNotificationService(); }
-    BrainCloudRedemptionCode *getRedemptionCodeService() { return _client->getRedemptionCodeService(); }
-    BrainCloudDataStream *getDataStreamService() { return _client->getDataStreamService(); }
-    BrainCloudProfanity *getProfanityService() { return _client->getProfanityService(); }
-    BrainCloudFile *getFileService() { return _client->getFileService(); }
-    BrainCloudGroup *getGroupService() { return _client->getGroupService(); }
-    BrainCloudMail *getMailService() { return _client->getMailService(); }
-    BrainCloudTournament *getTournamentService() { return _client->getTournamentService(); }
-    BrainCloudGlobalFile *getGlobalFileService() { return _client->getGlobalFileService(); }
-    BrainCloudCustomEntity *getCustomEntityService() { return _client->getCustomEntityService(); }
-    BrainCloudPresence *getPresenceService() { return _client->getPresenceService(); }
-    BrainCloudVirtualCurrency *getVirtualCurrencyService() { return _client->getVirtualCurrencyService(); }
-    BrainCloudAppStore *getAppStoreService() { return _client->getAppStoreService(); }
-    BrainCloudRTT *getRTTService() { return _client->getRTTService(); }
-    BrainCloudLobby *getLobbyService() { return _client->getLobbyService(); }
-    BrainCloudChat *getChatService() { return _client->getChatService(); }
-    BrainCloudMessaging *getMessagingService() { return _client->getMessagingService(); }
-    BrainCloudRelay *getRelayService() { return _client->getRelayService(); }
-    BrainCloudBlockchain *getBlockchainService() { return _client->getBlockchainService(); }
-    BrainCloudGroupFile *getGroupFileService() { return _client->getGroupFileService(); }
-    /**
-     * Returns the instance of the BrainCloudClient.
-     * @return The instance of the BrainCloudClient.
-     */
-    BrainCloudClient *getBCClient() { return _client; }
+     BrainCloudClient *getClient() { return _client; }
+     BrainCloudTimeUtils *getUtil() { return _client->getUtil(); }
 
-    bool canReconnect() { return getStoredProfileId() != "" && getStoredAnonymousId() != ""; }
+     // Service Getters
+     BrainCloudLeaderboard *getLeaderboardService() { return _client->getLeaderboardService(); }
+     BrainCloudPlayerState *getPlayerStateService() { return _client->getPlayerStateService(); }
+     BrainCloudGamification *getGamificationService() { return _client->getGamificationService(); }
+     BrainCloudGlobalEntity *getGlobalEntityService() { return _client->getGlobalEntityService(); }
+     BrainCloudGlobalStatistics *getGlobalStatisticsService() { return _client->getGlobalStatisticsService(); }
+     BrainCloudEntity *getEntityService() { return _client->getEntityService(); }
+     BrainCloudPlayerStatistics *getPlayerStatisticsService() { return _client->getPlayerStatisticsService(); }
+     BrainCloudTime *getTimeService() { return _client->getTimeService(); }
+     BrainCloudPlayerStatisticsEvent *getPlayerStatisticsEventService() { return _client->getPlayerStatisticsEventService(); }
+     BrainCloudIdentity *getIdentityService() { return _client->getIdentityService(); }
+     BrainCloudItemCatalog *getItemCatalogService() { return _client->getItemCatalogService(); }
+     BrainCloudUserItems *getUserItemsService() { return _client->getUserItemsService(); }
+     BrainCloudEvent *getEventService() { return _client->getEventService(); }
+     BrainCloudS3Handling *getS3HandlingService() { return _client->getS3HandlingService(); }
+     BrainCloudScript *getScriptService() { return _client->getScriptService(); }
+     BrainCloudAsyncMatch *getAsyncMatchService() { return _client->getAsyncMatchService(); }
+     BrainCloudFriend *getFriendService() { return _client->getFriendService(); }
+     BrainCloudGlobalApp *getGlobalAppService() { return _client->getGlobalAppService(); }
+     BrainCloudMatchmaking *getMatchmakingService() { return _client->getMatchmakingService(); }
+     BrainCloudOneWayMatch *getOneWayMatchService() { return _client->getOneWayMatchService(); }
+     BrainCloudPlaybackStream *getPlaybackStreamService() { return _client->getPlaybackStreamService(); }
+     BrainCloudPushNotification *getPushNotificationService() { return _client->getPushNotificationService(); }
+     BrainCloudRedemptionCode *getRedemptionCodeService() { return _client->getRedemptionCodeService(); }
+     BrainCloudDataStream *getDataStreamService() { return _client->getDataStreamService(); }
+     BrainCloudProfanity *getProfanityService() { return _client->getProfanityService(); }
+     BrainCloudFile *getFileService() { return _client->getFileService(); }
+     BrainCloudGroup *getGroupService() { return _client->getGroupService(); }
+     BrainCloudMail *getMailService() { return _client->getMailService(); }
+     BrainCloudTournament *getTournamentService() { return _client->getTournamentService(); }
+     BrainCloudGlobalFile *getGlobalFileService() { return _client->getGlobalFileService(); }
+     BrainCloudCustomEntity *getCustomEntityService() { return _client->getCustomEntityService(); }
+     BrainCloudPresence *getPresenceService() { return _client->getPresenceService(); }
+     BrainCloudVirtualCurrency *getVirtualCurrencyService() { return _client->getVirtualCurrencyService(); }
+     BrainCloudAppStore *getAppStoreService() { return _client->getAppStoreService(); }
+     BrainCloudRTT *getRTTService() { return _client->getRTTService(); }
+     BrainCloudLobby *getLobbyService() { return _client->getLobbyService(); }
+     BrainCloudChat *getChatService() { return _client->getChatService(); }
+     BrainCloudMessaging *getMessagingService() { return _client->getMessagingService(); }
+     BrainCloudRelay *getRelayService() { return _client->getRelayService(); }
+     BrainCloudBlockchain *getBlockchainService() { return _client->getBlockchainService(); }
+     BrainCloudGroupFile *getGroupFileService() { return _client->getGroupFileService(); }
+     /**
+      * Returns the instance of the BrainCloudClient.
+      * @return The instance of the BrainCloudClient.
+      */
+     BrainCloudClient *getBCClient() { return _client; }
 
-    /**
-     * Returns the stored profile id
-     * @return The stored profile id
-     */
-    FString getStoredProfileId() { return _client->getAuthenticationService()->getProfileId(); }
+     bool canReconnect() { return getStoredProfileId() != "" && getStoredAnonymousId() != ""; }
 
-    /**
-         * Sets the stored profile id
-         * @param in_profileId The profile id to set
-         */
-    void setStoredProfileId(FString profileId)
-    {
-        _client->getAuthenticationService()->setProfileId(profileId);
-        saveData();
-    }
+     /**
+      * Returns the stored profile id
+      * @return The stored profile id
+      */
+     FString getStoredProfileId() { return _client->getAuthenticationService()->getProfileId(); }
 
-    /**
-     * Resets the profile id to empty string
-     */
-    void resetStoredProfileId()
-    {
-        setStoredProfileId(TEXT(""));
-    }
+     /**
+      * Sets the stored profile id
+      * @param in_profileId The profile id to set
+      */
+     void setStoredProfileId(FString profileId)
+     {
+          _client->getAuthenticationService()->setProfileId(profileId);
+          saveData();
+     }
 
-    /**
-     * Returns the stored anonymous id
-     * @return The stored anonymous id
-     */
-    const FString getStoredAnonymousId() { return _client->getAuthenticationService()->getAnonymousId(); }
+     /**
+      * Resets the profile id to empty string
+      */
+     void resetStoredProfileId()
+     {
+          setStoredProfileId(TEXT(""));
+     }
 
-    /**
-         * Sets the stored anonymous id
-         * @param in_anonymousId The anonymous id to set
-         */
-    void setStoredAnonymousId(FString anonymousId)
-    {
-        _client->getAuthenticationService()->setAnonymousId(anonymousId);
-        saveData();
-    }
+     /**
+      * Returns the stored anonymous id
+      * @return The stored anonymous id
+      */
+     const FString getStoredAnonymousId() { return _client->getAuthenticationService()->getAnonymousId(); }
 
-    /**
-     * Resets the anonymous id to empty string
-     */
-    void resetStoredAnonymousId()
-    {
-        setStoredAnonymousId(TEXT(""));
-    }
+     /**
+      * Sets the stored anonymous id
+      * @param in_anonymousId The anonymous id to set
+      */
+     void setStoredAnonymousId(FString anonymousId)
+     {
+          _client->getAuthenticationService()->setAnonymousId(anonymousId);
+          saveData();
+     }
 
-    /**
-         * For non-anonymous authentication methods, a profile id will be passed in
-         * when this value is set to false. This will generate an error on the server
-         * if the profile id passed in does not match the profile associated with the
-         * authentication credentials. By default, this value is true.
-         *
-         * @param in_alwaysAllow Controls whether the profile id is passed in with
-         * non-anonymous authentications.
-         */
-    void setAlwaysAllowProfileSwitch(bool alwaysAllow);
+     /**
+      * Resets the anonymous id to empty string
+      */
+     void resetStoredAnonymousId()
+     {
+          setStoredAnonymousId(TEXT(""));
+     }
 
-    /**
-     * Returns the value for always allow profile switch
-     * @return Whether to always allow profile switches
-     */
-    bool getAlwaysAllowProfileSwitch();
+     /**
+      * For non-anonymous authentication methods, a profile id will be passed in
+      * when this value is set to false. This will generate an error on the server
+      * if the profile id passed in does not match the profile associated with the
+      * authentication credentials. By default, this value is true.
+      *
+      * @param in_alwaysAllow Controls whether the profile id is passed in with
+      * non-anonymous authentications.
+      */
+     void setAlwaysAllowProfileSwitch(bool alwaysAllow);
 
-    /**
-	* Set the wrapper name
-	* @return String used to distinguish saved wrapper data
-	*/
-    void setWrapperName(FString wrapperName) { _wrapperName = wrapperName; }
+     /**
+      * Returns the value for always allow profile switch
+      * @return Whether to always allow profile switches
+      */
+     bool getAlwaysAllowProfileSwitch();
 
-    virtual void serverCallback(ServiceName serviceName, ServiceOperation serviceOperation, FString const &jsonData);
-    virtual void serverError(ServiceName serviceName, ServiceOperation serviceOperation, int32 statusCode, int32 reasonCode, const FString &message);
+     /**
+      * Set the wrapper name
+      * @return String used to distinguish saved wrapper data
+      */
+     void setWrapperName(FString wrapperName) { _wrapperName = wrapperName; }
 
-    static FString buildErrorJson(int32 statusCode, int32 reasonCode, const FString &message);
-	static FString GetJsonString(TSharedRef<FJsonObject> jsonDataObject);
+     virtual void serverCallback(ServiceName serviceName, ServiceOperation serviceOperation, FString const &jsonData);
+     virtual void serverError(ServiceName serviceName, ServiceOperation serviceOperation, int32 statusCode, int32 reasonCode, const FString &message);
 
-  protected:
-    UBrainCloudWrapper(BrainCloudClient *client);
+     static FString buildErrorJson(int32 statusCode, int32 reasonCode, const FString &message);
+     static FString GetJsonString(TSharedRef<FJsonObject> jsonDataObject);
 
-    void loadData();
-    void saveData();
+protected:
+     UBrainCloudWrapper(BrainCloudClient *client);
 
-    BrainCloudClient *_client = nullptr;
+     void loadData();
+     void saveData();
 
-    FString _lastUrl;
-    FString _lastSecretKey;
-    FString _lastGameId;
-    FString _lastGameVersion;
-    FString _company;
-    FString _appName;
+     BrainCloudClient *_client = nullptr;
 
-    FString _authenticationType;
+     FString _lastUrl;
+     FString _lastSecretKey;
+     FString _lastGameId;
+     FString _lastGameVersion;
+     FString _company;
+     FString _appName;
 
-    FString _wrapperName;
+     FString _authenticationType;
 
-    IServerCallback *_authenticateCallback = nullptr;
+     FString _wrapperName;
 
-    bool _alwaysAllowProfileSwitch = true;
-    bool _createdWithClient = false;
+     IServerCallback *_authenticateCallback = nullptr;
 
-    void initializeIdentity(bool isAnonymousAuth = false);
-    void reauthenticate();
-    void getIdentitiesCallback(IServerCallback *success);
+     bool _alwaysAllowProfileSwitch = true;
+     bool _createdWithClient = false;
 
-    // these methods are not really used
-    FString getStoredAuthenticationType() { return _authenticationType; }
-    void setStoredAuthenticationType(FString authenticationType)
-    {
-        _authenticationType = authenticationType;
-        saveData();
-    }
-    void resetStoredAuthenticationType()
-    {
-        _authenticationType = TEXT("");
-        saveData();
-    }
+     void initializeIdentity(bool isAnonymousAuth = false);
+     void reauthenticate();
+     void getIdentitiesCallback(IServerCallback *success);
+
+     // these methods are not really used
+     FString getStoredAuthenticationType() { return _authenticationType; }
+     void setStoredAuthenticationType(FString authenticationType)
+     {
+          _authenticationType = authenticationType;
+          saveData();
+     }
+     void resetStoredAuthenticationType()
+     {
+          _authenticationType = TEXT("");
+          saveData();
+     }
 };
