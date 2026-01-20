@@ -191,7 +191,7 @@ class BrainCloudComms
 
 	//compression
 	bool _supportsCompression = true;
-	int32 _clientSideCompressionThreshold = 50000;
+	int32 _clientSideCompressionThreshold = 51200;
 
 	//For kill switch
 	int32 _killSwitchThreshold = 11;
