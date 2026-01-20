@@ -94,14 +94,14 @@ class BCCLIENTPLUGIN_API BrainCloudGlobalEntity
 	void deleteEntity(const FString &entityId, int32 version, IServerCallback *callback);
 
 	/**
-	* Method reads an existing entity from the server.
-	*
-	* Service Name - GlobalEntity
-	* Service Operation - Read
-	*
-	* @param entityId The entity ID
-	* @param callback The callback object
-	*/
+		* Method reads an existing entity from the server.
+		*
+		* Service Name - GlobalEntity
+		* Service Operation - Read
+		*
+		* @param in_entityId The entity ID
+		* @param in_callback The callback object
+		*/
 	void readEntity(const FString &entityId, IServerCallback *callback);
 
 	/**
@@ -130,54 +130,54 @@ class BCCLIENTPLUGIN_API BrainCloudGlobalEntity
 	void getListByIndexedId(const FString &entityIndexedId, int32 maxReturn, IServerCallback *callback);
 
 	/**
-	* Method gets a count of entities based on the where clause
-	*
-	* Service Name - GlobalEntity
-	* Service Operation - GetListCount
-	*
-	* @param where Mongo style query string
-	* @param callback The callback object
-	*/
+		* Method gets a count of entities based on the where clause
+		*
+		* Service Name - GlobalEntity
+		* Service Operation - GetListCount
+		*
+		* @param in_where Mongo style query string
+		* @param in_callback The callback object
+		*/
 	void getListCount(const FString &where, IServerCallback *callback);
 
 	/**
-	* Method uses a paging system to iterate through Global Entities
-	* After retrieving a page of Global Entities with this method,
-	* use GetPageOffset() to retrieve previous or next pages.
-	*
-	* Service Name - GlobalEntity
-	* Service Operation - GetPage
-	*
-	* @param context The json context for the page request.
-	*                   See the portal appendix documentation for format.
-	* @param callback The callback object
-	*/
+		 * Method uses a paging system to iterate through Global Entities
+		 * After retrieving a page of Global Entities with this method,
+		 * use GetPageOffset() to retrieve previous or next pages.
+		 *
+		 * Service Name - GlobalEntity
+		 * Service Operation - GetPage
+		 *
+		 * @param in_context The json context for the page request.
+		 *                   See the portal appendix documentation for format.
+		 * @param in_callback The callback object
+		 */
 	void getPage(const FString &context, IServerCallback *callback);
 
 	/**
-	* Method to retrieve previous or next pages after having called the GetPage method.
-	*
-	* Service Name - GlobalEntity
-	* Service Operation - GetPageOffset
-	*
-	* @param context The context string returned from the server from a
-	*      previous call to GetPage or GetPageOffset
-	* @param pageOffset The positive or negative page offset to fetch. Uses the last page
-	*      retrieved using the context string to determine a starting point.
-	* @param callback The callback object
-	*/
+		 * Method to retrieve previous or next pages after having called the GetPage method.
+		 *
+		 * Service Name - GlobalEntity
+		 * Service Operation - GetPageOffset
+		 *
+		 * @param in_context The context string returned from the server from a
+		 *      previous call to GetPage or GetPageOffset
+		 * @param in_pageOffset The positive or negative page offset to fetch. Uses the last page
+		 *      retrieved using the context string to determine a starting point.
+		 * @param in_callback The callback object
+		 */
 	void getPageOffset(const FString &context, int32 pageOffset, IServerCallback *callback);
 
 	/**
-	* Partial increment of global entity data field items. Partial set of items incremented as specified.
-	*
-	* Service Name - globalEntity
-	* Service Operation - INCREMENT_GLOBAL_ENTITY_DATA
-	*
-	* @param entityId The id of the entity to update
-	* @param jsonData The entity's data object
-	* @param callback The callback object
-	*/
+		* Partial increment of global entity data field items. Partial set of items incremented as specified.
+		*
+		* Service Name - globalEntity
+		* Service Operation - INCREMENT_GLOBAL_ENTITY_DATA
+		*
+		* @param in_entityId The id of the entity to update
+		* @param in_jsonData The entity's data object
+		* @param in_callback The callback object
+		*/
 	void incrementGlobalEntityData(const FString &entityId, const FString &jsonData, IServerCallback *callback = nullptr);
 
 	/**

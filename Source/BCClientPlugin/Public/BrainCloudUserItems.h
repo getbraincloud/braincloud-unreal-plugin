@@ -97,19 +97,18 @@ class BCCLIENTPLUGIN_API BrainCloudUserItems
     void getItemPromotionDetails(const FString& defId, const FString& shopId, bool includeDef, bool includePromotionDetails, IServerCallback* callback = nullptr);
 
    
-    /*
-    * Retrieves the page of user's inventory from the server 
-    * based on the context. If includeDef is true, response includes
-    * associated itemDef with each user item, with language fields 
-    * limited to the current or default language.
-    *
-    * Service Name - UserItems
-    * Service Operation - GET_USER_ITEMS_PAGE
-    *
-    * @param criteria
-    * @param includeDef
-    * @param callback The method to be invoked when the server response is received
-    */
+    /**
+		 * Retrieves the page of user's inventory from the server
+		 * based on the context. If includeDef is true, response
+		 *  includes associated itemDef with each user item, with
+		 * language fields limited to the current or default language.
+		 *
+		 * Service Name - userItems
+		 * Service Operation - GET_USER_INVENTORY_PAGE
+		 *
+		 * @param context
+		 * @param includeDef
+		 */
 	void getUserItemsPage(const FString &context, bool includeDef, IServerCallback *callback = nullptr);
 
     /*
@@ -129,19 +128,19 @@ class BCCLIENTPLUGIN_API BrainCloudUserItems
     */
 	void getUserItemsPageOffset(const FString &context, int pageOffest, bool includeDef, IServerCallback *callback = nullptr);
 
-    /*
-    * Retrieves the identified user item from the server.
-    * If includeDef is true, response includes associated
-    * itemDef with language fields limited to the current 
-    * or default language.
-    *
-    * Service Name - UserIItems
-    * Service Operation - GET_USER_ITEM
-    *
-    * @param itemId
-    * @param includeDef
-    * @param callback The method to be invoked when the server response is received
-    */
+    /**
+		 * Retrieves the identified user item from the server.
+		 * If includeDef is true, response includes associated
+		 * itemDef with language fields limited to the current
+		 * or default language.
+		 *
+		 * Service Name - userItems
+		 * Service Operation - GET_USER_ITEM
+		 *
+		 * @param itemId
+		 * @param includeDef
+		 * @param callback The method to be invoked when the server response is received
+		 */
 	void getUserItem(const FString &itemId, bool includeDef, IServerCallback *callback = nullptr);
 
     /*
@@ -199,17 +198,17 @@ class BCCLIENTPLUGIN_API BrainCloudUserItems
             IServerCallback* callback = nullptr
         );
 
-    /*
-    * Retrieves and transfers the gift item from the specified player, 
-    * who must have previously called giveUserItemTo.
-    *
-    * Service Name - UserItems
-    * Service Operation - RECEIVE_USER_ITEM_FROM
-    *
-    * @param profileId
-    * @param itemId
-    * @param callback The method to be invoked when the server response is received
-    */
+    /**
+		 * Retrieves and transfers the gift item from
+		 * the specified player, who must have previously
+		 * called giveUserItemTo.
+		 *
+		 * Service Name - userItems
+		 * Service Operation - RECEVIE_USER_ITEM_FROM
+		 *
+		 * @param profileId
+		 * @param itemId
+		 */
 	void receiveUserItemFrom(const FString &profileId, const FString &itemId, IServerCallback *callback = nullptr);
 	
 	/*
@@ -298,14 +297,12 @@ class BCCLIENTPLUGIN_API BrainCloudUserItems
     */
 	void publishUserItemToBlockchain(const FString &itemId, int version, IServerCallback *callback = nullptr);
 
-    /*
-    * Syncs the caller's user items with the item management attached blockchain. Results are reported asynchronously via an RTT event.
-    *
-    * Service Name - UserItems
-    * Service Operation - REFRESH_BLOCKCHAIN_USER_ITEMS
-    *
-    * @param callback The method to be invoked when the server response is received
-    */
+    /**
+		 * Syncs the caller's user items with the item management attached blockchain. Results are reported asynchronously via an RTT event.
+		 *
+		 * Service Name - userItems
+		 * Service Operation - REFRESH_BLOCKCHAIN_USER_ITEMS
+		 */
 	void refreshBlockchainUserItems(IServerCallback *callback = nullptr);
 
     /*

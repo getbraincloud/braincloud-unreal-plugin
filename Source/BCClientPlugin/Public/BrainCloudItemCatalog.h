@@ -12,29 +12,25 @@ class BCCLIENTPLUGIN_API BrainCloudItemCatalog
   public:
 	BrainCloudItemCatalog(BrainCloudClient *client);
 
-	/*
-	 * Reads an existing item definition from the 
-     * server, with language fields limited to the
-     * current or default language.
+	/**
+	 * Reads an existing item definition from the server, with language fields
+	 * limited to the current or default language
 	 *
-	 * Service Name - ItemCatalog
+	 * Service Name - itemCatalog
 	 * Service Operation - GET_CATALOG_ITEM_DEFINITION
 	 *
 	 * @param defId
-	 * @param callback The method to be invoked when the server response is received
 	 */
 	void getCatalogItemDefinition(const FString &defId, IServerCallback *callback = nullptr);
 
-	/*
-	 * Retrieves page of catalog items from the server, 
-     * with language fields limited to the text for the 
-     * current or default language.
+	/**
+	 * Retrieve page of catalog items from the server, with language fields limited to the 
+	 * text for the current or default language.
 	 *
-	 * Service Name - ItemCatalog
+	 * Service Name - itemCatalog
 	 * Service Operation - GET_CATALOG_ITEMS_PAGE
 	 *
 	 * @param context
-	 * @param callback The method to be invoked when the server response is received
 	 */
 	void getCatalogItemsPage(const FString &context, IServerCallback *callback = nullptr);
 

@@ -52,38 +52,56 @@ class BCCLIENTPLUGIN_API BrainCloudRTT
 	bool isRTTEnabled();
 
 	/**
-	* 
-	*/
+		 * Listen to real time events.
+		 * 
+		 * Notes: RTT must be enabled for this app, and enableRTT must have been successfully called.
+		 * Only one event callback can be registered at a time. Calling this a second time will override the previous callback.
+		 */
 	void setRTTHeartBeatSeconds(int32 in_value);
 
 	/**
-	* 
-	*/
+		 * Listen to real time chat messages.
+		 * 
+		 * Notes: RTT must be enabled for this app, and enableRTT must have been successfully called.
+		 * Only one chat callback can be registered at a time. Calling this a second time will override the previous callback.
+		 */
 	void deregisterAllRTTCallbacks();
 
 	/**
-	* 
-	*/
+		 * Listen to real time messaging.
+		 * 
+		 * Notes: RTT must be enabled for this app, and enableRTT must have been successfully called.
+		 * Only one messaging callback can be registered at a time. Calling this a second time will override the previous callback.
+		 */
 	void registerRTTEventCallback(UBCBlueprintRTTCallProxyBase *in_callback);
 
 	/**
-	* 
-	*/
+		 * Listen to real time lobby events.
+		 * 
+		 * Notes: RTT must be enabled for this app, and enableRTT must have been successfully called.
+		 * Only one lobby callback can be registered at a time. Calling this a second time will override the previous callback.
+		 */
 	void registerRTTEventCallback(IRTTCallback *in_callback);
 
 	/**
-	* 
-	*/
+		 * Listen to real time presence events.
+		 * 
+		 * Notes: RTT must be enabled for this app, and enableRTT must have been successfully called.
+		 * Only one presence callback can be registered at a time. Calling this a second time will override the previous callback.
+		 */
 	void deregisterRTTEventCallback();
 
 	/**
-	* 
-	*/
+		 * Listen to real time blockchain events.
+		 * 
+		 * Notes: RTT must be enabled for this app, and enableRTT must have been successfully called.
+		 * Only one presence callback can be registered at a time. Calling this a second time will override the previous callback.
+		 */
 	void registerRTTChatCallback(UBCBlueprintRTTCallProxyBase *in_callback);
 
 	/**
-	* 
-	*/
+		 * Clear all set RTT callbacks
+		 */
 	void registerRTTChatCallback(IRTTCallback *in_callback);
 
 	/**

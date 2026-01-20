@@ -99,28 +99,27 @@ public:
     */
   void startPurchase(const FString &in_storeId, const FString &in_jsonPurchaseData, IServerCallback *callback = nullptr);
 
-  /**
-    *
-    * Before making a purchase with the IAP store, you will need to store the purchase
-    * payload context on brainCloud so that the purchase can be verified for the proper IAP product.
-    * This payload will be used during the VerifyPurchase method to ensure the
-    * user properly paid for the correct product before awarding them the IAP product.
-    *
-    * Service Name - AppStore
-    * Service Operation - CachePurchasePayloadContext
-    *
-    * @param storeId The store platform. Valid stores are:
-    * - itunes
-    * - facebook
-    * - appworld
-    * - steam
-    * - windows
-    * - windowsPhone
-    * - googlePlay
-    * @param iapId The IAP product Id as configured for the product on brainCloud.
-    * @param payload The payload retrieved for the IAP product after the GetSalesInventory method.
-    * @param in_callback The method to be invoked when the server response is received
-    */
+  /*
+        * Before making a purchase with the IAP store, you will need to store the purchase
+        * payload context on brainCloud so that the purchase can be verified for the proper IAP product.
+        * This payload will be used during the VerifyPurchase method to ensure the
+        * user properly paid for the correct product before awarding them the IAP product.
+        *
+        * Service Name - AppStore
+        * Service Operation - CachePurchasePayloadContext
+        *
+        * @param storeId The store platform. Valid stores are:
+        * - itunes
+        * - facebook
+        * - appworld
+        * - steam
+        * - windows
+        * - windowsPhone
+        * - googlePlay
+        * @param transactionId the transactionId returned from start Purchase
+        * @param transactionData specific data for purchasing 2 staged purchases
+        * @param in_callback The method to be invoked when the server response is received
+        */
   void cachePurchasePayloadContext(const FString& in_storeId, const FString& iapId, const FString& payload, IServerCallback* callback = nullptr);
 
   /**
@@ -144,13 +143,11 @@ public:
   void finalizePurchase(const FString &in_storeId, const FString &in_transactionId, const FString &in_jsonTransactionData, IServerCallback *callback = nullptr);
 
   /**
-  * Returns up-to-date eligible 'promotions' for the user and a 'promotionsRefreshed' flag indicating whether the user's promotion info required refreshing.
-  *
-  * Service Name - appStore
-  * Service Operation - REFRESH_PROMOTIONS
-  *
-  * @param callback The method to be invoked when the server response is received
-  */
+        * Returns up-to-date eligible 'promotions' for the user and a 'promotionsRefreshed' flag indicating whether the user's promotion info required refreshing.
+        *
+        * Service Name - AppStore
+        * Service Operation - RefreshPromotions
+        */
   void refreshPromotions(IServerCallback *callback = nullptr);
 
 private:

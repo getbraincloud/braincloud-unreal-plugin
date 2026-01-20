@@ -29,14 +29,14 @@ class BCCLIENTPLUGIN_API BrainCloudGroup
     BrainCloudGroup(BrainCloudClient *client);
 
     /**
-     * Accept an outstanding invitation to join the group.
-     *
-     * Service Name - group
-     * Service Operation - ACCEPT_GROUP_INVITATION
-     *
-     * @param groupId ID of the group.
-     * @param callback The method to be invoked when the server response is received
-     */
+		* Accept an outstanding invitation to join the group.
+		*
+		* Service Name - group
+		* Service Operation - ACCEPT_GROUP_INVITATION
+		*
+		* @param in_groupId ID of the group.
+		* @param in_callback The method to be invoked when the server response is received
+		*/
     void acceptGroupInvitation(const FString &groupId, IServerCallback *callback = nullptr);
 
     /**
@@ -94,15 +94,15 @@ class BCCLIENTPLUGIN_API BrainCloudGroup
     void autoJoinGroupMulti(const TArray<FString> &groupType, EAutoJoinStrategy autoJoinStrategy, const FString &dataQueryJson, IServerCallback *callback = nullptr);
 
     /**
-     * Cancel an outstanding invitation to the group.
-     *
-     * Service Name - group
-     * Service Operation - CANCEL_GROUP_INVITATION
-     *
-     * @param groupId ID of the group.
-     * @param profileId Profile ID of the invitation being deleted.
-     * @param callback The method to be invoked when the server response is received
-     */
+		* Cancel an outstanding invitation to the group.
+		*
+		* Service Name - group
+		* Service Operation - CANCEL_GROUP_INVITATION
+		*
+		* @param in_groupId ID of the group.
+		* @param in_profileId Profile ID of the invitation being deleted.
+		* @param in_callback The method to be invoked when the server response is received
+		*/
     void cancelGroupInvitation(const FString &groupId, const FString &profileId, IServerCallback *callback = nullptr);
 
     /**
@@ -204,48 +204,48 @@ class BCCLIENTPLUGIN_API BrainCloudGroup
     void deleteGroupEntity(const FString &groupId, const FString &entityId, int32 version, IServerCallback *callback = nullptr);
 
     /**
-     * Delete a request to join a group
-     * 
-     * Service Name - group
-     * Service Opereation - DELETE_GROUP_JOIN_REQUEST
-     * 
-     * @param groupId ID of the group.
-     * @param callback the method to be invoked when the server response is received
-    */
+        * Delete an outstanding request to join the group.
+        *
+        * Service Name - group
+        * Service Operation - DELETE_GROUP_JOIN_REQUEST
+        *
+        * @param in_groupId ID of the group.
+        * @param in_callback The method to be invoked when the server response is received
+        */
     void deleteGroupJoinRequest(const FString& groupId, IServerCallback* callback = nullptr);
 
     /**
-     * Read information on groups to which the current player belongs.
-     *
-     * Service Name - group
-     * Service Operation - GET_MY_GROUPS
-     * @param callback The method to be invoked when the server response is received
-     */
+		* Read information on groups to which the current user belongs.
+		*
+		* Service Name - group
+		* Service Operation - GET_MY_GROUPS
+		* @param in_callback The method to be invoked when the server response is received
+		*/
     void getMyGroups(IServerCallback *callback = nullptr);
 
     /**
-     * Increment elements for the group's data field.
-     *
-     * Service Name - group
-     * Service Operation - INCREMENT_GROUP_DATA
-     *
-     * @param groupId ID of the group.
-     * @param jsonData Partial data map with incremental values.
-     * @param callback The method to be invoked when the server response is received
-     */
+		* Increment elements for the group's data field.
+		*
+		* Service Name - group
+		* Service Operation - INCREMENT_GROUP_DATA
+		*
+		* @param in_groupId ID of the group.
+		* @param in_jsonData Partial data map with incremental values.
+		* @param in_callback The method to be invoked when the server response is received
+		*/
     void incrementGroupData(const FString &groupId, const FString &jsonData, IServerCallback *callback = nullptr);
 
     /**
-     * Increment elements for the group entity's data field.
-     *
-     * Service Name - group
-     * Service Operation - INCREMENT_GROUP_ENTITY_DATA
-     *
-     * @param groupId ID of the group.
-     * @param entityId ID of the entity.
-     * @param jsonData Partial data map with incremental values.
-     * @param callback The method to be invoked when the server response is received
-     */
+		* Increment elements for the group entity's data field.
+		*
+		* Service Name - group
+		* Service Operation - INCREMENT_GROUP_ENTITY_DATA
+		*
+		* @param in_groupId ID of the group.
+		* @param in_entityId ID of the entity.
+		* @param in_jsonData Partial data map with incremental values.
+		* @param in_callback The method to be invoked when the server response is received
+		*/
     void incrementGroupEntityData(const FString &groupId, const FString &entityId, const FString &jsonData, IServerCallback *callback = nullptr);
 
     /**
@@ -263,36 +263,36 @@ class BCCLIENTPLUGIN_API BrainCloudGroup
     void inviteGroupMember(const FString &groupId, const FString &profileId, ERole role, const FString &jsonAttributes, IServerCallback *callback = nullptr);
 
     /**
-     * Join an open group or request to join a closed group.
-     *
-     * Service Name - group
-     * Service Operation - JOIN_GROUP
-     *
-     * @param groupId ID of the group.
-     * @param callback The method to be invoked when the server response is received
-     */
+		* Join an open group or request to join a closed group.
+		*
+		* Service Name - group
+		* Service Operation - JOIN_GROUP
+		*
+		* @param in_groupId ID of the group.
+		* @param in_callback The method to be invoked when the server response is received
+		*/
     void joinGroup(const FString &groupId, IServerCallback *callback = nullptr);
 
     /**
-     * Leave a group in which the player is a member.
-     *
-     * Service Name - group
-     * Service Operation - LEAVE_GROUP
-     *
-     * @param groupId ID of the group.
-     * @param callback The method to be invoked when the server response is received
-     */
+		* Leave a group in which the user is a member.
+		*
+		* Service Name - group
+		* Service Operation - LEAVE_GROUP
+		*
+		* @param in_groupId ID of the group.
+		* @param in_callback The method to be invoked when the server response is received
+		*/
     void leaveGroup(const FString &groupId, IServerCallback *callback = nullptr);
 
     /**
-     * Read a page of group information.
-     *
-     * Service Name - group
-     * Service Operation - LIST_GROUPS_PAGE
-     *
-     * @param context Query context.
-     * @param callback The method to be invoked when the server response is received
-     */
+		* Read a page of group information.
+		*
+		* Service Name - group
+		* Service Operation - LIST_GROUPS_PAGE
+		*
+		* @param in_context Query context.
+		* @param in_callback The method to be invoked when the server response is received
+		*/
     void listGroupsPage(const FString &jsonContext, IServerCallback *callback = nullptr);
 
     /**
@@ -308,47 +308,47 @@ class BCCLIENTPLUGIN_API BrainCloudGroup
     void listGroupsPageByOffset(const FString &encodedContext, int32 pageOffset, IServerCallback *callback = nullptr);
 
     /**
-     * Read information on groups to which the specified player belongs.  Access is subject to restrictions.
-     *
-     * Service Name - group
-     * Service Operation - LIST_GROUPS_WITH_MEMBER
-     *
-     * @param profileId
-     * @param callback The method to be invoked when the server response is received
-     */
+		* Read information on groups to which the specified user belongs.  Access is subject to restrictions.
+		*
+		* Service Name - group
+		* Service Operation - LIST_GROUPS_WITH_MEMBER
+		*
+		* @param in_profileId
+		* @param in_callback The method to be invoked when the server response is received
+		*/
     void listGroupsWithMember(const FString &profileId, IServerCallback *callback = nullptr);
 
     /**
-     * Read the specified group.
-     *
-     * Service Name - group
-     * Service Operation - READ_GROUP
-     *
-     * @param groupId ID of the group.
-     * @param callback The method to be invoked when the server response is received
-     */
+		* Read the specified group.
+		*
+		* Service Name - group
+		* Service Operation - READ_GROUP
+		*
+		* @param in_groupId ID of the group.
+		* @param in_callback The method to be invoked when the server response is received
+		*/
     void readGroup(const FString &groupId, IServerCallback *callback = nullptr);
 
     /**
-	* Read the specified group's data.
-	*
-	* Service Name - group
-	* Service Operation - READ_GROUP_DATA
-	*
-	* @param groupId ID of the group.
-	* @param callback The method to be invoked when the server response is received
-	*/
+		* Read the specified group's data.
+		*
+		* Service Name - group
+		* Service Operation - READ_GROUP_DATA
+		*
+		* @param in_groupId ID of the group.
+		* @param in_callback The method to be invoked when the server response is received
+		*/
     void readGroupData(const FString &groupId, IServerCallback *callback = nullptr);
 
     /**
-     * Read a page of group entity information.
-     *
-     * Service Name - group
-     * Service Operation - READ_GROUP_ENTITIES_PAGE
-     *
-     * @param context Query context.
-     * @param callback The method to be invoked when the server response is received
-     */
+		* Read a page of group entity information.
+		*
+		* Service Name - group
+		* Service Operation - READ_GROUP_ENTITIES_PAGE
+		*
+		* @param in_context Query context.
+		* @param in_callback The method to be invoked when the server response is received
+		*/
     void readGroupEntitiesPage(const FString &jsonContext, IServerCallback *callback = nullptr);
 
     /**
@@ -364,61 +364,61 @@ class BCCLIENTPLUGIN_API BrainCloudGroup
     void readGroupEntitiesPageByOffset(const FString &encodedContext, int32 pageOffset, IServerCallback *callback = nullptr);
 
     /**
-     * Read the specified group entity.
-     *
-     * Service Name - group
-     * Service Operation - READ_GROUP_ENTITY
-     *
-     * @param groupId ID of the group.
-     * @param entityId ID of the entity.
-     * @param callback The method to be invoked when the server response is received
-     */
+		* Read the specified group entity.
+		*
+		* Service Name - group
+		* Service Operation - READ_GROUP_ENTITY
+		*
+		* @param in_groupId ID of the group.
+		* @param in_entityId ID of the entity.
+		* @param in_callback The method to be invoked when the server response is received
+		*/
     void readGroupEntity(const FString &groupId, const FString &entityId, IServerCallback *callback = nullptr);
 
     /**
-     * Read the members of the group.
-     *
-     * Service Name - group
-     * Service Operation - READ_MEMBERS_OF_GROUP
-     *
-     * @param groupId ID of the group.
-     * @param callback The method to be invoked when the server response is received
-     */
+		* Read the members of the group.
+		*
+		* Service Name - group
+		* Service Operation - READ_MEMBERS_OF_GROUP
+		*
+		* @param in_groupId ID of the group.
+		* @param in_callback The method to be invoked when the server response is received
+		*/
     void readGroupMembers(const FString &groupId, IServerCallback *callback = nullptr);
 
     /**
-     * Reject an outstanding invitation to join the group.
-     *
-     * Service Name - group
-     * Service Operation - REJECT_GROUP_INVITATION
-     *
-     * @param groupId ID of the group.
-     * @param callback The method to be invoked when the server response is received
-     */
+		* Reject an outstanding invitation to join the group.
+		*
+		* Service Name - group
+		* Service Operation - REJECT_GROUP_INVITATION
+		*
+		* @param in_groupId ID of the group.
+		* @param in_callback The method to be invoked when the server response is received
+		*/
     void rejectGroupInvitation(const FString &groupId, IServerCallback *callback = nullptr);
 
     /**
-     * Reject an outstanding request to join the group.
-     *
-     * Service Name - group
-     * Service Operation - REJECT_GROUP_JOIN_REQUEST
-     *
-     * @param groupId ID of the group.
-     * @param profileId Profile ID of the invitation being deleted.
-     * @param callback The method to be invoked when the server response is received
-     */
+        * Reject an outstanding request to join the group.
+        *
+        * Service Name - group
+        * Service Operation - REJECT_GROUP_JOIN_REQUEST
+        *
+        * @param in_groupId ID of the group.
+        * @param in_profileId Profile ID of the invitation being deleted.
+        * @param in_callback The method to be invoked when the server response is received
+        */
     void rejectGroupJoinRequest(const FString &groupId, const FString &profileId, IServerCallback *callback = nullptr);
 
     /**
-     * Remove a member from the group.
-     *
-     * Service Name - group
-     * Service Operation - REMOVE_GROUP_MEMBER
-     *
-     * @param groupId ID of the group.
-     * @param profileId Profile ID of the member being deleted.
-     * @param callback The method to be invoked when the server response is received
-     */
+		* Remove a member from the group.
+		*
+		* Service Name - group
+		* Service Operation - REMOVE_GROUP_MEMBER
+		*
+		* @param in_groupId ID of the group.
+		* @param in_profileId Profile ID of the member being deleted.
+		* @param in_callback The method to be invoked when the server response is received
+		*/
     void removeGroupMember(const FString &groupId, const FString &profileId, IServerCallback *callback = nullptr);
 
     /**
@@ -488,15 +488,15 @@ class BCCLIENTPLUGIN_API BrainCloudGroup
     void updateGroupMember(const FString &groupId, const FString &profileId, ERole role, const FString &jsonAttributes, IServerCallback *callback = nullptr);
 
     /**
-     * Updates a group's name.
-     *
-     * Service Name - group
-     * Service Operation - UPDATE_GROUP_NAME
-     *
-     * @param groupId ID of the group.
-     * @param name Name to apply.
-     * @param callback The method to be invoked when the server response is received
-     */
+		* Updates a group's name.
+		*
+		* Service Name - group
+		* Service Operation - UPDATE_GROUP_NAME
+		*
+		* @param in_groupId ID of the group.
+		* @param in_name Name to apply.
+		* @param in_callback The method to be invoked when the server response is received
+		*/
     void updateGroupName(const FString &groupId, const FString &name, IServerCallback *callback = nullptr);
 
     /**
@@ -512,28 +512,28 @@ class BCCLIENTPLUGIN_API BrainCloudGroup
     void setGroupOpen(const FString &groupId, bool isOpenGroup, IServerCallback *callback = nullptr);
 
     /**
-     * Update a froup's summary data
-     *
-     * Service Name - group
-     * Service Operation - UPDATE_GROUP_SUMMARY_DATA
-     *
-     * @param groupId ID of the group.
-     * @param version the version
-     * @param jsonSummaryData custom application data 
-     * @param callback The method to be invoked when the server response is received
-     */
+		 * Update a group's summary data
+		 *
+		 * Service Name - group
+		 * Service Operation - UPDATE_GROUP_SUMMARY_DATA
+		 *
+		 * @param groupId ID of the group.
+		 * @param version the version of the group
+		 * @param jsonSummaryData custom application data
+		 * @param callback The method to be invoked when the server response is received
+		 */
     void updateGroupSummaryData(const FString &groupId, int32 version,  const FString &jsonSummaryData, IServerCallback *callback = nullptr);
     
     /**
-     * Get a list of up to maxReturn randomly selected groups from the server based on where condition
-     *
-     * Service Name - group
-     * Service Operation - GET_RANDOM_GROUPS_MATCHING
-     *
-     * @param jsonWhere where to search.
-     * @param maxReturn #of groups to search 
-     * @param callback The method to be invoked when the server response is received
-     */
+		 * Gets a list of up to maxReturn randomly selected groups from the server based on the where condition.
+		 *
+		 * Service Name - group
+		 * Service Operation - GET_RANDOM_GROUPS_MATCHING
+		 *
+		 * @param jsonWhere where to search
+		 * @param maxReturn # of groups to search
+		 * @param callback The method to be invoked when the server response is received
+		 */
     void getRandomGroupsMatching(const FString &jsonWhere, int32 maxReturn, IServerCallback *callback = nullptr);
 
   private:

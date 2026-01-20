@@ -49,14 +49,14 @@ class BCCLIENTPLUGIN_API BrainCloudGamification
     void readAchievements(IServerCallback *callback, bool includeMetaData = false);
 
     /**
-     * Method returns all defined xp levels and any rewards associated
-     * with those xp levels.
-     *
-     * Service Name - Gamification
-     * Service Operation - ReadXpLevels
-     *
-     * @param callback Method to be invoked when the server response is received.
-     */
+         * Method returns all defined xp levels and any rewards associated
+         * with those xp levels.
+         *
+         * Service Name - Gamification
+         * Service Operation - ReadXpLevels
+         *
+         * @param in_callback Method to be invoked when the server response is received.
+         */
     void readXpLevelsMetaData(IServerCallback *callback);
 
     /**

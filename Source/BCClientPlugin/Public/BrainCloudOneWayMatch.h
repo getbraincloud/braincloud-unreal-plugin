@@ -23,25 +23,25 @@ class BCCLIENTPLUGIN_API BrainCloudOneWayMatch
     void startMatch(const FString &otherPlayerId, int32 rangeDelta, IServerCallback *callback);
 
     /**
-    * Cancels a match
-    *
-    * Service Name - OneWayMatch
-    * Service Operation - CancelMatch
-    *
-    * @param playbackStreamId The playback stream id returned in the start match
-    * @param callback The method to be invoked when the server response is received
-    */
+         * Cancels a match
+         *
+         * Service Name - OneWayMatch
+         * Service Operation - CancelMatch
+         *
+         * @param in_playbackStreamId The playback stream id returned in the start match
+         * @param in_callback The method to be invoked when the server response is received
+         */
     void cancelMatch(const FString &playbackStreamId, IServerCallback *callback);
 
     /**
-     * Completes a match
-     *
-     * Service Name - OneWayMatch
-     * Service Operation - CompleteMatch
-     *
-     * @param playbackStreamId The playback stream id returned in the initial start match
-     * @param callback The method to be invoked when the server response is received
-     */
+         * Completes a match
+         *
+         * Service Name - OneWayMatch
+         * Service Operation - CompleteMatch
+         *
+         * @param in_playbackStreamId The playback stream id returned in the initial start match
+         * @param in_callback The method to be invoked when the server response is received
+         */
     void completeMatch(const FString &playbackStreamId, IServerCallback *callback);
 
   private:

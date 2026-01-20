@@ -46,13 +46,13 @@ class BCCLIENTPLUGIN_API BrainCloudVirtualCurrency
     void getPeerCurrency(const FString &in_vcId, const FString &in_peerCode, IServerCallback *callback = nullptr);
 
     /**
-    * Reset the player's currency to 0. 
-    *
-    * Service Name - VirtualCurrency
-    * Service Operation - ResetCurrency
-    * 
-    * @param in_callback The method to be invoked when the server response is received
-    */
+        * Reset player's currency to zero
+        *
+        * Service Name - VirtualCurrency
+        * Service Operation - ResetCurrency
+        *
+        * @param in_callback The method to be invoked when the server response is received
+        */
     void resetCurrency(IServerCallback *callback = nullptr);
 
     /**

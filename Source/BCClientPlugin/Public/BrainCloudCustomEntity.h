@@ -40,27 +40,30 @@ public:
   void deleteEntity(const FString &entityType, const FString &entityId, int version, IServerCallback *callback);
 
     /**
-     * Creates new custom entity.
-     *
-     * Service Name - CustomEntity
-     * Service Operation - GetCount
-     *
-     * @param entityType The entity type as defined by the user
-     * @param whereJson what to get count of
-     * @param callback The method to be invoked when the server response is received
-     */
+		 * Deletes the specified custom entity on the server.
+		 *
+		 * Service Name - CustomEntity
+		 * Service Operation - GetCount
+		 *
+		 * @param in_entityType The entity type as defined by the user
+		 * @param in_whereJson
+		 * @param in_callback The method to be invoked when the server response is received
+		 */
   void getCount(const FString &entityType, const FString &whereJson, IServerCallback *callback);
 
     /**
-     * Retrieves first page of custom entities from the server based on the custom entity type and specified query context
-     *
-     * Service Name - CustomEntity
-     * Service Operation - GetEntityPage
-     *
-     * @param entityType The entity type as defined by the user
-     * @param context
-     * @param callback The method to be invoked when the server response is received
-     */
+		 * Method uses a paging system to iterate through Custom Entities
+		 * After retrieving a page of Custom Entities with this method,
+		 * use GetEntityPageOffset() to retrieve previous or next pages.
+		 *
+		 * Service Name - CustomEntity
+		 * Service Operation - GetCustomEntityPage
+		 *
+		 * @param in_entityType The entity type as defined by the user
+		 * @param in_context The json context for the page request.
+		 *                   See the portal appendix documentation for format.
+		 * @param in_callback The callback object
+		 */
   void getEntityPage(const FString &entityType, const FString &context, IServerCallback *callback);
 
     /**
@@ -77,40 +80,40 @@ public:
   void getEntityPageOffset(const FString &entityType, const FString &context, int pageOffset, IServerCallback *callback);
 
     /**
-     * Reads a custom entity.
-     * 
-     * Service Name - CustomEntity
-     * Service Operation - ReadEntity
-     *
-     * @param entityType The entity type as defined by the user
-     * @param entityId 
-     * @param callback The method to be invoked when the server response is received
-     */
+		 * Gets the page of custom entities from the server based on the encoded context and specified page offset.
+		 *
+		 * Service Name - CustomEntity
+		 * Service Operation - ReadEntity
+		 *
+		 * @param in_entityType The entity type as defined by the user
+		 * @param in_entityId
+		 * @param in_callback The method to be invoked when the server response is received
+		 */
   void readEntity(const FString &entityType, const FString &entityId, IServerCallback *callback);
 
     /**
-     * Increments the specified fields by the specified amount within custom entity data on the server, enforcing ownership/ACL permissions.
-     * 
-     * Service Name - CustomEntity
-     * Service Operation - IncrementData
-     *
-     * @param entityType The entity type as defined by the user
-     * @param entityId 
-     * @param fieldJson
-     * @param callback The method to be invoked when the server response is received
-     */
+		 * Reads the custom entity singleton owned by the session's user.
+		 *
+		 * Service Name - CustomEntity
+		 * Service Operation - IncrementData
+		 *
+		 * @param in_entityType The entity type as defined by the user
+		 * @param in_entityId
+		 * @param in_fieldsJson
+		 * @param in_callback The method to be invoked when the server response is received
+		 */
   void incrementData(const FString &entityType, const FString &entityId, const FString &fieldsJson, IServerCallback *callback);
 
     /**
-     * Increments the specified fields, of the singleton owned by the user, by the specified amount within the custom entity data on the server.
-     * 
-     * Service Name - CustomEntity
-     * Service Operation - IncrementSingletonData
-     *
-     * @param entityType The entity type as defined by the user
-     * @param fieldJson
-     * @param callback The method to be invoked when the server response is received
-     */
+         * Increments the specified fields, of the singleton owned by the user, by the specified amount within the custom entity data on the server.
+         *
+         * Service Name - CustomEntity
+         * Service Operation - IncrementSingletonData
+         *
+         * @param in_entityType The type of custom entity being updated.
+         * @param in_fieldsJson Specific fields, as JSON, within entity's custom data, with respective increment amount.
+         * @param in_callback The method to be invoked when the server response is received
+         */
    void incrementSingletonData(const FString &entityType, const FString &fieldsJson, IServerCallback *callback);
 
     /**
@@ -173,26 +176,26 @@ public:
     void updateEntityFieldsSharded(const FString &entityType, const FString &entityId, int version, const FString &fieldsJson, const FString &shardKeyJson, IServerCallback *callback);
 
    /**
-    * deletes entities defined within the deleteCriteria.
-    * 
-    * Service Name - CustomEntity
-    * Service Operation - deleteEntities
-    *
-    * @param entityType The entity type as defined by the user
-    * @param deleteCriteria
-    * @param callback The method to be invoked when the server response is received
-    */
+		 * deletes entities based on the delete criteria.
+		 *
+		 * Service Name - CustomEntity
+		 * Service Operation - DeleteEntities
+		 *
+		 * @param in_entityType The entity type as defined by the user
+		 * @param in_deleteCriteria Json string of criteria wanted for deletion
+		 * @param in_callback The method to be invoked when the server response is received
+		 */
   void deleteEntities(const FString &entityType, const FString &deleteCriteria, IServerCallback *callback);
 
   /**
-     * Reads the custom entity singleton owned by the session's user.
-     * 
-     * Service Name - CustomEntity
-     * Service Operation - readSingleton
-     *
-     * @param entityType The entity type as defined by the user
-     * @param callback The method to be invoked when the server response is received
-     */
+		 * Reads the custom entity singleton owned by the session's user.
+		 *
+		 * Service Name - CustomEntity
+		 * Service Operation - ReadSingleton
+		 *
+		 * @param in_entityType The entity type as defined by the user
+		 * @param in_callback The method to be invoked when the server response is received
+		 */
   void readSingleton(const FString &entityType, IServerCallback *callback);
 
   /**

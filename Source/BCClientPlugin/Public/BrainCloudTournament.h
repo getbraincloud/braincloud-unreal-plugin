@@ -27,24 +27,24 @@ class BCCLIENTPLUGIN_API BrainCloudTournament
 	void claimTournamentReward(const FString &leaderboardId, int32 versionId, IServerCallback *callback = nullptr);
 
 	/**
-	* Get the status of a division
-	*
-	* Service Name - tournament
-	* Service Operation - GET_DIVISION_INFO
-	*
-	* @param divSetId The id for the division
-	* @param callback The method to be invoked when the server response is received
-	*/
+		 * Get the status of a division
+		 *
+		 * Service Name - tournament
+		 * Service Operation - GET_DIVISION_INFO
+		 *
+		 * @param in_divSetId The id for the division
+		 * @param in_callback The method to be invoked when the server response is received
+		 */
 	void getDivisionInfo(const FString &divSetId, IServerCallback *callback);
 
 	/**
-	* Returns list of player's recently active divisions
-	*
-	* Service Name - tournament
-	* Service Operation - GET_MY_DIVISIONS
-	*
-	* @param callback The method to be invoked when the server response is received
-	*/
+		 * Returns list of player's recently active divisions
+		 *
+		 * Service Name - tournament
+		 * Service Operation - GET_MY_DIVISIONS
+		 *
+		 * @param in_callback The method to be invoked when the server response is received
+		 */
 	void getMyDivisions(IServerCallback *callback);
 
 	/**
@@ -89,26 +89,26 @@ class BCCLIENTPLUGIN_API BrainCloudTournament
 	void joinTournament(const FString &leaderboardId, const FString &tournamentCode, int32 initialScore, IServerCallback *callback = nullptr);
 
 	/**
-	* Removes player from division instance
-	* Also removes division instance from player's division list
-	*
-	* Service Name - tournament
-	* Service Operation - LEAVE_DIVISION_INSTANCE
-	*
-	* @param leaderboardId The leaderboard for the tournament
-	* @param callback The method to be invoked when the server response is received
-	*/
+		 * Removes player from division instance
+		 * Also removes division instance from player's division list
+		 *
+		 * Service Name - tournament
+		 * Service Operation - LEAVE_DIVISION_INSTANCE
+		 *
+		 * @param in_leaderboardId The leaderboard for the tournament
+		 * @param in_callback The method to be invoked when the server response is received
+		 */
 	void leaveDivisionInstance(const FString &leaderboardId, IServerCallback *callback);
 
 	/**
-	* Removes player's score from tournament leaderboard
-	*
-	* Service Name - tournament
-	* Service Operation - LEAVE_TOURNAMENT
-	*
-	* @param leaderboardId The leaderboard for the tournament
-	* @param callback The method to be invoked when the server response is received
-	*/
+		 * Removes player's score from tournament leaderboard
+		 *
+		 * Service Name - tournament
+		 * Service Operation - LEAVE_TOURNAMENT
+		 *
+		 * @param in_leaderboardId The leaderboard for the tournament
+		 * @param in_callback The method to be invoked when the server response is received
+		 */
 	void leaveTournament(const FString &leaderboardId, IServerCallback *callback = nullptr);
 
 
@@ -146,14 +146,14 @@ class BCCLIENTPLUGIN_API BrainCloudTournament
 
 
 	/**
-	* Returns the user's expected reward based on the current scores
-	*
-	* Service Name - tournament
-	* Service Operation - VIEW_CURRENT_REWARD
-	*
-	* @param leaderboardId The leaderboard for the tournament
-	* @param callback The method to be invoked when the server response is received
-	*/
+		 * Returns the user's expected reward based on the current scores
+		 *
+		 * Service Name - tournament
+		 * Service Operation - VIEW_CURRENT_REWARD
+		 *
+		 * @param in_leaderboardId The leaderboard for the tournament
+		 * @param in_callback The method to be invoked when the server response is received
+		 */
 	void viewCurrentReward(const FString &leaderboardId, IServerCallback *callback = nullptr);
 
 	/**

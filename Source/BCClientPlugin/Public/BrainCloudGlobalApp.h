@@ -11,13 +11,13 @@ class BCCLIENTPLUGIN_API BrainCloudGlobalApp
     BrainCloudGlobalApp(BrainCloudClient *client);
 
     /**
-     * Read game's global properties
-     *
-     * Service Name - GlobalApp
-     * Service Operation - ReadProperties
-     *
-     * @param - callback The method to be invoked when the server response is received
-     */
+         * Read game's global properties
+         *
+         * Service Name - GlobalApp
+         * Service Operation - ReadProperties
+         *
+         * @param in_callback The method to be invoked when the server response is received
+         */
     void readProperties(IServerCallback *callback);
 
 	/**

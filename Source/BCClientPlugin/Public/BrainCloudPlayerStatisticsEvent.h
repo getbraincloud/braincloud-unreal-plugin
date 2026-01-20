@@ -30,24 +30,24 @@ class BCCLIENTPLUGIN_API BrainCloudPlayerStatisticsEvent
     void triggerStatsEvent(const FString &eventName, int32 eventMultiplier, IServerCallback *callback);
 
     /**
-     * See documentation for TriggerStatsEvent for more
-     * documentation.
-     *
-     * Service Name - PlayerStatisticsEvent
-     * Service Operation - TriggerMultiple
-     *
-     * @param jsonData
-     *   [
-     *     {
-     *       "eventName": "event1",
-     *       "eventMultiplier": 1
-     *     },
-     *     {
-     *       "eventName": "event2",
-     *       "eventMultiplier": 1
-     *     }
-     *   ]
-     */
+         * See documentation for TriggerStatisticsEvent for more
+         * documentation.
+         *
+         * Service Name - PlayerStatisticsEvent
+         * Service Operation - TriggerMultiple
+         *
+         * @param in_jsonData
+         *   [
+         *     {
+         *       "eventName": "event1",
+         *       "eventMultiplier": 1
+         *     },
+         *     {
+         *       "eventName": "event2",
+         *       "eventMultiplier": 1
+         *     }
+         *   ]
+         */
     void triggerStatsEvents(const FString &jsonData, IServerCallback *callback);
 
   private:

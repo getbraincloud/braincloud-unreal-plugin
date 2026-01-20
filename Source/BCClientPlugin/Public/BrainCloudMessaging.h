@@ -33,13 +33,13 @@ class BCCLIENTPLUGIN_API BrainCloudMessaging
     void getMessageBoxes(IServerCallback *in_callback);
 
     /**
-    * Returns count of user's 'total' messages and their 'unread' messages.
-    * 
-    * Service Name - messaging
-	* Service Operation - GET_MESSAGE_COUNTS
-    *
-	* @param in_callback Method to be invoked when the server response is received.
-    */
+		 * Retrieve user's message boxes, including 'inbox', 'sent', etc.
+		 *
+		 * Service Name - Messaging
+		 * Service Operation - GetMessageCounts
+		 *
+		 * @param callback The method to be invoked when the server response is received
+		 */
     void getMessageCounts(IServerCallback *in_callback);
 
     /**
@@ -55,26 +55,26 @@ class BCCLIENTPLUGIN_API BrainCloudMessaging
     void getMessages(const FString &in_msgBox, const TArray<FString> &in_msgsIds, bool markAsRead, IServerCallback *in_callback);
 
     /**
-    * Retrieves a page of messages.
-    * 
-    * Service Name - messaging
-	* Service Operation - GET_MESSAGES_PAGE
-    *
-    * @param in_context 
-	* @param in_callback Method to be invoked when the server response is received.
-    */
+		 * Retrieves a page of messages.
+		 *
+		 * Service Name - Messaging
+		 * Service Operation - GetMessagesPage
+		 *
+		 * @param context
+		 * @param callback The method to be invoked when the server response is received
+		 */
     void getMessagesPage(const FString &in_context, IServerCallback *in_callback);
 
     /**
-    * Retrieves a page of messages.
-    * 
-    * Service Name - messaging
-	* Service Operation - GET_MESSAGES_PAGE_OFFSET
-    *
-    * @param in_context 
-    * @param in_pageOffset 
-	* @param in_callback Method to be invoked when the server response is received.
-    */
+		 * Gets the page of messages from the server based on the encoded context and specified page offset.
+		 *
+		 * Service Name - Messaging
+		 * Service Operation - GetMessagesPageOffset
+		 *
+		 * @param context
+		 * @param pageOffset
+		 * @param callback The method to be invoked when the server response is received
+		 */
     void getMessagesPageOffset(const FString &in_context, int32 in_pageOffset, IServerCallback *in_callback);
 
     /**

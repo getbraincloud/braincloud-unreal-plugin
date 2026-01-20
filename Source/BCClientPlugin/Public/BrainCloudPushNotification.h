@@ -12,10 +12,10 @@ class BCCLIENTPLUGIN_API BrainCloudPushNotification
 	BrainCloudPushNotification(BrainCloudClient *client);
 
 	/**
-    * Deregisters all device tokens currently registered to the user.
-    *
-    * @param callback The method to be invoked when the server response is received
-    */
+         * Deregisters all device tokens currently registered to the user.
+         *
+         * @param in_callback The method to be invoked when the server response is received
+         */
 	void deregisterAllPushNotificationDeviceTokens(IServerCallback *callback = nullptr);
 
 	/**
@@ -51,13 +51,13 @@ class BCCLIENTPLUGIN_API BrainCloudPushNotification
 	void registerPushNotificationDeviceToken(const FString &deviceType, const FString &deviceToken, IServerCallback *callback);
 
 	/**
-    * Sends a simple push notification based on the passed in message.
-    * NOTE: It is possible to send a push notification to oneself.
-    *
-    * @param toProfileId The braincloud profileId of the user to receive the notification
-    * @param message Text of the push notification
-    * @param callback The method to be invoked when the server response is received
-    */
+         * Sends a simple push notification based on the passed in message.
+         * NOTE: It is possible to send a push notification to oneself.
+         *
+         * @param in_toProfileId The braincloud profileId of the user to receive the notification
+         * @param in_message Text of the push notification
+         * @param in_callback The method to be invoked when the server response is received
+         */
 	void sendSimplePushNotification(const FString &toProfileId, const FString &message, IServerCallback *callback);
 
 	/**
@@ -96,14 +96,14 @@ class BCCLIENTPLUGIN_API BrainCloudPushNotification
 	void sendTemplatedPushNotificationToGroup(const FString &groupId, int32 notificationTemplateId, const FString &substitutionsJson, IServerCallback *callback = nullptr);
 
 	/**
-    * Sends a notification to a "group" of user consisting of alert content and custom data.
-    * See the Portal documentation for more info.
-    *
-    * @param groupId Target group
-    * @param alertContentJson Body and title of alert
-    * @param customDataJson Optional custom data
-    * @param callback The method to be invoked when the server response is received
-    */
+        * Sends a notification to a "group" of user consisting of alert content and custom data.
+        * See the Portal documentation for more info.
+        *
+        * @param in_groupId Target group
+        * @param in_alertContentJson Body and title of alert
+        * @param in_customDataJson Optional custom data
+        * @param in_callback The method to be invoked when the server response is received
+        */
 	void sendNormalizedPushNotificationToGroup(const FString &groupId, const FString &alertContentJson, const FString &customDataJson, IServerCallback *callback = nullptr);
 
 	/**
@@ -153,14 +153,14 @@ class BCCLIENTPLUGIN_API BrainCloudPushNotification
 	void sendRawPushNotificationBatch(const TArray<FString> profileIds, const FString &fcmContent, const FString &iosContent, const FString &facebookContent, IServerCallback *callback = NULL);
 
 	/**
-	* Sends a raw push notification to a target group.
-	*
-	* @param groupId Target group
-	* @param fcmContent Valid Fcm data content
-	* @param iosContent Valid ios data content
-	* @param facebookContent Facebook template stringn
-	* @param callback The method to be invoked when the server response is received
-	*/
+     	* Sends a raw push notification to a target group.
+     	*
+     	* @param in_groupId Target group
+     	* @param in_fcmContent Valid Fcm data content
+     	* @param in_iosContent Valid ios data content
+     	* @param in_facebookContent Facebook template stringn
+     	* @param in_callback The method to be invoked when the server response is received
+     	*/
 	void sendRawPushNotificationToGroup(const FString &groupId, const FString &fcmContent, const FString &iosContent, const FString &facebookContent, IServerCallback *callback = NULL);
 
 	/**
@@ -208,13 +208,13 @@ class BCCLIENTPLUGIN_API BrainCloudPushNotification
 	void scheduleRichPushNotificationMinutes(const FString &profileId, const int32 notificationTemplateId, const FString &substitutionJson, const int32 minutesFromNow, IServerCallback *callback);
 
 	/**
-	* Sends a notification to a user consisting of alert content and custom data.
-	*
-	* @param toProfileId The profileId of the user to receive the notification
-	* @param alertContent Body and title of alert
-	* @param customData Optional custom data
-	* @param callback The method to be invoked when the server response is received
-	*/
+		* Sends a notification to a user consisting of alert content and custom data.
+		*
+		* @param in_toProfileId The profileId of the user to receive the notification
+		* @param in_alertContent Body and title of alert
+		* @param in_customData Optional custom data
+		* @param in_callback The method to be invoked when the server response is received
+		*/
 	void sendNormalizedPushNotification(const FString &toProfileId, const FString &alertContentJson, const FString &customDataJson, IServerCallback *callback = nullptr);
 
 	/**

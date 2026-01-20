@@ -11,13 +11,13 @@ class BCCLIENTPLUGIN_API BrainCloudMatchmaking
     BrainCloudMatchmaking(BrainCloudClient *client);
 
     /**
-     * Read match making record
-     *
-     * Service Name - MatchMaking
-     * Service Operation - Read
-     *
-     * @param callback The method to be invoked when the server response is received
-     */
+         * Read match making record
+         *
+         * Service Name - MatchMaking
+         * Service Operation - Read
+         *
+         * @param in_callback The method to be invoked when the server response is received
+         */
     void read(IServerCallback *callback);
 
     /**
@@ -32,13 +32,13 @@ class BCCLIENTPLUGIN_API BrainCloudMatchmaking
     void setPlayerRating(int32 playerRating, IServerCallback *callback);
 
     /**
-     * Resets player rating
-     *
-     * Service Name - MatchMaking
-     * Service Operation - ResetPlayerRating
-     *
-     * @param callback The method to be invoked when the server response is received
-     */
+         * Resets player rating
+         *
+         * Service Name - MatchMaking
+         * Service Operation - ResetPlayerRating
+         *
+         * @param in_callback The method to be invoked when the server response is received
+         */
     void resetPlayerRating(IServerCallback *callback);
 
     /**
@@ -64,13 +64,13 @@ class BCCLIENTPLUGIN_API BrainCloudMatchmaking
     void decrementPlayerRating(int32 decrement, IServerCallback *callback);
 
     /**
-     * Turns shield on
-     *
-     * Service Name - MatchMaking
-     * Service Operation - ShieldOn
-     *
-     * @param callback The method to be invoked when the server response is received
-     */
+         * Turns shield on
+         *
+         * Service Name - MatchMaking
+         * Service Operation - ShieldOn
+         *
+         * @param in_callback The method to be invoked when the server response is received
+         */
     void turnShieldOn(IServerCallback *callback);
 
     /**
@@ -85,13 +85,13 @@ class BCCLIENTPLUGIN_API BrainCloudMatchmaking
     void turnShieldOnFor(int32 minutes, IServerCallback *callback);
 
     /**
-     * Turns shield off
-     *
-     * Service Name - MatchMaking
-     * Service Operation - ShieldOff
-     *
-     * @param callback The method to be invoked when the server response is received
-     */
+         * Turns shield off
+         *
+         * Service Name - MatchMaking
+         * Service Operation - ShieldOff
+         *
+         * @param in_callback The method to be invoked when the server response is received
+         */
     void turnShieldOff(IServerCallback *callback);
 
     /**
@@ -164,23 +164,23 @@ class BCCLIENTPLUGIN_API BrainCloudMatchmaking
         IServerCallback *callback);
 
     /**
-     * Enables Match Making for the Player
-     *
-     * Service Name - MatchMaking
-     * Service Operation - EnableMatchMaking
-     *
-     * @param callback The method to be invoked when the server response is received
-     */
+         * Enables Match Making for the Player
+         *
+         * Service Name - MatchMaking
+         * Service Operation - EnableMatchMaking
+         *
+         * @param in_callback The method to be invoked when the server response is received
+         */
     void enableMatchMaking(IServerCallback *callback);
 
     /**
-    * Disables Match Making for the Player
-    *
-    * Service Name - MatchMaking
-    * Service Operation - EnableMatchMaking
-    *
-    * @param callback The method to be invoked when the server response is received
-    */
+        * Disables Match Making for the Player
+        *
+        * Service Name - MatchMaking
+        * Service Operation - EnableMatchMaking
+        *
+        * @param in_callback The method to be invoked when the server response is received
+        */
     void disableMatchMaking(IServerCallback *callback);
 
   private:

@@ -47,84 +47,82 @@ class BCCLIENTPLUGIN_API BrainCloudFriend
 	void getProfileInfoForCredentialIfExists(const FString& externalId, EBCAuthType authenticationType, IServerCallback* callback = nullptr);
 
 	/**
-	* Retrieves profile information for the specified external auth user.
-	*
-	* Service Name - friend
-	* Service Operation - GET_PROFILE_INFO_FOR_EXTERNAL_AUTH_ID
-	*
-	* @param externalId External ID of the user to find
-	* @param externalAuthType The external authentication type used for this users's external ID
-	* @param callback Method to be invoked when the server response is received.
-	*/
+		* Retrieves profile information for the specified external auth user.
+		*
+		* Service Name - friend
+		* Service Operation - GET_PROFILE_INFO_FOR_EXTERNAL_AUTH_ID
+		*
+		* @param in_externalId External ID of the friend to find
+		* @param in_externalAuthType The external authentication type used for this friend's external ID
+		* @param in_callback Method to be invoked when the server response is received.
+		*/
 	void getProfileInfoForExternalAuthId(const FString &externalId, const FString &externalAuthType, IServerCallback *callback = nullptr);
 
 	/**
-	* Retrieves profile information for the specified external auth user.
-	* Silently fails, if profile does not exist, just returns null and success, instead of an error.
-	*
-	* Service Name - friend
-	* Service Operation - GET_PROFILE_INFO_FOR_EXTERNAL_AUTH_ID_IF_EXISTS
-	*
-	* @param externalId External ID of the user to find
-	* @param externalAuthType The external authentication type used for this users's external ID
-	* @param callback Method to be invoked when the server response is received.
-	*/
+		 * Retrieves profile information for the specified user. Silently fails, if profile does not exist, just returns null and success, instead of an error.
+		 *
+		 * Service Name - Friend
+		 * Service Operation - GET_PROFILE_INFO_FOR_EXTERNAL_AUTH_ID_IF_EXISTS
+		 *
+		 * @param in_externalId External ID of the friend to find
+		 * @param in_externalAuthType The external authentication type used for this friend's external ID
+		 * @param in_callback Method to be invoked when the server response is received.
+		 */
 	void getProfileInfoForExternalAuthIdIfExists(const FString& externalId, const FString& externalAuthType, IServerCallback* callback = nullptr);
 
 	/**
-	* Retrieves the external ID for the specified user profile ID on the specified social platform.
-	*
-	* @param profileId User's Profile ID.
-	* @param authenticationType Associated authentication type.
-	* @param callback Method to be invoked when the server response is received.
-	*/
+		 * Retrieves the external ID for the specified user profile ID on the specified social platform.
+		 *
+		 * @param in_profileId Profile (user) ID.
+		 * @param in_authenticationType Associated authentication type.
+		 */
 	void getExternalIdForProfileId(const FString &profileId, const FString &authenticationType, IServerCallback *callback = nullptr);
 
 	/**
-	* Returns a particular entity of a particular friend.
-	*
-	* Service Name - Friend
-	* Service Operation - ReadFriendEntity
-	*
-	* @param entityId Id of entity to retrieve.
-	* @param friendId Profile Id of friend who owns entity.
-	* @param callback Method to be invoked when the server response is received.
-	*/
+		* Returns a particular entity of a particular friend.
+		*
+		* Service Name - Friend
+		* Service Operation - ReadFriendEntity
+		*
+		* @param in_entityId Id of entity to retrieve.
+		* @param in_friendId Profile Id of friend who owns entity.
+		* @param in_callback Method to be invoked when the server response is received.
+		*/
 	void readFriendEntity(const FString &entityId, const FString &friendId, IServerCallback *callback = nullptr);
 
 	/**
-	* Returns entities of all friends optionally based on type.
-	*
-	* Service Name - Friend
-	* Service Operation - ReadFriendsEntities
-	*
-	* @param entityType Types of entities to retrieve.
-	* @param callback Method to be invoked when the server response is received.
-	*/
+		* Returns entities of all friends optionally based on type.
+		*
+		* Service Name - Friend
+		* Service Operation - ReadFriendsEntities
+		*
+		* @param in_entityType Types of entities to retrieve.
+		* @param in_callback Method to be invoked when the server response is received.
+		*/
 	void readFriendsEntities(const FString &entityType, IServerCallback *callback = nullptr);
 
 	/**
-	* Read a friend's user state.
-    * If you are not friend with this user, you will get an error
-    * with NOT_FRIENDS reason code.
-	*
-	* Service Name - PlayerState
-	* Service Operation - ReadFriendsPlayerState
-	*
-	* @param friendId Target friend
-	* @param callback Method to be invoked when the server response is received.
-	*/
+		 * Read a friend's user state.
+         * If you are not friend with this user, you will get an error
+         * with NOT_FRIENDS reason code.
+		 *
+		 * Service Name - Friend
+		 * Service Operation - ReadFriendsPlayerState
+		 *
+		 * @param in_friendId Target friend
+		 * @param in_callback Method to be invoked when the server response is received.
+		 */
 	void readFriendUserState(const FString &friendId, IServerCallback *callback = nullptr);
 
 	/**
-	* Returns user state of a particular user.
-	*
-	* Service Name - Friend
-	* Service Operation - GET_SUMMARY_DATA_FOR_PROFILE_ID
-	*
-	* @param profileId Profile Id of user to retrieve user state for.
-	* @param callback Method to be invoked when the server response is received.
-	*/
+		* Returns user state of a particular user.
+		*
+		* Service Name - Friend
+		* Service Operation - GET_SUMMARY_DATA_FOR_PROFILE_ID
+		*
+		* @param in_profileId Profile Id of user to retrieve user state for.
+		* @param in_callback Method to be invoked when the server response is received.
+		*/
 	void getSummaryDataForProfileId(const FString &profileId, IServerCallback *callback = nullptr);
 
 	/**
@@ -153,13 +151,10 @@ class BCCLIENTPLUGIN_API BrainCloudFriend
 	void findUsersBySubstrName(const FString &searchText, int32 maxResults, IServerCallback *callback = nullptr);
 
 	/**
-	* Retrieves profile information for the partial matches of the specified text.
-	*
-	* Service Name - Friend
-	* Service Operation - FIND_USER_BY_EXACT_UNIVERSAL_ID
-	*
-	* @param searchText Universal ID text on which to search.
-	*/
+		 * Retrieves profile information of the specified universal Id.
+		 *
+		 * @param in_searchText Universal ID text on which to search.
+		 */
 	void findUserByExactUniversalId(const FString &searchText, IServerCallback *callback = nullptr);
 
 	/**

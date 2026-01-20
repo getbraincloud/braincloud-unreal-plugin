@@ -179,63 +179,60 @@ class BCCLIENTPLUGIN_API BrainCloudLobby : public IServerCallback
                            
 
     /**
-    * Finds a lobby matching the specified parameters, or creates one
-    * 
-    * Service Name - lobby
-	* Service Operation - GET_LOBBY_DATA
-    *
-    * @param in_lobbyID the lobbyId
-	* @param in_callback Method to be invoked when the server response is received.
-    */
+		 * Returns the data for the specified lobby, including member data.
+		 *
+		 * Service Name - Lobby
+		 * Service Operation - GetLobbyData
+		 *
+		 * @param lobbyId Id of chosen lobby.
+		 */
     void getLobbyData(const FString &in_lobbyID, IServerCallback *in_callback);
 
     /**
-    * Updates the ready state of the player
-    * 
-    * Service Name - lobby
-	* Service Operation - UPDATE_READY
-    *
-    * @param in_lobbyID the lobbyId
-    * @param in_isReady when lobby is found, place this user as "Ready"
-    * @param in_extraJson json string for extra customization 
-	* @param in_callback Method to be invoked when the server response is received.
-    */
+		 * Updates the ready status and extra json for the given lobby member.
+		 *
+		 * Service Name - Lobby
+		 * Service Operation - UpdateReady
+		 *
+		 * @param lobbyId The type of lobby to look for. Lobby types are defined in the portal.
+		 * @param isReady Initial ready-status of this user.
+		 * @param extraJson Initial extra-data about this user.
+		 */
     void updateReady(const FString &in_lobbyID, bool in_isReady, const FString &in_extraJson, IServerCallback *in_callback);
 
     /**
-    *  Valid only for the owner of the group -- edits the overally lobby config data
-    * 
-    * Service Name - lobby
-	* Service Operation - UPDATE_SETTINGS
-    *
-    * @param in_lobbyID the lobbyId
-    * @param in_configJson json string of the lobby config
-	* @param in_callback Method to be invoked when the server response is received.
-    */
+		 * Updates the ready status and extra json for the given lobby member.
+		 *
+		 * Service Name - Lobby
+		 * Service Operation - UpdateSettings
+		 *
+		 * @param lobbyId Id of the specfified lobby.
+		 * @param settings Configuration data for the room.
+		 */
     void updateSettings(const FString &in_lobbyID, const FString &in_configJson, IServerCallback *in_callback);
 
     /**
-    * Switches to the specified team (if allowed). Note - may be blocked by cloud code script
-    * 
-    * Service Name - lobby
-	* Service Operation - SWITCH_TEAM
-    *
-    * @param in_lobbyID the lobbyId
-    * @param in_teamCode team code
-	* @param in_callback Method to be invoked when the server response is received.
-    */
+		 * Switches to the specified team (if allowed.)
+		 * 
+		 * Sends LOBBY_MEMBER_UPDATED to all lobby members, with copy of member data
+		 *
+		 * Service Name - Lobby
+		 * Service Operation - SwitchTeam
+		 *
+		 * @param lobbyId Id of chosen lobby.
+		 * @param toTeamCode Specified team code.
+		 */
     void switchTeam(const FString &in_lobbyID, const FString &in_teamCode, IServerCallback *in_callback);
 
     /**
-    * Sends LOBBY_SIGNAL_DATA message to all lobby members
-    * 
-    * Service Name - lobby
-	* Service Operation - SEND_SIGNAL
-    *
-    * @param in_lobbyID the lobbyId
-    * @param in_signalJson customizeable json string attached to signal to lobby members
-	* @param in_callback Method to be invoked when the server response is received.
-    */
+		 * Sends LOBBY_SIGNAL_DATA message to all lobby members.
+		 *
+		 * Service Name - Lobby
+		 * Service Operation - SendSignal
+		 *
+		 * @param lobbyId Id of chosen lobby.
+		 * @param signalData Signal data to be sent.
+		 */
     void sendSignal(const FString &in_lobbyID, const FString &in_signalJson, IServerCallback *in_callback);
 
     /**
@@ -267,26 +264,24 @@ class BCCLIENTPLUGIN_API BrainCloudLobby : public IServerCallback
     void joinLobbyWithPingData(const FString &in_lobbyID, bool in_isReady, const FString &in_extraJson, const FString &in_teamCode, const TArray<FString> &in_otherUserCxIds, IServerCallback *in_callback);
 
     /**
-    * User leaves the specified lobby. if the user was the owner, a new owner will be chosen
-    * 
-    * Service Name - lobby
-	* Service Operation - LEAVE_LOBBY
-    *
-    * @param in_lobbyID the lobbyId
-	* @param in_callback Method to be invoked when the server response is received.
-    */
+		 * Causes the caller to leave the specified lobby. If the user was the owner, a new owner will be chosen. If user was the last member, the lobby will be deleted.
+		 *
+		 * Service Name - Lobby
+		 * Service Operation - LeaveLobby
+		 *
+		 * @param lobbyId Id of chosen lobby.
+		 */
     void leaveLobby(const FString &in_lobbyID, IServerCallback *in_callback);
 
     /**
-    *  Only valid from the owner of the lobby -- removes the specified member from the lobby
-    * 
-    * Service Name - lobby
-	* Service Operation - REMOVE_MEMBER
-    *
-    * @param in_lobbyID the lobbyId
-    * @param in_connectionId connectionId (cxId) of member to remove
-	* @param in_callback Method to be invoked when the server response is received.
-    */
+		 * Evicts the specified user from the specified lobby. The caller must be the owner of the lobby.
+		 *
+		 * Service Name - Lobby
+		 * Service Operation - RemoveMember
+		 *
+		 * @param lobbyId Id of chosen lobby.
+		 * @param cxId Specified member to be removed from the lobby.
+		 */
     void removeMember(const FString &in_lobbyID, const FString &in_connectionId, IServerCallback *in_callback);
 
     /**
@@ -312,36 +307,33 @@ class BCCLIENTPLUGIN_API BrainCloudLobby : public IServerCallback
     */
     void getRegionsForLobbies(const TArray<FString> &in_roomTypes, IServerCallback *in_callback);
 
-    /**
-    * Retrieves associated PingData averages to be used with all associated <>WithPingData APIs.
-    * Call anytime after GetRegionsForLobbies before proceeding. 
-    * 
-	* @param in_callback Method to be invoked when the server response is received.
-    */
+    /* Retrieves associated Ping Data averages to be used with all associated <>WithPingData APIs.
+		 * Call anytime after GetRegionsForLobbies before proceeding.
+		 * Once that completes, the associated region Ping Data is retrievable via getPingData and all associated <>WithPingData APIs are useable
+		 */
     void pingRegions( IServerCallback *in_callback);
 	
 	/**
-	* Gets a map keyed by rating of the visible lobby instances matching the given type and rating range.
-	* any ping data provided in the criteriaJson will be ignored.
-	*
-	* Service Name - Lobby
-	* Service Operation - GetLobbyInstances
-	*
-	* @param lobbyType The type of lobby to look for.
-	* @param criteriaJson A JSON object used to describe filter criteria.
-	*/
+		 * Gets a map keyed by rating of the visible lobby instances matching the given type and rating range.
+		 *
+		 * Service Name - Lobby
+		 * Service Operation - GET_LOBBY_INSTANCES
+		 *
+		 * @param lobbyType The type of lobby to look for.
+		 * @param criteriaJson A JSON string used to describe filter criteria.
+		 */
 	void getLobbyInstances(const FString &in_lobbyType, const FString &in_criteriaJson, IServerCallback* in_callback);
 
 	/**
-	* Gets a map keyed by rating of the visible lobby instances matching the given type and rating range.
-	* Only lobby instances in the regions that satisfy the ping portion of the criteriaJson (based on the values provided in pingData) will be returned.
-	*
-	* Service Name - Lobby
-	* Service Operation - GetLobbyInstancesWithPingData
-	*
-	* @param lobbyType The type of lobby to look for.
-	* @param criteriaJson A JSON object used to describe filter criteria.
-	*/
+		 * Gets a map keyed by rating of the visible lobby instances matching the given type and rating range.
+		 * Only lobby instances in the regions that satisfy the ping portion of the criteriaJson (based on the values provided in pingData) will be returned.
+		 *
+		 * Service Name - Lobby
+		 * Service Operation - GET_LOBBY_INSTANCES_WITH_PING_DATA
+		 *
+		 * @param lobbyType The type of lobby to look for.
+		 * @param criteriaJson A JSON string used to describe filter criteria.
+		 */
 	void getLobbyInstancesWithPingData(const FString &in_lobbyType, const FString &in_criteriaJson, IServerCallback* in_callback);
 	
     virtual void serverCallback(ServiceName serviceName, ServiceOperation serviceOperation, const FString &jsonData);

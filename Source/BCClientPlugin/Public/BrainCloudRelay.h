@@ -34,14 +34,14 @@ public:
      */
     void connect(BCRelayConnectionType in_connectionType, const FString &host, int port, const FString &passcode, const FString &lobbyId, IRelayConnectCallback *in_callback);
 
-    /** 
-     * Disconnects from relay session
-     */
+    /**
+         * Disconnects from the relay server
+         */
     void disconnect();
 
-    /*
-     * Sends end match request to server to close relay services.
-     */
+    /**
+         * Requests to end the current match on the relay server
+         */
     void endMatch(FString jsonPayload);
 
     /**
