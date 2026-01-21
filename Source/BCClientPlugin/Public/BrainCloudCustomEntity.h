@@ -41,7 +41,7 @@ public:
 	void deleteEntity(const FString &entityType, const FString &entityId, int version, IServerCallback *callback);
 
 	/**
-	 * Deletes the specified custom entity on the server.
+	 * Gets the count of entities matching the specified criteria.
 	 *
 	 * Service Name - CustomEntity
 	 * Service Operation - GetCount
