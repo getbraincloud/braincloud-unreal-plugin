@@ -34,18 +34,16 @@ public:
 	 */
 	void getCatalogItemsPage(const FString &context, IServerCallback *callback = nullptr);
 
-	/*
-	 *Gets the page of catalog items from the
-	 *server based on the encoded context and
-	 *specified page offset, with language fields
-	 *limited to the text for the current or default
-	 *language.
+	/**
+	 * Gets the page of catalog items from the server based ont he encoded
+	 * context and specified page offset, with language fields limited to the
+	 * text fir the current or default language
 	 *
-	 * Service Name - ItemCatalog
+	 * Service Name - itemCatalog
 	 * Service Operation - GET_CATALOG_ITEMS_PAGE_OFFSET
 	 *
 	 * @param context
-	 * @param callback The method to be invoked when the server response is received
+	 * @param pageOffset
 	 */
 	void getCatalogItemsPageOffset(const FString &context, int pageOffset, IServerCallback *callback = nullptr);
 

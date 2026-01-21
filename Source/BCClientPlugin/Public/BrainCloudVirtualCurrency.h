@@ -57,15 +57,13 @@ public:
 
     /**
      * @warning Method is recommended to be used in Cloud Code only for security
-     *
-     * For security reasons calling this API from the client is not recommended, and is rejected at the server by default. To over-ride, enable the 'Allow Currency Calls from Client" compatibility setting in the Design Portal.
+     * If you need to use it client side, enable 'Allow Currency Calls from Client' on the brainCloud dashboard
      */
     void awardCurrency(const FString &currencyType, int32 amount, IServerCallback *callback);
 
     /**
      * @warning Method is recommended to be used in Cloud Code only for security
-     *
-     * For security reasons calling this API from the client is not recommended, and is rejected at the server by default. To over-ride, enable the 'Allow Currency Calls from Client" compatibility setting in the Design Portal.
+     * If you need to use it client side, enable 'Allow Currency Calls from Client' on the brainCloud dashboard
      */
     void consumeCurrency(const FString &currencyType, int32 amount, IServerCallback *callback);
 

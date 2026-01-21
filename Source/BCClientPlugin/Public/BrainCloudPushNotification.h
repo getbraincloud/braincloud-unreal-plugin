@@ -19,24 +19,24 @@ public:
 	void deregisterAllPushNotificationDeviceTokens(IServerCallback *callback = nullptr);
 
 	/**
-	 * Deregisters the given device token from the server to disable this device
-	 * from receiving push notifications.
-	 *
-	 * @param platform The device platform being deregistered.
-	 * @param token The platform-dependant device token needed for push notifications.
-	 * @param callback The method to be invoked when the server response is received
-	 */
+         * Deregisters the given device token from the server to disable this device
+         * from receiving push notifications.
+         *
+         * @param in_device The device platform being deregistered.
+         * @param in_token The platform-dependent device token needed for push notifications.
+         * @param in_callback The method to be invoked when the server response is received
+         */
 	void deregisterPushNotificationDeviceToken(EBCPlatform platform, const FString &token, IServerCallback *callback = nullptr);
 
 	/**
-	 * Registers the given device token with the server to enable this device
-	 * to receive push notifications.
-	 *
-	 * @param platform The device platform
-	 * @param deviceToken The platform-dependant device token needed for push notifications.
-	 *   On IOS, this is obtained using the application:didRegisterForRemoteNotificationsWithDeviceToken callback
-	 * @param callback The method to be invoked when the server response is received
-	 */
+         * Registers the given device token with the server to enable this device
+         * to receive push notifications.
+         *
+         * @param in_platform The device platform
+         * @param in_deviceToken The platform-dependent device token needed for push notifications.
+         *  On IOS, this is obtained using the application:didRegisterForRemoteNotificationsWithDeviceToken callback
+         * @param in_callback The method to be invoked when the server response is received
+         */
 	void registerPushNotificationDeviceToken(EBCPlatform platform, const FString &deviceToken, IServerCallback *callback);
 
 	/**
@@ -61,38 +61,38 @@ public:
 	void sendSimplePushNotification(const FString &toProfileId, const FString &message, IServerCallback *callback);
 
 	/**
-	 * Sends a notification to a user based on a brainCloud portal configured notification template.
-	 * NOTE: It is possible to send a push notification to oneself.
-	 *
-	 * @param toProfileId The braincloud profileId of the user to receive the notification
-	 * @param notificationTemplateId Id of the notification template
-	 * @param callback The method to be invoked when the server response is received
-	 */
+         * Sends a notification to a user based on a brainCloud portal configured notification template.
+         * NOTE: It is possible to send a push notification to oneself.
+         *
+         * @param in_toProfileId The braincloud profileId of the user to receive the notification
+         * @param in_notificationTemplateId Id of the notification template
+         * @param in_callback The method to be invoked when the server response is received
+         */
 	void sendRichPushNotification(const FString &toProfileId, int32 notificationTemplateId, IServerCallback *callback);
 
 	/**
-	 * Sends a notification to a user based on a brainCloud portal configured notification template.
-	 * Includes JSON defining the substitution params to use with the template.
-	 * See the Portal documentation for more info.
-	 * NOTE: It is possible to send a push notification to oneself.
-	 *
-	 * @param toProfileId The braincloud profileId of the user to receive the notification
-	 * @param notificationTemplateId Id of the notification template
-	 * @param substitutionJson JSON defining the substitution params to use with the template
-	 * @param callback The method to be invoked when the server response is received
-	 */
+         * Sends a notification to a user based on a brainCloud portal configured notification template.
+         * Includes JSON defining the substitution params to use with the template.
+         * See the Portal documentation for more info.
+         * NOTE: It is possible to send a push notification to oneself.
+         *
+         * @param in_toProfileId The braincloud profileId of the user to receive the notification
+         * @param in_notificationTemplateId Id of the notification template
+         * @param in_substitutionJson JSON defining the substitution params to use with the template
+         * @param in_callback The method to be invoked when the server response is received
+         */
 	void sendRichPushNotificationWithParams(const FString &toProfileId, int32 notificationTemplateId, const FString &substitutionJson, IServerCallback *callback);
 
 	/**
-	 * Sends a notification to a "group" of user based on a brainCloud portal configured notification template.
-	 * Includes JSON defining the substitution params to use with the template.
-	 * See the Portal documentation for more info.
-	 *
-	 * @param groupId Target group
-	 * @param notificationTemplateId Template to use
-	 * @param substitutionsJson Map of substitution positions to strings
-	 * @param callback The method to be invoked when the server response is received
-	 */
+        * Sends a notification to a "group" of user based on a brainCloud portal configured notification template.
+        * Includes JSON defining the substitution params to use with the template.
+        * See the Portal documentation for more info.
+        *
+        * @param in_groupId Target group
+        * @param in_notificationTemplateId Template to use
+        * @param in_substitutionsJson Map of substitution positions to strings
+        * @param in_callback The method to be invoked when the server response is received
+        */
 	void sendTemplatedPushNotificationToGroup(const FString &groupId, int32 notificationTemplateId, const FString &substitutionsJson, IServerCallback *callback = nullptr);
 
 	/**
@@ -107,27 +107,27 @@ public:
 	void sendNormalizedPushNotificationToGroup(const FString &groupId, const FString &alertContentJson, const FString &customDataJson, IServerCallback *callback = nullptr);
 
 	/**
-	 * Schedules a normalized push notification to a user
-	 *
-	 * @param profileId The profileId of the user to receive the notification
-	 * @param fcmContent Valid Fcm data content
-	 * @param iosContent Valid ios data content
-	 * @param facebookContent Facebook template string
-	 * @param startTime Start time of sending the push notification
-	 * @param callback The method to be invoked when the server response is received
-	 */
+     	* Schedules a normalized push notification to a user
+     	*
+     	* @param in_profileId The profileId of the user to receive the notification
+     	* @param in_fcmContent Valid Fcm data content
+     	* @param in_iosContent Valid ios data content
+     	* @param in_facebookContent Facebook template string
+     	* @param in_startTimeUTC Start time of sending the push notification in milliseconds, use UTC time in milliseconds since epoch
+     	* @param in_callback The method to be invoked when the server response is received
+     	*/
 	void scheduleRawPushNotificationUTC(const FString &profileId, const FString &fcmContent, const FString &iosContent, const FString &facebookContent, int64 startTime, IServerCallback *callback = NULL);
 
 	/**
-	 * Schedules a normalized push notification to a user
-	 *
-	 * @param profileId The profileId of the user to receive the notification
-	 * @param fcmContent Valid Fcm data content
-	 * @param iosContent Valid ios data content
-	 * @param facebookContent Facebook template string
-	 * @param minutesFromNow Minutes from now to send the push notification
-	 * @param callback The method to be invoked when the server response is received
-	 */
+     	* Schedules a normalized push notification to a user
+     	*
+     	* @param in_profileId The profileId of the user to receive the notification
+     	* @param in_fcmContent Valid Fcm data content
+     	* @param in_iosContent Valid ios data content
+     	* @param in_facebookContent Facebook template string
+     	* @param minutesFromNow Minutes from now to send the push notification
+		* @param callback The method to be invoked when the server response is received
+     	*/
 	void scheduleRawPushNotificationMinutes(const FString &profileId, const FString &fcmContent, const FString &iosContent, const FString &facebookContent, int32 minutesFromNow, IServerCallback *callback = NULL);
 
 	/**
@@ -142,14 +142,14 @@ public:
 	void sendRawPushNotification(const FString &profileId, const FString &fcmContent, const FString &iosContent, const FString &facebookContent, IServerCallback *callback = NULL);
 
 	/**
-	 * Sends a raw push notification to a target list of users.
-	 *
-	 * @param profileIds Collection of profile IDs to send the notification to
-	 * @param fcmContent Valid Fcm data content
-	 * @param iosContent Valid ios data content
-	 * @param facebookContent Facebook template string
-	 * @param callback The method to be invoked when the server response is received
-	 */
+     	* Sends a raw push notification to a target list of users.
+     	*
+     	* @param in_profileIds Collection of profile IDs to send the notification to
+     	* @param in_fcmContent Valid Fcm data content
+     	* @param in_iosContent Valid ios data content
+     	* @param in_facebookContent Facebook template string
+     	* @param in_callback The method to be invoked when the server response is received
+     	*/
 	void sendRawPushNotificationBatch(const TArray<FString> profileIds, const FString &fcmContent, const FString &iosContent, const FString &facebookContent, IServerCallback *callback = NULL);
 
 	/**
@@ -164,47 +164,47 @@ public:
 	void sendRawPushNotificationToGroup(const FString &groupId, const FString &fcmContent, const FString &iosContent, const FString &facebookContent, IServerCallback *callback = NULL);
 
 	/**
-	 * Schedules a normalized push notification to a user
-	 *
-	 * @param profileId The profileId of the user to receive the notification
-	 * @param alertContentJson Body and title of alert
-	 * @param customDataJson Optional custom data
-	 * @param startTime Start time of sending the push notification
-	 * @param callback The method to be invoked when the server response is received
-	 */
+		* Schedules a normalized push notification to a user
+	    *
+		* @param in_toProfileId The profileId of the user to receive the notification
+		* @param in_alertContentJson Body and title of alert
+		* @param in_customDataJson Optional custom data
+		* @param in_startTimeUTC Start time of sending the push notification in milliseconds, use UTC time in milliseconds since epoch
+		* @param in_callback The method to be invoked when the server response is received
+		*/
 	void scheduleNormalizedPushNotificationUTC(const FString &profileId, const FString &alertContentJson, const FString &customDataJson, const int64 startTime, IServerCallback *callback);
 
 	/**
-	 * Schedules a normalized push notification to a user
-	 *
-	 * @param profileId The profileId of the user to receive the notification
-	 * @param alertContentJson Body and title of alert
-	 * @param customDataJson Optional custom data
-	 * @param minutesFromNow Minutes from now to send the push notification
-	 * @param callback The method to be invoked when the server response is received
-	 */
+		* Schedules a normalized push notification to a user
+		*
+		* @param in_toProfileId The profileId of the user to receive the notification
+		* @param in_alertContentJson Body and title of alert
+		* @param in_customDataJson Optional custom data
+		* @param in_minutesFromNow Minutes from now to send the push notification
+		* @param in_callback The method to be invoked when the server response is received
+		*/
 	void scheduleNormalizedPushNotificationMinutes(const FString &profileId, const FString &alertContentJson, const FString &customDataJson, const int32 minutesFromNow, IServerCallback *callback);
 
 	/**
-	 * Schedules a rich push notification to a user
-	 *
-	 * @param profileId The profileId of the user to receive the notification
-	 * @param notificationTemplateId Body and title of alert
-	 * @param substitutionJson Map of substitution positions to strings
-	 * @param startTime Start time of sending the push notification
-	 * @param callback The method to be invoked when the server response is received
-	 */
+		* Schedules a rich push notification to a user
+		*
+		* @param in_toProfileId The profileId of the user to receive the notification
+		* @param in_notificationTemplateId Body and title of alert
+		* @param in_substitutionsJson Map of substitution positions to strings
+		* @param in_startTimeUTC Start time of sending the push notification in milliseconds, use UTC time in milliseconds since epoch
+		* @param in_callback The method to be invoked when the server response is received
+		*/
 	void scheduleRichPushNotificationUTC(const FString &profileId, const int32 notificationTemplateId, const FString &substitutionJson, const int64 startTime, IServerCallback *callback);
 
 	/**
-	 * Schedules a rich push notification to a user
-	 *
-	 * @param profileId The profileId of the user to receive the notification
-	 * @param notificationTemplateId Body and title of alert
-	 * @param substitutionJson Map of substitution positions to strings
-	 * @param minutesFromNow Minutes from now to send the push notification
-	 * @param callback The method to be invoked when the server response is received
-	 */
+		* Schedules a rich push notification to a user
+		*
+		* @param in_toProfileId The profileId of the user to receive the notification
+		* @param in_notificationTemplateId Body and title of alert
+		* @param in_substitutionsJson Map of substitution positions to strings
+		* @param in_minutesFromNow Minutes from now to send the push notification
+		* @param in_callback The method to be invoked when the server response is received
+		*/
 	void scheduleRichPushNotificationMinutes(const FString &profileId, const int32 notificationTemplateId, const FString &substitutionJson, const int32 minutesFromNow, IServerCallback *callback);
 
 	/**
@@ -218,13 +218,13 @@ public:
 	void sendNormalizedPushNotification(const FString &toProfileId, const FString &alertContentJson, const FString &customDataJson, IServerCallback *callback = nullptr);
 
 	/**
-	 * Sends a notification to multiple users consisting of alert content and custom data.
-	 *
-	 * @param profileIds Collection of profile IDs to send the notification to
-	 * @param alertContent Body and title of alert
-	 * @param customData Optional custom data
-	 * @param callback The method to be invoked when the server response is received
-	 */
+		* Sends a notification to multiple users consisting of alert content and custom data.
+		*
+		* @param in_profileIds Collection of profile IDs to send the notification to
+		* @param in_alertContent Body and title of alert
+		* @param in_customData Optional custom data
+		* @param in_callback The method to be invoked when the server response is received
+		*/
 	void sendNormalizedPushNotificationBatch(const TArray<FString> profileIds, const FString &alertContentJson, const FString &customDataJson, IServerCallback *callback = nullptr);
 
 private:

@@ -13,12 +13,11 @@ public:
     /**
      * Deletes specified user messages on the server.
      *
-     * Service Name - messaging
-     * Service Operation - DELETE_MESSAGES
+     * Service Name - Messaging
+     * Service Operation - DeleteMessages
      *
-     * @param in_msgBox The msgBox that the msgIds belong to
-     * @param in_msgsIds Array of msg Ids to delete
-     * @param in_callback Method to be invoked when the server response is received.
+     * @param msgIds Arrays of message ids to delete.
+     * @param callback The method to be invoked when the server response is received
      */
     void deleteMessages(const FString &in_msgBox, const TArray<FString> &in_msgsIds, IServerCallback *in_callback);
 
@@ -45,12 +44,12 @@ public:
     /**
      * Retrieves list of specified messages.
      *
-     * Service Name - messaging
-     * Service Operation - GET_MESSAGES
+     * Service Name - Messaging
+     * Service Operation - GetMessages
      *
-     * @param in_msgBox The msgBox that the msgIds belong to
-     * @param in_msgsIds Array of msg Ids to delete
-     * @param in_callback Method to be invoked when the server response is received.
+     * @param msgIds Arrays of message ids to get.
+     * @param markAsRead mark messages that are read
+     * @param callback The method to be invoked when the server response is received
      */
     void getMessages(const FString &in_msgBox, const TArray<FString> &in_msgsIds, bool markAsRead, IServerCallback *in_callback);
 
@@ -78,39 +77,38 @@ public:
     void getMessagesPageOffset(const FString &in_context, int32 in_pageOffset, IServerCallback *in_callback);
 
     /**
-     * Retrieves a page of messages.
+     * Marks list of user messages as read on the server.
      *
-     * Service Name - messaging
-     * Service Operation - MARK_MESSAGES_READ
+     * Service Name - Messaging
+     * Service Operation - MarkMessagesRead
      *
-     * @param in_msgBox The msgBox that the msgIds belong to
-     * @param in_msgsIds Array of msg Ids to mark as read
-     * @param in_callback Method to be invoked when the server response is received.
+     * @param msgbox
+     * @param msgIds
+     * @param callback The method to be invoked when the server response is received
      */
     void markMessagesRead(const FString &in_msgBox, const TArray<FString> &in_msgsIds, IServerCallback *in_callback);
 
     /**
-     *Sends a message with specified 'subject' and 'text' to list of users.
+     * Sends a message with specified 'subject' and 'text' to list of users.
      *
-     * Service Name - messaging
-     * Service Operation - SEND_MESSAGE
+     * Service Name - Messaging
+     * Service Operation - SendMessage
      *
-     * @param in_toProfileIds Array of recipients for the message
-     * @param in_messageText Messsage Text
-     * @param in_messageSubject Messsage subject
-     * @param in_callback Method to be invoked when the server response is received.
+     * @param toProfileIds
+     * @param contentJson the message you are sending
+     * @param callback The method to be invoked when the server response is received
      */
     void sendMessage(const TArray<FString> &in_toProfileIds, const FString &in_contentJson, IServerCallback *in_callback);
 
     /**
-     *Sends a message with specified 'subject' and 'text' to list of users.
+     * Sends a simple message to specified list of users.
      *
-     * Service Name - messaging
-     * Service Operation - SEND_MESSAGE_SIMPLE
+     * Service Name - Messaging
+     * Service Operation - SendMessageSimple
      *
-     * @param in_toProfileIds Array of recipients for the message
-     * @param in_messageText Messsage Text
-     * @param in_callback Method to be invoked when the server response is received.
+     * @param toProfileIds
+     * @param messageText
+     * @param callback The method to be invoked when the server response is received
      */
     void sendMessageSimple(const TArray<FString> &in_toProfileIds, const FString &in_messageText, IServerCallback *in_callback);
 

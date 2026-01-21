@@ -17,11 +17,11 @@ public:
 	 * Service Name - GlobalEntity
 	 * Service Operation - Create
 	 *
-	 * @param entityType The entity type as defined by the user
-	 * @param timeToLive Sets expiry time for entity if > 0
-	 * @param jsonEntityAcl The entity's access control object
-	 * @param jsonEntityData The entity's data as a json string
-	 * @param callback The callback object
+	 * @param in_entityType The entity type as defined by the user
+	 * @param in_timeToLive Sets expiry time for entity in milliseconds if > 0
+	 * @param in_jsonEntityAcl The entity's access control list as json. A null acl implies default
+	 * @param in_jsonEntityData  The entity's data as a json string
+	 * @param in_callback The callback object
 	 */
 	void createEntity(const FString &entityType, int64 timeToLive, IAcl *jsonEntityAcl,
 					  const FString &jsonEntityData, IServerCallback *callback);
@@ -32,12 +32,12 @@ public:
 	 * Service Name - GlobalEntity
 	 * Service Operation - CreateWithIndexedId
 	 *
-	 * @param entityType The entity type as defined by the user
-	 * @param indexedId A secondary ID that will be indexed
-	 * @param timeToLive Sets expiry time for entity if > 0
-	 * @param jsonEntityAcl The entity's access control object list as json.
-	 * @param jsonEntityData The entity's data as a json string
-	 * @param callback The callback object
+	 * @param in_entityType The entity type as defined by the user
+	 * @param in_indexedId A secondary ID that will be indexed
+	 * @param in_timeToLive Sets expiry time for entity in milliseconds if > 0
+	 * @param in_jsonEntityAcl The entity's access control list as json. A null acl implies default
+	 * @param in_jsonEntityData  The entity's data as a json string
+	 * @param in_callback The callback object
 	 */
 	void createEntityWithIndexedId(const FString &entityType, const FString &indexedId, int64 timeToLive,
 								   IAcl *jsonEntityAcl, const FString &jsonEntityData, IServerCallback *callback);
@@ -48,10 +48,10 @@ public:
 	 * Service Name - GlobalEntity
 	 * Service Operation - Update
 	 *
-	 * @param entityId The entity ID
-	 * @param version The version of the entity to update
-	 * @param jsonEntityData The entity's data as a json string
-	 * @param callback The callback object
+	 * @param in_entityId The entity ID
+	 * @param in_version The version of the entity to update
+	 * @param in_jsonEntityData  The entity's data as a json string
+	 * @param in_callback The callback object
 	 */
 	void updateEntity(const FString &entityId, int32 version, const FString &jsonEntityData, IServerCallback *callback);
 
@@ -61,10 +61,10 @@ public:
 	 * Service Name - GlobalEntity
 	 * Service Operation - UpdateAcl
 	 *
-	 * @param entityId The entity ID
-	 * @param version The version of the entity to update
-	 * @param jsonEntityAcl The entity's access control object list.
-	 * @param callback The callback object
+	 * @param in_entityId The entity ID
+	 * @param in_version The version of the entity to update
+	 * @param in_jsonEntityAcl The entity's access control list as json.
+	 * @param in_callback The callback object
 	 */
 	void updateEntityAcl(const FString &entityId, int32 version, IAcl *jsonEntityAcl, IServerCallback *callback);
 
@@ -74,10 +74,10 @@ public:
 	 * Service Name - GlobalEntity
 	 * Service Operation - UpdateTimeToLive
 	 *
-	 * @param entityId The entity ID
-	 * @param version The version of the entity to update
-	 * @param timeToLive Sets expiry time for entity if > 0
-	 * @param callback The callback object
+	 * @param in_entityId The entity ID
+	 * @param in_version The version of the entity to update
+	 * @param in_timeToLive Sets expiry time for entity in milliseconds if > 0
+	 * @param in_callback The callback object
 	 */
 	void updateEntityTimeToLive(const FString &entityId, int32 version, int64 timeToLive, IServerCallback *callback);
 
@@ -87,9 +87,9 @@ public:
 	 * Service Name - GlobalEntity
 	 * Service Operation - Delete
 	 *
-	 * @param entityId The entity ID
-	 * @param version The version of the entity to delete
-	 * @param callback The callback object
+	 * @param in_entityId The entity ID
+	 * @param in_version The version of the entity to delete
+	 * @param in_callback The callback object
 	 */
 	void deleteEntity(const FString &entityId, int32 version, IServerCallback *callback);
 
@@ -110,10 +110,10 @@ public:
 	 * Service Name - GlobalEntity
 	 * Service Operation - GetList
 	 *
-	 * @param where Mongo style query string
-	 * @param orderBy Sort order
-	 * @param maxReturn The maximum number of entities to return
-	 * @param callback The callback object
+	 * @param in_where Mongo style query string
+	 * @param in_orderBy Sort order
+	 * @param in_maxReturn The maximum number of entities to return
+	 * @param in_callback The callback object
 	 */
 	void getList(const FString &where, const FString &orderBy, int32 maxReturn, IServerCallback *callback);
 
@@ -123,9 +123,9 @@ public:
 	 * Service Name - GlobalEntity
 	 * Service Operation - GetListByIndexedId
 	 *
-	 * @param entityIndexedId The entity indexed Id
-	 * @param maxReturn The maximum number of entities to return
-	 * @param callback The callback object
+	 * @param in_entityIndexedId The entity indexed Id
+	 * @param in_maxReturn The maximum number of entities to return
+	 * @param in_callback The callback object
 	 */
 	void getListByIndexedId(const FString &entityIndexedId, int32 maxReturn, IServerCallback *callback);
 
@@ -186,22 +186,22 @@ public:
 	 * Service Name - globalEntity
 	 * Service Operation - GET_RANDOM_ENTITIES_MATCHING
 	 *
-	 * @param where Mongo style query string.
-	 * @param maxReturn The maximum number of entities to return.
-	 * @param callback The callback object
+	 * @param in_where Mongo style query string
+	 * @param in_maxReturn The maximum number of entities to return
+	 * @param in_callback The callback object
 	 */
 	void getRandomEntitiesMatching(const FString &where, int32 maxReturn, IServerCallback *callback = nullptr);
 
 	/**
-	 * Method updates an existing entity's Owner and ACL on the server.
+	 * Method updates an existing entity's Indexed Id
 	 *
 	 * Service Name - globalEntity
 	 * Service Operation - UPDATE_ENTITY_OWNER_AND_ACL
 	 *
-	 * @param entityId The entity ID
-	 * @param version The version of the entity to update
-	 * @param entityIndexedId the id index of the entity
-	 * @param callback The callback object
+	 * @param in_entityId The entity ID
+	 * @param in_version The version of the entity to update
+	 * @param in_entityIndexedId the id index of the entity
+	 * @param in_callback The callback object
 	 */
 	void updateEntityIndexedId(const FString &entityId, int32 version, const FString &entityIndexedId, IServerCallback *callback = nullptr);
 
@@ -211,11 +211,11 @@ public:
 	 * Service Name - globalEntity
 	 * Service Operation - UPDATE_ENTITY_OWNER_AND_ACL
 	 *
-	 * @param entityId The entity ID
-	 * @param version The version of the entity to update
-	 * @param ownerId The owner ID
-	 * @param jsonEntityAcl The entity's access control list as JSON.
-	 * @param callback The callback object
+	 * @param in_entityId The entity ID
+	 * @param in_version The version of the entity to update
+	 * @param in_ownerId The owner ID
+	 * @param in_jsonEntityAcl The entity's access control list as JSON.
+	 * @param in_callback The callback object
 	 */
 	void updateEntityOwnerAndAcl(const FString &entityId, int32 version, const FString &ownerId, IAcl *jsonEntityAcl, IServerCallback *callback);
 
@@ -225,10 +225,10 @@ public:
 	 * Service Name - globalEntity
 	 * Service Operation - MAKE_SYSTEM_ENTITY
 	 *
-	 * @param entityId The entity ID
-	 * @param version The version of the entity to update
-	 * @param jsonEntityAcl The entity's access control list as JSON.
-	 * @param callback The callback object
+	 * @param in_entityId The entity ID
+	 * @param in_version The version of the entity to update
+	 * @param in_jsonEntityAcl The entity's access control list as JSON.
+	 * @param in_callback The callback object
 	 */
 	void makeSystemEntity(const FString &entityId, int32 version, IAcl *jsonEntityAcl, IServerCallback *callback);
 

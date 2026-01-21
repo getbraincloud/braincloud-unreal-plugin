@@ -45,11 +45,11 @@ public:
    * Service Name - group
    * Service Operation - ADD_GROUP_MEMBER
    *
-   * @param groupId ID of the group.
-   * @param profileId Profile ID of the member being added.
-   * @param role Role of the member being added.
-   * @param jsonAttributes Attributes of the member being added.
-   * @param callback The method to be invoked when the server response is received
+   * @param in_groupId ID of the group.
+   * @param in_profileId Profile ID of the member being added.
+   * @param in_role Role of the member being added.
+   * @param in_jsonAttributes Attributes of the member being added.
+   * @param in_callback The method to be invoked when the server response is received
    */
   void addGroupMember(const FString &groupId, const FString &profileId, ERole role, const FString &jsonAttributes, IServerCallback *callback = nullptr);
 
@@ -59,11 +59,11 @@ public:
    * Service Name - group
    * Service Operation - APPROVE_GROUP_JOIN_REQUEST
    *
-   * @param groupId ID of the group.
-   * @param profileId Profile ID of the invitation being deleted.
-   * @param role Role of the member being invited.
-   * @param jsonAttributes Attributes of the member being invited.
-   * @param callback The method to be invoked when the server response is received
+   * @param in_groupId ID of the group.
+   * @param in_profileId Profile ID of the invitation being deleted.
+   * @param in_role Role of the member being invited.
+   * @param in_jsonAttributes Attributes of the member being invited.
+   * @param in_callback The method to be invoked when the server response is received
    */
   void approveGroupJoinRequest(const FString &groupId, const FString &profileId, ERole role, const FString &jsonAttributes, IServerCallback *callback = nullptr);
 
@@ -73,23 +73,22 @@ public:
    * Service Name - group
    * Service Operation - AUTO_JOIN_GROUP
    *
-   * @param groupType Name of the associated group type.
-   * @param autoJoinStrategy Selection strategy to employ when there are multiple matches
-   * @param dataQueryJson Query parameters (optional)
-   * @param callback The method to be invoked when the server response is received
+   * @param in_groupType Name of the associated group type.
+   * @param in_autoJoinStrategy Selection strategy to employ when there are multiple matches
+   * @param in_dataQueryJson Query parameters (optional)
+   * @param in_callback The method to be invoked when the server response is received
    */
   void autoJoinGroup(const FString &groupType, EAutoJoinStrategy autoJoinStrategy, const FString &dataQueryJson, IServerCallback *callback = nullptr);
 
   /**
-   * Automatically join an open group that matches the search criteria and has space available.
-   *
+   * Find and join an open group in the pool of groups in multiple group types provided as input arguments.		*
    * Service Name - group
    * Service Operation - AUTO_JOIN_GROUP_MULTI
    *
-   * @param groupType Name of the associated group type.
-   * @param autoJoinStrategy Selection strategy to employ when there are multiple matches
-   * @param dataQueryJson Query parameters (optional)
-   * @param callback The method to be invoked when the server response is received
+   * @param in_groupTypes Name of the associated group type.
+   * @param in_autoJoinStrategy Selection strategy to employ when there are multiple matches
+   * @param in_where Query parameters (optional)
+   * @param in_callback The method to be invoked when the server response is received
    */
   void autoJoinGroupMulti(const TArray<FString> &groupType, EAutoJoinStrategy autoJoinStrategy, const FString &dataQueryJson, IServerCallback *callback = nullptr);
 
@@ -111,14 +110,14 @@ public:
    * Service Name - group
    * Service Operation - CREATE_GROUP
    *
-   * @param name Name of the group.
-   * @param groupType Name of the type of group.
-   * @param isOpenGroup true if group is open; false if closed.
-   * @param acl The group's access control list. A null ACL implies default.
-   * @param jsonOwnerAttributes Attributes for the group owner (current player).
-   * @param jsonDefaultMemberAttributes Default attributes for group members.
-   * @param jsonData Custom application data.
-   * @param callback The method to be invoked when the server response is received
+   * @param in_name Name of the group.
+   * @param in_groupType Name of the type of group.
+   * @param in_isOpenGroup true if group is open; false if closed.
+   * @param in_acl The group's access control list. A null ACL implies default.
+   * @param in_jsonOwnerAttributes Attributes for the group owner (current user).
+   * @param in_jsonDefaultMemberAttributes Default attributes for group members.
+   * @param in_jsonData Custom application data.
+   * @param in_callback The method to be invoked when the server response is received
    */
   void createGroup(
       const FString &name,
@@ -131,20 +130,20 @@ public:
       IServerCallback *callback = nullptr);
 
   /**
-   * Create a group with summary data.
+   * Create a group with Summary Data.
    *
    * Service Name - group
    * Service Operation - CREATE_GROUP
    *
-   * @param name Name of the group.
-   * @param groupType Name of the type of group.
-   * @param isOpenGroup true if group is open; false if closed.
-   * @param acl The group's access control list. A null ACL implies default.
-   * @param jsonOwnerAttributes Attributes for the group owner (current player).
-   * @param jsonDefaultMemberAttributes Default attributes for group members.
-   * @param jsonData Custom application data.
-   * @param jsonSummaryData a summary
-   * @param callback The method to be invoked when the server response is received
+   * @param in_name Name of the group.
+   * @param in_groupType Name of the type of group.
+   * @param in_isOpenGroup true if group is open; false if closed.
+   * @param in_acl The group's access control list. A null ACL implies default.
+   * @param in_jsonOwnerAttributes Attributes for the group owner (current user).
+   * @param in_jsonDefaultMemberAttributes Default attributes for group members.
+   * @param in_jsonSummaryData the summary.
+   * @param in_jsonData Custom application data.
+   * @param in_callback The method to be invoked when the server response is received
    */
   void createGroupWithSummaryData(
       const FString &name,
@@ -163,12 +162,12 @@ public:
    * Service Name - group
    * Service Operation - CREATE_GROUP_ENTITY
    *
-   * @param groupId ID of the group.
-   * @param isOwnedByGroupMember true if entity is owned by a member; false if owned by the entire group.
-   * @param entityType Type of the group entity.
-   * @param acl Access control list for the group entity.
-   * @param jsonData Custom application data.
-   * @param callback The method to be invoked when the server response is received
+   * @param in_groupId ID of the group.
+   * @param in_isOwnedByGroupMember true if entity is owned by a member; false if owned by the entire group.
+   * @param in_entityType Type of the group entity.
+   * @param in_acl Access control list for the group entity.
+   * @param in_jsonData Custom application data.
+   * @param in_callback The method to be invoked when the server response is received
    */
   void createGroupEntity(
       const FString &groupId,
@@ -184,9 +183,9 @@ public:
    * Service Name - group
    * Service Operation - DELETE_GROUP
    *
-   * @param groupId ID of the group.
-   * @param version Current version of the group
-   * @param callback The method to be invoked when the server response is received
+   * @param in_groupId ID of the group.
+   * @param in_version Current version of the group
+   * @param in_callback The method to be invoked when the server response is received
    */
   void deleteGroup(const FString &groupId, int32 version, IServerCallback *callback = nullptr);
 
@@ -196,10 +195,10 @@ public:
    * Service Name - group
    * Service Operation - DELETE_GROUP_ENTITY
    *
-   * @param groupId ID of the group.
-   * @param entityId ID of the entity.
-   * @param version The current version of the group entity (for concurrency checking).
-   * @param callback The method to be invoked when the server response is received
+   * @param in_groupId ID of the group.
+   * @param in_entityId ID of the entity.
+   * @param in_version The current version of the group entity (for concurrency checking).
+   * @param in_callback The method to be invoked when the server response is received
    */
   void deleteGroupEntity(const FString &groupId, const FString &entityId, int32 version, IServerCallback *callback = nullptr);
 
@@ -254,11 +253,11 @@ public:
    * Service Name - group
    * Service Operation - INVITE_GROUP_MEMBER
    *
-   * @param groupId ID of the group.
-   * @param profileId Profile ID of the member being invited.
-   * @param role Role of the member being invited.
-   * @param jsonAttributes Attributes of the member being invited.
-   * @param callback The method to be invoked when the server response is received
+   * @param in_groupId ID of the group.
+   * @param in_profileId Profile ID of the member being invited.
+   * @param in_role Role of the member being invited.
+   * @param in_jsonAttributes Attributes of the member being invited.
+   * @param in_callback The method to be invoked when the server response is received
    */
   void inviteGroupMember(const FString &groupId, const FString &profileId, ERole role, const FString &jsonAttributes, IServerCallback *callback = nullptr);
 
@@ -301,9 +300,9 @@ public:
    * Service Name - group
    * Service Operation - LIST_GROUPS_PAGE_BY_OFFSET
    *
-   * @param encodedContext Encoded reference query context.
-   * @param offset Number of pages by which to offset the query.
-   * @param callback The method to be invoked when the server response is received
+   * @param in_encodedContext Encoded reference query context.
+   * @param in_offset Number of pages by which to offset the query.
+   * @param in_callback The method to be invoked when the server response is received
    */
   void listGroupsPageByOffset(const FString &encodedContext, int32 pageOffset, IServerCallback *callback = nullptr);
 
@@ -357,9 +356,9 @@ public:
    * Service Name - group
    * Service Operation - READ_GROUP_ENTITIES_PAGE_BY_OFFSET
    *
-   * @param encodedContext Encoded reference query context.
-   * @param offset Number of pages by which to offset the query.
-   * @param callback The method to be invoked when the server response is received
+   * @param in_encodedContext Encoded reference query context.
+   * @param in_offset Number of pages by which to offset the query.
+   * @param in_callback The method to be invoked when the server response is received
    */
   void readGroupEntitiesPageByOffset(const FString &encodedContext, int32 pageOffset, IServerCallback *callback = nullptr);
 
@@ -424,10 +423,10 @@ public:
   /**
    * Set a group's access conditions.
    *
-   * Service Name - group
+   * Service Name - Group
    * Service Operation - UPDATE_GROUP_ACL
    *
-   * @param groupId ID of the group.
+   * @param groupId ID of the group
    * @param acl The group's access control list. A null ACL implies default
    * @param callback The method to be invoked when the server response is received
    */
@@ -436,13 +435,13 @@ public:
   /**
    * Update the acl settings for a group entity, enforcing ownership.
    *
-   * Service Name - group
+   * Service Name - Group
    * Service Operation - UPDATE_GROUP_ENTITY_ACL
    *
-   * @param groupId ID of the group.
-   * @param entityId ID of the entity to update.
-   * @param acl The group's access control list. A null ACL implies default
-   * @param callback The method to be invoked when the server response is received
+   * @param in_groupId The id of the group
+   * @param in_entityId The id of the entity to update
+   * @param in_acl Access control list for the group entity
+   * @param in_callback The method to be invoked when the server response is received
    */
   void updateGroupEntityAcl(const FString &groupId, const FString &entityId, UBrainCloudGroupACL *acl, IServerCallback *callback = nullptr);
 
@@ -452,10 +451,10 @@ public:
    * Service Name - group
    * Service Operation - UPDATE_GROUP_DATA
    *
-   * @param groupId ID of the group.
-   * @param version Version to verify.
-   * @param jsonData Data to apply.
-   * @param callback The method to be invoked when the server response is received
+   * @param in_groupId ID of the group.
+   * @param in_version Version to verify.
+   * @param in_jsonData Data to apply.
+   * @param in_callback The method to be invoked when the server response is received
    */
   void updateGroupData(const FString &groupId, int32 version, const FString &jsonData, IServerCallback *callback = nullptr);
 
@@ -465,11 +464,11 @@ public:
    * Service Name - group
    * Service Operation - UPDATE_GROUP_ENTITY_DATA
    *
-   * @param groupId ID of the group.
-   * @param entityId ID of the entity.
-   * @param version The current version of the group entity (for concurrency checking).
-   * @param jsonData Custom application data.
-   * @param callback The method to be invoked when the server response is received
+   * @param in_groupId ID of the group.
+   * @param in_entityId ID of the entity.
+   * @param in_version The current version of the group entity (for concurrency checking).
+   * @param in_jsonData Custom application data.
+   * @param in_callback The method to be invoked when the server response is received
    */
   void updateGroupEntityData(const FString &groupId, const FString &entityId, int32 version, const FString &jsonData, IServerCallback *callback = nullptr);
 
@@ -479,11 +478,11 @@ public:
    * Service Name - group
    * Service Operation - UPDATE_GROUP_MEMBER
    *
-   * @param groupId ID of the group.
-   * @param profileId Profile ID of the member being updated.
-   * @param role Role of the member being updated (optional).
-   * @param jsonAttributes Attributes of the member being updated (optional).
-   * @param callback The method to be invoked when the server response is received
+   * @param in_groupId ID of the group.
+   * @param in_profileId Profile ID of the member being updated.
+   * @param in_role Role of the member being updated (optional).
+   * @param in_jsonAttributes Attributes of the member being updated (optional).
+   * @param in_callback The method to be invoked when the server response is received
    */
   void updateGroupMember(const FString &groupId, const FString &profileId, ERole role, const FString &jsonAttributes, IServerCallback *callback = nullptr);
 

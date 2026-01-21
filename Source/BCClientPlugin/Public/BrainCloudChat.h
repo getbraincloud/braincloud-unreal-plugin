@@ -110,15 +110,14 @@ public:
 
 	/**
 	 * Send a potentially rich chat message.
+	 * <content> must contain at least a "text" field for text messaging.
 	 *
-	 * Service Name - chat
-	 * Service Operation - POST_CHAT_MESSAGE
+	 * Service Name - Chat
+	 * Service Operation - PostChatMessage
 	 *
-	 * @param in_channelId The channelId to post the chat message to
-	 * @param in_plain The plain text message asscociated with the chat message
-	 * @param in_jsonRich The json string to associate with the chat message
-	 * @param in_recordInHistory Whether to record the message in history, or to only send it to currently active participants
-	 * @param in_callback Method to be invoked when the server response is received.
+	 * @param channelId Channel id to post message to.
+	 * @param content Object containing "text" for the text message. Can also has rich content for custom data.
+	 * @param callback The method to be invoked when the server response is received.
 	 */
 	void postChatMessage(const FString &in_channelId, const FString &in_plain, const FString &in_jsonRich, bool in_recordInHistory, IServerCallback *in_callback);
 
@@ -135,18 +134,18 @@ public:
 	void postChatMessageSimple(const FString &in_channelId, const FString &in_plain, bool in_recordInHistory, IServerCallback *in_callback);
 
 	/**
-	 * Update a chat message. <content> must contain at least a "plain" field for plain-text messaging. <version> must match the latest or pass -1 to bypass version check.
+	 * Update a chat message.
+	 * <content> must contain at least a "text" field for text-text messaging.
+	 * <version> must match the latest or pass -1 to bypass version check.
 	 *
-	 * Service Name - chat
-	 * Service Operation - UPDATE_CHAT_MESSAGE
+	 * Service Name - Chat
+	 * Service Operation - UpdateChatMessage
 	 *
-	 * @param in_channelId The channelId of the chat message to update
-	 * @param in_messageId The messagedId of the message to update
-	 * @param in_version The version of the message to update, must match the latest or pass -1 to bypass version check.
-	 * @param in_plain The plain text message asscociated with the chat message
-	 * @param in_jsonRich The json string to associate with the chat message
-	 * @param in_recordInHistory Whether to record the message in history, or to only send it to currently active participants
-	 * @param in_callback Method to be invoked when the server response is received.
+	 * @param channelId Channel id where the message to update is.
+	 * @param msgId Message id to update.
+	 * @param version Version of the message to update. Must match latest or pass -1 to bypass version check.
+	 * @param content Data to update. Object containing "text" for the text message. Can also has rich content for custom data.
+	 * @param callback The method to be invoked when the server response is received.
 	 */
 	void updateChatMessage(const FString &in_channelId, const FString &in_messageId, int32 in_version,
 						   const FString &in_plain, const FString &in_jsonRich, IServerCallback *in_callback);

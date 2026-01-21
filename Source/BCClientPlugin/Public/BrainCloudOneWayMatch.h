@@ -16,9 +16,9 @@ public:
    * Service Name - OneWayMatch
    * Service Operation - StartMatch
    *
-   * @param otherPlayerId The player to start a match with
-   * @param rangeDelta The range delta used for the initial match search
-   * @param callback The method to be invoked when the server response is received
+   * @param in_otherPlayerId The player to start a match with
+   * @param in_rangeDelta The range delta used for the initial match search
+   * @param in_callback The method to be invoked when the server response is received
    */
   void startMatch(const FString &otherPlayerId, int32 rangeDelta, IServerCallback *callback);
 

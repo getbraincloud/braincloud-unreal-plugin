@@ -27,23 +27,23 @@ public:
 	 * Service Name - friend
 	 * Service Operation - GET_PROFILE_INFO_FOR_CREDENTIAL
 	 *
-	 * @param externalId The users's external ID
-	 * @param authenticationType The authentication type of the user ID
-	 * @param callback Method to be invoked when the server response is received.
+	 * @param in_externalId The users's external ID
+	 * @param in_authenticationType The authentication type of the user ID
+	 * @param in_callback Method to be invoked when the server response is received.
 	 */
 	void getProfileInfoForCredential(const FString &externalId, EBCAuthType authenticationType, IServerCallback *callback = nullptr);
 
 	/**
-	 * Retrieves profile information for the specified user.
-	 * Silently fails, if profile does not exist, just returns null and success, instead of an error.
-	 *
-	 * Service Name - friend
-	 * Service Operation - GET_PROFILE_INFO_FOR_CREDENTIAL_IF_EXISTS
-	 *
-	 * @param externalId The users's external ID
-	 * @param authenticationType The authentication type of the user ID
-	 * @param callback Method to be invoked when the server response is received.
-	 */
+		* Retrieves profile information for the specified user.
+		Silently fails, if profile does not exist, just returns null and success, instead of an error.
+		*
+		* Service Name - friend
+		* Service Operation - GET_PROFILE_INFO_FOR_CREDENTIAL_IF_EXISTS
+		*
+		* @param in_externalId The users's external ID
+		* @param in_authenticationType The authentication type of the user ID
+		* @param in_callback Method to be invoked when the server response is received.
+		*/
 	void getProfileInfoForCredentialIfExists(const FString &externalId, EBCAuthType authenticationType, IServerCallback *callback = nullptr);
 
 	/**
@@ -158,24 +158,18 @@ public:
 	void findUserByExactUniversalId(const FString &searchText, IServerCallback *callback = nullptr);
 
 	/**
-	 * Retrieves profile information for the partial matches of the specified text.
+	 * Retrieves profile information for the users whos UniversalId start with search text.
 	 *
-	 * Service Name - Friend
-	 * Service Operation - FIND_USERS_BY_UNIVERSAL_ID_STARTING_WITH
-	 *
-	 * @param searchText Universal ID text on which to search.
-	 * @param maxResults Maximum number of results to return.
+	 * @param in_searchText Universal ID text on which to search.
+	 * @param in_maxResults Maximum number of results to return.
 	 */
 	void findUsersByUniversalIdStartingWith(const FString &searchText, int32 maxResults, IServerCallback *callback = nullptr);
 
 	/**
-	 * Retrieves profile information for the partial matches of the specified text.
+	 * Retrieves profile information for the users whos names start with search text.
 	 *
-	 * Service Name - Friend
-	 * Service Operation - FIND_USER_BY_NAME_STARTING_WITH
-	 *
-	 * @param searchText Universal ID text on which to search.
-	 * @param maxResults Maximum number of results to return.
+	 * @param in_searchText Name text on which to search.
+	 * @param in_maxResults Maximum number of results to return.
 	 */
 	void findUsersByNameStartingWith(const FString &searchText, int32 maxResults, IServerCallback *callback = nullptr);
 
@@ -185,9 +179,9 @@ public:
 	 * Service Name - Friend
 	 * Service Operation - LIST_FRIENDS
 	 *
-	 * @param friendPlatform Friend platform to query.
-	 * @param includeSummaryData  True if including summary data; false otherwise.
-	 * @param callback Method to be invoked when the server response is received.
+	 * @param in_friendPlatform Friend platform to query.
+	 * @param in_includeSummaryData  True if including summary data; false otherwise.
+	 * @param in_callback Method to be invoked when the server response is received.
 	 */
 	void listFriends(EFriendPlatform friendPlatform, bool includeSummaryData, IServerCallback *callback = nullptr);
 
@@ -209,8 +203,8 @@ public:
 	 * Service Name - Friend
 	 * Service Operation - ADD_FRIENDS
 	 *
-	 * @param profileIds Collection of profile IDs.
-	 * @param callback Method to be invoked when the server response is received.
+	 * @param in_profileIds Collection of profile IDs.
+	 * @param in_callback Method to be invoked when the server response is received.
 	 */
 	void addFriends(const TArray<FString> &profileIds, IServerCallback *callback = nullptr);
 
@@ -220,10 +214,10 @@ public:
 	 * Service Name - Friend
 	 * Service Operation - ADD_FRIENDS_FROM_PLATFORM
 	 *
-	 * @param friendPlatform Platform to add from (i.e: FriendPlatform::Facebook)
-	 * @param mode ADD or SYNC
-	 * @param externalIds Collection of external IDs from the friend platform.
-	 * @param callback Method to be invoked when the server response is received.
+	 * @param in_friendPlatform Platform to add from (i.e: FriendPlatform::Facebook)
+	 * @param in_mode ADD or SYNC
+	 * @param in_externalIds Collection of external IDs from the friend platform.
+	 * @param in_callback Method to be invoked when the server response is received.
 	 */
 	void addFriendsFromPlatform(const EFriendPlatform &friendPlatform, FString mode, const TArray<FString> &externalIds, IServerCallback *callback = nullptr);
 
@@ -233,8 +227,8 @@ public:
 	 * Service Name - Friend
 	 * Service Operation - REMOVE_FRIENDS
 	 *
-	 * @param profileIds Collection of profile IDs.
-	 * @param callback Method to be invoked when the server response is received.
+	 * @param in_profileIds Collection of profile IDs.
+	 * @param in_callback Method to be invoked when the server response is received.
 	 */
 	void removeFriends(const TArray<FString> &profileIds, IServerCallback *callback = nullptr);
 
@@ -242,10 +236,10 @@ public:
 	 * Get users online status
 	 *
 	 * Service Name - Friend
-	 * Service Operation - GET_PLAYERS_ONLINE_STATUS
+	 * Service Operation - GET_USERS_ONLINE_STATUS
 	 *
-	 * @param profileIds Collection of profile IDs.
-	 * @param callback Method to be invoked when the server response is received.
+	 * @param in_profileIds Collection of profile IDs.
+	 * @param in_callback Method to be invoked when the server response is received.
 	 */
 	void getUsersOnlineStatus(const TArray<FString> &profileIds, IServerCallback *callback = nullptr);
 

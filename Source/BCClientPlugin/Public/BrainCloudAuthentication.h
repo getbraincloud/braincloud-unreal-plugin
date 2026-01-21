@@ -252,14 +252,14 @@ public:
 	void authenticateParse(const FString &userid, const FString &token, bool forceCreate, IServerCallback *callback);
 
 	/*
-	 * Authenticate the user using a handoffId and a token
+	 * Authenticate the user using a handoffId and authentication token
 	 *
 	 * Service Name - Authenticate
 	 * Service Operation - Authenticate
 	 *
-	 * @param handoffId braincloud handoff id generated from cloud script
-	 * @param securityToken The security token entered byt the user
-	 * @param callback The method to be invoked when the server response is received
+	 * @param in_handoffId braincloud handoff id generated from cloud script
+	 * @param in_securityToken The authentication token
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void authenticateHandoff(const FString &handoffId, const FString &securityToken, bool forceCreate, IServerCallback *callback);
 
@@ -290,18 +290,18 @@ public:
 	 */
 	void authenticateExternal(const FString &userid, const FString &token, const FString &externalAuthName, bool forceCreate, IServerCallback *callback);
 
-	/**
+	/*
 	 * A generic Authenticate method that translates to the same as calling a specific one, except it takes an extraJson
 	 * that will be passed along to pre- or post- hooks.
 	 *
 	 * Service Name - Authenticate
 	 * Service Operation - Authenticate
 	 *
-	 * @param authenticationType Universal, Email, Facebook, etc
-	 * @param ids Auth IDs structure
-	 * @param forceCreate Should a new profile be created for this user if the account does not exist?
-	 * @param extraJson Additional to piggyback along with the call, to be picked up by pre- or post- hooks. Leave empty string for no extraJson.
-	 * @param callback The method to be invoked when the server response is received
+	 * @param in_authenticationType Universal, Email, Facebook, etc
+	 * @param in_ids Auth IDs structure
+	 * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
+	 * @param in_extraJson Additional to piggyback along with the call, to be picked up by pre- or post- hooks. Leave empty string for no extraJson.
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void authenticateAdvanced(EBCAuthType authenticationType, const FAuthenticationIds &ids, bool forceCreate, const FString &extraJson, IServerCallback *callback = NULL);
 

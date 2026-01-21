@@ -144,10 +144,10 @@ public:
 	 * Service Name - identity
 	 * Service Operation - Attach
 	 *
-	 * @param authenticationType Universal, Email, Facebook, etc
-	 * @param ids Auth IDs structure
-	 * @param extraJson Additional to piggyback along with the call, to be picked up by pre- or post- hooks. Leave empty string for no extraJson.
-	 * @param callback The method to be invoked when the server response is received
+	 * @param in_authenticationType Universal, Email, Facebook, etc
+	 * @param in_ids Auth IDs structure
+	 * @param in_extraJson Additional to piggyback along with the call, to be picked up by pre- or post- hooks. Leave empty string for no extraJson.
+	 * @param in_callback The method to be invoked when the server response is received
 	 *
 	 * Errors to watch for:  SWITCHING_PROFILES - this means that the identity you provided
 	 * already points to a different profile.  You will likely want to offer the user the
@@ -164,10 +164,10 @@ public:
 	 * Service Name - identity
 	 * Service Operation - Merge
 	 *
-	 * @param authenticationType Universal, Email, Facebook, etc
-	 * @param ids Auth IDs structure
-	 * @param extraJson Additional to piggyback along with the call, to be picked up by pre- or post- hooks. Leave empty string for no extraJson.
-	 * @param callback The method to be invoked when the server response is received
+	 * @param in_authenticationType Universal, Email, Facebook, etc
+	 * @param in_ids Auth IDs structure
+	 * @param in_extraJson Additional to piggyback along with the call, to be picked up by pre- or post- hooks. Leave empty string for no extraJson.
+	 * @param in_callback The method to be invoked when the server response is received
 	 *
 	 */
 	void mergeAdvancedIdentity(EBCAuthType authenticationType, const FAuthenticationIds &ids, const FString &extraJson, IServerCallback *callback = nullptr);
@@ -178,11 +178,11 @@ public:
 	 * Service Name - identity
 	 * Service Operation - Detach
 	 *
-	 * @param authenticationType Universal, Email, Facebook, etc
-	 * @param externalId User ID
-	 * @param continueAnon Proceed even if the profile will revert to anonymous?
-	 * @param extraJson Additional to piggyback along with the call, to be picked up by pre- or post- hooks. Leave empty string for no extraJson.
-	 * @param callback The method to be invoked when the server response is received
+	 * @param in_authenticationType Universal, Email, Facebook, etc
+	 * @param in_externalId User ID
+	 * @param in_continueAnon Proceed even if the profile will revert to anonymous?
+	 * @param in_extraJson Additional to piggyback along with the call, to be picked up by pre- or post- hooks. Leave empty string for no extraJson.
+	 * @param in_callback The method to be invoked when the server response is received
 	 *
 	 * Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set in_continueAnon to false, and
 	 * disconnecting this identity would result in the profile being anonymous (which means that
@@ -929,15 +929,8 @@ public:
 	 */
 	void getIdentities(IServerCallback *callback = nullptr);
 
-	/**
+	/*
 	 * Retrieves identity status for given identity type for this profile.
-	 *
-	 * Service Name - identity
-	 * Service Operation - GET_IDENTITY_STATUS
-	 *
-	 * @param authenticationType Type of authentication
-	 * @param externalAuthName The name of the external authentication mechanism (optional, used for custom authentication types)
-	 * @param callback The method to be invoked when the server response is received
 	 */
 	void getIdentityStatus(EBCAuthType authenticationType, const FString &externalAuthName, IServerCallback *callback = nullptr);
 
@@ -952,15 +945,15 @@ public:
 	void getExpiredIdentities(IServerCallback *callback = nullptr);
 
 	/**
-	 * Refreshes an identity for this player
+	 * Refreshes an identity for this user
 	 *
 	 * Service Name - identity
 	 * Service Operation - REFRESH_IDENTITY
 	 *
-	 * @param externalId User ID
-	 * @param authenticationToken Password or client side token
-	 * @param authenticationType Type of authentication
-	 * @param callback The method to be invoked when the server response is received
+	 * @param in_externalId User ID
+	 * @param in_authenticationToken Password or client side token
+	 * @param in_authenticationType Type of authentication
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void refreshIdentity(const FString &externalId, const FString &authenticationToken, EBCAuthType authenticationType, IServerCallback *callback = nullptr);
 
@@ -988,10 +981,12 @@ public:
 	 *
 	 * @param externalId The users id for the new credentials
 	 * @param authenticationToken The password/token
-	 * @param forceCreate Should a new profile be created if it does not exist?
 	 * @param authenticationType Type of identity
 	 * @param externalAuthName Optional - if attaching an external identity
-	 * @param callback The method to be invoked when the server response is received
+	 * @param forceCreate Should a new profile be created if it does not exist?
+	 * @param successCallback The success callback
+	 * @param errorCallback The failure callback.
+	 * @param cbObject The user object sent to the callback
 	 */
 	void attachParentWithIdentity(const FString &externalId, const FString &authenticationToken, EBCAuthType authenticationType,
 								  const FString &externalAuthName, bool forceCreate, IServerCallback *callback = nullptr);
@@ -1009,7 +1004,7 @@ public:
 	void detachParent(IServerCallback *callback);
 
 	/**
-	 * Attaches a peer identity to this player's profile
+	 * Attaches a peer identity to this user's profile
 	 *
 	 * Service Name - identity
 	 * Service Operation - ATTACH_PEER_PROFILE
@@ -1020,7 +1015,9 @@ public:
 	 * @param authenticationType Type of identity
 	 * @param externalAuthName Optional - if attaching an external identity
 	 * @param forceCreate Should a new profile be created if it does not exist?
-	 * @param callback The method to be invoked when the server response is received
+	 * @param successCallback The success callback
+	 * @param errorCallback The failure callback.
+	 * @param cbObject The user object sent to the callback
 	 */
 	void attachPeerProfile(const FString &peer, const FString &externalId, const FString &authenticationToken, EBCAuthType authenticationType,
 						   const FString &externalAuthName, bool forceCreate, IServerCallback *callback);

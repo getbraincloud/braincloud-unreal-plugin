@@ -44,16 +44,18 @@ public:
      void initialize(FString serverUrl, FString secretKey, FString appId, FString version);
 
      /**
-      * Method initializes the BrainCloudClient with multiple app/secret
-      * Used when needed to switch between child and parent apps
+      * Method initializes the BrainCloudClient with multiple app/secret.
+      * Used when needed to switch between child and parent apps.
       *
-      * @param serverURL The url to the brainCloud server
-      * @param appIdSecretMap The map of <appid, secretKey>
-      * @param defaultAppId the default app id we start with
-      * @param version The app's version
-      * @param companyName company name used in the keycheain for storing anonymous and profile ids. Pick anything
-      * @param appName app name used in the keychain for storing anonymous and profile ids. Pick anything
-      *
+      * @param in_serverURL The url to the brainCloud server
+      *     Currently this should be:  https://api.braincloudservers.com/dispatcherv2
+      * @param in_defaultAppId The default app id that we start with
+      * @param in_secretMap A map of <appId, secretKey>
+      * @param in_version The app version
+      * @param in_companyName The company name used in the keychain for storing anonymous and profile ids.
+      * You are free to pick anything you want.
+      * @param in_appName The app name used in the keychain for storing anonymous and profile ids.
+      * You are free to pick anything you want.
       */
      void initializeWithApps(FString serverUrl, FString appId, TMap<FString, FString> secretMap, FString appVersion, FString companyName, FString appName);
 
@@ -331,14 +333,14 @@ public:
      void authenticateNintendo(const FString &in_accountId, const FString &in_authToken, bool in_forceCreate, IServerCallback *in_callback = NULL);
 
      /*
-      * Authenticate the user using a handoffId and a token
+      * Authenticate the user using a handoffId and authentication token
       *
       * Service Name - Authenticate
       * Service Operation - Authenticate
       *
-      * @param handoffId braincloud handoff id generated from cloud script
-      * @param securityToken The security token entered byt the user
-      * @param callback The method to be invoked when the server response is received
+      * @param in_handoffId braincloud handoff id generated from cloud script
+      * @param in_securityToken The authentication token
+      * @param in_callback The method to be invoked when the server response is received
       */
      void authenticateHandoff(FString &handoffId, FString &securityToken, bool forceCreate, IServerCallback *callback = nullptr);
 
@@ -635,7 +637,7 @@ public:
      /*
       * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
       * In event the current session was previously an anonymous account, the smart switch will delete that profile.
-      * Use this function to keep a clean design flow from anonymous to signed profiles
+      * Use this function to keep a clean designflow from anonymous to signed profiles
       *
       * A generic Authenticate method that translates to the same as calling a specific one, except it takes an extraJson
       * that will be passed along to pre- or post- hooks.

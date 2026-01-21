@@ -21,13 +21,17 @@ public:
   void readAllGlobalStats(IServerCallback *callback = nullptr);
 
   /**
-   * Reads a subset of global statistics.
+   * Reads a subset of global statistics as defined by the input collection.
    *
    * Service Name - GlobalStatistics
    * Service Operation - ReadSubset
    *
-   * @param globalStats An array of statistics to read.
-   * @param callback Method to be invoked when the server response is received.
+   * @param in_statistics A collection containing the statistics to read:
+   * [
+   *   "Level01_TimesBeaten",
+   *   "Level02_TimesBeaten"
+   * ]
+   * @param in_callback Method to be invoked when the server response is received.
    */
   void readGlobalStatsSubset(const TArray<FString> &globalStats, IServerCallback *callback = nullptr);
 

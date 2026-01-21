@@ -21,13 +21,14 @@ public:
   void readAllUserStats(IServerCallback *callback = nullptr);
 
   /**
-   * Reads a subset of user statistics.
+   * Reads a subset of user statistics as defined by the input collection.
    *
    * Service Name - PlayerStatistics
    * Service Operation - ReadSubset
    *
-   * @param playerStats The array containing the subset of statistics to read.
-   * @param callback The method to be invoked when the server response is received
+   * @param in_statistics A collection containing the subset of statistics to read:
+   * ex. [ "pantaloons", "minions" ]
+   * @param in_callback The method to be invoked when the server response is received
    */
   void readUserStatsSubset(const TArray<FString> &playerStats, IServerCallback *callback = nullptr);
 

@@ -148,10 +148,9 @@ public:
 	void EnableCompressedResponses(bool isEnabled);
 
 	/**
-	 * Method initializes the BrainCloudClient.
+	 * Method initializes the BrainCloudClient. Automatically passes in current serverURL
+	 * as https://api.braincloudservers.com/dispatcherv2
 	 *
-	 * @param in_serverURL The url to the brainCloud server
-	 *     Currently this should be:  https://api.braincloudservers.com/dispatcherv2
 	 * @param in_secretKey The secret key for your game
 	 * @param in_appId The app id
 	 * @param in_appVersion The version
@@ -162,12 +161,13 @@ public:
 					const FString &appVersion);
 	/**
 	 * Method initializes the BrainCloudClient with multiple app/secret.
-	 * Used when needed to switch between child and parent apps
+	 * Used when needed to switch between child and parent apps.
 	 *
-	 * @param serverURL The url to the brainCloud server
-	 * @param appId The app's id
-	 * @param appIdSecretMap is the map of <appId, secretKey>
-	 * @param appVersion The app's version
+	 * @param in_serverURL The url to the brainCloud server
+	 *     Currently this should be:  https://api.braincloudservers.com/dispatcherv2
+	 * @param in_defaultAppId The default app id that we start with
+	 * @param in_secretMap A map of <appId, secretKey>
+	 * @param in_appVersion The version
 	 */
 	void initializeWithApps(const FString &serverUrl,
 							const FString &appId,
@@ -419,9 +419,12 @@ public:
 	 * The number of entries in this array determines how many packet
 	 * retries will occur.
 	 *
-	 * By default, the packet timeout array is {10, 10, 10}
+	 * By default, the packet timeout array is {10, 10, 10}.
 	 *
-	 * @param timeouts An array of packet timeouts.
+	 * Note that this method does not change the timeout for authentication
+	 * packets (use setAuthenticationPacketTimeout method).
+	 *
+	 * @param in_timeouts A vector of packet timeouts.
 	 */
 	void setPacketTimeouts(const TArray<int32> &timeouts);
 

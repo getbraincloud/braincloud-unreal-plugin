@@ -21,13 +21,16 @@ public:
 	/// </summary>
 	void requestClientConnection(IServerCallback *callback);
 
-	/*
+	/**
 	 * Enables Real Time event for this session.
 	 * Real Time events are disabled by default. Usually events
 	 * need to be polled using GET_EVENTS. By enabling this, events will
 	 * be received instantly when they happen through a TCP connection to an Event Server.
 	 *
 	 * This function will first call requestClientConnection, then connect to the address
+	 *
+	 * @param callback The callback.
+	 * @param useWebSocket Use web sockets instead of TCP for the internal connections. Default is true
 	 */
 	void enableRTT(BCRTTConnectionType in_type, IServerCallback *in_callback);
 
@@ -60,18 +63,15 @@ public:
 	void setRTTHeartBeatSeconds(int32 in_value);
 
 	/**
-	 * Listen to real time chat messages.
-	 *
-	 * Notes: RTT must be enabled for this app, and enableRTT must have been successfully called.
-	 * Only one chat callback can be registered at a time. Calling this a second time will override the previous callback.
+	 * Clear all set RTT callbacks
 	 */
 	void deregisterAllRTTCallbacks();
 
 	/**
-	 * Listen to real time messaging.
+	 * Listen to real time events.
 	 *
 	 * Notes: RTT must be enabled for this app, and enableRTT must have been successfully called.
-	 * Only one messaging callback can be registered at a time. Calling this a second time will override the previous callback.
+	 * Only one event callback can be registered at a time. Calling this a second time will override the previous callback.
 	 */
 	void registerRTTEventCallback(UBCBlueprintRTTCallProxyBase *in_callback);
 
@@ -92,10 +92,10 @@ public:
 	void deregisterRTTEventCallback();
 
 	/**
-	 * Listen to real time blockchain events.
+	 * Listen to real time chat messages.
 	 *
 	 * Notes: RTT must be enabled for this app, and enableRTT must have been successfully called.
-	 * Only one presence callback can be registered at a time. Calling this a second time will override the previous callback.
+	 * Only one chat callback can be registered at a time. Calling this a second time will override the previous callback.
 	 */
 	void registerRTTChatCallback(UBCBlueprintRTTCallProxyBase *in_callback);
 
@@ -105,22 +105,34 @@ public:
 	void registerRTTChatCallback(IRTTCallback *in_callback);
 
 	/**
+	 * Listen to real time messaging.
 	 *
+	 * Notes: RTT must be enabled for this app, and enableRTT must have been successfully called.
+	 * Only one messaging callback can be registered at a time. Calling this a second time will override the previous callback.
 	 */
 	void deregisterRTTChatCallback();
 
 	/**
+	 * Listen to real time lobby events.
 	 *
+	 * Notes: RTT must be enabled for this app, and enableRTT must have been successfully called.
+	 * Only one lobby callback can be registered at a time. Calling this a second time will override the previous callback.
 	 */
 	void registerRTTMessagingCallback(UBCBlueprintRTTCallProxyBase *in_callback);
 
 	/**
+	 * Listen to real time presence events.
 	 *
+	 * Notes: RTT must be enabled for this app, and enableRTT must have been successfully called.
+	 * Only one presence callback can be registered at a time. Calling this a second time will override the previous callback.
 	 */
 	void registerRTTMessagingCallback(IRTTCallback *in_callback);
 
 	/**
+	 * Listen to real time blockchain events.
 	 *
+	 * Notes: RTT must be enabled for this app, and enableRTT must have been successfully called.
+	 * Only one presence callback can be registered at a time. Calling this a second time will override the previous callback.
 	 */
 	void deregisterRTTMessagingCallback();
 

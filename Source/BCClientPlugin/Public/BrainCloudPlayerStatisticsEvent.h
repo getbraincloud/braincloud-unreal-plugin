@@ -11,7 +11,7 @@ public:
   BrainCloudPlayerStatisticsEvent(BrainCloudClient *client);
 
   /**
-   * Trigger an event server side that will increase the users statistics.
+   * Trigger an event server side that will increase the user's statistics.
    * This may cause one or more awards to be sent back to the user -
    * could be achievements, experience, etc. Achievements will be sent by this
    * client library to the appropriate awards service (Apple Game Center, etc).
@@ -25,7 +25,7 @@ public:
    *
    * @see BrainCloudPlayerStatistics
    *
-   * @param callback The method to be invoked when the server response is received
+   * @param in_callback The method to be invoked when the server response is received
    */
   void triggerStatsEvent(const FString &eventName, int32 eventMultiplier, IServerCallback *callback);
 

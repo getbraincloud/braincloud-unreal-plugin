@@ -34,16 +34,9 @@ public:
 	void getPresenceOfGroup(const FString &groupId, bool includeOffline, IServerCallback *callback);
 
 	/**
-	 * Gets the presence data for the given <profileIds>. Will not include
-	 * offline profiles unless <includeOffline> is set to true.
-	 *
-	 * Service Name - Presence
-	 * Service Operation - GET_PRESENCE_OF_USERS
-	 *
-	 * @param groupId the id for the group
-	 * @param includeOffline Will not include offline profiles unless includeOffline is set to true.
-	 * @param callback The method to be invoked when the server response is received
-	 */
+		 * Gets the presence data for the given <profileIds>. Will not include
+		 * offline profiles unless <includeOffline> is set to true.
+		 */
 	void getPresenceOfUsers(const TArray<FString> &profileIds, bool includeOffline, IServerCallback *callback);
 
 	/**
@@ -63,17 +56,10 @@ public:
 	void registerListenersForGroup(const FString &groupId, bool biderectional, IServerCallback *callback);
 
 	/**
-	 * Registers the caller for RTT presence updates for the given
-	 * <profileIds>. If <bidirectional> is set to true, then also registers
-	 * the targeted users for presence updates from the caller.
-	 *
-	 * Service Name - Presence
-	 * Service Operation - REGISTER_LISTENERS_FOR_PROFILES
-	 *
-	 * @param profileIds The store platform, valid stored: all, brainCloud, facebook
-	 * @param bidirectional Allows registration of target user for presence update
-	 * @param callback The method to be invoked when the server response is received
-	 */
+		 * Registers the caller for RTT presence updates for the given
+		 * <profileIds>. If <bidirectional> is set to true, then also registers
+		 * the targeted users for presence updates from the caller.
+		 */
 	void registerListenersForProfiles(const TArray<FString> &profileIds, bool bidirectional, IServerCallback *callback);
 
 	/**

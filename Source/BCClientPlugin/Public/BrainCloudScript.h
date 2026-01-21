@@ -23,16 +23,15 @@ public:
 	void runScript(const FString &scriptName, const FString &jsonScriptData, IServerCallback *callback = nullptr);
 
 	/**
-	 * Allows cloud script executions to be scheduled
+	 * Allows cloud script executions to be scheduled - UTC time
 	 *
 	 * Service Name - Script
 	 * Service Operation - ScheduleCloudScript
 	 *
-	 * @param scriptName The name of the script to be run
-	 * @param jsonScriptData Data to be sent to the script in json format
-	 * @param startDateInUTC The start date as a time struct
-	 * @param callback The method to be invoked when the server response is received
-	 * @see The API documentation site for more details on cloud code
+	 * @param in_scriptName The name of the script to be run
+	 * @param in_jsonScriptData Data to be sent to the script in json format
+	 * @param in_startDateInUTC The start date in UTC
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void scheduleRunScriptMillisUTC(const FString &scriptName, const FString &jsonScriptData, int64 startDateInUTC, IServerCallback *callback = nullptr);
 

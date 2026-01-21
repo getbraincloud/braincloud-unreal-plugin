@@ -66,22 +66,20 @@ public:
                    IServerCallback *in_callback);
 
     /**
-     * Finds a lobby matching the specified parameters WITH PING DATA.  GetRegionsForLobbies and PingRegions must be successfully responded to prior to calling.
+     * Finds a lobby matching the specified parameters. Asynchronous - returns 200 to indicate that matchmaking has started. Uses attached ping data to resolve best location. GetRegionsForLobbies and PingRegions must be successfully responded to.
      *
-     * Service Name - lobby
-     * Service Operation - FIND_LOBBY_WITH_PING_DATA
+     * Service Name - Lobby
+     * Service Operation - FindLobbyWithPingData
      *
-     * @param in_roomType type of room
-     * @param in_rating rating of the room
-     * @param in_maxSteps max iterations to search for a lobby
-     * @param in_algoJson json string of the search algorithm to use
-     * @param in_filterJson json string of the filter to be passed on
-     * @param in_timeoutSecs numberOfseconds before timing out
-     * @param in_isReady when lobby is found, place this user as "Ready"
-     * @param in_extraJson json string for extra customization
-     * @param in_teamCode team code
-     * @param in_otherUserCxIds array of other user Connection Ids to bring when the lobby is found
-     * @param in_callback Method to be invoked when the server response is received.
+     * @param lobbyType The type of lobby to look for. Lobby types are defined in the portal.
+     * @param rating The skill rating to use for finding the lobby. Provided as a separate parameter because it may not exactly match the user's rating (especially in cases where parties are involved).
+     * @param maxSteps The maximum number of steps to wait when looking for an applicable lobby. Each step is ~5 seconds.
+     * @param algo The algorithm to use for increasing the search scope.
+     * @param filterJson Used to help filter the list of rooms to consider. Passed to the matchmaking filter, if configured.
+     * @param otherUserCxIds Array of other users (i.e. party members) to add to the lobby as well. Will constrain things so that only lobbies with room for all players will be considered.
+     * @param isReady Initial ready-status of this user.
+     * @param extraJson Initial extra-data about this user.
+     * @param teamCode Preferred team for this user, if applicable. Send "" or null for automatic assignment
      */
     void findLobbyWithPingData(const FString &in_roomType, int32 in_rating, int32 in_maxSteps,
                                const FString &in_algoJson, const FString &in_filterJson, int32 in_timeoutSecs,
@@ -89,63 +87,61 @@ public:
                                IServerCallback *in_callback);
 
     /**
-     * Like findLobby, but geared towards creating new lobbies
+     * Creates a new lobby.
      *
-     * Service Name - lobby
-     * Service Operation - CREATE_LOBBY
+     * Sends LOBBY_JOIN_SUCCESS message to the user, with full copy of lobby data Sends LOBBY_MEMBER_JOINED to all lobby members, with copy of member data
      *
-     * @param in_roomType type of room
-     * @param in_rating rating of the room
-     * @param in_maxSteps max iterations to search for a lobby
-     * @param in_isReady when lobby is found, place this user as "Ready"
-     * @param in_extraJson json string for extra customization
-     * @param in_teamCode team code
-     * @param in_configJson json string of the lobby config
-     * @param in_otherUserCxIds array of other user Connection Ids to bring when the lobby is found
-     * @param in_callback Method to be invoked when the server response is received.
+     * Service Name - Lobby
+     * Service Operation - CreateLobby
+     *
+     * @param lobbyType The type of lobby to look for. Lobby types are defined in the portal.
+     * @param rating The skill rating to use for finding the lobby. Provided as a separate parameter because it may not exactly match the user's rating (especially in cases where parties are involved).
+     * @param otherUserCxIds Array of other users (i.e. party members) to add to the lobby as well. Will constrain things so that only lobbies with room for all players will be considered.
+     * @param isReady Initial ready-status of this user.
+     * @param extraJson Initial extra-data about this user.
+     * @param teamCode Preferred team for this user, if applicable. Send "" or null for automatic assignment.
+     * @param settings Configuration data for the room.
      */
     void createLobby(const FString &in_roomType, int32 in_rating, int32 in_maxSteps,
                      bool in_isReady, const FString &in_extraJson, const FString &in_teamCode,
                      const FString &in_configJson, const TArray<FString> &in_otherUserCxIds, IServerCallback *in_callback);
 
     /**
-     * Like findLobby, but geared towards creating new lobbies WITH PING DATA.  GetRegionsForLobbies and PingRegions must be successfully responded to prior to calling.
+     * Creates a new lobby. Uses attached ping data to resolve best location. GetRegionsForLobbies and PingRegions must be successfully responded to.
      *
-     * Service Name - lobby
-     * Service Operation - CREATE_LOBBY_WITH_PING_DATA
+     * Sends LOBBY_JOIN_SUCCESS message to the user, with full copy of lobby data Sends LOBBY_MEMBER_JOINED to all lobby members, with copy of member data
      *
-     * @param in_roomType type of room
-     * @param in_rating rating of the room
-     * @param in_maxSteps max iterations to search for a lobby
-     * @param in_isReady when lobby is found, place this user as "Ready"
-     * @param in_extraJson json string for extra customization
-     * @param in_teamCode team code
-     * @param in_configJson json string of the lobby config
-     * @param in_otherUserCxIds array of other user Connection Ids to bring when the lobby is found
-     * @param in_callback Method to be invoked when the server response is received.
+     * Service Name - Lobby
+     * Service Operation - CreateLobbyWithPingData
+     *
+     * @param lobbyType The type of lobby to look for. Lobby types are defined in the portal.
+     * @param rating The skill rating to use for finding the lobby. Provided as a separate parameter because it may not exactly match the user's rating (especially in cases where parties are involved).
+     * @param otherUserCxIds Array of other users (i.e. party members) to add to the lobby as well. Will constrain things so that only lobbies with room for all players will be considered.
+     * @param isReady Initial ready-status of this user.
+     * @param extraJson Initial extra-data about this user.
+     * @param teamCode Preferred team for this user, if applicable. Send "" or null for automatic assignment.
+     * @param settings Configuration data for the room.
      */
     void createLobbyWithPingData(const FString &in_roomType, int32 in_rating, int32 in_maxSteps,
                                  bool in_isReady, const FString &in_extraJson, const FString &in_teamCode,
                                  const FString &in_configJson, const TArray<FString> &in_otherUserCxIds, IServerCallback *in_callback);
 
     /**
-     * Finds a lobby matching the specified parameters, or creates one
+     * Adds the caller to the lobby entry queue and will create a lobby if none are found.
      *
-     * Service Name - lobby
-     * Service Operation - FIND_OR_CREATE_LOBBY
+     * Service Name - Lobby
+     * Service Operation - FindOrCreateLobby
      *
-     * @param in_roomType type of room
-     * @param in_rating rating of the room
-     * @param in_maxSteps max iterations to search for a lobby
-     * @param in_algoJson json string of the search algorithm to use
-     * @param in_filterJson json string of the filter to be passed on
-     * @param in_timeoutSecs numberOfseconds before timing out
-     * @param in_isReady when lobby is found, place this user as "Ready"
-     * @param in_extraJson json string for extra customization
-     * @param in_teamCode team code
-     * @param in_configJson json string of the lobby config
-     * @param in_otherUserCxIds array of other user Connection Ids to bring when the lobby is found
-     * @param in_callback Method to be invoked when the server response is received.
+     * @param lobbyType The type of lobby to look for. Lobby types are defined in the portal.
+     * @param rating The skill rating to use for finding the lobby. Provided as a separate parameter because it may not exactly match the user's rating (especially in cases where parties are involved).
+     * @param maxSteps The maximum number of steps to wait when looking for an applicable lobby. Each step is ~5 seconds.
+     * @param algo The algorithm to use for increasing the search scope.
+     * @param filterJson Used to help filter the list of rooms to consider. Passed to the matchmaking filter, if configured.
+     * @param otherUserCxIds Array of other users (i.e. party members) to add to the lobby as well. Will constrain things so that only lobbies with room for all players will be considered.
+     * @param settings Configuration data for the room.
+     * @param isReady Initial ready-status of this user.
+     * @param extraJson Initial extra-data about this user.
+     * @param teamCode Preferred team for this user, if applicable. Send "" or null for automatic assignment.
      */
     void findOrCreateLobby(const FString &in_roomType, int32 in_rating, int32 in_maxSteps,
                            const FString &in_algoJson, const FString &in_filterJson, int32 in_timeoutSecs,
@@ -153,23 +149,21 @@ public:
                            const FString &in_configJson, const TArray<FString> &in_otherUserCxIds, IServerCallback *in_callback);
 
     /**
-     * Finds a lobby matching the specified parameters, or creates one WITH PING DATA.  GetRegionsForLobbies and PingRegions must be successfully responded to prior to calling.
+     * Adds the caller to the lobby entry queue and will create a lobby if none are found. Uses attached ping data to resolve best location. GetRegionsForLobbies and PingRegions must be successfully responded to.
      *
-     * Service Name - lobby
-     * Service Operation - FIND_OR_CREATE_LOBBY_WITH_PING_DATA
+     * Service Name - Lobby
+     * Service Operation - FindOrCreateLobbyWithPingData
      *
-     * @param in_roomType type of room
-     * @param in_rating rating of the room
-     * @param in_maxSteps max iterations to search for a lobby
-     * @param in_algoJson json string of the search algorithm to use
-     * @param in_filterJson json string of the filter to be passed on
-     * @param in_timeoutSecs numberOfseconds before timing out
-     * @param in_isReady when lobby is found, place this user as "Ready"
-     * @param in_extraJson json string for extra customization
-     * @param in_teamCode team code
-     * @param in_configJson json string of the lobby config
-     * @param in_otherUserCxIds array of other user Connection Ids to bring when the lobby is found
-     * @param in_callback Method to be invoked when the server response is received.
+     * @param lobbyType The type of lobby to look for. Lobby types are defined in the portal.
+     * @param rating The skill rating to use for finding the lobby. Provided as a separate parameter because it may not exactly match the user's rating (especially in cases where parties are involved).
+     * @param maxSteps The maximum number of steps to wait when looking for an applicable lobby. Each step is ~5 seconds.
+     * @param algo The algorithm to use for increasing the search scope.
+     * @param filterJson Used to help filter the list of rooms to consider. Passed to the matchmaking filter, if configured.
+     * @param otherUserCxIds Array of other users (i.e. party members) to add to the lobby as well. Will constrain things so that only lobbies with room for all players will be considered.
+     * @param settings Configuration data for the room.
+     * @param isReady Initial ready-status of this user.
+     * @param extraJson Initial extra-data about this user.
+     * @param teamCode Preferred team for this user, if applicable. Send "" or null for automatic assignment.
      */
     void findOrCreateLobbyWithPingData(const FString &in_roomType, int32 in_rating, int32 in_maxSteps,
                                        const FString &in_algoJson, const FString &in_filterJson, int32 in_timeoutSecs,
@@ -234,31 +228,33 @@ public:
     void sendSignal(const FString &in_lobbyID, const FString &in_signalJson, IServerCallback *in_callback);
 
     /**
-     * User joins the specified lobby
-     * Service Name - lobby
-     * Service Operation - JOIN_LOBBY
-     *
-     * @param in_lobbyID the lobbyId
-     * @param in_isReady status of user joining
-     * @param in_extraJson is the extra constraints
-     * @param in_teamCode team code
-     * @param in_otherUserCxIds is a list of other players who re part of the lobby
-     * @param in_callback Method to be invoked when the server response is received.
-     */
+         * Join specified lobby
+         *
+         * Service Name - Lobby
+         * Service Operation - JoinLobby
+         *
+         * @param lobbyId Id of the specfified lobby.
+         * @param isReady Initial ready-status of this user.
+         * @param extraJson Initial extra-data about this user.
+         * @param toTeamCode Specified team code.
+         * @param otherUserCxIds Array of other users (i.e. party members) to add to the lobby as well. Will constrain things so that only lobbies with room for all players will be considered.
+
+         */
     void joinLobby(const FString &in_lobbyID, bool in_isReady, const FString &in_extraJson, const FString &in_teamCode, const TArray<FString> &in_otherUserCxIds, IServerCallback *in_callback);
 
     /**
-     * User joins the specified lobby WITH PING DATA.  GetRegionsForLobbies and PingRegions must be successfully responded to prior to calling.
-     * Service Name - lobby
-     * Service Operation - JOIN_LOBBY_WITH_PING_DATA
-     *
-     * @param in_lobbyID the lobbyId
-     * @param in_isReady status of user joining
-     * @param in_extraJson is the extra constraints
-     * @param in_teamCode team code
-     * @param in_otherUserCxIds is a list of other players who re part of the lobby
-     * @param in_callback Method to be invoked when the server response is received.
-     */
+         * Join specified lobby. Uses attached ping data to resolve best location. GetRegionsForLobbies and PingRegions must be successfully responded to.
+         *
+         * Service Name - Lobby
+         * Service Operation - JoinLobbyWithPingData
+         *
+         * @param lobbyId Id of the specfified lobby.
+         * @param isReady Initial ready-status of this user.
+         * @param extraJson Initial extra-data about this user.
+         * @param toTeamCode Specified team code.
+         * @param otherUserCxIds Array of other users (i.e. party members) to add to the lobby as well. Will constrain things so that only lobbies with room for all players will be considered.
+
+         */
     void joinLobbyWithPingData(const FString &in_lobbyID, bool in_isReady, const FString &in_extraJson, const FString &in_teamCode, const TArray<FString> &in_otherUserCxIds, IServerCallback *in_callback);
 
     /**
@@ -294,14 +290,12 @@ public:
      */
     void cancelFindRequest(const FString &in_lobbyType, const FString &in_entryId, IServerCallback *in_callback);
 
-    /**
-     * Retrieves the region settings for each of the given lobby types. Upon SuccessCallback or afterwards, call PingRegions to start retrieving appropriate data.
-     * Once that completes, the associated region Ping Data is retrievable via PingData and all associated <>WithPingData APIs are useable
-     * Service Name - lobby
-     * Service Operation - GET_REGIONS_FOR_LOBBIES
+    /* Retrieves the region settings for each of the given lobby types. Upon success or afterwards, call pingRegions to start retrieving appropriate data.
      *
-     * @param in_roomTypes List of roomtypes to request the ping regions
-     * @param in_callback Method to be invoked when the server response is received.
+     * Service Name - Lobby
+     * Service Operation - GetRegionsForLobbies
+     *
+     * @param roomTypes Ids of the lobby types.
      */
     void getRegionsForLobbies(const TArray<FString> &in_roomTypes, IServerCallback *in_callback);
 

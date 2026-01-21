@@ -17,11 +17,11 @@ public:
    * Service Name - Entity
    * Service Operation - Create
    *
-   * @param entityType The entity type as defined by the user
-   * @param jsonEntityData    The entity's data as a json string
-   * @param jsonEntityAcl The entity's access control list as an IAcl object. A null acl implies default
-   * permissions which make the entity readable/writeable by only the player.
-   * @param callback The method to be invoked when the server response is received
+   * @param in_entityType The entity type as defined by the user
+   * @param in_jsonEntityData The entity's data as a json string
+   * @param in_jsonEntityAcl The entity's access control list as json. A null acl implies default
+   * permissions which make the entity readable/writeable by only the user.
+   * @param in_callback The method to be invoked when the server response is received
    */
   void createEntity(const FString &entityType, const FString &jsonEntityData, IAcl *jsonEntityAcl, IServerCallback *callback);
 
@@ -32,13 +32,15 @@ public:
    * Service Name - Entity
    * Service Operation - Update
    *
-   * @param entityId The id of the entity to update
-   * @param entityType The entity type as defined by the user
-   * @param jsonEntityData    The entity's data as a json string.
-   * @param jsonEntityAcl The entity's access control list as an IAcl object. A null acl implies default
-   * permissions which make the entity readable/writeable by only the player.
-   * @param in_version The version of the entity to update. Use -1 to indicate the newest version
-   * @param callback The method to be invoked when the server response is received
+   * @param in_entityId The id of the entity to update
+   * @param in_entityType The entity type as defined by the user
+   * @param in_jsonEntityData The entity's data as a json string.
+   * @param in_jsonEntityAcl The entity's access control list as json. A null acl implies default
+   * permissions which make the entity readable/writeable by only the user.
+   * @param in_version Current version of the entity. If the version of the
+   * entity on the server does not match the version passed in, the
+   * server operation will fail. Use -1 to skip version checking.
+   * @param in_callback The method to be invoked when the server response is received
    */
   void updateEntity(const FString &entityId, const FString &entityType, const FString &jsonEntityData, IAcl *jsonEntityAcl, int32 in_version, IServerCallback *callback);
 
@@ -69,10 +71,15 @@ public:
    * Service Name - Entity
    * Service Operation - UpdateSingleton
    *
-   * @param entityType The entity type as defined by the user
-   * @param jsonEntityData The entity's data as a json string.
-   * permissions which make the entity readable/writeable by only the player.
-   * @param callback The method to be invoked when the server response is received
+   * @param in_entityType The entity type as defined by the user
+   * @param in_jsonEntityData  The entity's data as a json string.
+   * permissions which make the entity readable/writeable by only the user.
+   * @param in_jsonEntityAcl The entity's access control list as json. A null acl implies default
+   * permissions which make the entity readable/writeable by only the user.
+   * @param in_version Current version of the entity. If the version of the
+   * entity on the server does not match the version passed in, the
+   * server operation will fail. Use -1 to skip version checking.
+   * @param in_callback The method to be invoked when the server response is received
    */
   void updateSingleton(const FString &entityType, const FString &jsonEntityData, IServerCallback *callback);
 
@@ -82,8 +89,11 @@ public:
    * Service Name - Entity
    * Service Operation - Delete
    *
-   * @param entityId The id of the entity to update
-   * @param callback The method to be invoked when the server response is received
+   * @param in_entityId The id of the entity to update
+   * @param in_version Current version of the entity. If the version of the
+   * entity on the server does not match the version passed in, the
+   * server operation will fail. Use -1 to skip version checking.
+   * @param in_callback The method to be invoked when the server response is received
    */
   void deleteEntity(const FString &entityId, IServerCallback *callback);
 
@@ -93,8 +103,11 @@ public:
    * Service Name - Entity
    * Service Operation - DeleteSingleton
    *
-   * @param entityType The type of the entity to delete
-   * @param callback The method to be invoked when the server response is received
+   * @param in_entityType The type of the entity to delete
+   * @param in_version Current version of the entity. If the version of the
+   * entity on the server does not match the version passed in, the
+   * server operation will fail. Use -1 to skip version checking.
+   * @param in_callback The method to be invoked when the server response is received
    */
   void deleteSingleton(const FString &entityType, IServerCallback *callback);
 
@@ -135,31 +148,31 @@ public:
   void getSharedEntitiesForProfileId(const FString &profileId, IServerCallback *callback);
 
   /**
-   * Method gets list of shared entities for the specified player based on type and/or where clause
+   * Method gets list of shared entities for the specified user based on type and/or where clause
    *
    * Service Name - Entity
    * Service Operation - READ_SHARED_ENTITIES_LIST
    *
-   * @param profileId The player ID to retrieve shared entities for
-   * @param whereJson Mongo style query
-   * @param orderByJson Sort order
-   * @param maxReturn The maximum number of entities to return
-   * @param callback The method to be invoked when the server response is received
+   * @param in_profileId The profile ID to retrieve shared entities for
+   * @param in_whereJson Mongo style query
+   * @param in_orderByJson Sort order
+   * @param in_maxReturn The maximum number of entities to return
+   * @param in_callback The method to be invoked when the server response is received
    */
   void getSharedEntitiesListForProfileId(const FString &profileId, const FString &whereJson, const FString &orderByJson, int32 maxReturn, IServerCallback *callback = nullptr);
 
   /**
-   * Method updates a shared entity owned by another player. This operation results in the entity
+   * Method updates a shared entity owned by another user. This operation results in the entity
    * data being completely replaced by the passed in JSON string.
    *
    * Service Name - Entity
    * Service Operation - UpdateShared
    *
-   * @param entityId The id of the entity to update
-   * @param targetProfileId The id of the player who owns the shared entity
-   * @param entityType The entity type as defined by the user
-   * @param jsonEntityData    The entity's data as a json string.
-   * @param callback The method to be invoked when the server response is received
+   * @param in_entityId The id of the entity to update
+   * @param in_targetProfileId The id of the user who owns the shared entity
+   * @param in_entityType The entity type as defined by the user
+   * @param in_jsonEntityData The entity's data as a json string.
+   * @param in_callback The method to be invoked when the server response is received
    */
   void updateSharedEntity(const FString &entityId, const FString &targetProfileId, const FString &entityType, const FString &jsonEntityData, IServerCallback *callback);
 
@@ -169,10 +182,10 @@ public:
    * Service Name - Entity
    * Service Operation - GET_LIST
    *
-   * @param whereJson Mongo style query string
-   * @param orderByJson Sort order
-   * @param maxReturn The maximum number of entities to return
-   * @param callback The callback object
+   * @param in_whereJson Mongo style query string
+   * @param in_orderByJson Sort order
+   * @param in_maxReturn The maximum number of entities to return
+   * @param in_callback The callback object
    */
   void getList(const FString &whereJson, const FString &orderByJson, int32 maxReturn, IServerCallback *callback);
 
