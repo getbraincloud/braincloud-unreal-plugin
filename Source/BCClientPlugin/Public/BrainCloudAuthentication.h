@@ -162,7 +162,7 @@ public:
 	 * Service Name - Authenticate
 	 * Service Operation - Authenticate
 	 *
-	 * @param in_userId  The User Id of the user
+	 * @param in_email  The e-mail address of the user
 	 * @param in_password  The password of the user
 	 * @param forceCreate Should a new profile be created for this user if the account does not exist?
 	 * @param in_callback The method to be invoked when the server response is received

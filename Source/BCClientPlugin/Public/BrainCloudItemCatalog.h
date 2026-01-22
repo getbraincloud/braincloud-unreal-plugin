@@ -14,36 +14,39 @@ public:
 
 	/**
 	 * Reads an existing item definition from the server, with language fields
-	 * limited to the current or default language
+	 * limited to the current or default language.
 	 *
-	 * Service Name - itemCatalog
+	 * Service Name - ItemCatalog
 	 * Service Operation - GET_CATALOG_ITEM_DEFINITION
 	 *
-	 * @param defId
+	 * @param in_defId The identifier of the catalog item definition to retrieve
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void getCatalogItemDefinition(const FString &defId, IServerCallback *callback = nullptr);
 
 	/**
-	 * Retrieve page of catalog items from the server, with language fields limited to the
-	 * text for the current or default language.
+	 * Retrieve a page of catalog items from the server, with language fields
+	 * limited to the text for the current or default language.
 	 *
-	 * Service Name - itemCatalog
+	 * Service Name - ItemCatalog
 	 * Service Operation - GET_CATALOG_ITEMS_PAGE
 	 *
-	 * @param context
+	 * @param in_context The pagination context returned from a previous catalog page request
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void getCatalogItemsPage(const FString &context, IServerCallback *callback = nullptr);
 
 	/**
-	 * Gets the page of catalog items from the server based ont he encoded
+	 * Gets a page of catalog items from the server based on the encoded
 	 * context and specified page offset, with language fields limited to the
-	 * text fir the current or default language
+	 * text for the current or default language.
 	 *
-	 * Service Name - itemCatalog
+	 * Service Name - ItemCatalog
 	 * Service Operation - GET_CATALOG_ITEMS_PAGE_OFFSET
 	 *
-	 * @param context
-	 * @param pageOffset
+	 * @param in_context The pagination context returned from a previous catalog page request
+	 * @param in_pageOffset The page offset relative to the current context
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void getCatalogItemsPageOffset(const FString &context, int pageOffset, IServerCallback *callback = nullptr);
 

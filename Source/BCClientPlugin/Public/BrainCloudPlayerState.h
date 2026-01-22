@@ -120,14 +120,14 @@ public:
      void updateAttributes(const FString &jsonAttributes, bool wipeExisting, IServerCallback *callback);
 
      /**
-        * Remove user's attributes.
-        *
-        * Service Name - PlayerState
-        * Service Operation - RemoveAttributes
-        *
-        * @param in_attributeNames Collection of attribute names.
-        * @param in_callback The method to be invoked when the server response is received
-        */
+      * Remove user's attributes.
+      *
+      * Service Name - PlayerState
+      * Service Operation - RemoveAttributes
+      *
+      * @param in_attributeNames Collection of attribute names.
+      * @param in_callback The method to be invoked when the server response is received
+      */
      void removeAttributes(const TArray<FString> &attributeNames, IServerCallback *callback);
 
      /**
@@ -165,16 +165,16 @@ public:
      void clearUserStatus(const FString &statusName, IServerCallback *callback);
 
      /**
-         * Stack user's statuses
-         *
-         * Service Name - PlayerState
-         * Service Operation - EXTEND_USER_STATUS
-         *
-         * @param in_statusName Updated email
-         * @param additionalSecs
-         * @param details
-         * @param in_callback The method to be invoked when the server response is received
-         */
+      * Stack user's statuses
+      *
+      * Service Name - PlayerState
+      * Service Operation - EXTEND_USER_STATUS
+      *
+      * @param in_statusName Updated email
+      * @param additionalSecs
+      * @param details
+      * @param in_callback The method to be invoked when the server response is received
+      */
      void extendUserStatus(const FString &statusName, int additionalSecs, const FString &details, IServerCallback *callback);
 
      /**
@@ -189,27 +189,27 @@ public:
      void getUserStatus(const FString &statusName, IServerCallback *callback);
 
      /**
-         * Set timed status for a user
-         *
-         * Service Name - PlayerState
-         * Service Operation - SET_USER_STATUS
-         *
-         * @param in_statusName Updated email
-         * @param in_durationSecs
-         * @param in_details
-         * @param in_callback The method to be invoked when the server response is received
-         */
+      * Set timed status for a user
+      *
+      * Service Name - PlayerState
+      * Service Operation - SET_USER_STATUS
+      *
+      * @param in_statusName Updated email
+      * @param in_durationSecs
+      * @param in_details
+      * @param in_callback The method to be invoked when the server response is received
+      */
      void setUserStatus(const FString &statusName, int durationSecs, const FString &details, IServerCallback *callback);
 
      /**
-        * Remove user's attributes.
-        *
-        * Service Name - PlayerState
-        * Service Operation - RemoveAttributes
-        *
-        * @param in_attributeNames Collection of attribute names.
-        * @param in_callback The method to be invoked when the server response is received
-        */
+      * Remove user's attributes.
+      *
+      * Service Name - PlayerState
+      * Service Operation - RemoveAttributes
+      *
+      * @param in_attributeNames Collection of attribute names.
+      * @param in_callback The method to be invoked when the server response is received
+      */
      void updateTimeZoneOffset(int32 timeZoneOffset, IServerCallback *callback);
 
      /**

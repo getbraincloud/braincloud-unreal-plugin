@@ -8,308 +8,270 @@ class IServerCallback;
 class BCCLIENTPLUGIN_API BrainCloudUserItems
 {
 public:
-    BrainCloudUserItems(BrainCloudClient *client);
+	BrainCloudUserItems(BrainCloudClient *client);
 
-    /**
-     * Allows item(s) to be awarded to a user without collecting
-     *  the purchase amount. If includeDef is true, response
-     * includes associated itemDef with language fields limited
-     *  to the current or default language.
-     *
-     * Service Name - userItems
-     * Service Operation - AWARD_USER_ITEM
-     *
-     * @param defId
-     * @param quantity
-     * @param includeDef
-     */
-    void awardUserItem(const FString &defId, int quantity, bool includeDef, IServerCallback *callback = nullptr);
+	/**
+	 * Awards item(s) to a user without collecting the purchase amount.
+	 * If includeDef is true, response includes associated itemDef
+	 * with language fields limited to the current or default language.
+	 *
+	 * Service Name - userItems
+	 * Service Operation - AWARD_USER_ITEM
+	 *
+	 * @param in_defId       The unique id of the item definition to award.
+	 * @param in_quantity    The quantity of the item to award.
+	 * @param in_includeDef  If true, include associated item definition in the response.
+	 * @param in_callback The method to be invoked when the server response is received
+	 */
+	void awardUserItem(const FString &defId, int quantity, bool includeDef, IServerCallback *callback = nullptr);
 
-    /*
-     * Allows item(s) to be awarded to a user without collecting
-     * the purchase amount. If includeDef is true, response
-     * includes associated itemDef with language fields limited
-     * to the current or default language.
-     *
-     * Service Name - UserItems
-     * Service Operation - AWARD_USER_ITEM
-     *
-     * @param defId The unique id of the item definition to award.
-     * @param quantity The quantity of the item to award.
-     * @param includeDef If true, the associated item definition will be included in the response.
-     * @param optionsJson Optional support for specifying 'blockIfExceedItemMaxStackable' indicating how to process the award
-     * if the defId is for a stackable item with a max stackable quantity and the specified quantity to award is too high.
-     * If true and the quantity is too high, the call is blocked and an error is returned.
-     * If false (default) and quantity is too high, the quantity is adjusted to the allowed maximum and the quantity not awarded is reported
-     * in response key 'itemsNotAwarded' - unless the adjusted quantity would be 0, in which case the call is blocked and an error is returned.
-     * @param callback The method to be invoked when the server response is received
-     */
-    void awardUserItemWithOptions(const FString &defId, int quantity, bool includeDef, const FString &optionsJson, IServerCallback *callback = nullptr);
+	/**
+	 * Awards item(s) to a user with additional options.
+	 *
+	 * Service Name - userItems
+	 * Service Operation - AWARD_USER_ITEM
+	 *
+	 * @param in_defId       The unique id of the item definition to award.
+	 * @param in_quantity    The quantity of the item to award.
+	 * @param in_includeDef  If true, include associated item definition in the response.
+	 * @param in_optionsJson JSON string specifying additional options (e.g., blockIfExceedItemMaxStackable).
+	 * @param in_callback The method to be invoked when the server response is received
+	 */
+	void awardUserItemWithOptions(const FString &defId, int quantity, bool includeDef, const FString &optionsJson, IServerCallback *callback = nullptr);
 
-    /**
-     * Allows a quantity of a specified user item to be dropped,
-     * without any recovery of the money paid for the item.
-     * If any quantity of the user item remains, it will be returned,
-     * potentially with the associated itemDef (with language fields
-     * limited to the current or default language).
-     *
-     * Service Name - userItems
-     * Service Operation - DROP_USER_ITEM
-     *
-     * @param defId
-     * @param quantity
-     * @param includeDef
-     */
-    void dropUserItem(const FString &itemId, int quantity, bool includeDef, IServerCallback *callback = nullptr);
+	/**
+	 * Drops a quantity of a specified user item without recovering the purchase cost.
+	 * If any quantity remains, it may include the associated itemDef.
+	 *
+	 * Service Name - userItems
+	 * Service Operation - DROP_USER_ITEM
+	 *
+	 * @param in_defId       The unique id of the item definition to drop.
+	 * @param in_quantity    The quantity of the item to drop.
+	 * @param in_includeDef  If true, include associated item definition in the response.
+	 * @param in_callback The method to be invoked when the server response is received
+	 */
+	void dropUserItem(const FString &itemId, int quantity, bool includeDef, IServerCallback *callback = nullptr);
 
-    /*
-     * Returns list of items on promotion available to the current user
-     * for promotions available to the current user.
-     *
-     * Service Name - UserItems
-     * Service Operation - GET_ITEMS_ON_PROMOTION
-     *
-     * @param shopId The id identifying the store the item is from, if applicable.
-     * @param includeDef If true, the associated item definition info of the promotional items will be included in the response.
-     * @param includePromotionDetails If true, the promotion details of the eligible promotions will be included in the response.
-     * @param optionsJson Optional support for specifying additional options. Currently supporting option 'category' to include only catalog items configured with the specified category, if desired.
-     * @param callback The method to be invoked when the server response is received
-     *
-     */
-    void getItemsOnPromotion(const FString &shopId, bool includeDef, bool includePromotionDetails, const FString &optionsJson = TEXT(""), IServerCallback *callback = nullptr);
+	/**
+	 * Returns a list of items on promotion available to the current user.
+	 *
+	 * Service Name - userItems
+	 * Service Operation - GET_ITEMS_ON_PROMOTION
+	 *
+	 * @param in_shopId                  Store ID.
+	 * @param in_includeDef              Include associated item definition if true.
+	 * @param in_includePromotionDetails Include promotion details if true.
+	 * @param in_optionsJson             JSON string specifying additional options (e.g., category).
+	 * @param in_callback                Callback invoked when the server response is received.
+	 */
+	void getItemsOnPromotion(const FString &shopId, bool includeDef, bool includePromotionDetails, const FString &optionsJson = TEXT(""), IServerCallback *callback = nullptr);
 
-    /*
-     * Returns list of promotional details for the specified item definition
-     * for promotions available to the current user.
-     *
-     * Service Name - UserItems
-     * Service Operation - GET_ITEMS_ON_PROMOTION
-     *
-     * @param defId The unique id of the item definition to check.
-     * @param shopId The id identifying the store the item is from, if applicable.
-     * @param includeDef If true, the associated item definition will be included in the response.
-     * @param includePromotionDetails If true, the promotion details of the eligible promotions will be included in the response.
-     * @param callback The method to be invoked when the server response is received
-     *
-     */
-    void getItemPromotionDetails(const FString &defId, const FString &shopId, bool includeDef, bool includePromotionDetails, IServerCallback *callback = nullptr);
+	/**
+	 * Returns a list of promotional details for a specified item.
+	 *
+	 * Service Name - userItems
+	 * Service Operation - GET_ITEM_PROMOTION_DETAILS
+	 *
+	 * @param in_defId                    Item definition ID.
+	 * @param in_shopId                   Store ID.
+	 * @param in_includeDef               Include associated item definition if true.
+	 * @param in_includePromotionDetails  Include promotion details if true.
+	 * @param in_callback                 Callback invoked when the server response is received.
+	 */
+	void getItemPromotionDetails(const FString &defId, const FString &shopId, bool includeDef, bool includePromotionDetails, IServerCallback *callback = nullptr);
 
-    /**
-     * Retrieves the page of user's inventory from the server
-     * based on the context. If includeDef is true, response
-     *  includes associated itemDef with each user item, with
-     * language fields limited to the current or default language.
-     *
-     * Service Name - userItems
-     * Service Operation - GET_USER_INVENTORY_PAGE
-     *
-     * @param context
-     * @param includeDef
-     */
-    void getUserItemsPage(const FString &context, bool includeDef, IServerCallback *callback = nullptr);
+	/**
+	 * Retrieves a page of the user's inventory.
+	 *
+	 * Service Name - userItems
+	 * Service Operation - GET_USER_INVENTORY_PAGE
+	 *
+	 * @param in_context     Context string used to filter inventory.
+	 * @param in_includeDef  If true, include associated item definitions in the response.
+	 * @param in_callback The method to be invoked when the server response is received
+	 */
+	void getUserItemsPage(const FString &context, bool includeDef, IServerCallback *callback = nullptr);
 
-    /**
-     * Retrieves the page of user's inventory from the server
-     *  based on the encoded context. If includeDef is true,
-     * response includes associated itemDef with each user item,
-     * with language fields limited to the current or default
-     * language.
-     *
-     * Service Name - userItems
-     * Service Operation - GET_USER_INVENTORY_PAGE_OFFSET
-     *
-     * @param context
-     * @param pageOffset
-     * @param includeDef
-     */
-    void getUserItemsPageOffset(const FString &context, int pageOffest, bool includeDef, IServerCallback *callback = nullptr);
+	/**
+	 * Retrieves a page of the user's inventory with an offset.
+	 *
+	 * Service Name - userItems
+	 * Service Operation - GET_USER_INVENTORY_PAGE_OFFSET
+	 *
+	 * @param in_context     Context string used to filter inventory.
+	 * @param in_pageOffset  Page offset to retrieve.
+	 * @param in_includeDef  If true, include associated item definitions in the response.
+	 * @param in_callback The method to be invoked when the server response is received
+	 */
+	void getUserItemsPageOffset(const FString &context, int pageOffest, bool includeDef, IServerCallback *callback = nullptr);
 
-    /**
-     * Retrieves the identified user item from the server.
-     * If includeDef is true, response includes associated
-     * itemDef with language fields limited to the current
-     * or default language.
-     *
-     * Service Name - userItems
-     * Service Operation - GET_USER_ITEM
-     *
-     * @param itemId
-     * @param includeDef
-     * @param callback The method to be invoked when the server response is received
-     */
-    void getUserItem(const FString &itemId, bool includeDef, IServerCallback *callback = nullptr);
+	/**
+	 * Retrieves a specific user item.
+	 *
+	 * Service Name - userItems
+	 * Service Operation - GET_USER_ITEM
+	 *
+	 * @param in_itemId      ID of the user item to retrieve.
+	 * @param in_includeDef  If true, include associated item definition in the response.
+	 * @param in_callback The method to be invoked when the server response is received
+	 */
+	void getUserItem(const FString &itemId, bool includeDef, IServerCallback *callback = nullptr);
 
-    /**
-     * Gifts item to the specified player.
-     *
-     * Service Name - userItems
-     * Service Operation - GIVE_USER_ITEM_TO
-     *
-     * @param profileId
-     * @param itemId
-     * @param version
-     * @param immediate
-     */
-    void giveUserItemTo(const FString &profileId, const FString &itemId, int version, int quantity, bool immediate, IServerCallback *callback = nullptr);
+	/**
+	 * Gifts an item to another user.
+	 *
+	 * Service Name - userItems
+	 * Service Operation - GIVE_USER_ITEM_TO
+	 *
+	 * @param in_profileId   Profile ID of the recipient.
+	 * @param in_itemId      ID of the item to gift.
+	 * @param in_version     Version of the item being gifted.
+	 * @param in_quantity    Quantity of the item to gift.
+	 * @param in_immediate   If true, the gift is delivered immediately.
+	 * @param in_callback The method to be invoked when the server response is received
+	 */
+	void giveUserItemTo(const FString &profileId, const FString &itemId, int version, int quantity, bool immediate, IServerCallback *callback = nullptr);
 
-    /**
-     * Retrieves the identified user item from the server.
-     * If includeDef is true, response includes associated
-     * itemDef with language fields limited to the current
-     * or default language.
-     *
-     * Service Name - userItems
-     * Service Operation - PURCHASE_USER_ITEM
-     *
-     * @param defId
-     * @param quantity
-     * @param shopId
-     * @param includeDef
-     */
-    void purchaseUserItem(const FString &defId, int quantity, const FString &shopId, bool includeDef, IServerCallback *callback = nullptr);
+	/**
+	 * Purchases a user item from a store.
+	 *
+	 * Service Name - userItems
+	 * Service Operation - PURCHASE_USER_ITEM
+	 *
+	 * @param in_defId       The unique id of the item definition to purchase.
+	 * @param in_quantity    Quantity of the item to purchase.
+	 * @param in_shopId      Store ID for the purchase.
+	 * @param in_includeDef  If true, include associated item definition in the response.
+	 * @param in_callback The method to be invoked when the server response is received
+	 */
+	void purchaseUserItem(const FString &defId, int quantity, const FString &shopId, bool includeDef, IServerCallback *callback = nullptr);
 
-    /*
-     * Purchases a quantity of an item from the specified store,
-     * if the user has enough funds and purchasing for listed buy price
-     * is not disabled for associated catalog item definition.
-     * If includeDef is true, response includes associated itemDef with language fields
-     * limited to the current or default language.
-     *
-     * Service Name - UserItems
-     * Service Operation - PURCHASE_USER_ITEM
-     *
-     * @param defId The unique id of the item definition to purchase.
-     * @param quantity The quantity of the item to purchase.
-     * @param shopId The id identifying the store the item is being purchased from, if applicable.
-     * @param includeDef If true, the associated item definition will be included in the response.
-     * @param optionsJson Optional support for specifying 'blockIfExceedItemMaxStackable' indicating how to process the purchase
-     * if the defId is for a stackable item with a max stackable quantity and the specified quantity being purchased is too high.
-     * If true and the quantity is too high, the call is blocked and an error is returned. If false (default) and quantity is too high,
-     * the quantity is adjusted to the allowed maximum and the quantity not purchased is reported in response key 'itemsNotPurchased'
-     * - unless the adjusted quantity would be 0, in which case the call is blocked and an error is returned.
-     * @param callback The method to be invoked when the server response is received
-     *
-     */
-    void purchaseUserItemsWithOptions(
-        const FString &defId,
-        int quantity,
-        const FString &shopId,
-        bool includeDef,
-        const FString &optionsJson,
-        IServerCallback *callback = nullptr);
+	/**
+	 * Purchases a user item with options.
+	 *
+	 * Service Name - userItems
+	 * Service Operation - PURCHASE_USER_ITEM
+	 *
+	 * @param in_defId       The unique id of the item definition to purchase.
+	 * @param in_quantity    Quantity of the item to purchase.
+	 * @param in_shopId      Store ID for the purchase.
+	 * @param in_includeDef  If true, include associated item definition in the response.
+	 * @param in_optionsJson JSON string specifying additional options.
+	 * @param in_callback The method to be invoked when the server response is received
+	 */
+	void purchaseUserItemsWithOptions(
+		const FString &defId,
+		int quantity,
+		const FString &shopId,
+		bool includeDef,
+		const FString &optionsJson,
+		IServerCallback *callback = nullptr);
 
-    /**
-     * Retrieves and transfers the gift item from
-     * the specified player, who must have previously
-     * called giveUserItemTo.
-     *
-     * Service Name - userItems
-     * Service Operation - RECEIVE_USER_ITEM_FROM
-     *
-     * @param profileId
-     * @param itemId
-     */
-    void receiveUserItemFrom(const FString &profileId, const FString &itemId, IServerCallback *callback = nullptr);
+	/**
+	 * Retrieves and transfers a gift item from another user.
+	 *
+	 * Service Name - userItems
+	 * Service Operation - RECEIVE_USER_ITEM_FROM
+	 *
+	 * @param in_profileId   Profile ID of the sender.
+	 * @param in_itemId      ID of the item being received.
+	 * @param in_callback The method to be invoked when the server response is received
+	 */
+	void receiveUserItemFrom(const FString &profileId, const FString &itemId, IServerCallback *callback = nullptr);
 
-    /*
-     * Opens a quantity of a bundle user item.Applicable user items will be
-     * created and any currencies awarded.
-     * NOTE: Supported only for user items based on BUNDLE type catalog items.
-     *
-     * Service Name - UserItems
-     * Service Operation - OpenBundle
-     *
-     * @param itemId ID uniquely identifying the user item to be sold.
-     * @param version Version of the user' BUNDLE type item being opened. Pass
-     * -1 for any version.
-     * @param quantity Quantity of the item being sold. Quantity greater than
-     * 1 only applicable if stackable item.
-     * @param includeDef Flag set to true to include the associated item
-     * definition for any user items created, plus if any user item quantity
-     * remains for bundle user item being opened; false if not required.
-     * @param optionsJson Optional support for specifying 'blockIfExceedItemMaxStackable'
-     * indicating how to process the award if the defId is for a stackable item
-     * with a max stackable quantity and the specified quantity to award is too
-     * high. If true and the quantity is too high, the call is blocked and an
-     * error is returned. If false (default) and quantity is too high, the
-     * quantity is adjusted to the allowed maximum and the quantity not awarded
-     * is reported in response key 'itemsNotAwarded' - unless the adjusted
-     * quantity would be 0, in which case the call is blocked and an error is
-     * returned.
-     */
-    void openBundle(const FString &itemId, int version, int quantity, bool includeDef, const FString &optionsJson, IServerCallback *callback = nullptr);
+	/**
+	 * Opens a quantity of a bundle user item.
+	 * Creates applicable items and awards any currencies.
+	 *
+	 * Service Name - userItems
+	 * Service Operation - OPEN_BUNDLE
+	 *
+	 * @param in_itemId      ID of the bundle item to open.
+	 * @param in_version     Version of the bundle item (pass -1 for any version).
+	 * @param in_quantity    Quantity of the item to open.
+	 * @param in_includeDef  Include associated item definitions if true.
+	 * @param in_optionsJson JSON string specifying additional options.
+	 * @param in_callback The method to be invoked when the server response is received
+	 */
+	void openBundle(const FString &itemId, int version, int quantity, bool includeDef, const FString &optionsJson, IServerCallback *callback = nullptr);
 
-    /**
-     * Allows a quantity of a specified user item to be sold.
-     * If any quantity of the user item remains, it will be returned,
-     * potentially with the associated itemDef (with language fields
-     * limited to the current or default language), along with the
-     * currency refunded and currency balances.
-     *
-     * Service Name - userItems
-     * Service Operation - SELL_USER_ITEM
-     *
-     * @param itemId
-     * @param version
-     * @param quantity
-     * @param shopId
-     * @param includeDef
-     */
-    void sellUserItem(const FString &itemId, int version, int quantity, const FString &shopId, bool includeDef, IServerCallback *callback = nullptr);
+	/**
+	 * Sells a user item back to the store.
+	 *
+	 * Service Name - userItems
+	 * Service Operation - SELL_USER_ITEM
+	 *
+	 * @param in_itemId      ID of the user item to sell.
+	 * @param in_version     Version of the item being sold.
+	 * @param in_quantity    Quantity of the item to sell.
+	 * @param in_shopId      Store ID for the sale.
+	 * @param in_includeDef  If true, include associated item definition in the response.
+	 * @param in_callback The method to be invoked when the server response is received
+	 */
+	void sellUserItem(const FString &itemId, int version, int quantity, const FString &shopId, bool includeDef, IServerCallback *callback = nullptr);
 
-    /**
-     * Updates the item data on the specified user item.
-     *
-     * Service Name - userItems
-     * Service Operation - UPDATE_USER_ITEM_DATA
-     *
-     * @param itemId
-     * @param version
-     * @param newItemData
-     */
-    void updateUserItemData(const FString &itemId, int version, const FString &newItemData, IServerCallback *callback = nullptr);
+	/**
+	 * Updates the data of a specific user item.
+	 *
+	 * Service Name - userItems
+	 * Service Operation - UPDATE_USER_ITEM_DATA
+	 *
+	 * @param in_itemId      ID of the user item to update.
+	 * @param in_version     Version of the item being updated.
+	 * @param in_newItemData JSON string with updated item data.
+	 * @param in_callback The method to be invoked when the server response is received
+	 */
+	void updateUserItemData(const FString &itemId, int version, const FString &newItemData, IServerCallback *callback = nullptr);
 
-    /**
-     * Uses the specified item, potentially consuming it.
-     *
-     * Service Name - userItems
-     * Service Operation - USE_USER_ITEM
-     *
-     * @param itemId
-     * @param version
-     * @param newItemData
-     * @param includeDef
-     */
-    void useUserItem(const FString &itemId, int version, const FString &newItemData, bool includeDef, IServerCallback *callback = nullptr);
+	/**
+	 * Uses a user item, potentially consuming it.
+	 *
+	 * Service Name - userItems
+	 * Service Operation - USE_USER_ITEM
+	 *
+	 * @param in_itemId      ID of the user item to use.
+	 * @param in_version     Version of the user item (pass -1 for any version).
+	 * @param in_newItemData Optional JSON string to update item fields.
+	 * @param in_includeDef  If true, include associated item definition in the response.
+	 * @param in_callback The method to be invoked when the server response is received
+	 */
+	void useUserItem(const FString &itemId, int version, const FString &newItemData, bool includeDef, IServerCallback *callback = nullptr);
 
-    /**
-     * Publishes the specified item to the item management attached blockchain. Results are reported asynchronously via an RTT event.
-     *
-     * Service Name - userItems
-     * Service Operation - PUBLISH_USER_ITEM_TO_BLOCKCHAIN
-     *
-     * @param itemId
-     * @param version
-     * @param newItemData
-     */
-    void publishUserItemToBlockchain(const FString &itemId, int version, IServerCallback *callback = nullptr);
+	/**
+	 * Publishes a user item to the blockchain.
+	 *
+	 * Service Name - userItems
+	 * Service Operation - PUBLISH_USER_ITEM_TO_BLOCKCHAIN
+	 *
+	 * @param in_itemId      ID of the user item to publish.
+	 * @param in_version     Version of the item to publish.
+	 * @param in_callback The method to be invoked when the server response is received
+	 */
+	void publishUserItemToBlockchain(const FString &itemId, int version, IServerCallback *callback = nullptr);
 
-    /**
-     * Syncs the caller's user items with the item management attached blockchain. Results are reported asynchronously via an RTT event.
-     *
-     * Service Name - userItems
-     * Service Operation - REFRESH_BLOCKCHAIN_USER_ITEMS
-     */
-    void refreshBlockchainUserItems(IServerCallback *callback = nullptr);
+	/**
+	 * Refreshes blockchain user items.
+	 *
+	 * Service Name - userItems
+	 * Service Operation - REFRESH_BLOCKCHAIN_USER_ITEMS
+	 *
+	 * @param in_callback Callback invoked when the server response is received.
+	 */
+	void refreshBlockchainUserItems(IServerCallback *callback = nullptr);
 
-    /**
-     * Removes the specified item from the item management attached blockchain. Results are reported asynchronously via an RTT event.
-     *
-     * Service Name - userItems
-     * Service Operation - REMOVE_USER_ITEM_FROM_BLOCKCHAIN
-     */
-    void removeUserItemFromBlockchain(const FString &itemId, int version, IServerCallback *callback = nullptr);
+	/**
+	 * Removes a user item from the blockchain.
+	 *
+	 * Service Name - userItems
+	 * Service Operation - REMOVE_USER_ITEM_FROM_BLOCKCHAIN
+	 *
+	 * @param in_itemId   ID of the user item to remove.
+	 * @param in_version  Version of the user item to remove.
+	 * @param in_callback Callback invoked when the server response is received.
+	 */
+	void removeUserItemFromBlockchain(const FString &itemId, int version, IServerCallback *callback = nullptr);
 
 private:
-    BrainCloudClient *_client = nullptr;
+	BrainCloudClient *_client = nullptr;
 };

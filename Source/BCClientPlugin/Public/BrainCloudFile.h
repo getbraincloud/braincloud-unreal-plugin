@@ -36,10 +36,8 @@ public:
         IServerCallback *callback = nullptr);
 
     /**
-     * List user files from the given cloud path
+     * List all user files
      *
-     * @param in_cloudPath File path
-     * @param in_recurse Whether to recurse into sub-directories
      * @param in_callback The method to be invoked when the server response is received
      */
     void listUserFiles(IServerCallback *callback = nullptr);

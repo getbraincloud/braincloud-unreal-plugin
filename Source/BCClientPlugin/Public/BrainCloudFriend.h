@@ -75,6 +75,7 @@ public:
 	 *
 	 * @param in_profileId Profile (user) ID.
 	 * @param in_authenticationType Associated authentication type.
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void getExternalIdForProfileId(const FString &profileId, const FString &authenticationType, IServerCallback *callback = nullptr);
 
@@ -133,7 +134,7 @@ public:
 	 *
 	 * @param searchText The string to search for.
 	 * @param maxResults  Maximum number of results to return.
-	 * @param callback Method to be invoked when the server response is received.
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void findUsersByExactName(const FString &searchText, int32 maxResults, IServerCallback *callback = nullptr);
 
@@ -146,7 +147,7 @@ public:
 	 *
 	 * @param searchText The substring to search for. Minimum length of 3 characters.
 	 * @param maxResults  Maximum number of results to return. If there are more the message
-	 * @param callback Method to be invoked when the server response is received.
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void findUsersBySubstrName(const FString &searchText, int32 maxResults, IServerCallback *callback = nullptr);
 
@@ -154,6 +155,7 @@ public:
 	 * Retrieves profile information of the specified universal Id.
 	 *
 	 * @param in_searchText Universal ID text on which to search.
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void findUserByExactUniversalId(const FString &searchText, IServerCallback *callback = nullptr);
 
@@ -162,6 +164,7 @@ public:
 	 *
 	 * @param in_searchText Universal ID text on which to search.
 	 * @param in_maxResults Maximum number of results to return.
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void findUsersByUniversalIdStartingWith(const FString &searchText, int32 maxResults, IServerCallback *callback = nullptr);
 
@@ -170,6 +173,7 @@ public:
 	 *
 	 * @param in_searchText Name text on which to search.
 	 * @param in_maxResults Maximum number of results to return.
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void findUsersByNameStartingWith(const FString &searchText, int32 maxResults, IServerCallback *callback = nullptr);
 

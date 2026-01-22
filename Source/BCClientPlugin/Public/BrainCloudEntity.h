@@ -54,7 +54,8 @@ public:
    */
   void getEntity(const FString &entityId, IServerCallback *callback);
 
-  /** Method retreives a singleton entity on the server. If the entity doesn't exist, null is returned.
+  /**
+   * Method retreives a singleton entity on the server. If the entity doesn't exist, null is returned.
    *
    * Service Name - Entity
    * Service Operation - ReadSingleton
@@ -111,7 +112,8 @@ public:
    */
   void deleteSingleton(const FString &entityType, IServerCallback *callback);
 
-  /** Method returns all user entities that match the given type.
+  /**
+   * Method returns all user entities that match the given type.
    * Service Name - Entity
    * Service Operation - ReadByType
    *
@@ -185,7 +187,7 @@ public:
    * @param in_whereJson Mongo style query string
    * @param in_orderByJson Sort order
    * @param in_maxReturn The maximum number of entities to return
-   * @param in_callback The callback object
+   * @param in_callback The method to be invoked when the server response is received
    */
   void getList(const FString &whereJson, const FString &orderByJson, int32 maxReturn, IServerCallback *callback);
 
@@ -196,7 +198,7 @@ public:
    * Service Operation - GET_LIST_COUNT
    *
    * @param in_whereJson Mongo style query string
-   * @param in_callback The callback object
+   * @param in_callback The method to be invoked when the server response is received
    */
   void getListCount(const FString &whereJson, IServerCallback *callback);
 
@@ -210,7 +212,7 @@ public:
    *
    * @param in_context The json context for the page request.
    *                   See the portal appendix documentation for format.
-   * @param in_callback The callback object
+   * @param in_callback The method to be invoked when the server response is received
    */
   void getPage(const FString &context, IServerCallback *callback);
 
@@ -224,7 +226,7 @@ public:
    *      previous call to GetPage or GetPageOffset
    * @param in_pageOffset The positive or negative page offset to fetch. Uses the last page
    *      retrieved using the context string to determine a starting point.
-   * @param in_callback The callback object
+   * @param in_callback The method to be invoked when the server response is received
    */
   void getPageOffset(const FString &context, int32 pageOffset, IServerCallback *callback);
 
@@ -236,7 +238,7 @@ public:
    *
    * @param in_entityId The id of the entity to update
    * @param in_jsonData The entity's data object
-   * @param in_callback The callback object
+   * @param in_callback The method to be invoked when the server response is received
    */
   void incrementUserEntityData(const FString &entityId, const FString &jsonData, IServerCallback *callback = nullptr);
 
@@ -249,7 +251,7 @@ public:
    * @param in_entityId The id of the entity to update
    * @param in_targetProfileId Profile ID of the entity owner
    * @param in_jsonData The entity's data object
-   * @param in_callback The callback object
+   * @param in_callback The method to be invoked when the server response is received
    */
   void incrementSharedUserEntityData(const FString &entityId, const FString &targetProfileId, const FString &jsonData, IServerCallback *callback = nullptr);
 

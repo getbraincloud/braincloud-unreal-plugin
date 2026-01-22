@@ -21,7 +21,7 @@ public:
 	 * @param in_timeToLive Sets expiry time for entity in milliseconds if > 0
 	 * @param in_jsonEntityAcl The entity's access control list as json. A null acl implies default
 	 * @param in_jsonEntityData  The entity's data as a json string
-	 * @param in_callback The callback object
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void createEntity(const FString &entityType, int64 timeToLive, IAcl *jsonEntityAcl,
 					  const FString &jsonEntityData, IServerCallback *callback);
@@ -37,7 +37,7 @@ public:
 	 * @param in_timeToLive Sets expiry time for entity in milliseconds if > 0
 	 * @param in_jsonEntityAcl The entity's access control list as json. A null acl implies default
 	 * @param in_jsonEntityData  The entity's data as a json string
-	 * @param in_callback The callback object
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void createEntityWithIndexedId(const FString &entityType, const FString &indexedId, int64 timeToLive,
 								   IAcl *jsonEntityAcl, const FString &jsonEntityData, IServerCallback *callback);
@@ -51,7 +51,7 @@ public:
 	 * @param in_entityId The entity ID
 	 * @param in_version The version of the entity to update
 	 * @param in_jsonEntityData  The entity's data as a json string
-	 * @param in_callback The callback object
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void updateEntity(const FString &entityId, int32 version, const FString &jsonEntityData, IServerCallback *callback);
 
@@ -64,7 +64,7 @@ public:
 	 * @param in_entityId The entity ID
 	 * @param in_version The version of the entity to update
 	 * @param in_jsonEntityAcl The entity's access control list as json.
-	 * @param in_callback The callback object
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void updateEntityAcl(const FString &entityId, int32 version, IAcl *jsonEntityAcl, IServerCallback *callback);
 
@@ -77,7 +77,7 @@ public:
 	 * @param in_entityId The entity ID
 	 * @param in_version The version of the entity to update
 	 * @param in_timeToLive Sets expiry time for entity in milliseconds if > 0
-	 * @param in_callback The callback object
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void updateEntityTimeToLive(const FString &entityId, int32 version, int64 timeToLive, IServerCallback *callback);
 
@@ -89,7 +89,7 @@ public:
 	 *
 	 * @param in_entityId The entity ID
 	 * @param in_version The version of the entity to delete
-	 * @param in_callback The callback object
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void deleteEntity(const FString &entityId, int32 version, IServerCallback *callback);
 
@@ -100,7 +100,7 @@ public:
 	 * Service Operation - Read
 	 *
 	 * @param in_entityId The entity ID
-	 * @param in_callback The callback object
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void readEntity(const FString &entityId, IServerCallback *callback);
 
@@ -113,7 +113,7 @@ public:
 	 * @param in_where Mongo style query string
 	 * @param in_orderBy Sort order
 	 * @param in_maxReturn The maximum number of entities to return
-	 * @param in_callback The callback object
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void getList(const FString &where, const FString &orderBy, int32 maxReturn, IServerCallback *callback);
 
@@ -125,7 +125,7 @@ public:
 	 *
 	 * @param in_entityIndexedId The entity indexed Id
 	 * @param in_maxReturn The maximum number of entities to return
-	 * @param in_callback The callback object
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void getListByIndexedId(const FString &entityIndexedId, int32 maxReturn, IServerCallback *callback);
 
@@ -136,7 +136,7 @@ public:
 	 * Service Operation - GetListCount
 	 *
 	 * @param in_where Mongo style query string
-	 * @param in_callback The callback object
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void getListCount(const FString &where, IServerCallback *callback);
 
@@ -150,7 +150,7 @@ public:
 	 *
 	 * @param in_context The json context for the page request.
 	 *                   See the portal appendix documentation for format.
-	 * @param in_callback The callback object
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void getPage(const FString &context, IServerCallback *callback);
 
@@ -164,7 +164,7 @@ public:
 	 *      previous call to GetPage or GetPageOffset
 	 * @param in_pageOffset The positive or negative page offset to fetch. Uses the last page
 	 *      retrieved using the context string to determine a starting point.
-	 * @param in_callback The callback object
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void getPageOffset(const FString &context, int32 pageOffset, IServerCallback *callback);
 
@@ -176,7 +176,7 @@ public:
 	 *
 	 * @param in_entityId The id of the entity to update
 	 * @param in_jsonData The entity's data object
-	 * @param in_callback The callback object
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void incrementGlobalEntityData(const FString &entityId, const FString &jsonData, IServerCallback *callback = nullptr);
 
@@ -188,7 +188,7 @@ public:
 	 *
 	 * @param in_where Mongo style query string
 	 * @param in_maxReturn The maximum number of entities to return
-	 * @param in_callback The callback object
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void getRandomEntitiesMatching(const FString &where, int32 maxReturn, IServerCallback *callback = nullptr);
 
@@ -201,7 +201,7 @@ public:
 	 * @param in_entityId The entity ID
 	 * @param in_version The version of the entity to update
 	 * @param in_entityIndexedId the id index of the entity
-	 * @param in_callback The callback object
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void updateEntityIndexedId(const FString &entityId, int32 version, const FString &entityIndexedId, IServerCallback *callback = nullptr);
 
@@ -215,7 +215,7 @@ public:
 	 * @param in_version The version of the entity to update
 	 * @param in_ownerId The owner ID
 	 * @param in_jsonEntityAcl The entity's access control list as JSON.
-	 * @param in_callback The callback object
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void updateEntityOwnerAndAcl(const FString &entityId, int32 version, const FString &ownerId, IAcl *jsonEntityAcl, IServerCallback *callback);
 
@@ -228,7 +228,7 @@ public:
 	 * @param in_entityId The entity ID
 	 * @param in_version The version of the entity to update
 	 * @param in_jsonEntityAcl The entity's access control list as JSON.
-	 * @param in_callback The callback object
+	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void makeSystemEntity(const FString &entityId, int32 version, IAcl *jsonEntityAcl, IServerCallback *callback);
 

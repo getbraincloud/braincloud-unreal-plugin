@@ -41,7 +41,7 @@ public:
 	void deleteEntity(const FString &entityType, const FString &entityId, int version, IServerCallback *callback);
 
 	/**
-	 * Gets the count of entities matching the specified criteria.
+	 * Deletes the specified custom entity on the server.
 	 *
 	 * Service Name - CustomEntity
 	 * Service Operation - GetCount
@@ -81,26 +81,26 @@ public:
 	void getEntityPageOffset(const FString &entityType, const FString &context, int pageOffset, IServerCallback *callback);
 
 	/**
-	 * Gets the page of custom entities from the server based on the encoded context and specified page offset.
+	 * Reads the specified custom entity from the server.
 	 *
 	 * Service Name - CustomEntity
 	 * Service Operation - ReadEntity
 	 *
 	 * @param in_entityType The entity type as defined by the user
-	 * @param in_entityId
+	 * @param in_entityId The entity id as defined by the system
 	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void readEntity(const FString &entityType, const FString &entityId, IServerCallback *callback);
 
 	/**
-	 * Reads the custom entity singleton owned by the session's user.
+	 * Increments fields on the specified custom entity owned by the user on the server.
 	 *
 	 * Service Name - CustomEntity
 	 * Service Operation - IncrementData
 	 *
 	 * @param in_entityType The entity type as defined by the user
-	 * @param in_entityId
-	 * @param in_fieldsJson
+	 * @param in_entityId The entity id as defined by the system
+	 * @param in_fieldsJson Specific fields, as JSON, within entity's custom data, with respective increment amount.
 	 * @param in_callback The method to be invoked when the server response is received
 	 */
 	void incrementData(const FString &entityType, const FString &entityId, const FString &fieldsJson, IServerCallback *callback);

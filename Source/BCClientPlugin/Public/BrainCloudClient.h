@@ -148,9 +148,10 @@ public:
 	void EnableCompressedResponses(bool isEnabled);
 
 	/**
-	 * Method initializes the BrainCloudClient. Automatically passes in current serverURL
-	 * as https://api.braincloudservers.com/dispatcherv2
+	 * Method initializes the BrainCloudClient.
 	 *
+	 * @param in_serverURL The url to the brainCloud server
+	 *     Currently this should be:  https://api.braincloudservers.com/dispatcherv2
 	 * @param in_secretKey The secret key for your game
 	 * @param in_appId The app id
 	 * @param in_appVersion The version
@@ -161,10 +162,9 @@ public:
 					const FString &appVersion);
 	/**
 	 * Method initializes the BrainCloudClient with multiple app/secret.
-	 * Used when needed to switch between child and parent apps.
+	 * Used when needed to switch between child and parent apps. Automatically passes in
+	 * current serverURL which is https://api.braincloudservers.com/dispatcherv2
 	 *
-	 * @param in_serverURL The url to the brainCloud server
-	 *     Currently this should be:  https://api.braincloudservers.com/dispatcherv2
 	 * @param in_defaultAppId The default app id that we start with
 	 * @param in_secretMap A map of <appId, secretKey>
 	 * @param in_appVersion The version
