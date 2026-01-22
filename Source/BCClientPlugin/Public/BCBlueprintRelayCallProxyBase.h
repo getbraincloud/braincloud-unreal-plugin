@@ -5,7 +5,7 @@
 #include "IRelayCallback.h"
 #include "BCBlueprintRelayCallProxyBase.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FBrainCloudRelayCallbackDelegate, int, netId, const TArray<uint8>&, data);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FBrainCloudRelayCallbackDelegate, int, netId, const TArray<uint8> &, data);
 
 UCLASS(MinimalAPI)
 class UBCBlueprintRelayCallProxyBase : public UObject, public IRelayCallback
@@ -15,12 +15,12 @@ class UBCBlueprintRelayCallProxyBase : public UObject, public IRelayCallback
 public:
     UBCBlueprintRelayCallProxyBase(const FObjectInitializer &ObjectInitializer) { this->AddToRoot(); }
 
-    //Response delegates
+    // Response delegates
     UPROPERTY(BlueprintAssignable)
     FBrainCloudRelayCallbackDelegate OnRelayCallback;
 
-    //callbacks
-    void relayCallback(int netId, const TArray<uint8>& in_data)
+    // callbacks
+    void relayCallback(int netId, const TArray<uint8> &in_data)
     {
         OnRelayCallback.Broadcast(netId, in_data);
     }

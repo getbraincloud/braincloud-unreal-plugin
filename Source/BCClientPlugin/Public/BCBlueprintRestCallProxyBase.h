@@ -17,42 +17,42 @@ class UBCBlueprintRestCallProxyBase : public UObject, public IEventCallback, pub
 {
     GENERATED_BODY()
 
-  public:
+public:
     UBCBlueprintRestCallProxyBase(const FObjectInitializer &ObjectInitializer) {}
 
-    //Response delegates
+    // Response delegates
     UPROPERTY(BlueprintAssignable)
     FBrainCloudRestCallbackDelegate OnCallback;
 
-    //IEventCallback
+    // IEventCallback
     void eventCallback(const FString &jsonData)
     {
         FBC_ReturnData returnData = FBC_ReturnData();
         OnCallback.Broadcast(jsonData, returnData);
     }
 
-    //IRewardCallback
+    // IRewardCallback
     void rewardCallback(const FString &jsonData)
     {
         FBC_ReturnData returnData = FBC_ReturnData();
         OnCallback.Broadcast(jsonData, returnData);
     }
 
-    //INetworkErrorCallback
+    // INetworkErrorCallback
     void networkError()
     {
         FBC_ReturnData returnData = FBC_ReturnData();
         OnCallback.Broadcast(TEXT(""), returnData);
     }
 
-    //IGlobalErrorCallback
+    // IGlobalErrorCallback
     void globalError(ServiceName serviceName, ServiceOperation serviceOperation, int32 statusCode, int32 reasonCode, const FString &jsonError)
     {
         FBC_ReturnData returnData = FBC_ReturnData(serviceName.getValue(), serviceOperation.getValue(), statusCode, reasonCode);
         OnCallback.Broadcast(jsonError, returnData);
     }
 
-    //IFileUploadCallback
+    // IFileUploadCallback
     void fileUploadCompleted(const FString &fileUploadId, const FString &jsonResponse)
     {
         FBC_ReturnData returnData = FBC_ReturnData(fileUploadId, fileUploadId, 200, 0);

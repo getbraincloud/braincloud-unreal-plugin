@@ -4,10 +4,10 @@
 
 class BCCLIENTPLUGIN_API OperationParam
 {
-  public:
+public:
 	static const OperationParam Authenticate;
 
-	//Push Notification Service - Send Params
+	// Push Notification Service - Send Params
 	static const OperationParam PushNotificationSendParamToPlayerId;
 	static const OperationParam PushNotificationSendParamProfileId;
 	static const OperationParam PushNotificationSendParamNotificationTemplateId;
@@ -21,7 +21,7 @@ class BCCLIENTPLUGIN_API OperationParam
 	static const OperationParam IosContent;
 	static const OperationParam FacebookContent;
 
-	//Push Notification Service - Register Params
+	// Push Notification Service - Register Params
 	static const OperationParam PushNotificationRegisterParamDeviceType;
 	static const OperationParam PushNotificationRegisterParamDeviceToken;
 	static const OperationParam PushNotificationRegisterParamPushId;
@@ -145,8 +145,8 @@ class BCCLIENTPLUGIN_API OperationParam
 	static const OperationParam EventServiceUpdateEventDataEventId;
 	static const OperationParam EventServiceUpdateEventDataData;
 	static const OperationParam EvId;
-	static const OperationParam EventServiceEvIds;	
-	static const OperationParam EventServiceDateMillis;	
+	static const OperationParam EventServiceEvIds;
+	static const OperationParam EventServiceDateMillis;
 	static const OperationParam EventServiceEventType;
 
 	// Event Service - Delete Incoming Params
@@ -177,7 +177,7 @@ class BCCLIENTPLUGIN_API OperationParam
 	static const OperationParam FriendServiceProfileIds;
 	static const OperationParam ExternalAuthType;
 
-	//Achievements Event Data Params
+	// Achievements Event Data Params
 	static const OperationParam GamificationServiceAchievementsName;
 	static const OperationParam GamificationServiceAchievementsData;
 	static const OperationParam GamificationServiceAchievementsGranted;
@@ -291,7 +291,7 @@ class BCCLIENTPLUGIN_API OperationParam
 
 	static const OperationParam ReleasePlatformIos;
 	static const OperationParam ReleasePlatformFacebook;
-		static const OperationParam ReleasePlatformOculus;
+	static const OperationParam ReleasePlatformOculus;
 	static const OperationParam ReleasePlatformBlackberry;
 	static const OperationParam ReleasePlatformGoogleAndroid;
 	static const OperationParam ReleasePlatformWindowsPhone;
@@ -346,12 +346,12 @@ class BCCLIENTPLUGIN_API OperationParam
 	static const OperationParam PlayerStateServiceIncludeSummaryData;
 	static const OperationParam IdentityServiceForceSingleton;
 
-	//item Catalog
+	// item Catalog
 	static const OperationParam ItemCatalogServiceDefId;
 	static const OperationParam ItemCatalogServiceContext;
 	static const OperationParam ItemCatalogServicePageOffset;
 
-	//UserItems
+	// UserItems
 	static const OperationParam UserItemsDefId;
 	static const OperationParam UserItemsQuantity;
 	static const OperationParam UserItemsIncludeDef;
@@ -371,7 +371,7 @@ class BCCLIENTPLUGIN_API OperationParam
 	static const OperationParam RedemptionCodeServiceScanCode;
 	static const OperationParam RedemptionCodeServiceCodeType;
 	static const OperationParam RedemptionCodeServiceCustomRedemptionInfo;
-	
+
 	// DataStream
 	static const OperationParam DataStreamEventName;
 	static const OperationParam DataStreamEventProperties;
@@ -425,7 +425,7 @@ class BCCLIENTPLUGIN_API OperationParam
 	static const OperationParam GroupSummaryData;
 	static const OperationParam GroupMaxReturn;
 
-	//mail
+	// mail
 	static const OperationParam ProfileId;
 	static const OperationParam EmailAddress;
 	static const OperationParam EmailAddresses;
@@ -442,20 +442,20 @@ class BCCLIENTPLUGIN_API OperationParam
 	static const OperationParam RoundStartedEpoch;
 	static const OperationParam Data;
 
-	//Global File
+	// Global File
 	static const OperationParam GlobalFileFileName;
 	static const OperationParam GlobalFileFileId;
 	static const OperationParam GlobalFileFolderPath;
 	static const OperationParam GlobalFileRecurse;
 
-	//virtual currency
+	// virtual currency
 	static const OperationParam VirtualCurrencyVcId;
 	static const OperationParam VirtualCurrencyLevelName;
 	static const OperationParam VirtualCurrencyPeerCode;
 	static const OperationParam VirtualCurrencyPriceInfoCriteria;
 	static const OperationParam VirtualCurrencyAmount;
 
-	//app store
+	// app store
 	static const OperationParam AppStoreId;
 	static const OperationParam IAPId;
 	static const OperationParam Payload;
@@ -519,8 +519,8 @@ class BCCLIENTPLUGIN_API OperationParam
 	static const OperationParam LobbyMinRating;
 	static const OperationParam LobbyMaxRating;
 	static const OperationParam LobbyCriteria;
-	
-	//customEntity
+
+	// customEntity
 	static const OperationParam CustomEntityServiceEntityType;
 	static const OperationParam CustomEntityServiceJsonEntityData;
 	static const OperationParam CustomEntityServiceAcl;
@@ -539,15 +539,15 @@ class BCCLIENTPLUGIN_API OperationParam
 	static const OperationParam CustomEntityServiceDataJson;
 	static const OperationParam CustomEntityServiceDeleteCriteria;
 	static const OperationParam CustomEntityServiceShardKeyJson;
-	
-	//global app
+
+	// global app
 	static const OperationParam GlobalAppReadSelectedProperties;
 	static const OperationParam GlobalAppReadPropertiesInCategories;
 
 	static const OperationParam BlockChainIntegrationId;
 	static const OperationParam BlockChainContext;
 
-	//group file
+	// group file
 	static const OperationParam FolderPath;
 	static const OperationParam FileName;
 	static const OperationParam FullPathFilename;
@@ -564,8 +564,6 @@ class BCCLIENTPLUGIN_API OperationParam
 	static const OperationParam GroupFilename;
 	static const OperationParam GroupFileACL;
 	static const OperationParam NewACL;
-	
-	
 
 	FString getValue() const { return _value; }
 
@@ -574,7 +572,7 @@ class BCCLIENTPLUGIN_API OperationParam
 
 	static bool isOptionalParamValid(const FString &param);
 
-  private:
+private:
 	FString _value;
 
 	OperationParam(const FString &value);

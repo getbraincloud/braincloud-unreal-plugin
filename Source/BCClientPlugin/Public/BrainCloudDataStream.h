@@ -12,47 +12,46 @@ public:
   BrainCloudDataStream(BrainCloudClient *client);
 
   /**
-     * Creates custom data stream page event
-     *
-     * @param eventName Name of event
-     * @param jsonEventProperties Properties of event
-     * @param callback The callback object
-     */
+   * Creates custom data stream page event
+   *
+   * @param eventName Name of event
+   * @param eventProperties Properties of event
+   * @param in_callback The method to be invoked when the server response is received
+   */
   void customPageEvent(const FString &eventName, const FString &jsonEventProperties, IServerCallback *callback = nullptr);
 
   /**
-     * Creates custom data stream screen event
-     *
-     * @param eventName Name of event
-     * @param jsonEventProperties Properties of event
-     * @param callback The callback object
-     */
+   * Creates custom data stream screen event
+   *
+   * @param eventName Name of event
+   * @param eventProperties Properties of event
+   * @param in_callback The method to be invoked when the server response is received
+   */
   void customScreenEvent(const FString &eventName, const FString &jsonEventProperties, IServerCallback *callback = nullptr);
 
   /**
-     * Creates custom data stream track event
-     *
-     * @param eventName Name of event
-     * @param jsonEventProperties Properties of event
-     * @param callback The callback object
-     */
+   * Creates custom data stream track event
+   *
+   * @param eventName Name of event
+   * @param eventProperties Properties of event
+   * @param in_callback The method to be invoked when the server response is received
+   */
   void customTrackEvent(const FString &eventName, const FString &jsonEventProperties, IServerCallback *callback = nullptr);
 
-    /**
-     * Send crash report
-     *
-     * @param crashType String the type of crash
-     * @param errosMsg String the message to send
-     * @param crashJson Json the fields of the crash
-     * @param crashLog String log data
-     * @param userName
-     * @param userEmail
-     * @param userNotes
-     * @param userSubmitted
-     * @param callback The callback object
-     */
+  /**
+   * Send crash report
+   *
+   * @param crashType
+   * @param errorMsg
+   * @param crashJson
+   * @param crashLog
+   * @param userName
+   * @param userEmail
+   * @param userNotes
+   * @param userSubmitted
+   * @param in_callback The method to be invoked when the server response is received
+   */
   void submitCrashReport(const FString &crashType, const FString &errorMsg, const FString &crashJson, const FString &crashLog, const FString &userName, const FString &userEmail, const FString &userNotes, bool userSubmitted, IServerCallback *callback = nullptr);
-
 
 private:
   BrainCloudClient *_client = nullptr;

@@ -7,7 +7,7 @@ class IServerCallback;
 
 class BCCLIENTPLUGIN_API BrainCloudProfanity
 {
-  public:
+public:
     BrainCloudProfanity(BrainCloudClient *client);
 
     /**
@@ -16,12 +16,12 @@ class BCCLIENTPLUGIN_API BrainCloudProfanity
      * Service Name - Profanity
      * Service Operation - ProfanityCheck
      *
-     * @param text The text to check
-     * @param languages Optional comma delimited list of two character language codes
-     * @param flagEmail Optional processing of email addresses
-     * @param flagPhone Optional processing of phone numbers
-     * @param flagUrls Optional processing of urls
-     * @param callback The method to be invoked when the server response is received
+     * @param in_text The text to check
+     * @param in_languages Optional comma delimited list of two character language codes
+     * @param in_flagEmail Optional processing of email addresses
+     * @param in_flagPhone Optional processing of phone numbers
+     * @param in_flagUrls Optional processing of urls
+     * @param in_callback The method to be invoked when the server response is received
      *
      * Significant error codes:
      *
@@ -44,13 +44,13 @@ class BCCLIENTPLUGIN_API BrainCloudProfanity
      * Service Name - Profanity
      * Service Operation - ProfanityReplaceText
      *
-     * @param text The text to check
-     * @param replaceSymbol The text to replace individual characters of profanity text with
-     * @param languages Optional comma delimited list of two character language codes
-     * @param flagEmail Optional processing of email addresses
-     * @param flagPhone Optional processing of phone numbers
-     * @param flagUrls Optional processing of urls
-     * @param callback The method to be invoked when the server response is received
+     * @param in_text The text to check
+     * @param in_replaceSymbol The text to replace individual characters of profanity text with
+     * @param in_languages Optional comma delimited list of two character language codes
+     * @param in_flagEmail Optional processing of email addresses
+     * @param in_flagPhone Optional processing of phone numbers
+     * @param in_flagUrls Optional processing of urls
+     * @param in_callback The method to be invoked when the server response is received
      *
      * Significant error codes:
      *
@@ -74,12 +74,12 @@ class BCCLIENTPLUGIN_API BrainCloudProfanity
      * Service Name - Profanity
      * Service Operation - ProfanityIdentifyBadWords
      *
-     * @param text The text to check
-     * @param languages Optional comma delimited list of two character language codes
-     * @param flagEmail Optional processing of email addresses
-     * @param flagPhone Optional processing of phone numbers
-     * @param flagUrls Optional processing of urls
-     * @param callback The method to be invoked when the server response is received
+     * @param in_text The text to check
+     * @param in_languages Optional comma delimited list of two character language codes
+     * @param in_flagEmail Optional processing of email addresses
+     * @param in_flagPhone Optional processing of phone numbers
+     * @param in_flagUrls Optional processing of urls
+     * @param in_callback The method to be invoked when the server response is received
      *
      * Significant error codes:
      *
@@ -96,6 +96,6 @@ class BCCLIENTPLUGIN_API BrainCloudProfanity
         bool flagUrls,
         IServerCallback *callback = nullptr);
 
-  private:
+private:
     BrainCloudClient *_client = nullptr;
 };

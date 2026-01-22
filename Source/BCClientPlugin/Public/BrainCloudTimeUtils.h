@@ -7,15 +7,15 @@ class IServerCallback;
 
 class BCCLIENTPLUGIN_API BrainCloudTimeUtils
 {
-  public:
-    BrainCloudTimeUtils(BrainCloudClient *client);
+public:
+  BrainCloudTimeUtils(BrainCloudClient *client);
 
-    static int64 UTCDateTimeToUTCMillis(FDateTime dateTime);
-    static FDateTime UTCMillisToUTCDateTime(int64 utcDateTime);
-    static FDateTime LocalTimeToUTCTime(FDateTime localDate);
-    static FDateTime UTCTimeToLocalTime(FDateTime utcDate);
-    static float UTCTimeZoneOffset();
-    
-  private:
-    BrainCloudClient *_client = nullptr;
+  static int64 UTCDateTimeToUTCMillis(FDateTime dateTime);
+  static FDateTime UTCMillisToUTCDateTime(int64 utcDateTime);
+  static FDateTime LocalTimeToUTCTime(FDateTime localDate);
+  static FDateTime UTCTimeToLocalTime(FDateTime utcDate);
+  static float UTCTimeZoneOffset();
+
+private:
+  BrainCloudClient *_client = nullptr;
 };

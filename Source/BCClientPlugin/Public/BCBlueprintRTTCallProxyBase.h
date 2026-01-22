@@ -12,14 +12,14 @@ class UBCBlueprintRTTCallProxyBase : public UObject, public IRTTCallback
 {
     GENERATED_BODY()
 
-  public:
+public:
     UBCBlueprintRTTCallProxyBase(const FObjectInitializer &ObjectInitializer) { this->AddToRoot(); }
 
-    //Response delegates
+    // Response delegates
     UPROPERTY(BlueprintAssignable)
     FBrainCloudRTTCallbackDelegate OnRTTCallback;
 
-    //callbacks
+    // callbacks
     void rttCallback(const FString &jsonData)
     {
         OnRTTCallback.Broadcast(jsonData);

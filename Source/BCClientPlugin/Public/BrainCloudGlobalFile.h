@@ -7,55 +7,55 @@ class IServerCallback;
 
 class BCCLIENTPLUGIN_API BrainCloudGlobalFile
 {
-  public:
+public:
     BrainCloudGlobalFile(BrainCloudClient *client);
 
     /**
-     * Returns information on a file using fileId.
+     * Returns the complete info for the specified file given it’s fileId
      *
-     * Service Name - GlobalFile
+     * Service Name - GlobalFileV3
      * Service Operation - GetFileInfo
      *
-     * @param - fileId - the file's id
-     * @param - callback The method to be invoked when the server response is received
+     * @param in_fileId The fileId of the global file
+     * @param in_callback The method to be invoked when the server response is received
      */
     void getFileInfo(const FString &fileId, IServerCallback *callback);
 
     /**
-     * Returns information on a file using path and name.
+     * Returns the complete info for the specified file, without having to look up the fileId first.
      *
-     * Service Name - GlobalFile
+     * Service Name - GlobalFileV3
      * Service Operation - GetFileInfoSimple
      *
-     * @param - folderPath - the folder path the file is stored at
-     * @param - fileId - the file's id
-     * @param - callback The method to be invoked when the server response is received
+     * @param in_folderPath The folder path of the file
+     * @param in_filename The name of the file
+     * @param in_callback The method to be invoked when the server response is received
      */
     void getFileInfoSimple(const FString &fileName, const FString &folderPath, IServerCallback *callback);
 
     /**
-     * Return CDN url for file for clients that cannot handle redirect.
+     * Returns the CDN of the specified file.
      *
-     * Service Name - GlobalFile
+     * Service Name - GlobalFileV3
      * Service Operation - GetGlobalCDNUrl
      *
-     * @param - fileId - the file's id
-     * @param - callback The method to be invoked when the server response is received
+     * @param in_fileId The fileId of the global file
+     * @param in_callback The method to be invoked when the server response is received
      */
     void getGlobalCDNUrl(const FString &fileId, IServerCallback *callback);
 
     /**
-     * Returns a list of files.
+     * Returns files at the current path.
      *
-     * Service Name - GlobalFile
+     * Service Name - GlobalFileV3
      * Service Operation - GetGlobalFileList
      *
-     * @param - folderPath - the folder path the file is stored at
-     * @param - recurse - does it recurse?
-     * @param - callback The method to be invoked when the server response is received
+     * @param in_folderPath The folder path to list files from
+     * @param in_recurse Whether to recurse into subfolders
+     * @param in_callback The method to be invoked when the server response is received
      */
     void getGlobalFileList(const FString &folderPath, bool recurse, IServerCallback *callback);
 
-  private:
+private:
     BrainCloudClient *_client = nullptr;
 };
