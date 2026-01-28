@@ -14,14 +14,15 @@ public:
 	/**
 	 * Method creates a new entity on the server.
 	 *
-	 * Service Name - GlobalEntity
-	 * Service Operation - Create
+	 * Service Name - globalEntity
+	 * Service Operation - CREATE
 	 *
-	 * @param in_entityType The entity type as defined by the user
-	 * @param in_timeToLive Sets expiry time for entity in milliseconds if > 0
-	 * @param in_jsonEntityAcl The entity's access control list as json. A null acl implies default
-	 * @param in_jsonEntityData  The entity's data as a json string
-	 * @param in_callback The method to be invoked when the server response is received
+	 * @param entityType The entity type as defined by the user
+	 * @param timeToLive The duration of time, in milliseconds, the singleton custom entity should live
+	 * 				before being expired. Null indicates never expires. Value of -1 indicates no change for updates.
+	 * @param jsonEntityAcl The entity's access control list as json. A null acl implies default
+	 * @param jsonEntityData  The entity's data as a json string
+	 * @param callback The method to be invoked when the server response is received
 	 */
 	void createEntity(const FString &entityType, int64 timeToLive, IAcl *jsonEntityAcl,
 					  const FString &jsonEntityData, IServerCallback *callback);
@@ -29,15 +30,16 @@ public:
 	/**
 	 * Method creates a new entity on the server with an indexed id.
 	 *
-	 * Service Name - GlobalEntity
-	 * Service Operation - CreateWithIndexedId
+	 * Service Name - globalEntity
+	 * Service Operation - CREATE_WITH_INDEXED_ID
 	 *
-	 * @param in_entityType The entity type as defined by the user
-	 * @param in_indexedId A secondary ID that will be indexed
-	 * @param in_timeToLive Sets expiry time for entity in milliseconds if > 0
-	 * @param in_jsonEntityAcl The entity's access control list as json. A null acl implies default
-	 * @param in_jsonEntityData  The entity's data as a json string
-	 * @param in_callback The method to be invoked when the server response is received
+	 * @param entityType The entity type as defined by the user
+	 * @param indexedId A secondary ID that will be indexed
+	 * @param timeToLive The duration of time, in milliseconds, the singleton custom entity should live
+	 * 				before being expired. Null indicates never expires. Value of -1 indicates no change for updates.
+	 * @param jsonEntityAcl The entity's access control list as json. A null acl implies default
+	 * @param jsonEntityData  The entity's data as a json string
+	 * @param callback The method to be invoked when the server response is received
 	 */
 	void createEntityWithIndexedId(const FString &entityType, const FString &indexedId, int64 timeToLive,
 								   IAcl *jsonEntityAcl, const FString &jsonEntityData, IServerCallback *callback);
@@ -45,98 +47,99 @@ public:
 	/**
 	 * Method updates an existing entity on the server.
 	 *
-	 * Service Name - GlobalEntity
-	 * Service Operation - Update
+	 * Service Name - globalEntity
+	 * Service Operation - UPDATE
 	 *
-	 * @param in_entityId The entity ID
-	 * @param in_version The version of the entity to update
-	 * @param in_jsonEntityData  The entity's data as a json string
-	 * @param in_callback The method to be invoked when the server response is received
+	 * @param entityId The entity ID
+	 * @param version The version of the entity to update
+	 * @param jsonEntityData  The entity's data as a json string
+	 * @param callback The method to be invoked when the server response is received
 	 */
 	void updateEntity(const FString &entityId, int32 version, const FString &jsonEntityData, IServerCallback *callback);
 
 	/**
 	 * Method updates an existing entity's Acl on the server.
 	 *
-	 * Service Name - GlobalEntity
-	 * Service Operation - UpdateAcl
+	 * Service Name - globalEntity
+	 * Service Operation - UPDATE_ACL
 	 *
-	 * @param in_entityId The entity ID
-	 * @param in_version The version of the entity to update
-	 * @param in_jsonEntityAcl The entity's access control list as json.
-	 * @param in_callback The method to be invoked when the server response is received
+	 * @param entityId The entity ID
+	 * @param version The version of the entity to update
+	 * @param jsonEntityAcl The entity's access control list as json.
+	 * @param callback The method to be invoked when the server response is received
 	 */
 	void updateEntityAcl(const FString &entityId, int32 version, IAcl *jsonEntityAcl, IServerCallback *callback);
 
 	/**
 	 * Method updates an existing entity's time to live on the server.
 	 *
-	 * Service Name - GlobalEntity
-	 * Service Operation - UpdateTimeToLive
+	 * Service Name - globalEntity
+	 * Service Operation - UPDATE_TIME_TO_LIVE
 	 *
-	 * @param in_entityId The entity ID
-	 * @param in_version The version of the entity to update
-	 * @param in_timeToLive Sets expiry time for entity in milliseconds if > 0
-	 * @param in_callback The method to be invoked when the server response is received
+	 * @param entityId The entity ID
+	 * @param version The version of the entity to update
+	 * @param timeToLive The duration of time, in milliseconds, the singleton custom entity should live
+	 * 				before being expired. Null indicates never expires. Value of -1 indicates no change for updates.
+	 * @param callback The method to be invoked when the server response is received
 	 */
 	void updateEntityTimeToLive(const FString &entityId, int32 version, int64 timeToLive, IServerCallback *callback);
 
 	/**
 	 * Method deletes an existing entity on the server.
 	 *
-	 * Service Name - GlobalEntity
-	 * Service Operation - Delete
+	 * Service Name - globalEntity
+	 * Service Operation - DELETE
 	 *
-	 * @param in_entityId The entity ID
-	 * @param in_version The version of the entity to delete
-	 * @param in_callback The method to be invoked when the server response is received
+	 * @param entityId The entity ID
+	 * @param version The version of the entity to delete
+	 * @param callback The method to be invoked when the server response is received
 	 */
 	void deleteEntity(const FString &entityId, int32 version, IServerCallback *callback);
 
 	/**
 	 * Method reads an existing entity from the server.
 	 *
-	 * Service Name - GlobalEntity
-	 * Service Operation - Read
+	 * Service Name - globalEntity
+	 * Service Operation - READ
 	 *
-	 * @param in_entityId The entity ID
-	 * @param in_callback The method to be invoked when the server response is received
+	 * @param entityId The entity ID
+	 * @param callback The method to be invoked when the server response is received
 	 */
 	void readEntity(const FString &entityId, IServerCallback *callback);
 
 	/**
 	 * Method gets list of entities from the server base on type and/or where clause
 	 *
-	 * Service Name - GlobalEntity
-	 * Service Operation - GetList
+	 * Service Name - globalEntity
+	 * Service Operation - GET_LIST
 	 *
-	 * @param in_where Mongo style query string
-	 * @param in_orderBy Sort order
-	 * @param in_maxReturn The maximum number of entities to return
-	 * @param in_callback The method to be invoked when the server response is received
+	 * @param where Mongo style query string
+	 * @param orderBy Sort order
+	 * @param maxReturn The maximum number of entities to return
+	 * @param callback The method to be invoked when the server response is received
 	 */
 	void getList(const FString &where, const FString &orderBy, int32 maxReturn, IServerCallback *callback);
 
 	/**
 	 * Method gets list of entities from the server base on indexed id
 	 *
-	 * Service Name - GlobalEntity
-	 * Service Operation - GetListByIndexedId
+	 * Service Name - globalEntity
+	 * Service Operation - GET_LIST_BY_INDEXED_ID
 	 *
-	 * @param in_entityIndexedId The entity indexed Id
-	 * @param in_maxReturn The maximum number of entities to return
-	 * @param in_callback The method to be invoked when the server response is received
+	 * @param entityIndexedId The entity indexed Id
+	 * @param maxReturn The maximum number of entities to return
+	 * @param callback The method to be invoked when the server response is received
 	 */
 	void getListByIndexedId(const FString &entityIndexedId, int32 maxReturn, IServerCallback *callback);
 
 	/**
 	 * Method gets a count of entities based on the where clause
 	 *
-	 * Service Name - GlobalEntity
-	 * Service Operation - GetListCount
+	 * Service Name - globalEntity
+	 * Service Operation - GET_LIST_COUNT
 	 *
-	 * @param in_where Mongo style query string
-	 * @param in_callback The method to be invoked when the server response is received
+	 * @param where Mongo style query string
+	 * @param callback The method to be invoked when the server response is received
 	 */
 	void getListCount(const FString &where, IServerCallback *callback);
 
@@ -145,26 +148,26 @@ public:
 	 * After retrieving a page of Global Entities with this method,
 	 * use GetPageOffset() to retrieve previous or next pages.
 	 *
-	 * Service Name - GlobalEntity
-	 * Service Operation - GetPage
+	 * Service Name - globalEntity
+	 * Service Operation - GET_PAGE
 	 *
-	 * @param in_context The json context for the page request.
+	 * @param context The json context for the page request.
 	 *                   See the portal appendix documentation for format.
-	 * @param in_callback The method to be invoked when the server response is received
+	 * @param callback The method to be invoked when the server response is received
 	 */
 	void getPage(const FString &context, IServerCallback *callback);
 
 	/**
 	 * Method to retrieve previous or next pages after having called the GetPage method.
 	 *
-	 * Service Name - GlobalEntity
-	 * Service Operation - GetPageOffset
+	 * Service Name - globalEntity
+	 * Service Operation - GET_PAGE_OFFSET
 	 *
-	 * @param in_context The context string returned from the server from a
+	 * @param context The context string returned from the server from a
 	 *      previous call to GetPage or GetPageOffset
-	 * @param in_pageOffset The positive or negative page offset to fetch. Uses the last page
+	 * @param pageOffset The positive or negative page offset to fetch. Uses the last page
 	 *      retrieved using the context string to determine a starting point.
-	 * @param in_callback The method to be invoked when the server response is received
+	 * @param callback The method to be invoked when the server response is received
 	 */
 	void getPageOffset(const FString &context, int32 pageOffset, IServerCallback *callback);
 
@@ -174,9 +177,9 @@ public:
 	 * Service Name - globalEntity
 	 * Service Operation - INCREMENT_GLOBAL_ENTITY_DATA
 	 *
-	 * @param in_entityId The id of the entity to update
-	 * @param in_jsonData The entity's data object
-	 * @param in_callback The method to be invoked when the server response is received
+	 * @param entityId The id of the entity to update
+	 * @param jsonData The entity's data object
+	 * @param callback The method to be invoked when the server response is received
 	 */
 	void incrementGlobalEntityData(const FString &entityId, const FString &jsonData, IServerCallback *callback = nullptr);
 
@@ -186,9 +189,9 @@ public:
 	 * Service Name - globalEntity
 	 * Service Operation - GET_RANDOM_ENTITIES_MATCHING
 	 *
-	 * @param in_where Mongo style query string
-	 * @param in_maxReturn The maximum number of entities to return
-	 * @param in_callback The method to be invoked when the server response is received
+	 * @param where Mongo style query string
+	 * @param maxReturn The maximum number of entities to return
+	 * @param callback The method to be invoked when the server response is received
 	 */
 	void getRandomEntitiesMatching(const FString &where, int32 maxReturn, IServerCallback *callback = nullptr);
 
@@ -198,10 +201,10 @@ public:
 	 * Service Name - globalEntity
 	 * Service Operation - UPDATE_ENTITY_OWNER_AND_ACL
 	 *
-	 * @param in_entityId The entity ID
-	 * @param in_version The version of the entity to update
-	 * @param in_entityIndexedId the id index of the entity
-	 * @param in_callback The method to be invoked when the server response is received
+	 * @param entityId The entity ID
+	 * @param version The version of the entity to update
+	 * @param entityIndexedId the id index of the entity
+	 * @param callback The method to be invoked when the server response is received
 	 */
 	void updateEntityIndexedId(const FString &entityId, int32 version, const FString &entityIndexedId, IServerCallback *callback = nullptr);
 
@@ -211,11 +214,11 @@ public:
 	 * Service Name - globalEntity
 	 * Service Operation - UPDATE_ENTITY_OWNER_AND_ACL
 	 *
-	 * @param in_entityId The entity ID
-	 * @param in_version The version of the entity to update
-	 * @param in_ownerId The owner ID
-	 * @param in_jsonEntityAcl The entity's access control list as JSON.
-	 * @param in_callback The method to be invoked when the server response is received
+	 * @param entityId The entity ID
+	 * @param version The version of the entity to update
+	 * @param ownerId The owner ID
+	 * @param jsonEntityAcl The entity's access control list as JSON.
+	 * @param callback The method to be invoked when the server response is received
 	 */
 	void updateEntityOwnerAndAcl(const FString &entityId, int32 version, const FString &ownerId, IAcl *jsonEntityAcl, IServerCallback *callback);
 
@@ -225,10 +228,10 @@ public:
 	 * Service Name - globalEntity
 	 * Service Operation - MAKE_SYSTEM_ENTITY
 	 *
-	 * @param in_entityId The entity ID
-	 * @param in_version The version of the entity to update
-	 * @param in_jsonEntityAcl The entity's access control list as JSON.
-	 * @param in_callback The method to be invoked when the server response is received
+	 * @param entityId The entity ID
+	 * @param version The version of the entity to update
+	 * @param jsonEntityAcl The entity's access control list as JSON.
+	 * @param callback The method to be invoked when the server response is received
 	 */
 	void makeSystemEntity(const FString &entityId, int32 version, IAcl *jsonEntityAcl, IServerCallback *callback);
 
