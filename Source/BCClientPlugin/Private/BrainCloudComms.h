@@ -3,6 +3,8 @@
 #pragma once
 #include "Interfaces/IHttpRequest.h"
 #include "Runtime/Launch/Resources/Version.h"
+#include "IServerCallback.h"
+#include "IReconnectCallback.h"
 
 class IEventCallback;
 class IRewardCallback;
@@ -27,7 +29,7 @@ class BrainCloudComms
 	void EnableLogging(bool shouldEnable) { _isLoggingEnabled = shouldEnable; };
 	bool IsLoggingEnabled() { return _isLoggingEnabled; };
 
-	void AddToQueue(ServerCall *);
+	void AddToQueue(TSharedRef<ServerCall> ServerCallRef);
 	void ClearSessionId() { _sessionId.Empty(); }
 	void ResetCommunication();
 	void RunCallbacks();
@@ -59,6 +61,11 @@ class BrainCloudComms
 	void RegisterNetworkErrorCallback(UBCBlueprintRestCallProxyBase *callback);
 	void DeregisterNetworkErrorCallback();
 
+	//Long session reconnect callback
+	void RegisterReconnectCallback(IReconnectCallback* reconnectCallback) { _reconnectCallback = reconnectCallback; }
+	void RegisterReconnectCallback(UBCBlueprintRestCallProxyBase* callback);
+	void DeregisterReconnectCallback();
+
 	//Getters
 	bool IsAuthenticated() { return _isAuthenticated; }
 	bool IsInitialized() { return _isInitialized; }
@@ -70,6 +77,7 @@ class BrainCloudComms
 	int32 GetUploadLowTransferRateTimeout() { return _uploadLowTransferRateTimeout; }
 	int32 GetUploadLowTransferRateThreshold() { return _uploadLowTransferRateThreshold; }
 	int32 GetUploadOverallTimeout() { return _uploadOverallTimeout; }
+	bool GetLongSessionEnabled() { return _longSessionEnabled; }
 
 	//Setters
 	void SetServerUrl(const FString &serverUrl) { _serverUrl = serverUrl; }
@@ -84,6 +92,7 @@ class BrainCloudComms
 	void SetUploadLowTransferRateThreshold(int32 bytesPerSec) { _uploadLowTransferRateThreshold = bytesPerSec; }
 	void SetUploadOverallTimeout(int32 seconds) { _uploadOverallTimeout = seconds; }
 	void SetAuthenticated() { _isAuthenticated = true; }
+	void SetLongSessionEnabled(bool isEnabled) { _longSessionEnabled = isEnabled; }
 
 	//File upload
 	void CancelUpload(const FString &fileUploadId);
@@ -139,6 +148,7 @@ class BrainCloudComms
 	bool _isLoggingEnabled = false;
 	bool _isAuthenticated = false;
 	bool _isInitialized = false;
+	bool _longSessionEnabled = false;
 
 	int32 _bundleId = 0;
 	FString _sessionId;
@@ -154,6 +164,7 @@ class BrainCloudComms
 	IFileUploadCallback *_fileUploadCallback = nullptr;
 	IGlobalErrorCallback *_globalErrorCallback = nullptr;
 	INetworkErrorCallback *_networkErrorCallback = nullptr;
+	IReconnectCallback* _reconnectCallback = nullptr;
 	TMap<FString, UBCBlueprintRestCallProxyBase *> m_registeredRestBluePrintCallbacks;
 
 	uint64 _packetId = 0;
@@ -199,4 +210,23 @@ class BrainCloudComms
 	int32 _killSwitchErrorCount = 0;
 	FString _killSwitchService;
 	FString _killSwitchOperation;
+};
+
+class UBrainCloudWrapper;
+class ServiceName;
+class ServiceOperation;
+
+class AuthReconnectCallback final : public IServerCallback
+{
+public:
+	AuthReconnectCallback(BrainCloudComms* commsRef, IReconnectCallback* callback, TSharedRef<TArray<TSharedRef<ServerCall>>> lastPacket);
+
+	virtual ~AuthReconnectCallback();
+	virtual void serverCallback(ServiceName serviceName, ServiceOperation serviceOperation, const FString& jsonData) override;
+	virtual void serverError(ServiceName serviceName, ServiceOperation serviceOperation, int32 statusCode, int32 reasonCode, const FString& jsonError) override;
+
+protected:
+	BrainCloudComms* _commsRef;
+	IReconnectCallback* _callback;
+	TSharedRef<TArray<TSharedRef<ServerCall>>> _lastPacket;
 };

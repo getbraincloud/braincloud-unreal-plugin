@@ -316,6 +316,22 @@ void BrainCloudClient::deregisterNetworkErrorCallback()
 	_brainCloudComms->DeregisterNetworkErrorCallback();
 }
 
+void BrainCloudClient::registerReconnectCallback(IReconnectCallback* reconnectCallback)
+{
+	_brainCloudComms->RegisterReconnectCallback(reconnectCallback);
+}
+
+void BrainCloudClient::registerReconnectCallback(UBCBlueprintRestCallProxyBase* reconnectCallback)
+{
+	_brainCloudComms->RegisterReconnectCallback(reconnectCallback);
+}
+
+void BrainCloudClient::deregisterReconnectCallback()
+{
+	_brainCloudComms->DeregisterReconnectCallback();
+}
+
+
 void BrainCloudClient::enableLogging(bool shouldEnable)
 {
 	_brainCloudComms->EnableLogging(shouldEnable);
@@ -343,7 +359,8 @@ void BrainCloudClient::heartbeat()
 
 void BrainCloudClient::sendRequest(ServerCall *serviceMessage)
 {
-	_brainCloudComms->AddToQueue(serviceMessage);
+	TSharedRef<ServerCall> sc = MakeShareable(serviceMessage);
+	_brainCloudComms->AddToQueue(sc);
 }
 
 void BrainCloudClient::resetCommunication()

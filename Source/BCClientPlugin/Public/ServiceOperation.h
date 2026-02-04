@@ -531,6 +531,7 @@ public:
 	FString getValue() const { return _value; }
 
 	bool operator==(const ServiceOperation &s) const;
+	bool operator!=(const ServiceOperation& s) const;
 	void operator=(const ServiceOperation &s);
 
 private:

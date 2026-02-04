@@ -51,6 +51,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "BrainCloudClient.generated.h"
 
+
 class BrainCloudComms;
 class BrainCloudRTTComms;
 class BrainCloudRelayComms;
@@ -61,6 +62,7 @@ class IFileUploadCallback;
 class IGlobalErrorCallback;
 class INetworkErrorCallback;
 class IRTTCallback;
+class IReconnectCallback;
 class UBCBlueprintRTTCallProxyBase;
 class UBCBlueprintRestCallProxyBase;
 
@@ -271,6 +273,21 @@ public:
 	void deregisterNetworkErrorCallback();
 
 	/**
+	* Registers a callback that is invoked when long sessions are enabled and a re-authentication has just happened
+	* 
+	* @param in_reconnectCallback The reocnnect callback handlers
+	*/
+	void registerReconnectCallback(IReconnectCallback *reconnectCallback);
+	void registerReconnectCallback(UBCBlueprintRestCallProxyBase *reconnectCallback); // blueprint support
+	
+	/**
+	 * Deregisters the reconnect callback
+	 */
+	void deregisterReconnectCallback();
+
+	
+
+	/**
 	 * Deregisters the global error callback
 	 */
 	void deregisterGlobalErrorCallback();
@@ -306,7 +323,10 @@ public:
 	/**
 	 * Sends a service request message to the server. This will most likely be placed
 	 * in a queue...
-	 *
+	 * 
+	 * Takes ownership. serviceMessage must be heap-allocated with `new`.
+	 * Must not already be owned by a smart pointer.
+	 * 
 	 * @param in_serviceMessage
 	 */
 	void sendRequest(ServerCall *serviceMessage);
