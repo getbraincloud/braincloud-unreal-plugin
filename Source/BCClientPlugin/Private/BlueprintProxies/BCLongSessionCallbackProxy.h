@@ -19,11 +19,11 @@ public:
 	*
 	*/
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Client")
-	static UBCLongSessionCallbackProxy* RegisterReconnectCallback(UBrainCloudWrapper* brainCloudWrapper);
+	static UBCLongSessionCallbackProxy* RegisterLongSessionCallback(UBrainCloudWrapper* brainCloudWrapper);
 
 	/** 
 	*   
 	*/
 	UFUNCTION(BlueprintCallable, Category = "BrainCloud|Client")
-	static void DeregisterReconnectCallback(UBrainCloudWrapper* brainCloudWrapper);
+	static void DeregisterLongSessionCallback(UBrainCloudWrapper* brainCloudWrapper);
 };
