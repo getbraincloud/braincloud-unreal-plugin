@@ -320,6 +320,22 @@ void BrainCloudClient::deregisterNetworkErrorCallback()
 	_brainCloudComms->DeregisterNetworkErrorCallback();
 }
 
+void BrainCloudClient::registerLongSessionCallback(ILongSessionCallback* longSessionCallback)
+{
+	_brainCloudComms->RegisterLongSessionCallback(longSessionCallback);
+}
+
+void BrainCloudClient::registerLongSessionCallback(UBCBlueprintRestCallProxyBase* longSessionCallback)
+{
+	_brainCloudComms->RegisterLongSessionCallback(longSessionCallback);
+}
+
+void BrainCloudClient::deregisterLongSessionCallback()
+{
+	_brainCloudComms->DeregisterLongSessionCallback();
+}
+
+
 void BrainCloudClient::enableLogging(bool shouldEnable)
 {
 	_brainCloudComms->EnableLogging(shouldEnable);
@@ -347,7 +363,8 @@ void BrainCloudClient::heartbeat()
 
 void BrainCloudClient::sendRequest(ServerCall *serviceMessage)
 {
-	_brainCloudComms->AddToQueue(serviceMessage);
+	TSharedRef<ServerCall> sc = MakeShareable(serviceMessage);
+	_brainCloudComms->AddToQueue(sc);
 }
 
 void BrainCloudClient::resetCommunication()

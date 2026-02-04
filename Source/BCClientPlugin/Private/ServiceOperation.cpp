@@ -533,6 +533,11 @@ bool ServiceOperation::operator==(const ServiceOperation &s) const
 	return _value == s.getValue();
 }
 
+bool ServiceOperation::operator!=(const ServiceOperation& s) const
+{
+	return _value != s.getValue();
+}
+
 void ServiceOperation::operator=(const ServiceOperation &s)
 {
 	_value = s.getValue();
