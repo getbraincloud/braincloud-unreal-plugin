@@ -726,8 +726,6 @@ void BrainCloudComms::ReportResults(PacketRef requestPacket, TSharedRef<FJsonObj
 	UObject *tempCallback = nullptr;
 	IRewardCallback *rewardCallback = _rewardCallback != nullptr ? _rewardCallback : m_registeredRestBluePrintCallbacks.Contains("reward") ? m_registeredRestBluePrintCallbacks["reward"] : nullptr;
 
-	bool attemptToReconnect = false;
-
 	for (int32 i = 0; i < responses.Num(); i++)
 	{
 		TSharedRef<ServerCall> sc = (*requestPacket)[i];
@@ -771,7 +769,7 @@ void BrainCloudComms::ReportResults(PacketRef requestPacket, TSharedRef<FJsonObj
 
 					AuthReconnectCallback* authCallback = new AuthReconnectCallback(this, longSessionCallback, curRequest);
 					_client->getAuthenticationService()->authenticateAnonymous(false, authCallback);
-					attemptToReconnect = true;
+
 					break;
 				}
 

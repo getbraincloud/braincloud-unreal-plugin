@@ -20,12 +20,12 @@ public:
    * This mechanism supersedes the PlayerStatisticsService API methods,
    * which only update raw statistics without triggering rewards.
    *
-   * Service Name - PlayerStatisticsEvent
-   * Service Operation - Trigger
+   * Service Name - playerStatisticsEvent
+   * Service Operation - TRIGGER
    *
-   * @param in_eventName Name of the statistics event to trigger.
-   * @param in_eventMultiplier Optional multiplier to apply to the event.
-   * @param in_callback Callback invoked when the server response is received.
+   * @param eventName Name of the statistics event to trigger.
+   * @param eventMultiplier Optional multiplier to apply to the event.
+   * @param callback Callback invoked when the server response is received.
    *                    Defaults to nullptr if no callback is needed.
    * @see BrainCloudPlayerStatistics
    */
@@ -35,10 +35,10 @@ public:
    * See documentation for TriggerStatisticsEvent for more
    * documentation.
    *
-   * Service Name - PlayerStatisticsEvent
-   * Service Operation - TriggerMultiple
+   * Service Name - playerStatisticsEvent
+   * Service Operation - TRIGGER_MULTIPLE
    *
-   * @param in_jsonData
+   * @param jsonData
    *   [
    *     {
    *       "eventName": "event1",
@@ -49,7 +49,7 @@ public:
    *       "eventMultiplier": 1
    *     }
    *   ]
-   * @param in_callback The method to be invoked when the server response is received
+   * @param callback The method to be invoked when the server response is received
    */
   void triggerStatsEvents(const FString &jsonData, IServerCallback *callback);
 

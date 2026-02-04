@@ -11,14 +11,14 @@ UBCLongSessionCallbackProxy::UBCLongSessionCallbackProxy(const FObjectInitialize
 {
 }
 
-UBCLongSessionCallbackProxy* UBCLongSessionCallbackProxy::RegisterReconnectCallback(UBrainCloudWrapper* brainCloudWrapper)
+UBCLongSessionCallbackProxy* UBCLongSessionCallbackProxy::RegisterLongSessionCallback(UBrainCloudWrapper* brainCloudWrapper)
 {
 	UBCLongSessionCallbackProxy* Proxy = NewObject<UBCLongSessionCallbackProxy>();
 	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getBCClient()->registerLongSessionCallback(Proxy);
 	return Proxy;
 }
 
-void UBCLongSessionCallbackProxy::DeregisterReconnectCallback(UBrainCloudWrapper* brainCloudWrapper)
+void UBCLongSessionCallbackProxy::DeregisterLongSessionCallback(UBrainCloudWrapper* brainCloudWrapper)
 {
 	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getBCClient()->deregisterLongSessionCallback();
 }
