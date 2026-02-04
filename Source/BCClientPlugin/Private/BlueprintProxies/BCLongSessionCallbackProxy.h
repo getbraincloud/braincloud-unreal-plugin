@@ -3,26 +3,26 @@
 #pragma once
 
 #include "BCBlueprintRestCallProxyBase.h"
-#include "BCReconnectCallbackProxy.generated.h"
+#include "BCLongSessionCallbackProxy.generated.h"
 
 /**
  * 
  */
 UCLASS(MinimalAPI)
-class UBCReconnectCallbackProxy : public UBCBlueprintRestCallProxyBase
+class UBCLongSessionCallbackProxy : public UBCBlueprintRestCallProxyBase
 {
 	GENERATED_BODY()
 public:
-	UBCReconnectCallbackProxy(const FObjectInitializer& ObjectInitializer);
+	UBCLongSessionCallbackProxy(const FObjectInitializer& ObjectInitializer);
 
 	/**
 	*
 	*/
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Client")
-	static UBCReconnectCallbackProxy* RegisterReconnectCallback(UBrainCloudWrapper* brainCloudWrapper);
+	static UBCLongSessionCallbackProxy* RegisterReconnectCallback(UBrainCloudWrapper* brainCloudWrapper);
 
-	/**
-	*
+	/** 
+	*   
 	*/
 	UFUNCTION(BlueprintCallable, Category = "BrainCloud|Client")
 	static void DeregisterReconnectCallback(UBrainCloudWrapper* brainCloudWrapper);

@@ -62,7 +62,7 @@ class IFileUploadCallback;
 class IGlobalErrorCallback;
 class INetworkErrorCallback;
 class IRTTCallback;
-class IReconnectCallback;
+class ILongSessionCallback;
 class UBCBlueprintRTTCallProxyBase;
 class UBCBlueprintRestCallProxyBase;
 
@@ -275,15 +275,15 @@ public:
 	/**
 	* Registers a callback that is invoked when long sessions are enabled and a re-authentication has just happened
 	* 
-	* @param in_reconnectCallback The reocnnect callback handlers
+	* @param longSessionCallback The long session callback handler
 	*/
-	void registerReconnectCallback(IReconnectCallback *reconnectCallback);
-	void registerReconnectCallback(UBCBlueprintRestCallProxyBase *reconnectCallback); // blueprint support
+	void registerLongSessionCallback(ILongSessionCallback *longSessionCallback);
+	void registerLongSessionCallback(UBCBlueprintRestCallProxyBase *longSessionCallback); // blueprint support
 	
 	/**
 	 * Deregisters the reconnect callback
 	 */
-	void deregisterReconnectCallback();
+	void deregisterLongSessionCallback();
 
 	
 

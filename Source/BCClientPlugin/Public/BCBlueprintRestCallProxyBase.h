@@ -7,14 +7,14 @@
 #include "INetworkErrorCallback.h"
 #include "IGlobalErrorCallback.h"
 #include "IFileUploadCallback.h"
-#include "IReconnectCallback.h"
+#include "ILongSessionCallback.h"
 #include "BCBlueprintCallProxyBase.h"
 #include "BCBlueprintRestCallProxyBase.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FBrainCloudRestCallbackDelegate, FString, JsonData, FBC_ReturnData, AdditionalData);
 
 UCLASS(MinimalAPI)
-class UBCBlueprintRestCallProxyBase : public UObject, public IEventCallback, public IRewardCallback, public INetworkErrorCallback, public IGlobalErrorCallback, public IFileUploadCallback, public IReconnectCallback
+class UBCBlueprintRestCallProxyBase : public UObject, public IEventCallback, public IRewardCallback, public INetworkErrorCallback, public IGlobalErrorCallback, public IFileUploadCallback, public ILongSessionCallback
 {
     GENERATED_BODY()
 
@@ -66,13 +66,13 @@ public:
         OnCallback.Broadcast(jsonResponse, returnData);
     }
 
-    void reconnectSuccess(const FString& jsonData)
+    void longSessionSuccess(const FString& jsonData)
     {
         FBC_ReturnData returnData = FBC_ReturnData();
         OnCallback.Broadcast(jsonData, returnData);
     }
 
-    void reconnectFailed(const FString& jsonData)
+    void longSessionFailed(const FString& jsonData)
     {
         FBC_ReturnData returnData = FBC_ReturnData();
         OnCallback.Broadcast(jsonData, returnData);

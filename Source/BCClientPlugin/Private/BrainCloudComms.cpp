@@ -212,15 +212,15 @@ void BrainCloudComms::DeregisterNetworkErrorCallback()
 	_networkErrorCallback = nullptr;
 }
 
-void BrainCloudComms::RegisterReconnectCallback(UBCBlueprintRestCallProxyBase* callback)
+void BrainCloudComms::RegisterLongSessionCallback(UBCBlueprintRestCallProxyBase* callback)
 {
 	callback->AddToRoot();
-	m_registeredRestBluePrintCallbacks.Emplace("reconnect", callback);
+	m_registeredRestBluePrintCallbacks.Emplace("longSession", callback);
 }
 
-void BrainCloudComms::DeregisterReconnectCallback()
+void BrainCloudComms::DeregisterLongSessionCallback()
 {
-	FString serviceName = TEXT("reconnect");
+	FString serviceName = TEXT("longSession");
 	if (m_registeredRestBluePrintCallbacks.Contains(serviceName))
 	{
 		m_registeredRestBluePrintCallbacks[serviceName]->RemoveFromRoot();
@@ -593,17 +593,16 @@ void BrainCloudComms::HandleResponse(int32 statusCode, FString responseBody)
 
 void BrainCloudComms::RetryCachedMessages()
 {
-	if (_isLoggingEnabled)
-		UE_LOG(LogBrainCloudComms, Log, TEXT("Retrying cached messages"));
-
 	if (_blockingQueue)
 	{
+		if (_isLoggingEnabled)
+			UE_LOG(LogBrainCloudComms, Log, TEXT("Retrying cached messages"));
+
 		_blockingQueue = false;
 		_retryCount = 0;
 		_waitingForRetry = false;
+		ResendActivePacket();
 	}
-	//Resend also if blocking queue was already false 
-	ResendActivePacket();
 }
 
 void BrainCloudComms::FlushCachedMessages(bool sendApiErrorCallbacks)
@@ -768,9 +767,9 @@ void BrainCloudComms::ReportResults(PacketRef requestPacket, TSharedRef<FJsonObj
 
 					UE_LOG(LogBrainCloudComms, Log, TEXT("Long session expired, will attempt re-authentication."));
 
-					IReconnectCallback* reconnectCallback = _reconnectCallback != nullptr ? _reconnectCallback : m_registeredRestBluePrintCallbacks.Contains("reconnect") ? m_registeredRestBluePrintCallbacks["reconnect"] : nullptr;
+					ILongSessionCallback* longSessionCallback = _longSessionCallback != nullptr ? _longSessionCallback : m_registeredRestBluePrintCallbacks.Contains("longSession") ? m_registeredRestBluePrintCallbacks["longSession"] : nullptr;
 
-					AuthReconnectCallback* authCallback = new AuthReconnectCallback(this, reconnectCallback, curRequest);
+					AuthReconnectCallback* authCallback = new AuthReconnectCallback(this, longSessionCallback, curRequest);
 					_client->getAuthenticationService()->authenticateAnonymous(false, authCallback);
 					attemptToReconnect = true;
 					break;
@@ -1103,7 +1102,7 @@ int16 BrainCloudComms::GetMaxRetryAttempts()
 
 AuthReconnectCallback::AuthReconnectCallback(
 	BrainCloudComms* commsRef,
-	IReconnectCallback* callback,
+	ILongSessionCallback* callback,
 	TSharedRef<TArray<TSharedRef<ServerCall>>> lastPacket)
 	: _commsRef(commsRef)
 	, _callback(callback)
@@ -1120,13 +1119,13 @@ void AuthReconnectCallback::serverCallback(ServiceName serviceName, ServiceOpera
 	if (serviceName == ServiceName::AuthenticateV2 && serviceOperation == ServiceOperation::Authenticate)
 	{
 		UE_LOG(LogBrainCloudComms, Log, TEXT("Long session re-authentication success. Retrying cached messages..."));
-		//_lastPacket is a TSharedRef<TArray<TSharedRef<ServerCall>>>
+
 		const TArray<TSharedRef<ServerCall>>& packet = _lastPacket.Get();
 		for (int i = packet.Num() - 1; i >= 0; i--) {
 			_commsRef->AddToQueue(packet[i]);
 		}
-		_commsRef->RetryCachedMessages();
-		if(_callback != nullptr) _callback->reconnectSuccess(jsonData);
+
+		if(_callback != nullptr) _callback->longSessionSuccess(jsonData);
 		delete this;
 	}
 }
@@ -1135,6 +1134,6 @@ void AuthReconnectCallback::serverError(ServiceName serviceName, ServiceOperatio
 {
 	UE_LOG(LogBrainCloudComms, Error, TEXT("Long session re-authentication failed."));
 	_commsRef->SetLongSessionEnabled(false);
-	if (_callback != nullptr) _callback->reconnectFailed(jsonError);
+	if (_callback != nullptr) _callback->longSessionFailed(jsonError);
 	delete this;
 }

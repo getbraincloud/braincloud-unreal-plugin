@@ -4,7 +4,7 @@
 #include "Interfaces/IHttpRequest.h"
 #include "Runtime/Launch/Resources/Version.h"
 #include "IServerCallback.h"
-#include "IReconnectCallback.h"
+#include "ILongSessionCallback.h"
 
 class IEventCallback;
 class IRewardCallback;
@@ -62,9 +62,9 @@ class BrainCloudComms
 	void DeregisterNetworkErrorCallback();
 
 	//Long session reconnect callback
-	void RegisterReconnectCallback(IReconnectCallback* reconnectCallback) { _reconnectCallback = reconnectCallback; }
-	void RegisterReconnectCallback(UBCBlueprintRestCallProxyBase* callback);
-	void DeregisterReconnectCallback();
+	void RegisterLongSessionCallback(ILongSessionCallback* longSessionCallback) { _longSessionCallback = longSessionCallback; }
+	void RegisterLongSessionCallback(UBCBlueprintRestCallProxyBase* callback);
+	void DeregisterLongSessionCallback();
 
 	//Getters
 	bool IsAuthenticated() { return _isAuthenticated; }
@@ -164,7 +164,7 @@ class BrainCloudComms
 	IFileUploadCallback *_fileUploadCallback = nullptr;
 	IGlobalErrorCallback *_globalErrorCallback = nullptr;
 	INetworkErrorCallback *_networkErrorCallback = nullptr;
-	IReconnectCallback* _reconnectCallback = nullptr;
+	ILongSessionCallback* _longSessionCallback = nullptr;
 	TMap<FString, UBCBlueprintRestCallProxyBase *> m_registeredRestBluePrintCallbacks;
 
 	uint64 _packetId = 0;
@@ -219,7 +219,7 @@ class ServiceOperation;
 class AuthReconnectCallback final : public IServerCallback
 {
 public:
-	AuthReconnectCallback(BrainCloudComms* commsRef, IReconnectCallback* callback, TSharedRef<TArray<TSharedRef<ServerCall>>> lastPacket);
+	AuthReconnectCallback(BrainCloudComms* commsRef, ILongSessionCallback* callback, TSharedRef<TArray<TSharedRef<ServerCall>>> lastPacket);
 
 	virtual ~AuthReconnectCallback();
 	virtual void serverCallback(ServiceName serviceName, ServiceOperation serviceOperation, const FString& jsonData) override;
@@ -227,6 +227,6 @@ public:
 
 protected:
 	BrainCloudComms* _commsRef;
-	IReconnectCallback* _callback;
+	ILongSessionCallback* _callback;
 	TSharedRef<TArray<TSharedRef<ServerCall>>> _lastPacket;
 };
