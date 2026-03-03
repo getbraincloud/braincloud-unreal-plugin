@@ -697,5 +697,7 @@ public:
     static const int32 CLIENT_UPLOAD_FILE_UNKNOWN = 90102;
     static const int32 CLIENT_DISABLED = 90200;
     static const int32 RS_CLIENT_ERROR = 90300;
+    static const int32 RTT_NO_API_SESSION_ERROR = 90600;
+    static const int32 RS_NO_API_SESSION_ERROR = 90601;
 };
 using ReasonCode = ReasonCodes;

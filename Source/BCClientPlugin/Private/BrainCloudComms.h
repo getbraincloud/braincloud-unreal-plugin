@@ -69,6 +69,7 @@ class BrainCloudComms
 	//Getters
 	bool IsAuthenticated() { return _isAuthenticated; }
 	bool IsInitialized() { return _isInitialized; }
+	bool IsKillSwitchEngaged() { return _killSwitchEngaged; }
 	const FString &GetSessionId() const { return _sessionId; }
 	const FString &GetServerUrl() { return _serverUrl; }
 	const FString &GetSecretKey() { return _secretKey; }

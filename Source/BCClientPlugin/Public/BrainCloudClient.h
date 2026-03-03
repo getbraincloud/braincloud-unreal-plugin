@@ -314,6 +314,11 @@ public:
 	 * @return True if initialized, false otherwise.
 	 */
 	bool isInitialized();
+	
+	/*
+	 * Returns if killswitch is engaged
+	 */
+	bool isKillSwitchEngaged();
 
 	/**
 	 * Send an empty message to the server, which essentially polls the
