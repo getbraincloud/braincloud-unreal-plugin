@@ -62,8 +62,15 @@ void BrainCloudRTTComms::enableRTT(BCRTTConnectionType in_connectionType, IServe
 	{
 		return; 
 	}
+	if(!m_client->isAuthenticated() || m_client->isKillSwitchEngaged())
+	{
+		//Handled in RunCallbacks()
+		m_appCallback = callback;
+		m_connectionRefused = true;
+	}
 	else
 	{
+		m_connectionRefused = false;
 		m_connectionType = in_connectionType;
 		m_appCallback = callback;
 		m_client->getRTTService()->requestClientConnection(this);
@@ -77,8 +84,15 @@ void BrainCloudRTTComms::enableRTT(BCRTTConnectionType in_connectionType, UBCRTT
 	{
 		return;
 	}
+	if(!m_client->isAuthenticated() || m_client->isKillSwitchEngaged())
+	{
+		//Handled in RunCallbacks()
+		m_appCallbackBP = callback;
+		m_connectionRefused = true;
+	}
 	else
 	{
+		m_connectionRefused = false;
 		m_connectionType = in_connectionType;
 		m_appCallbackBP = callback;
 		m_client->getRTTService()->requestClientConnection(this);
@@ -136,7 +150,29 @@ void BrainCloudRTTComms::RunCallbacks()
 		}
 	}
 
-	if(m_disconnectedWithReason)
+	if(m_connectionRefused)
+	{
+		m_connectionRefused = false;
+		if(!m_client->isAuthenticated() || m_client->isKillSwitchEngaged())
+		{
+			if(m_client->isLoggingEnabled())
+			{
+				UE_LOG(LogBrainCloudComms, Log, TEXT("RTT: EnableRTT Called before calling Authenticate Request. Disabling RTT."));
+			}
+			
+			FString jsonMessage = TEXT("EnableRTT Called before calling Authenticate Request. Disabling RTT.");
+			// error callback!
+			if (m_appCallback != nullptr)
+			{
+				m_appCallback->serverError(ServiceName::RTTRegistration, ServiceOperation::Connect, 403, ReasonCodes::RTT_NO_API_SESSION_ERROR, jsonMessage);
+			}
+			else if (m_appCallbackBP != nullptr)
+			{
+				m_appCallbackBP->serverError(ServiceName::RTTRegistration, ServiceOperation::Connect, 403, ReasonCodes::RTT_NO_API_SESSION_ERROR, jsonMessage);
+			}
+		}
+	}
+	else if(m_disconnectedWithReason)
 	{
 		disconnect();
 	}

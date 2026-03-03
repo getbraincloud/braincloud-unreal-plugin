@@ -130,4 +130,5 @@ class BrainCloudRTTComms : public IServerCallback
 	BCWebsocketStatus m_websocketStatus;
 	bool m_bIsConnected;
 	bool m_disconnectedWithReason = false;
+	bool m_connectionRefused = false;	//Meant to indicate if client refuses to send connect request due to not being authenticate or killswitch activated
 };

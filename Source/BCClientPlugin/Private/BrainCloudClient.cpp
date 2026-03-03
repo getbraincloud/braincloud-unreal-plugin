@@ -356,6 +356,11 @@ bool BrainCloudClient::isInitialized()
 	return _brainCloudComms != nullptr ? _brainCloudComms->IsInitialized() : false;
 }
 
+bool BrainCloudClient::isKillSwitchEngaged()
+{
+	return _brainCloudComms != nullptr ? _brainCloudComms->IsKillSwitchEngaged() : false;
+}
+
 void BrainCloudClient::heartbeat()
 {
 	_brainCloudComms->Heartbeat();
