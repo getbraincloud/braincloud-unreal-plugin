@@ -25,4 +25,10 @@ struct FBrainCloudAppDataStruct
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "brainCloud Init Params")
 	FString S2SUrl = "";
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "brainCloud Init Params")
+	FString ChildAppId = "";
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "brainCloud Init Params")
+	FString ChildAppSecret = "";
 };

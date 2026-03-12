@@ -40,6 +40,8 @@ FBrainCloudAppDataStruct UBrainCloudFunctionLibrary::GetBCAppData()
     FString ServerUrlKey = TEXT("ServerUrl");
     FString S2SKeyKey = TEXT("S2SKey");
     FString S2SUrlKey = TEXT("S2SUrl");
+    FString ChildAppIdKey = TEXT("ChildAppId");
+    FString ChildAppSecretKey = TEXT("ChildAppSecret");
 
     FString ConfigPath = FPaths::ProjectConfigDir();
     ConfigPath += Filename;
@@ -71,6 +73,8 @@ FBrainCloudAppDataStruct UBrainCloudFunctionLibrary::GetBCAppData()
             Result.ServerUrl = configKeys.Contains(*ServerUrlKey) ? ConfigSection->Find(*ServerUrlKey)->GetValue() : TEXT("");
             Result.S2SKey = configKeys.Contains(*S2SKeyKey) ? ConfigSection->Find(*S2SKeyKey)->GetValue() : TEXT("");
             Result.S2SUrl = configKeys.Contains(*S2SUrlKey) ? ConfigSection->Find(*S2SUrlKey)->GetValue() : TEXT("");
+            Result.ChildAppId = configKeys.Contains(*ChildAppIdKey) ? ConfigSection->Find(*ChildAppIdKey)->GetValue() : TEXT("");
+            Result.ChildAppSecret = configKeys.Contains(*ChildAppSecretKey) ? ConfigSection->Find(*ChildAppSecretKey)->GetValue() : TEXT("");
         }
         else {
             UE_LOG(LogBrainCloud, Warning, TEXT("Couldn't find BrainCloudSettings.ini file in projects Config folder"));
