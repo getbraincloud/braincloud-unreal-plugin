@@ -11,6 +11,8 @@
 
 #include "BrainCloudSave.h"
 #include "Kismet/GameplayStatics.h"
+#include "HAL/FileManager.h"
+#include "Misc/Paths.h"
 
 #include "SmartSwitchAuthenticateCallback.h"
 #include "BrainCloudComms.h"
@@ -518,9 +520,22 @@ void UBrainCloudWrapper::loadData()
     FString slotPrefix = _wrapperName;
     FString slotName = slotPrefix + LoadGameInstance->SaveSlotName;
 
+    // Check whether the save file exists before attempting to load it.
+    // LoadGameFromSlot emits a LogStreaming warning when the file is missing,
+    // which can trigger false test failures when log output is scanned for keywords.
+    FString savePath = FPaths::ProjectSavedDir() / TEXT("SaveGames") / slotName + TEXT(".sav");
+    if (!IFileManager::Get().FileExists(*savePath))
+    {
+        UE_LOG(LogBrainCloud, Log, TEXT("BrainCloudWrapper::loadData - Save file not found at '%s'. Creating new save data."), *savePath);
+        saveData();
+        return;
+    }
+
     LoadGameInstance = Cast<UBrainCloudSave>(UGameplayStatics::LoadGameFromSlot(slotName, LoadGameInstance->UserIndex));
     if (LoadGameInstance == nullptr)
     {
+        // The file exists but could not be deserialized — likely a permissions issue or file corruption.
+        UE_LOG(LogBrainCloud, Warning, TEXT("BrainCloudWrapper::loadData - Save file exists at '%s' but could not be loaded. Check file permissions and integrity. Creating new save data."), *savePath);
         saveData();
         return;
     }
