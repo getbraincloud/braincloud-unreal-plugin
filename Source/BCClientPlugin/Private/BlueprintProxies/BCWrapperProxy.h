@@ -51,8 +51,16 @@ public:
      * @param alwaysAllow Controls whether the profile id is passed in with
      * non-anonymous authentications.
      */
-  UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Wrapper")
+  UFUNCTION(BlueprintCallable, Category = "BrainCloud|Wrapper")
   static void SetAlwaysAllowProfileSwitch(UBrainCloudWrapper *brainCloudWrapper, bool alwaysAllow);
+
+  /**
+  * Maintains the user's session alive by calling the reconnect method upon detecting the expiration of the user's session.
+  * 
+  * @param enabled True if long-sesson should be enabled
+  */
+  UFUNCTION(BlueprintCallable, Category = "BrainCloud|Wrapper")
+  static void EnableLongSession(UBrainCloudWrapper* brainCloudWrapper, bool enabled);
 
   /**
      * Method initializes the BrainCloudClient.

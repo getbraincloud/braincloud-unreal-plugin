@@ -74,6 +74,12 @@ void UBrainCloudWrapper::initializeWithApps(FString url, FString appId, TMap<FSt
     loadData();
 }
 
+void UBrainCloudWrapper::enableLongSession(bool enabled)
+{
+    initializeIdentity(true);
+    _client->getBrainCloudComms()->SetLongSessionEnabled(enabled);
+}
+
 void UBrainCloudWrapper::initializeIdentity(bool isAnonymousAuth)
 {
     // create an anonymous ID if necessary

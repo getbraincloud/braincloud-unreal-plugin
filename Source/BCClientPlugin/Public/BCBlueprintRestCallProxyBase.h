@@ -7,52 +7,53 @@
 #include "INetworkErrorCallback.h"
 #include "IGlobalErrorCallback.h"
 #include "IFileUploadCallback.h"
+#include "ILongSessionCallback.h"
 #include "BCBlueprintCallProxyBase.h"
 #include "BCBlueprintRestCallProxyBase.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FBrainCloudRestCallbackDelegate, FString, JsonData, FBC_ReturnData, AdditionalData);
 
 UCLASS(MinimalAPI)
-class UBCBlueprintRestCallProxyBase : public UObject, public IEventCallback, public IRewardCallback, public INetworkErrorCallback, public IGlobalErrorCallback, public IFileUploadCallback
+class UBCBlueprintRestCallProxyBase : public UObject, public IEventCallback, public IRewardCallback, public INetworkErrorCallback, public IGlobalErrorCallback, public IFileUploadCallback, public ILongSessionCallback
 {
     GENERATED_BODY()
 
-  public:
+public:
     UBCBlueprintRestCallProxyBase(const FObjectInitializer &ObjectInitializer) {}
 
-    //Response delegates
+    // Response delegates
     UPROPERTY(BlueprintAssignable)
     FBrainCloudRestCallbackDelegate OnCallback;
 
-    //IEventCallback
+    // IEventCallback
     void eventCallback(const FString &jsonData)
     {
         FBC_ReturnData returnData = FBC_ReturnData();
         OnCallback.Broadcast(jsonData, returnData);
     }
 
-    //IRewardCallback
+    // IRewardCallback
     void rewardCallback(const FString &jsonData)
     {
         FBC_ReturnData returnData = FBC_ReturnData();
         OnCallback.Broadcast(jsonData, returnData);
     }
 
-    //INetworkErrorCallback
+    // INetworkErrorCallback
     void networkError()
     {
         FBC_ReturnData returnData = FBC_ReturnData();
         OnCallback.Broadcast(TEXT(""), returnData);
     }
 
-    //IGlobalErrorCallback
+    // IGlobalErrorCallback
     void globalError(ServiceName serviceName, ServiceOperation serviceOperation, int32 statusCode, int32 reasonCode, const FString &jsonError)
     {
         FBC_ReturnData returnData = FBC_ReturnData(serviceName.getValue(), serviceOperation.getValue(), statusCode, reasonCode);
         OnCallback.Broadcast(jsonError, returnData);
     }
 
-    //IFileUploadCallback
+    // IFileUploadCallback
     void fileUploadCompleted(const FString &fileUploadId, const FString &jsonResponse)
     {
         FBC_ReturnData returnData = FBC_ReturnData(fileUploadId, fileUploadId, 200, 0);
@@ -63,5 +64,17 @@ class UBCBlueprintRestCallProxyBase : public UObject, public IEventCallback, pub
     {
         FBC_ReturnData returnData = FBC_ReturnData(fileUploadId, fileUploadId, statusCode, reasonCode);
         OnCallback.Broadcast(jsonResponse, returnData);
+    }
+
+    void longSessionSuccess(const FString& jsonData)
+    {
+        FBC_ReturnData returnData = FBC_ReturnData();
+        OnCallback.Broadcast(jsonData, returnData);
+    }
+
+    void longSessionFailed(const FString& jsonData)
+    {
+        FBC_ReturnData returnData = FBC_ReturnData();
+        OnCallback.Broadcast(jsonData, returnData);
     }
 };

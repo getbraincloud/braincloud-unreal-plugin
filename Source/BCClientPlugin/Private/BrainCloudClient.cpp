@@ -21,6 +21,10 @@
 #include "BrainCloudFunctionLibrary.h"
 #include "Internationalization/Culture.h"
 
+#if PLATFORM_ANDROID
+#include "Android/AndroidPlatformMisc.h"
+#endif
+
 // Define all static member variables.
 FString BrainCloudClient::s_brainCloudClientVersion = TEXT("5.9.0");
 
@@ -316,6 +320,22 @@ void BrainCloudClient::deregisterNetworkErrorCallback()
 	_brainCloudComms->DeregisterNetworkErrorCallback();
 }
 
+void BrainCloudClient::registerLongSessionCallback(ILongSessionCallback* longSessionCallback)
+{
+	_brainCloudComms->RegisterLongSessionCallback(longSessionCallback);
+}
+
+void BrainCloudClient::registerLongSessionCallback(UBCBlueprintRestCallProxyBase* longSessionCallback)
+{
+	_brainCloudComms->RegisterLongSessionCallback(longSessionCallback);
+}
+
+void BrainCloudClient::deregisterLongSessionCallback()
+{
+	_brainCloudComms->DeregisterLongSessionCallback();
+}
+
+
 void BrainCloudClient::enableLogging(bool shouldEnable)
 {
 	_brainCloudComms->EnableLogging(shouldEnable);
@@ -336,6 +356,11 @@ bool BrainCloudClient::isInitialized()
 	return _brainCloudComms != nullptr ? _brainCloudComms->IsInitialized() : false;
 }
 
+bool BrainCloudClient::isKillSwitchEngaged()
+{
+	return _brainCloudComms != nullptr ? _brainCloudComms->IsKillSwitchEngaged() : false;
+}
+
 void BrainCloudClient::heartbeat()
 {
 	_brainCloudComms->Heartbeat();
@@ -343,7 +368,8 @@ void BrainCloudClient::heartbeat()
 
 void BrainCloudClient::sendRequest(ServerCall *serviceMessage)
 {
-	_brainCloudComms->AddToQueue(serviceMessage);
+	TSharedRef<ServerCall> sc = MakeShareable(serviceMessage);
+	_brainCloudComms->AddToQueue(sc);
 }
 
 void BrainCloudClient::resetCommunication()
@@ -853,12 +879,18 @@ void BrainCloudClient::determineReleasePlatform()
 	else if (platform == TEXT("Android"))
 	{
 		#if PLATFORM_ANDROID
+		FString DeviceModel = FAndroidMisc::GetDeviceModel();
 		if(FAndroidMisc::GetDeviceMake() == TEXT("Amazon"))
 		{
 			_releasePlatform = BCPlatform::EnumToString(EBCPlatform::AMAZON_ANDROID);
 		}
 		else{
-			_releasePlatform = BCPlatform::EnumToString(EBCPlatform::GOOGLE_PLAY_ANDROID);
+			if (DeviceModel.Contains(TEXT("Quest"), ESearchCase::IgnoreCase) || DeviceModel.Contains(TEXT("Oculus"), ESearchCase::IgnoreCase)) {
+				_releasePlatform = BCPlatform::EnumToString(EBCPlatform::OCULUS);
+			}
+			else {
+				_releasePlatform = BCPlatform::EnumToString(EBCPlatform::GOOGLE_PLAY_ANDROID);
+			}
 		}
 		#endif
 	}

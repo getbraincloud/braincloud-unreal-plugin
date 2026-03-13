@@ -20,6 +20,6 @@ public:
 
   virtual TSharedRef<FJsonObject> toJsonObject();
 
-  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="BrainCloud|ACL")
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BrainCloud|ACL")
   EAcl Other;
 };

@@ -40,26 +40,26 @@ class UBCBlueprintCallProxyBase : public UObject, public IServerCallback
 {
     GENERATED_BODY()
 
-  public:
+public:
     UBCBlueprintCallProxyBase(const FObjectInitializer &ObjectInitializer)
     {
         // ensures these are not removed during scene loads! which is important!
         this->AddToRoot();
     }
 
-    //Response delegates
+    // Response delegates
     UPROPERTY(BlueprintAssignable)
     FBrainCloudCallbackDelegate OnSuccess;
 
     UPROPERTY(BlueprintAssignable)
     FBrainCloudCallbackDelegate OnFailure;
 
-    //callbacks
+    // callbacks
     void serverCallback(ServiceName serviceName, ServiceOperation serviceOperation, const FString &jsonData)
     {
         FBC_ReturnData returnData = FBC_ReturnData(serviceName.getValue(), serviceOperation.getValue(), 200, 0);
         OnSuccess.Broadcast(jsonData, returnData);
-        
+
         cleanup();
     }
 
@@ -67,14 +67,14 @@ class UBCBlueprintCallProxyBase : public UObject, public IServerCallback
     {
         FBC_ReturnData returnData = FBC_ReturnData(serviceName.getValue(), serviceOperation.getValue(), statusCode, reasonCode);
         OnFailure.Broadcast(jsonError, returnData);
-        
+
         cleanup();
     }
 
-    protected:
+protected:
     bool _bCleanupAfterFirstResponse = true;
 
-    private:
+private:
     void cleanup()
     {
         if (_bCleanupAfterFirstResponse)

@@ -406,14 +406,23 @@ const ServiceOperation ServiceOperation::UpdateActivity = ServiceOperation(TEXT(
 
 //tournament
 const ServiceOperation ServiceOperation::GetTournamentStatus = ServiceOperation(TEXT("GET_TOURNAMENT_STATUS"));
+const ServiceOperation ServiceOperation::GetGroupTournamentStatus = ServiceOperation(TEXT("GET_GROUP_TOURNAMENT_STATUS"));
 const ServiceOperation ServiceOperation::GetDivisionInfo = ServiceOperation(TEXT("GET_DIVISION_INFO"));
+const ServiceOperation ServiceOperation::GetGroupDivisionInfo = ServiceOperation(TEXT("GET_GROUP_DIVISION_INFO"));
 const ServiceOperation ServiceOperation::GetMyDivisions = ServiceOperation(TEXT("GET_MY_DIVISIONS"));
+const ServiceOperation ServiceOperation::GetGroupDivisions = ServiceOperation(TEXT("GET_GROUP_DIVISIONS"));
 const ServiceOperation ServiceOperation::JoinTournament = ServiceOperation(TEXT("JOIN_TOURNAMENT"));
+const ServiceOperation ServiceOperation::JoinGroupTournament = ServiceOperation(TEXT("JOIN_GROUP_TOURNAMENT"));
 const ServiceOperation ServiceOperation::JoinDivision = ServiceOperation(TEXT("JOIN_DIVISION"));
+const ServiceOperation ServiceOperation::JoinGroupDivision = ServiceOperation(TEXT("JOIN_GROUP_DIVISION"));
 const ServiceOperation ServiceOperation::LeaveTournament = ServiceOperation(TEXT("LEAVE_TOURNAMENT"));
+const ServiceOperation ServiceOperation::LeaveGroupTournament = ServiceOperation(TEXT("LEAVE_GROUP_TOURNAMENT"));
 const ServiceOperation ServiceOperation::LeaveDivisionInstance = ServiceOperation(TEXT("LEAVE_DIVISION_INSTANCE"));
+const ServiceOperation ServiceOperation::LeaveGroupDivisionInstance = ServiceOperation(TEXT("LEAVE_GROUP_DIVISION_INSTANCE"));
 const ServiceOperation ServiceOperation::PostTournamentScore = ServiceOperation(TEXT("POST_TOURNAMENT_SCORE"));
+const ServiceOperation ServiceOperation::PostGroupTournamentScore = ServiceOperation(TEXT("POST_GROUP_TOURNAMENT_SCORE"));
 const ServiceOperation ServiceOperation::PostTournamentScoreWithResults = ServiceOperation(TEXT("POST_TOURNAMENT_SCORE_WITH_RESULTS"));
+const ServiceOperation ServiceOperation::PostGroupTournamentScoreWithResults = ServiceOperation(TEXT("POST_GROUP_TOURNAMENT_SCORE_WITH_RESULTS"));
 const ServiceOperation ServiceOperation::ViewCurrentReward = ServiceOperation(TEXT("VIEW_CURRENT_REWARD"));
 const ServiceOperation ServiceOperation::ViewReward = ServiceOperation(TEXT("VIEW_REWARD"));
 const ServiceOperation ServiceOperation::ClaimTournamentReward = ServiceOperation(TEXT("CLAIM_TOURNAMENT_REWARD"));
@@ -501,6 +510,7 @@ const ServiceOperation ServiceOperation::UpdateUserItemData = ServiceOperation("
 const ServiceOperation ServiceOperation::UseUserItem = ServiceOperation("USE_USER_ITEM");
 const ServiceOperation ServiceOperation::PublishUserItemToBlackchain = ServiceOperation("PUBLISH_USER_ITEM_TO_BLOCKCHAIN");
 const ServiceOperation ServiceOperation::RefreshBlockchainUserItems = ServiceOperation("REFRESH_BLOCKCHAIN_USER_ITEMS");
+const ServiceOperation ServiceOperation::OpenBundle = ServiceOperation("OPEN_BUNDLE");
 
 //item catalog
 const ServiceOperation ServiceOperation::GetCatalogItemDefinition = ServiceOperation("GET_CATALOG_ITEM_DEFINITION");
@@ -530,6 +540,11 @@ const ServiceOperation ServiceOperation::GetUniqs = ServiceOperation("GET_UNIQS"
 bool ServiceOperation::operator==(const ServiceOperation &s) const
 {
 	return _value == s.getValue();
+}
+
+bool ServiceOperation::operator!=(const ServiceOperation& s) const
+{
+	return _value != s.getValue();
 }
 
 void ServiceOperation::operator=(const ServiceOperation &s)

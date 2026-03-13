@@ -4,7 +4,7 @@
 
 class BCCLIENTPLUGIN_API ServiceOperation
 {
-  public:
+public:
 	static const ServiceOperation None;
 
 	static const ServiceOperation Authenticate;
@@ -158,7 +158,7 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation GetGroupLeaderboardView;
 	static const ServiceOperation PostScoreDynamicUsingConfig;
 
-	//Global File
+	// Global File
 	static const ServiceOperation GetFileInfo;
 	static const ServiceOperation GetFileInfoSimple;
 	static const ServiceOperation GetGlobalCDNUrl;
@@ -297,7 +297,6 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation GetRandomEntitiesMatching;
 	static const ServiceOperation DeleteEntities;
 
-
 	static const ServiceOperation GetAttributes;
 	static const ServiceOperation UpdateAttributes;
 	static const ServiceOperation RemoveAttributes;
@@ -339,7 +338,7 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation DeleteUserFiles;
 	static const ServiceOperation GetCdnUrl;
 
-	//group
+	// group
 	static const ServiceOperation AcceptGroupInvitation;
 	static const ServiceOperation AddGroupMember;
 	static const ServiceOperation ApproveGroupJoinRequest;
@@ -380,7 +379,7 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation UpdateGroupSummaryData;
 	static const ServiceOperation GetRandomGroupsMatching;
 
-	//group file services
+	// group file services
 	static const ServiceOperation CheckFilenameExists;
 	static const ServiceOperation CheckFullpathFilenameExists;
 	static const ServiceOperation CopyGroupFile;
@@ -389,27 +388,36 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation MoveUserToGroupFile;
 	static const ServiceOperation UpdateFileInfo;
 
-	//mail
+	// mail
 	static const ServiceOperation SendBasicEmail;
 	static const ServiceOperation SendAdvancedEmail;
 	static const ServiceOperation SendAdvancedEmailByAddress;
 	static const ServiceOperation SendAdvancedEmailByAddresses;
 
-	//tournament
+	// tournament
 	static const ServiceOperation GetTournamentStatus;
+	static const ServiceOperation GetGroupTournamentStatus;
 	static const ServiceOperation GetDivisionInfo;
+	static const ServiceOperation GetGroupDivisionInfo;
 	static const ServiceOperation GetMyDivisions;
+	static const ServiceOperation GetGroupDivisions;
 	static const ServiceOperation JoinDivision;
+	static const ServiceOperation JoinGroupDivision;
 	static const ServiceOperation LeaveDivisionInstance;
+	static const ServiceOperation LeaveGroupDivisionInstance;
 	static const ServiceOperation JoinTournament;
+	static const ServiceOperation JoinGroupTournament;
 	static const ServiceOperation LeaveTournament;
+	static const ServiceOperation LeaveGroupTournament;
 	static const ServiceOperation PostTournamentScore;
+	static const ServiceOperation PostGroupTournamentScore;
 	static const ServiceOperation PostTournamentScoreWithResults;
+	static const ServiceOperation PostGroupTournamentScoreWithResults;
 	static const ServiceOperation ViewCurrentReward;
 	static const ServiceOperation ViewReward;
 	static const ServiceOperation ClaimTournamentReward;
 
-	//CustomEntity
+	// CustomEntity
 	static const ServiceOperation CreateEntity;
 	static const ServiceOperation DeleteEntity;
 	static const ServiceOperation GetCount;
@@ -424,8 +432,8 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation UpdateEntityFields;
 	static const ServiceOperation UpdateEntityFieldsSharded;
 	static const ServiceOperation UpdateSingletonFields;
-	
-	//presence
+
+	// presence
 	static const ServiceOperation ForcePush;
 	static const ServiceOperation GetPresenceOfFriends;
 	static const ServiceOperation GetPresenceOfGroup;
@@ -437,14 +445,14 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation StopListening;
 	static const ServiceOperation UpdateActivity;
 
-	//virtualCurrency
+	// virtualCurrency
 	static const ServiceOperation GetPlayerCurrency;
 	static const ServiceOperation GetParentCurrency;
 	static const ServiceOperation GetPeerCurrency;
 	static const ServiceOperation ConsumeVirtualCurrency;
 	static const ServiceOperation AwardVirtualCurrency;
 
-	//App Store
+	// App Store
 	static const ServiceOperation VerifyPurchase;
 	static const ServiceOperation GetEligiblePromotions;
 	static const ServiceOperation GetSalesInventory;
@@ -501,13 +509,13 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation PingData;
 	static const ServiceOperation GetLobbyInstances;
 	static const ServiceOperation GetLobbyInstancesWithPingData;
-	
-	//Item Catalog
+
+	// Item Catalog
 	static const ServiceOperation GetCatalogItemDefinition;
 	static const ServiceOperation GetCatalogItemsPage;
 	static const ServiceOperation GetCatalogItemsPageOffset;
 
-	//UserItemsManagement
+	// UserItemsManagement
 	static const ServiceOperation AwardUserItem;
 	static const ServiceOperation AwardUserItemWithOptions;
 	static const ServiceOperation DropUserItem;
@@ -524,16 +532,18 @@ class BCCLIENTPLUGIN_API ServiceOperation
 	static const ServiceOperation UseUserItem;
 	static const ServiceOperation PublishUserItemToBlackchain;
 	static const ServiceOperation RefreshBlockchainUserItems;
+	static const ServiceOperation OpenBundle;
 
 	static const ServiceOperation GetBlockchainItems;
 	static const ServiceOperation GetUniqs;
-	
+
 	FString getValue() const { return _value; }
 
 	bool operator==(const ServiceOperation &s) const;
+	bool operator!=(const ServiceOperation& s) const;
 	void operator=(const ServiceOperation &s);
 
-  private:
+private:
 	ServiceOperation(const FString &operation);
 
 	FString _value;

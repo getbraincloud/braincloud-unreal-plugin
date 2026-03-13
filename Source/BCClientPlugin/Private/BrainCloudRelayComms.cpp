@@ -175,6 +175,17 @@ void BrainCloudRelayComms::resetCommunication()
 
 void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, const FString& host, int port, const FString& passcode, const FString& lobbyId, IRelayConnectCallback* in_callback)
 {
+    if(!m_client->isAuthenticated() || m_client->isKillSwitchEngaged())
+    {
+        m_pRelayConnectCallback = in_callback;
+        if(m_pRelayConnectCallback != nullptr)
+        {
+            m_pRelayConnectCallback->relayConnectFailure(TEXT("Connect called before Authenticate. Disabling Relay."));
+        }
+        queueErrorEvent(FString::Printf(TEXT("Connect called before Authenticate. Disabling Relay.")));
+        return;
+    }
+
     if (m_isSocketConnected)
     {
         socketCleanup();
@@ -187,6 +198,17 @@ void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, cons
 
 void BrainCloudRelayComms::connect(BCRelayConnectionType in_connectionType, const FString& host, int port, const FString& passcode, const FString& lobbyId, UBCRelayProxy* in_callback)
 {
+    if(!m_client->isAuthenticated() || m_client->isKillSwitchEngaged())
+    {
+        m_pRelayConnectCallbackBP = in_callback;
+        if(m_pRelayConnectCallbackBP != nullptr)
+        {
+            m_pRelayConnectCallbackBP->relayConnectFailure(TEXT("Relay: Connect called before Authenticate. Disabling Relay."));
+        }
+        queueErrorEvent(FString::Printf(TEXT("Relay: Connect called before Authenticate. Disabling Relay.")));
+        return;
+    }
+
     if (m_isSocketConnected)
     {
         socketCleanup();

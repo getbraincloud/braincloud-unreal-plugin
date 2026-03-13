@@ -9,20 +9,26 @@ struct FBrainCloudAppDataStruct
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "brainCloud Init Params")
-		FString ServerUrl = "";
+	FString ServerUrl = "";
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "brainCloud Init Params")
-		FString AppId = "";
+	FString AppId = "";
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "brainCloud Init Params")
-		FString AppSecret = "";
+	FString AppSecret = "";
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "brainCloud Init Params")
-		FString Version = "";
+	FString Version = "";
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "brainCloud Init Params")
-		FString S2SKey = "";
+	FString S2SKey = "";
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "brainCloud Init Params")
-		FString S2SUrl = "";
+	FString S2SUrl = "";
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "brainCloud Init Params")
+	FString ChildAppId = "";
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "brainCloud Init Params")
+	FString ChildAppSecret = "";
 };

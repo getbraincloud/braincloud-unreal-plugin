@@ -7,14 +7,14 @@ class IServerCallback;
 
 class BCCLIENTPLUGIN_API BrainCloudProfanity
 {
-  public:
+public:
     BrainCloudProfanity(BrainCloudClient *client);
 
     /**
      * Checks supplied text for profanity.
      *
-     * Service Name - Profanity
-     * Service Operation - ProfanityCheck
+     * Service Name - profanity
+     * Service Operation - PROFANITY_CHECK
      *
      * @param text The text to check
      * @param languages Optional comma delimited list of two character language codes
@@ -41,8 +41,8 @@ class BCCLIENTPLUGIN_API BrainCloudProfanity
     /**
      * Replaces the characters of profanity text with a passed character(s).
      *
-     * Service Name - Profanity
-     * Service Operation - ProfanityReplaceText
+     * Service Name - profanity
+     * Service Operation - PROFANITY_REPLACE_TEXT
      *
      * @param text The text to check
      * @param replaceSymbol The text to replace individual characters of profanity text with
@@ -71,8 +71,8 @@ class BCCLIENTPLUGIN_API BrainCloudProfanity
     /**
      * Checks supplied text for profanity and returns a list of bad wors.
      *
-     * Service Name - Profanity
-     * Service Operation - ProfanityIdentifyBadWords
+     * Service Name - profanity
+     * Service Operation - PROFANITY_IDENTIFY_BAD_WORDS
      *
      * @param text The text to check
      * @param languages Optional comma delimited list of two character language codes
@@ -96,6 +96,6 @@ class BCCLIENTPLUGIN_API BrainCloudProfanity
         bool flagUrls,
         IServerCallback *callback = nullptr);
 
-  private:
+private:
     BrainCloudClient *_client = nullptr;
 };

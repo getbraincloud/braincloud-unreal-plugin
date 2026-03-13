@@ -9,50 +9,47 @@ class IServerCallback;
 
 class BCCLIENTPLUGIN_API BrainCloudItemCatalog
 {
-  public:
+public:
 	BrainCloudItemCatalog(BrainCloudClient *client);
 
-	/*
-	 * Reads an existing item definition from the 
-     * server, with language fields limited to the
-     * current or default language.
+	/**
+	 * Reads an existing item definition from the server, with language fields
+	 * limited to the current or default language.
 	 *
-	 * Service Name - ItemCatalog
+	 * Service Name - itemCatalog
 	 * Service Operation - GET_CATALOG_ITEM_DEFINITION
 	 *
-	 * @param defId
+	 * @param defId The identifier of the catalog item definition to retrieve
 	 * @param callback The method to be invoked when the server response is received
 	 */
 	void getCatalogItemDefinition(const FString &defId, IServerCallback *callback = nullptr);
 
-	/*
-	 * Retrieves page of catalog items from the server, 
-     * with language fields limited to the text for the 
-     * current or default language.
+	/**
+	 * Retrieve a page of catalog items from the server, with language fields
+	 * limited to the text for the current or default language.
 	 *
-	 * Service Name - ItemCatalog
+	 * Service Name - itemCatalog
 	 * Service Operation - GET_CATALOG_ITEMS_PAGE
 	 *
-	 * @param context
+	 * @param context The pagination context returned from a previous catalog page request
 	 * @param callback The method to be invoked when the server response is received
 	 */
 	void getCatalogItemsPage(const FString &context, IServerCallback *callback = nullptr);
 
-	/*
-     *Gets the page of catalog items from the 
-     *server based on the encoded context and 
-     *specified page offset, with language fields 
-     *limited to the text for the current or default 
-     *language.
+	/**
+	 * Gets a page of catalog items from the server based on the encoded
+	 * context and specified page offset, with language fields limited to the
+	 * text for the current or default language.
 	 *
-	 * Service Name - ItemCatalog
+	 * Service Name - itemCatalog
 	 * Service Operation - GET_CATALOG_ITEMS_PAGE_OFFSET
 	 *
-	 * @param context
+	 * @param context The pagination context returned from a previous catalog page request
+	 * @param pageOffset The page offset relative to the current context
 	 * @param callback The method to be invoked when the server response is received
 	 */
 	void getCatalogItemsPageOffset(const FString &context, int pageOffset, IServerCallback *callback = nullptr);
 
-	private:
+private:
 	BrainCloudClient *_client = nullptr;
 };

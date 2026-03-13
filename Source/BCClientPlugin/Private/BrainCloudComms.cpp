@@ -25,8 +25,8 @@ BrainCloudComms::BrainCloudComms(BrainCloudClient *client) : _client(client)
 {
 	SetPacketTimeoutsToDefault();
 #if (ENGINE_MAJOR_VERSION < 5 || (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION <= 3))
-    // in 5.4 HttpActivityTimeout defaults to 30, config it through HttpActivityTimeout or HttpTotalTimeout instead
-    FHttpModule::Get().SetHttpTimeout(30);
+	// in 5.4 HttpActivityTimeout defaults to 30, config it through HttpActivityTimeout or HttpTotalTimeout instead
+	FHttpModule::Get().SetHttpTimeout(30);
 #endif
 }
 
@@ -91,22 +91,20 @@ void BrainCloudComms::InitializeWithApps(const FString &serverURL, const TMap<FS
 
 void BrainCloudComms::SetPacketTimeoutsToDefault()
 {
-    _packetTimeouts.Empty();
+	_packetTimeouts.Empty();
 	_packetTimeouts.Add(15);
 	_packetTimeouts.Add(20);
 	_packetTimeouts.Add(35);
 	_packetTimeouts.Add(50);
 }
 
-void BrainCloudComms::AddToQueue(ServerCall *serverCall)
+void BrainCloudComms::AddToQueue(TSharedRef<ServerCall> ServerCallRef)
 {
 	if (!_isInitialized)
 		UE_LOG(LogBrainCloudComms, Error, TEXT("Attempted to send request but client is not initialized!"));
 
-	TSharedRef<ServerCall> sc = MakeShareable(serverCall);
-
 	_queueMutex.Lock();
-	_messageQueue.AddHead(sc);
+	_messageQueue.AddHead(ServerCallRef);
 	_queueMutex.Unlock();
 }
 
@@ -205,6 +203,24 @@ void BrainCloudComms::RegisterNetworkErrorCallback(UBCBlueprintRestCallProxyBase
 void BrainCloudComms::DeregisterNetworkErrorCallback()
 {
 	FString serviceName = TEXT("networkError");
+	if (m_registeredRestBluePrintCallbacks.Contains(serviceName))
+	{
+		m_registeredRestBluePrintCallbacks[serviceName]->RemoveFromRoot();
+		m_registeredRestBluePrintCallbacks.Remove(serviceName);
+	}
+
+	_networkErrorCallback = nullptr;
+}
+
+void BrainCloudComms::RegisterLongSessionCallback(UBCBlueprintRestCallProxyBase* callback)
+{
+	callback->AddToRoot();
+	m_registeredRestBluePrintCallbacks.Emplace("longSession", callback);
+}
+
+void BrainCloudComms::DeregisterLongSessionCallback()
+{
+	FString serviceName = TEXT("longSession");
 	if (m_registeredRestBluePrintCallbacks.Contains(serviceName))
 	{
 		m_registeredRestBluePrintCallbacks[serviceName]->RemoveFromRoot();
@@ -467,22 +483,22 @@ void BrainCloudComms::RunCallbacks()
 				isError = true;
 			}
 #if (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 4)
-            //warning: 'Failed_ConnectionError' is deprecated: Failed_ConnectionError has been deprecated, use Failed + EHttpFailureReason::ConnectionError instead
-            else if (!_waitingForRetry && status == EHttpRequestStatus::Failed && _activeRequest->GetFailureReason() == EHttpFailureReason::ConnectionError)
+			//warning: 'Failed_ConnectionError' is deprecated: Failed_ConnectionError has been deprecated, use Failed + EHttpFailureReason::ConnectionError instead
+			else if (!_waitingForRetry && status == EHttpRequestStatus::Failed && _activeRequest->GetFailureReason() == EHttpFailureReason::ConnectionError)
 #else
-            else if (!_waitingForRetry && status == EHttpRequestStatus::Failed_ConnectionError)
+			else if (!_waitingForRetry && status == EHttpRequestStatus::Failed_ConnectionError)
 #endif
 			{
 				if (_isLoggingEnabled)
 					UE_LOG(LogBrainCloudComms, Warning, TEXT("Request failed due to a connection error"));
 				isError = true;
 			}
-            else if (!_waitingForRetry && status == EHttpRequestStatus::Failed)
-            {
-                if (_isLoggingEnabled)
-                    UE_LOG(LogBrainCloudComms, Warning, TEXT("Request failed"));
-                isError = true;
-            }
+			else if (!_waitingForRetry && status == EHttpRequestStatus::Failed)
+			{
+				if (_isLoggingEnabled)
+					UE_LOG(LogBrainCloudComms, Warning, TEXT("Request failed"));
+				isError = true;
+			}
 
 			if (isError) //request failed
 			{
@@ -581,6 +597,7 @@ void BrainCloudComms::RetryCachedMessages()
 	{
 		if (_isLoggingEnabled)
 			UE_LOG(LogBrainCloudComms, Log, TEXT("Retrying cached messages"));
+
 		_blockingQueue = false;
 		_retryCount = 0;
 		_waitingForRetry = false;
@@ -733,7 +750,30 @@ void BrainCloudComms::ReportResults(PacketRef requestPacket, TSharedRef<FJsonObj
 			if (respObj->HasField(TEXT("reason_code")))
 			{
 				reasonCode = respObj->GetNumberField(TEXT("reason_code"));
-				if (reasonCode == ReasonCodes::PLAYER_SESSION_EXPIRED || reasonCode == ReasonCodes::NO_SESSION || reasonCode == ReasonCodes::PLAYER_SESSION_LOGGED_OUT || sc->getOperation() == ServiceOperation::Logout || sc->getOperation() == ServiceOperation::FullReset)
+
+				ServiceOperation operation = sc->getOperation();
+
+				if (reasonCode == ReasonCodes::PLAYER_SESSION_EXPIRED && 
+					_longSessionEnabled &&
+					operation != ServiceOperation::Authenticate &&
+					_isAuthenticated) {
+					 
+					_isAuthenticated = false;
+					ClearSessionId();
+
+					auto curRequest = requestPacket;
+
+					UE_LOG(LogBrainCloudComms, Log, TEXT("Long session expired, will attempt re-authentication."));
+
+					ILongSessionCallback* longSessionCallback = _longSessionCallback != nullptr ? _longSessionCallback : m_registeredRestBluePrintCallbacks.Contains("longSession") ? m_registeredRestBluePrintCallbacks["longSession"] : nullptr;
+
+					AuthReconnectCallback* authCallback = new AuthReconnectCallback(this, longSessionCallback, curRequest);
+					_client->getAuthenticationService()->authenticateAnonymous(false, authCallback);
+
+					break;
+				}
+
+				if ((reasonCode == ReasonCodes::PLAYER_SESSION_EXPIRED && !_longSessionEnabled) || reasonCode == ReasonCodes::NO_SESSION || reasonCode == ReasonCodes::PLAYER_SESSION_LOGGED_OUT || sc->getOperation() == ServiceOperation::Logout || sc->getOperation() == ServiceOperation::FullReset)
 				{
 					_isAuthenticated = false;
 					_sessionId = TEXT("");
@@ -1018,7 +1058,12 @@ void BrainCloudComms::Heartbeat()
 	if (_isAuthenticated && lastRequestSent > _heartbeatInterval)
 	{
 		TSharedRef<FJsonObject> val = MakeShareable(new FJsonObject());
-		ServerCall *sc = new ServerCall(ServiceName::HeartBeat, ServiceOperation::Read, val, nullptr);
+		TSharedRef<ServerCall> sc = MakeShared<ServerCall>(
+			ServiceName::HeartBeat,
+			ServiceOperation::Read,
+			val,
+			nullptr
+		);
 		AddToQueue(sc);
 	}
 }
@@ -1051,4 +1096,42 @@ double BrainCloudComms::GetRetryTimeoutSeconds(int16 retryAttempt)
 int16 BrainCloudComms::GetMaxRetryAttempts()
 {
 	return ShouldRetryPacket() ? (int16)_packetTimeouts.Num() - 1 : 0;
+}
+
+AuthReconnectCallback::AuthReconnectCallback(
+	BrainCloudComms* commsRef,
+	ILongSessionCallback* callback,
+	TSharedRef<TArray<TSharedRef<ServerCall>>> lastPacket)
+	: _commsRef(commsRef)
+	, _callback(callback)
+	, _lastPacket(lastPacket)
+{
+}
+
+AuthReconnectCallback::~AuthReconnectCallback()
+{
+}
+
+void AuthReconnectCallback::serverCallback(ServiceName serviceName, ServiceOperation serviceOperation, const FString& jsonData)
+{
+	if (serviceName == ServiceName::AuthenticateV2 && serviceOperation == ServiceOperation::Authenticate)
+	{
+		UE_LOG(LogBrainCloudComms, Log, TEXT("Long session re-authentication success. Retrying cached messages..."));
+
+		const TArray<TSharedRef<ServerCall>>& packet = _lastPacket.Get();
+		for (int i = packet.Num() - 1; i >= 0; i--) {
+			_commsRef->AddToQueue(packet[i]);
+		}
+
+		if(_callback != nullptr) _callback->longSessionSuccess(jsonData);
+		delete this;
+	}
+}
+
+void AuthReconnectCallback::serverError(ServiceName serviceName, ServiceOperation serviceOperation, int32 statusCode, int32 reasonCode, const FString& jsonError)
+{
+	UE_LOG(LogBrainCloudComms, Error, TEXT("Long session re-authentication failed."));
+	_commsRef->SetLongSessionEnabled(false);
+	if (_callback != nullptr) _callback->longSessionFailed(jsonError);
+	delete this;
 }
