@@ -320,19 +320,19 @@ void BrainCloudClient::deregisterNetworkErrorCallback()
 	_brainCloudComms->DeregisterNetworkErrorCallback();
 }
 
-void BrainCloudClient::registerLongSessionCallback(ILongSessionCallback* longSessionCallback)
+void BrainCloudClient::registerAutoReconnectCallback(IAutoReconnectCallback* autoReconnectCallback)
 {
-	_brainCloudComms->RegisterLongSessionCallback(longSessionCallback);
+	_brainCloudComms->RegisterAutoReconnectCallback(autoReconnectCallback);
 }
 
-void BrainCloudClient::registerLongSessionCallback(UBCBlueprintRestCallProxyBase* longSessionCallback)
+void BrainCloudClient::registerAutoReconnectCallback(UBCBlueprintRestCallProxyBase* autoReconnectCallback)
 {
-	_brainCloudComms->RegisterLongSessionCallback(longSessionCallback);
+	_brainCloudComms->RegisterAutoReconnectCallback(autoReconnectCallback);
 }
 
-void BrainCloudClient::deregisterLongSessionCallback()
+void BrainCloudClient::deregisterAutoReconnectCallback()
 {
-	_brainCloudComms->DeregisterLongSessionCallback();
+	_brainCloudComms->DeregisterAutoReconnectCallback();
 }
 
 

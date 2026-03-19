@@ -76,10 +76,10 @@ void UBrainCloudWrapper::initializeWithApps(FString url, FString appId, TMap<FSt
     loadData();
 }
 
-void UBrainCloudWrapper::enableLongSession(bool enabled)
+void UBrainCloudWrapper::enableAutoReconnect(bool enabled)
 {
     initializeIdentity(true);
-    _client->getBrainCloudComms()->SetLongSessionEnabled(enabled);
+    _client->getBrainCloudComms()->SetAutoReconnectEnabled(enabled);
 }
 
 void UBrainCloudWrapper::initializeIdentity(bool isAnonymousAuth)
