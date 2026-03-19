@@ -62,9 +62,9 @@ public:
 	 /**
 	  * Maintains the user's session alive by calling the reconnect method upon detecting the expiration of the user's session.
 	  *
-	  * @param enabled True if long-sesson should be enabled
+	  * @param enabled True if auto-reconnect should be enabled
 	  */
-	 void enableLongSession(bool enabled);
+	 void enableAutoReconnect(bool enabled);
 
 	 /**
 	  * Authenticate a user anonymously with brainCloud - used for apps that don't want to bother

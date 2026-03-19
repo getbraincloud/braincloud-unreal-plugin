@@ -59,9 +59,9 @@ void UBCWrapperProxy::SetAlwaysAllowProfileSwitch(UBrainCloudWrapper *brainCloud
 	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->setAlwaysAllowProfileSwitch(alwaysAllow);
 }
 
-void UBCWrapperProxy::EnableLongSession(UBrainCloudWrapper* brainCloudWrapper, bool enabled)
+void UBCWrapperProxy::EnableAutoReconnect(UBrainCloudWrapper* brainCloudWrapper, bool enabled)
 {
-	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->enableLongSession(enabled);
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->enableAutoReconnect(enabled);
 }
 
 void UBCWrapperProxy::Initialize(UBrainCloudWrapper *brainCloudWrapper, FString serverUrl, FString secretKey, FString appId, FString version)
