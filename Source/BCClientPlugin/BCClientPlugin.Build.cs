@@ -22,8 +22,7 @@ public class BCClientPlugin : ModuleRules
     {
         PrivatePCHHeaderFile = "Private/BCClientPluginPrivatePCH.h";
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-        //Uncomment this if you're developing on a confidential platform (IE: Playstation, Nintendo and Xbox)
-        //bAllowConfidentialPlatformDefines = true;
+
         PrivateIncludePaths.AddRange(
             new string[] {
                     Path.Combine(ModulePath,"Private"),
@@ -35,8 +34,14 @@ public class BCClientPlugin : ModuleRules
                 {
                     "JsonUtilities",
                     "HTTP",
-                    "AndroidNative"
+                    // "AndroidNative" removed from here
                 });
+
+        // Only include AndroidNative when actually targeting Android
+        if (Target.Platform.ToString() == "Android")
+        {
+            PrivateDependencyModuleNames.Add("AndroidNative");
+        }
 
         PublicDependencyModuleNames.AddRange(
             new string[]
@@ -52,32 +57,21 @@ public class BCClientPlugin : ModuleRules
                     "HTTP"
                 });
 
-        // win64
         PublicDefinitions.Add("PLATFORM_UWP=0");
       
-        //Uncomment Target Platform for Win32 if you're not using plugin for UE5. 
-        if (Target.Platform == UnrealTargetPlatform.Win64 /*|| Target.Platform == UnrealTargetPlatform.Win32*/)
+        if (Target.Platform == UnrealTargetPlatform.Win64)
         {
             PrivateDependencyModuleNames.Add("zlib");
         }
 
-        //Uncomment if you're developing for Playstation 5
-        /*else if (Target.Platform == UnrealTargetPlatform.PS5)
-        {
-            PublicDependencyModuleNames.Add("WebSockets_PS5");
-        }*/
-
-    #if EARLIER_THAN_4_23 
+    #if EARLIER_THAN_4_23
     #if WITH_FORWARDED_MODULE_RULES_CTOR
-        // support for HTML5 available in engine before UE 4.24
-        else if (Target.Platform ==UnrealTargetPlatform.HTML5)
+        else if (Target.Platform == UnrealTargetPlatform.HTML5)
         {
             PublicLibraryPaths.Add(Path.Combine(ModulePath, "ThirdParty/lib/HTML5"));
             PublicAdditionalLibraries.Add(Path.Combine(ModulePath,"ThirdParty/lib/HTML5/WebSocket.js"));
         }
     #endif
     #endif
-
-
     }
 }
