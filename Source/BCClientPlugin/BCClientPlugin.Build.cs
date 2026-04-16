@@ -34,14 +34,8 @@ public class BCClientPlugin : ModuleRules
                 {
                     "JsonUtilities",
                     "HTTP",
-                    // "AndroidNative" removed from here
+                    "AndroidNative"
                 });
-
-        // Only include AndroidNative when actually targeting Android
-        if (Target.Platform.ToString() == "Android")
-        {
-            PrivateDependencyModuleNames.Add("AndroidNative");
-        }
 
         PublicDependencyModuleNames.AddRange(
             new string[]
