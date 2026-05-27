@@ -537,6 +537,9 @@ public:
 	static const ServiceOperation GetBlockchainItems;
 	static const ServiceOperation GetUniqs;
 
+	// campaign
+	static const ServiceOperation GetMyCampaigns;
+
 	FString getValue() const { return _value; }
 
 	bool operator==(const ServiceOperation &s) const;

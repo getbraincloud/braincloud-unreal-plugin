@@ -91,6 +91,7 @@ BrainCloudClient::~BrainCloudClient()
 	destroyService(_lobbyService);
 	destroyService(_chatService);
 	destroyService(_messagingService);
+	destroyService(_campaignService);
 }
 
 
@@ -487,6 +488,15 @@ BrainCloudGroupFile* BrainCloudClient::getGroupFileService()
 		_groupFileService = new BrainCloudGroupFile(this);
 	}
 	return _groupFileService;
+}
+
+BrainCloudCampaign* BrainCloudClient::getCampaignService()
+{
+	if (_campaignService == nullptr)
+	{
+		_campaignService = new BrainCloudCampaign(this);
+	}
+	return _campaignService;
 }
 
 BrainCloudAuthentication *BrainCloudClient::getAuthenticationService()

@@ -66,6 +66,7 @@ public:
 
   static const ServiceName Blockchain;
   static const ServiceName GroupFile;
+  static const ServiceName Campaign;
 
   FString getValue() const { return _value; }
 

@@ -537,6 +537,9 @@ const ServiceOperation ServiceOperation::UpdateSingletonFields = ServiceOperatio
 const ServiceOperation ServiceOperation::GetBlockchainItems = ServiceOperation("GET_BLOCKCHAIN_ITEMS");
 const ServiceOperation ServiceOperation::GetUniqs = ServiceOperation("GET_UNIQS");
 
+// campaign
+const ServiceOperation ServiceOperation::GetMyCampaigns = ServiceOperation(TEXT("GET_MY_CAMPAIGNS"));
+
 bool ServiceOperation::operator==(const ServiceOperation &s) const
 {
 	return _value == s.getValue();
