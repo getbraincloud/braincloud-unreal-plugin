@@ -101,6 +101,47 @@ class UBCLobbyProxy : public UBCBlueprintCallProxyBase
                                       const FString &in_configJson, const TArray<FString> &in_otherUserCxIds);
 
     /**
+    * Creates a new lobby with server config overrides.
+    *
+    * Service Name - lobby
+    * Service Operation - CREATE_LOBBY_WITH_CONFIG
+    *
+    * @param in_roomType type of room
+    * @param in_rating rating of the room
+    * @param in_otherUserCxIds array of other user Connection Ids to bring when the lobby is found
+    * @param in_isReady when lobby is found, place this user as "Ready"
+    * @param in_extraJson json string for extra customization
+    * @param in_teamCode team code
+    * @param in_configJson json string of the lobby config
+    * @param in_configOverridesJson json string of server config overrides for the lobby
+    */
+    UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Lobby")
+    static UBCLobbyProxy *CreateLobbyWithConfig(UBrainCloudWrapper *brainCloudWrapper, const FString &in_roomType, int32 in_rating,
+                                                const TArray<FString> &in_otherUserCxIds, bool in_isReady, const FString &in_extraJson,
+                                                const FString &in_teamCode, const FString &in_configJson, const FString &in_configOverridesJson);
+
+    /**
+    * Creates a new lobby with server config overrides using ping data to select the best region.
+    * GetRegionsForLobbies and PingRegions must be successfully responded to prior to calling.
+    *
+    * Service Name - lobby
+    * Service Operation - CREATE_LOBBY_WITH_CONFIG_AND_PING_DATA
+    *
+    * @param in_roomType type of room
+    * @param in_rating rating of the room
+    * @param in_otherUserCxIds array of other user Connection Ids to bring when the lobby is found
+    * @param in_isReady when lobby is found, place this user as "Ready"
+    * @param in_extraJson json string for extra customization
+    * @param in_teamCode team code
+    * @param in_configJson json string of the lobby config
+    * @param in_configOverridesJson json string of server config overrides for the lobby
+    */
+    UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Lobby")
+    static UBCLobbyProxy *CreateLobbyWithConfigAndPingData(UBrainCloudWrapper *brainCloudWrapper, const FString &in_roomType, int32 in_rating,
+                                                           const TArray<FString> &in_otherUserCxIds, bool in_isReady, const FString &in_extraJson,
+                                                           const FString &in_teamCode, const FString &in_configJson, const FString &in_configOverridesJson);
+
+    /**
     * Finds a lobby matching the specified parameters, or creates one
     * 
     * Service Name - lobby

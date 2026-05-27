@@ -47,6 +47,24 @@ UBCLobbyProxy *UBCLobbyProxy::CreateLobbyWithPingData(UBrainCloudWrapper *brainC
 	return Proxy;
 }
 
+UBCLobbyProxy *UBCLobbyProxy::CreateLobbyWithConfig(UBrainCloudWrapper *brainCloudWrapper, const FString &in_roomType, int32 in_rating,
+                                                     const TArray<FString> &in_otherUserCxIds, bool in_isReady, const FString &in_extraJson,
+                                                     const FString &in_teamCode, const FString &in_configJson, const FString &in_configOverridesJson)
+{
+	UBCLobbyProxy *Proxy = NewObject<UBCLobbyProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getLobbyService()->createLobbyWithConfig(in_roomType, in_rating, in_otherUserCxIds, in_isReady, in_extraJson, in_teamCode, in_configJson, in_configOverridesJson, Proxy);
+	return Proxy;
+}
+
+UBCLobbyProxy *UBCLobbyProxy::CreateLobbyWithConfigAndPingData(UBrainCloudWrapper *brainCloudWrapper, const FString &in_roomType, int32 in_rating,
+                                                                const TArray<FString> &in_otherUserCxIds, bool in_isReady, const FString &in_extraJson,
+                                                                const FString &in_teamCode, const FString &in_configJson, const FString &in_configOverridesJson)
+{
+	UBCLobbyProxy *Proxy = NewObject<UBCLobbyProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getLobbyService()->createLobbyWithConfigAndPingData(in_roomType, in_rating, in_otherUserCxIds, in_isReady, in_extraJson, in_teamCode, in_configJson, in_configOverridesJson, Proxy);
+	return Proxy;
+}
+
 UBCLobbyProxy *UBCLobbyProxy::FindOrCreateLobby(UBrainCloudWrapper *brainCloudWrapper, const FString &in_roomType, int32 in_rating, int32 in_maxSteps,
 												const FString &in_algoJson, const FString &in_filterJson, int32 in_timeoutSecs,
 												bool in_isReady, const FString &in_extraJson, const FString &in_teamCode,

@@ -537,6 +537,7 @@ const OperationParam OperationParam::LobbyIsReady = OperationParam("isReady");
 const OperationParam OperationParam::LobbyOtherUserCxIds = OperationParam("otherUserCxIds");
 const OperationParam OperationParam::LobbyExtraJson = OperationParam("extraJson");
 const OperationParam OperationParam::LobbyTeamCode = OperationParam("toTeamCode");
+const OperationParam OperationParam::LobbyConfigOverrides = OperationParam("configOverrides");
 const OperationParam OperationParam::LobbyIdentifier = OperationParam("lobbyId");
 const OperationParam OperationParam::LobbyToTeamName = OperationParam("toTeamCode");
 const OperationParam OperationParam::LobbySignalData = OperationParam("signalData");
