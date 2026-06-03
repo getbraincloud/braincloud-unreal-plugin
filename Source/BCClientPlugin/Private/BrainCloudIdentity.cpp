@@ -3,6 +3,7 @@
 #include "BrainCloudIdentity.h"
 #include "BCClientPluginPrivatePCH.h"
 
+#include "BrainCloudAuthentication.h"
 #include "BrainCloudClient.h"
 #include "ServerCall.h"
 #include "JsonUtil.h"
@@ -229,9 +230,27 @@ void BrainCloudIdentity::attachGameCenterIdentity(const FString &gameCenterId, I
 	attachIdentity(gameCenterId, TEXT(""), EBCAuthType::GameCenter, callback);
 }
 
+void BrainCloudIdentity::attachGameCenterIdentity(const FString &gameCenterId,
+                                                   int64 timestamp, const FString &publicKeyUrl,
+                                                   const TArray<uint8> &signature, const TArray<uint8> &salt,
+                                                   const FString &teamPlayerId, IServerCallback *callback)
+{
+	FString authToken = BrainCloudAuthentication::createGameCenterAuthenticationToken(timestamp, publicKeyUrl, signature, salt, teamPlayerId);
+	attachIdentity(gameCenterId, authToken, EBCAuthType::GameCenter, callback);
+}
+
 void BrainCloudIdentity::mergeGameCenterIdentity(const FString &gameCenterId, IServerCallback *callback)
 {
 	mergeIdentity(gameCenterId, TEXT(""), EBCAuthType::GameCenter, callback);
+}
+
+void BrainCloudIdentity::mergeGameCenterIdentity(const FString &gameCenterId,
+                                                  int64 timestamp, const FString &publicKeyUrl,
+                                                  const TArray<uint8> &signature, const TArray<uint8> &salt,
+                                                  const FString &teamPlayerId, IServerCallback *callback)
+{
+	FString authToken = BrainCloudAuthentication::createGameCenterAuthenticationToken(timestamp, publicKeyUrl, signature, salt, teamPlayerId);
+	mergeIdentity(gameCenterId, authToken, EBCAuthType::GameCenter, callback);
 }
 
 void BrainCloudIdentity::detachGameCenterIdentity(const FString &gameCenterId, bool continueAnon, IServerCallback *callback)

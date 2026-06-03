@@ -435,33 +435,80 @@ public:
 	void detachPlaystation5Identity(const FString &psnAccountId, bool continueAnon, IServerCallback *callback = nullptr);
 
 	/**
-	 * Attach a Game Center identity to the current profile.
+	 * Attach a Game Center identity to the current profile (legacy support only, not recommended).
+	 * This version requires the Game Center legacy authentication compatibility flag to be enabled
+	 * on the brainCloud dashboard. Use attachGameCenterIdentity with verification parameters instead.
 	 *
 	 * Service Name - identity
 	 * Service Operation - ATTACH
 	 *
-	 * @param gameCenterId The player's game center id  (use the playerID property from the local GKPlayer object)
+	 * @param gameCenterId The player's game center id
 	 * @param callback The method to be invoked when the server response is received
 	 *
-	 * Errors to watch for:  SWITCHING_PROFILES - this means that the Game Center identity you provided
-	 * already points to a different profile.  You will likely want to offer the player the
+	 * Errors to watch for: SWITCHING_PROFILES - this means that the Game Center identity you provided
+	 * already points to a different profile. You will likely want to offer the player the
 	 * choice to *SWITCH* to that profile, or *MERGE* the profiles.
 	 *
 	 * To switch profiles, call ClearSavedProfileID() and call this method again.
-	 *
 	 */
 	void attachGameCenterIdentity(const FString &gameCenterId, IServerCallback *callback = nullptr);
 
 	/**
-	 * Merge the profile associated with the specified Game Center identity with the current profile.
+	 * Attach a Game Center identity to the current profile using identity verification signature.
+	 *
+	 * Service Name - identity
+	 * Service Operation - ATTACH
+	 *
+	 * @param gameCenterId The player's Game Center id (PlayerId, GamePlayerId, or TeamPlayerId from GKLocalPlayer)
+	 * @param timestamp Unix timestamp in milliseconds from the Game Center signature fetch
+	 * @param publicKeyUrl Apple's public key certificate URL from the Game Center signature fetch
+	 * @param signature Raw signature bytes from the Game Center signature fetch
+	 * @param salt Raw salt bytes from the Game Center signature fetch
+	 * @param teamPlayerId Optional TeamPlayerId — only required when gameCenterId is set to a
+	 *   value other than TeamPlayerId (e.g. GamePlayerId)
+	 * @param callback The method to be invoked when the server response is received
+	 */
+	void attachGameCenterIdentity(const FString &gameCenterId,
+	                              int64 timestamp, const FString &publicKeyUrl,
+	                              const TArray<uint8> &signature, const TArray<uint8> &salt,
+	                              const FString &teamPlayerId = TEXT(""),
+	                              IServerCallback *callback = nullptr);
+
+	/**
+	 * Merge the profile associated with the specified Game Center identity with the current profile
+	 * (legacy support only, not recommended).
+	 * This version requires the Game Center legacy authentication compatibility flag to be enabled
+	 * on the brainCloud dashboard. Use mergeGameCenterIdentity with verification parameters instead.
 	 *
 	 * Service Name - identity
 	 * Service Operation - MERGE
 	 *
-	 * @param gameCenterId The player's game center id  (use the playerID property from the local GKPlayer object)
+	 * @param gameCenterId The player's game center id
 	 * @param callback The method to be invoked when the server response is received
 	 */
 	void mergeGameCenterIdentity(const FString &gameCenterId, IServerCallback *callback = nullptr);
+
+	/**
+	 * Merge the profile associated with the specified Game Center identity with the current profile
+	 * using identity verification signature.
+	 *
+	 * Service Name - identity
+	 * Service Operation - MERGE
+	 *
+	 * @param gameCenterId The player's Game Center id (PlayerId, GamePlayerId, or TeamPlayerId from GKLocalPlayer)
+	 * @param timestamp Unix timestamp in milliseconds from the Game Center signature fetch
+	 * @param publicKeyUrl Apple's public key certificate URL from the Game Center signature fetch
+	 * @param signature Raw signature bytes from the Game Center signature fetch
+	 * @param salt Raw salt bytes from the Game Center signature fetch
+	 * @param teamPlayerId Optional TeamPlayerId — only required when gameCenterId is set to a
+	 *   value other than TeamPlayerId (e.g. GamePlayerId)
+	 * @param callback The method to be invoked when the server response is received
+	 */
+	void mergeGameCenterIdentity(const FString &gameCenterId,
+	                             int64 timestamp, const FString &publicKeyUrl,
+	                             const TArray<uint8> &signature, const TArray<uint8> &salt,
+	                             const FString &teamPlayerId = TEXT(""),
+	                             IServerCallback *callback = nullptr);
 
 	/**
 	 * Detach the Game Center identity from the current profile.

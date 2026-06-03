@@ -124,16 +124,70 @@ public:
 	void authenticatePlaystation5(const FString &psnAccountId, const FString &psnAuthToken, bool forceCreate, IServerCallback *callback);
 
 	/**
-	 * Authenticate the user using their Game Center id
+	 * Authenticate the user using their Game Center id (legacy support only, not recommended).
+	 * This version requires the Game Center legacy authentication compatibility flag to be enabled
+	 * on the brainCloud dashboard. Use authenticateGameCenter with verification parameters instead.
 	 *
 	 * Service Name - authenticationV2
 	 * Service Operation - AUTHENTICATE
 	 *
-	 * @param gameCenterId The player's game center id  (use the playerID property from the local GKPlayer object)
+	 * @param gameCenterId The player's game center id
 	 * @param forceCreate Should a new profile be created for this user if the account does not exist?
 	 * @param callback The method to be invoked when the server response is received
 	 */
 	void authenticateGameCenter(const FString &gameCenterId, bool forceCreate, IServerCallback *callback);
+
+	/**
+	 * Authenticate the user using their Game Center id and identity verification signature.
+	 *
+	 * Service Name - authenticationV2
+	 * Service Operation - AUTHENTICATE
+	 *
+	 * @param gameCenterId The player's Game Center id (PlayerId, GamePlayerId, or TeamPlayerId from GKLocalPlayer)
+	 * @param forceCreate Should a new profile be created for this user if the account does not exist?
+	 * @param timestamp Unix timestamp in milliseconds from the Game Center signature fetch
+	 * @param publicKeyUrl Apple's public key certificate URL from the Game Center signature fetch
+	 * @param signature Raw signature bytes from the Game Center signature fetch
+	 * @param salt Raw salt bytes from the Game Center signature fetch
+	 * @param teamPlayerId Optional TeamPlayerId — only required when gameCenterId is set to a
+	 *   value other than TeamPlayerId (e.g. GamePlayerId), so brainCloud can associate the user
+	 *   with their team-scoped identity
+	 * @param callback The method to be invoked when the server response is received
+	 */
+	void authenticateGameCenter(const FString &gameCenterId, bool forceCreate,
+	                            int64 timestamp, const FString &publicKeyUrl,
+	                            const TArray<uint8> &signature, const TArray<uint8> &salt,
+	                            const FString &teamPlayerId = TEXT(""),
+	                            IServerCallback *callback = nullptr);
+
+	/**
+	 * Authenticate the user using their Game Center id with a pre-built authentication token.
+	 * Intended for use when createGameCenterAuthenticationToken was called separately (e.g. in
+	 * SmartSwitchAuthenticateGameCenter where the token is computed before the identity swap).
+	 *
+	 * Service Name - authenticationV2
+	 * Service Operation - AUTHENTICATE
+	 *
+	 * @param gameCenterId The player's Game Center id
+	 * @param authToken Pre-built Base64 token from createGameCenterAuthenticationToken
+	 * @param forceCreate Should a new profile be created for this user if the account does not exist?
+	 * @param callback The method to be invoked when the server response is received
+	 */
+	void authenticateGameCenter(const FString &gameCenterId, const FString &authToken, bool forceCreate, IServerCallback *callback = nullptr);
+
+	/**
+	 * Builds and returns the Base64-encoded JSON authentication token for Game Center.
+	 * Returns an empty string if any required field is missing.
+	 *
+	 * @param timestamp Unix timestamp in milliseconds
+	 * @param publicKeyUrl Apple's public key certificate URL
+	 * @param signature Raw signature bytes
+	 * @param salt Raw salt bytes
+	 * @param teamPlayerId Optional team player id (serialised as null in JSON when empty)
+	 */
+	static FString createGameCenterAuthenticationToken(int64 timestamp, const FString &publicKeyUrl,
+	                                                    const TArray<uint8> &signature, const TArray<uint8> &salt,
+	                                                    const FString &teamPlayerId = TEXT(""));
 
 	/**
 	 * Authenticate the user with a custom Email and Password.  Note that the client app

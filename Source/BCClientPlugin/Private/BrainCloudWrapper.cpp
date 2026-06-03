@@ -15,6 +15,7 @@
 #include "Misc/Paths.h"
 
 #include "SmartSwitchAuthenticateCallback.h"
+#include "BrainCloudAuthentication.h"
 #include "BrainCloudComms.h"
 
 UBrainCloudWrapper::UBrainCloudWrapper()
@@ -182,6 +183,16 @@ void UBrainCloudWrapper::authenticateGameCenter(FString gameCenterId, bool force
     _client->getAuthenticationService()->authenticateGameCenter(gameCenterId, forceCreate, this);
 }
 
+void UBrainCloudWrapper::authenticateGameCenter(const FString &gameCenterId, bool forceCreate,
+                                                 int64 timestamp, const FString &publicKeyUrl,
+                                                 const TArray<uint8> &signature, const TArray<uint8> &salt,
+                                                 const FString &teamPlayerId, IServerCallback *callback)
+{
+    _authenticateCallback = callback;
+    initializeIdentity();
+    _client->getAuthenticationService()->authenticateGameCenter(gameCenterId, forceCreate, timestamp, publicKeyUrl, signature, salt, teamPlayerId, this);
+}
+
 void UBrainCloudWrapper::authenticateGoogle(FString userid, FString token, bool forceCreate, IServerCallback *callback)
 {
     _authenticateCallback = callback;
@@ -306,6 +317,16 @@ void UBrainCloudWrapper::smartSwitchAuthenticateGameCenter(const FString &gameCe
 {
     FString emptyToken = TEXT("");
     SmartSwitchAuthenticateCallback *smartCallback = new SmartSwitchAuthenticateCallback(this, EBCAuthType::GameCenter, gameCenterId, emptyToken, in_forceCreate, in_callback);
+    getIdentitiesCallback(smartCallback);
+}
+
+void UBrainCloudWrapper::smartSwitchAuthenticateGameCenter(const FString &gameCenterId, bool in_forceCreate,
+                                                            int64 timestamp, const FString &publicKeyUrl,
+                                                            const TArray<uint8> &signature, const TArray<uint8> &salt,
+                                                            const FString &teamPlayerId, IServerCallback *in_callback)
+{
+    FString authToken = BrainCloudAuthentication::createGameCenterAuthenticationToken(timestamp, publicKeyUrl, signature, salt, teamPlayerId);
+    SmartSwitchAuthenticateCallback *smartCallback = new SmartSwitchAuthenticateCallback(this, EBCAuthType::GameCenter, gameCenterId, authToken, in_forceCreate, in_callback);
     getIdentitiesCallback(smartCallback);
 }
 

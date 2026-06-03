@@ -83,6 +83,16 @@ UBCAuthenticationProxy *UBCAuthenticationProxy::AuthenticateGameCenter(UBrainClo
     return Proxy;
 }
 
+UBCAuthenticationProxy *UBCAuthenticationProxy::AuthenticateGameCenterWithVerification(UBrainCloudWrapper *brainCloudWrapper, FString gameCenterId, bool forceCreate,
+                                                                                         int64 timestamp, FString publicKeyUrl,
+                                                                                         TArray<uint8> signature, TArray<uint8> salt,
+                                                                                         FString teamPlayerId)
+{
+    UBCAuthenticationProxy *Proxy = NewObject<UBCAuthenticationProxy>();
+    UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getClient()->getAuthenticationService()->authenticateGameCenter(gameCenterId, forceCreate, timestamp, publicKeyUrl, signature, salt, teamPlayerId, Proxy);
+    return Proxy;
+}
+
 UBCAuthenticationProxy *UBCAuthenticationProxy::AuthenticateEmailPassword(UBrainCloudWrapper *brainCloudWrapper, FString email, FString password, bool forceCreate)
 {
     UBCAuthenticationProxy *Proxy = NewObject<UBCAuthenticationProxy>();
