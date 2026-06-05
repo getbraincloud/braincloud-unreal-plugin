@@ -138,6 +138,16 @@ UBCWrapperProxy *UBCWrapperProxy::AuthenticateGameCenter(UBrainCloudWrapper *bra
 	return Proxy;
 }
 
+UBCWrapperProxy *UBCWrapperProxy::AuthenticateGameCenterWithVerification(UBrainCloudWrapper *brainCloudWrapper, FString gameCenterId, bool forceCreate,
+                                                                          int64 timestamp, FString publicKeyUrl,
+                                                                          TArray<uint8> signature, TArray<uint8> salt,
+                                                                          FString teamPlayerId)
+{
+	UBCWrapperProxy *Proxy = NewObject<UBCWrapperProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->authenticateGameCenter(gameCenterId, forceCreate, timestamp, publicKeyUrl, signature, salt, teamPlayerId, Proxy);
+	return Proxy;
+}
+
 UBCWrapperProxy *UBCWrapperProxy::AuthenticateGoogle(UBrainCloudWrapper *brainCloudWrapper, FString userid, FString token, bool forceCreate)
 {
 	UBCWrapperProxy *Proxy = NewObject<UBCWrapperProxy>();
@@ -240,6 +250,16 @@ UBCWrapperProxy *UBCWrapperProxy::SmartSwitchAuthenticateGameCenter(UBrainCloudW
 {
 	UBCWrapperProxy *Proxy = NewObject<UBCWrapperProxy>();
 	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->smartSwitchAuthenticateGameCenter(gameCenterId, forceCreate, Proxy);
+	return Proxy;
+}
+
+UBCWrapperProxy *UBCWrapperProxy::SmartSwitchAuthenticateGameCenterWithVerification(UBrainCloudWrapper *brainCloudWrapper, const FString &gameCenterId, bool forceCreate,
+                                                                                      int64 timestamp, const FString &publicKeyUrl,
+                                                                                      const TArray<uint8> &signature, const TArray<uint8> &salt,
+                                                                                      const FString &teamPlayerId)
+{
+	UBCWrapperProxy *Proxy = NewObject<UBCWrapperProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->smartSwitchAuthenticateGameCenter(gameCenterId, forceCreate, timestamp, publicKeyUrl, signature, salt, teamPlayerId, Proxy);
 	return Proxy;
 }
 
