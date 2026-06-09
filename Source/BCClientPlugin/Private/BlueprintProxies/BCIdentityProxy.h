@@ -430,32 +430,74 @@ class UBCIdentityProxy : public UBCBlueprintCallProxyBase
 	static UBCIdentityProxy *DetachPlaystation5Identity(UBrainCloudWrapper *brainCloudWrapper, const FString &psnAccountId, bool continueAnon);
 	
 	/*
-	* Attach a Game Center identity to the current profile.
+	* Attach a Game Center identity to the current profile (legacy support only, not recommended).
+	* Requires the Game Center legacy authentication compatibility flag to be enabled on brainCloud.
+	* Use AttachGameCenterIdentityWithVerification instead.
 	*
 	* Service Name - identity
 	* Service Operation - Attach
 	*
-	* Param - gameCenterId The player's game center id  (use the playerID property from the local GKPlayer object)
-	*
-	* Errors to watch for:  SWITCHING_PROFILES - this means that the Facebook identity you provided
-	* already points to a different profile.  You will likely want to offer the user the
-	* choice to *SWITCH* to that profile, or *MERGE* the profiles.
-	*
-	* To switch profiles, call ClearSavedProfileID() and call this method again.
+	* Param - gameCenterId The player's game center id
 	*/
-	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Identity")
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", DeprecatedFunction,
+		DeprecationMessage = "Use AttachGameCenterIdentityWithVerification instead. This version requires a legacy compatibility flag on brainCloud."),
+		Category = "BrainCloud|Identity")
 	static UBCIdentityProxy *AttachGameCenterIdentity(UBrainCloudWrapper *brainCloudWrapper, const FString &gameCenterId);
 
 	/*
-	* Merge the profile associated with the specified Game Center identity with the current profile.
+	* Attach a Game Center identity to the current profile using identity verification signature.
+	*
+	* Service Name - identity
+	* Service Operation - Attach
+	*
+	* Param - gameCenterId The player's Game Center id (PlayerId, GamePlayerId, or TeamPlayerId)
+	* Param - timestamp Unix timestamp in milliseconds from the Game Center signature fetch
+	* Param - publicKeyUrl Apple's public key certificate URL from the Game Center signature fetch
+	* Param - signature Raw signature bytes from the Game Center signature fetch
+	* Param - salt Raw salt bytes from the Game Center signature fetch
+	* Param - teamPlayerId Optional; only required when gameCenterId is not the TeamPlayerId
+	*/
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Identity")
+	static UBCIdentityProxy *AttachGameCenterIdentityWithVerification(UBrainCloudWrapper *brainCloudWrapper, const FString &gameCenterId,
+	                                                                   int64 timestamp, const FString &publicKeyUrl,
+	                                                                   const TArray<uint8> &signature, const TArray<uint8> &salt,
+	                                                                   const FString &teamPlayerId);
+
+	/*
+	* Merge the profile associated with the specified Game Center identity with the current profile
+	* (legacy support only, not recommended).
+	* Requires the Game Center legacy authentication compatibility flag to be enabled on brainCloud.
+	* Use MergeGameCenterIdentityWithVerification instead.
 	*
 	* Service Name - identity
 	* Service Operation - Merge
 	*
-	* Param - gameCenterId The player's game center id  (use the playerID property from the local GKPlayer object)
+	* Param - gameCenterId The player's game center id
+	*/
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", DeprecatedFunction,
+		DeprecationMessage = "Use MergeGameCenterIdentityWithVerification instead. This version requires a legacy compatibility flag on brainCloud."),
+		Category = "BrainCloud|Identity")
+	static UBCIdentityProxy *MergeGameCenterIdentity(UBrainCloudWrapper *brainCloudWrapper, const FString &gameCenterId);
+
+	/*
+	* Merge the profile associated with the specified Game Center identity with the current profile
+	* using identity verification signature.
+	*
+	* Service Name - identity
+	* Service Operation - Merge
+	*
+	* Param - gameCenterId The player's Game Center id (PlayerId, GamePlayerId, or TeamPlayerId)
+	* Param - timestamp Unix timestamp in milliseconds from the Game Center signature fetch
+	* Param - publicKeyUrl Apple's public key certificate URL from the Game Center signature fetch
+	* Param - signature Raw signature bytes from the Game Center signature fetch
+	* Param - salt Raw salt bytes from the Game Center signature fetch
+	* Param - teamPlayerId Optional; only required when gameCenterId is not the TeamPlayerId
 	*/
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Identity")
-	static UBCIdentityProxy *MergeGameCenterIdentity(UBrainCloudWrapper *brainCloudWrapper, const FString &gameCenterId);
+	static UBCIdentityProxy *MergeGameCenterIdentityWithVerification(UBrainCloudWrapper *brainCloudWrapper, const FString &gameCenterId,
+	                                                                  int64 timestamp, const FString &publicKeyUrl,
+	                                                                  const TArray<uint8> &signature, const TArray<uint8> &salt,
+	                                                                  const FString &teamPlayerId);
 
 	/*
 	* Detach the Game Center identity from the current profile.

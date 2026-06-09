@@ -202,7 +202,40 @@ public:
 	  * @returns   performs the in_success callback on success, in_failure callback on failure
 	  *
 	  */
+	 /*
+	  * Authenticate the user using their Game Center id (legacy support only, not recommended).
+	  * Requires the Game Center legacy authentication compatibility flag to be enabled on the
+	  * brainCloud dashboard. Use the overloaded version with verification parameters instead.
+	  *
+	  * Service Name - Authenticate
+	  * Service Operation - Authenticate
+	  *
+	  * @param gameCenterId The player's game center id
+	  * @param forceCreate Should a new profile be created for this user if the account does not exist?
+	  * @param callback The method to be invoked when the server response is received
+	  */
 	 void authenticateGameCenter(FString gameCenterId, bool forceCreate, IServerCallback *callback = nullptr);
+
+	 /*
+	  * Authenticate the user using their Game Center id and identity verification signature.
+	  *
+	  * Service Name - Authenticate
+	  * Service Operation - Authenticate
+	  *
+	  * @param gameCenterId The player's Game Center id (PlayerId, GamePlayerId, or TeamPlayerId)
+	  * @param forceCreate Should a new profile be created for this user if the account does not exist?
+	  * @param timestamp Unix timestamp in milliseconds from the Game Center signature fetch
+	  * @param publicKeyUrl Apple's public key certificate URL from the Game Center signature fetch
+	  * @param signature Raw signature bytes from the Game Center signature fetch
+	  * @param salt Raw salt bytes from the Game Center signature fetch
+	  * @param teamPlayerId Optional TeamPlayerId — only required when gameCenterId is not the TeamPlayerId
+	  * @param callback The method to be invoked when the server response is received
+	  */
+	 void authenticateGameCenter(const FString &gameCenterId, bool forceCreate,
+	                             int64 timestamp, const FString &publicKeyUrl,
+	                             const TArray<uint8> &signature, const TArray<uint8> &salt,
+	                             const FString &teamPlayerId = TEXT(""),
+	                             IServerCallback *callback = nullptr);
 
 	 /*
 	  * Authenticate the user using a google userid(email address) and google authentication token.
@@ -518,7 +551,46 @@ public:
 	  * @returns   performs the in_success callback on success, in_failure callback on failure
 	  *
 	  */
+	 /*
+	  * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
+	  * In event the current session was previously an anonymous account, the smart switch will delete that profile.
+	  *
+	  * Authenticate the user using their Game Center id (legacy support only, not recommended).
+	  * Requires the Game Center legacy authentication compatibility flag to be enabled on the
+	  * brainCloud dashboard. Use the overloaded version with verification parameters instead.
+	  *
+	  * Service Name - Authenticate
+	  * Service Operation - Authenticate
+	  *
+	  * @param gameCenterId The player's game center id
+	  * @param forceCreate Should a new profile be created for this user if the account does not exist?
+	  * @param callback The method to be invoked when the server response is received
+	  */
 	 void smartSwitchAuthenticateGameCenter(const FString &gameCenterId, bool forceCreate, IServerCallback *callback = NULL);
+
+	 /*
+	  * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
+	  * In event the current session was previously an anonymous account, the smart switch will delete that profile.
+	  *
+	  * Authenticate the user using their Game Center id and identity verification signature.
+	  *
+	  * Service Name - Authenticate
+	  * Service Operation - Authenticate
+	  *
+	  * @param gameCenterId The player's Game Center id (PlayerId, GamePlayerId, or TeamPlayerId)
+	  * @param forceCreate Should a new profile be created for this user if the account does not exist?
+	  * @param timestamp Unix timestamp in milliseconds from the Game Center signature fetch
+	  * @param publicKeyUrl Apple's public key certificate URL from the Game Center signature fetch
+	  * @param signature Raw signature bytes from the Game Center signature fetch
+	  * @param salt Raw salt bytes from the Game Center signature fetch
+	  * @param teamPlayerId Optional TeamPlayerId — only required when gameCenterId is not the TeamPlayerId
+	  * @param callback The method to be invoked when the server response is received
+	  */
+	 void smartSwitchAuthenticateGameCenter(const FString &gameCenterId, bool forceCreate,
+	                                        int64 timestamp, const FString &publicKeyUrl,
+	                                        const TArray<uint8> &signature, const TArray<uint8> &salt,
+	                                        const FString &teamPlayerId = TEXT(""),
+	                                        IServerCallback *callback = nullptr);
 
 	 /*
 	  * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.

@@ -138,18 +138,40 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
 	static UBCAuthenticationProxy *AuthenticatePlaystation5(UBrainCloudWrapper *brainCloudWrapper, FString psnAccountId, FString psnAuthToken, bool forceCreate);
 	
     /**
-    * Authenticate the user using their Game Center id
+    * Authenticate the user using their Game Center id (legacy support only, not recommended).
+    * Requires the Game Center legacy authentication compatibility flag to be enabled on brainCloud.
+    * Use AuthenticateGameCenterWithVerification instead.
     *
     * Service Name - Authenticate
     * Service Operation - Authenticate
     *
-    * Param - gameCenterId The player's game center id  (use the playerID property from the local GKPlayer object)
+    * Param - gameCenterId The player's game center id
     * Param - forceCreate Should a new profile be created for this user if the account does not exist?
+    */
+    UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", DeprecatedFunction,
+        DeprecationMessage = "Use AuthenticateGameCenterWithVerification instead. This version requires a legacy compatibility flag on brainCloud."),
+        Category = "BrainCloud|Authentication")
+    static UBCAuthenticationProxy *AuthenticateGameCenter(UBrainCloudWrapper *brainCloudWrapper, FString gameCenterId, bool forceCreate);
+
+    /**
+    * Authenticate the user using their Game Center id and identity verification signature.
     *
-    * (Note: recommend using BCWrapper method instead.)
+    * Service Name - Authenticate
+    * Service Operation - Authenticate
+    *
+    * Param - gameCenterId The player's Game Center id (PlayerId, GamePlayerId, or TeamPlayerId)
+    * Param - forceCreate Should a new profile be created for this user if the account does not exist?
+    * Param - timestamp Unix timestamp in milliseconds from the Game Center signature fetch
+    * Param - publicKeyUrl Apple's public key certificate URL from the Game Center signature fetch
+    * Param - signature Raw signature bytes from the Game Center signature fetch
+    * Param - salt Raw salt bytes from the Game Center signature fetch
+    * Param - teamPlayerId Optional; only required when gameCenterId is not the TeamPlayerId
     */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
-    static UBCAuthenticationProxy *AuthenticateGameCenter(UBrainCloudWrapper *brainCloudWrapper, FString gameCenterId, bool forceCreate);
+    static UBCAuthenticationProxy *AuthenticateGameCenterWithVerification(UBrainCloudWrapper *brainCloudWrapper, FString gameCenterId, bool forceCreate,
+                                                                           int64 timestamp, FString publicKeyUrl,
+                                                                           TArray<uint8> signature, TArray<uint8> salt,
+                                                                           FString teamPlayerId);
 
     /**
     * Authenticate the user with a custom Email and Password.  Note that the client app

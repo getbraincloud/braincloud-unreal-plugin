@@ -212,6 +212,26 @@ UBCIdentityProxy *UBCIdentityProxy::MergeGameCenterIdentity(UBrainCloudWrapper *
 	return Proxy;
 }
 
+UBCIdentityProxy *UBCIdentityProxy::AttachGameCenterIdentityWithVerification(UBrainCloudWrapper *brainCloudWrapper, const FString &gameCenterId,
+                                                                              int64 timestamp, const FString &publicKeyUrl,
+                                                                              const TArray<uint8> &signature, const TArray<uint8> &salt,
+                                                                              const FString &teamPlayerId)
+{
+	UBCIdentityProxy *Proxy = NewObject<UBCIdentityProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getIdentityService()->attachGameCenterIdentity(gameCenterId, timestamp, publicKeyUrl, signature, salt, teamPlayerId, Proxy);
+	return Proxy;
+}
+
+UBCIdentityProxy *UBCIdentityProxy::MergeGameCenterIdentityWithVerification(UBrainCloudWrapper *brainCloudWrapper, const FString &gameCenterId,
+                                                                             int64 timestamp, const FString &publicKeyUrl,
+                                                                             const TArray<uint8> &signature, const TArray<uint8> &salt,
+                                                                             const FString &teamPlayerId)
+{
+	UBCIdentityProxy *Proxy = NewObject<UBCIdentityProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getIdentityService()->mergeGameCenterIdentity(gameCenterId, timestamp, publicKeyUrl, signature, salt, teamPlayerId, Proxy);
+	return Proxy;
+}
+
 UBCIdentityProxy *UBCIdentityProxy::DetachGameCenterIdentity(UBrainCloudWrapper *brainCloudWrapper, const FString &gameCenterId, bool continueAnon)
 {
 	UBCIdentityProxy *Proxy = NewObject<UBCIdentityProxy>();
