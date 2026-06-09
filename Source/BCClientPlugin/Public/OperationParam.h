@@ -511,6 +511,7 @@ public:
 	static const OperationParam LobbyOtherUserCxIds;
 	static const OperationParam LobbyExtraJson;
 	static const OperationParam LobbyTeamCode;
+	static const OperationParam LobbyConfigOverrides;
 	static const OperationParam LobbyIdentifier;
 	static const OperationParam LobbyToTeamName;
 	static const OperationParam LobbySignalData;

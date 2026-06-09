@@ -968,6 +968,7 @@ public:
 	 BrainCloudRelay *getRelayService() { return _client->getRelayService(); }
 	 BrainCloudBlockchain *getBlockchainService() { return _client->getBlockchainService(); }
 	 BrainCloudGroupFile *getGroupFileService() { return _client->getGroupFileService(); }
+	 BrainCloudCampaign *getCampaignService() { return _client->getCampaignService(); }
 	 /**
 	  * Returns the instance of the BrainCloudClient.
 	  * @return The instance of the BrainCloudClient.

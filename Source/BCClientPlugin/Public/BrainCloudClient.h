@@ -7,6 +7,7 @@
 #include "BrainCloudAsyncMatch.h"
 #include "BrainCloudAuthentication.h"
 #include "BrainCloudBlockchain.h"
+#include "BrainCloudCampaign.h"
 #include "BrainCloudChat.h"
 #include "BrainCloudCustomEntity.h"
 #include "BrainCloudDataStream.h"
@@ -386,6 +387,7 @@ public:
 	BrainCloudTimeUtils *getUtil();
 	BrainCloudBlockchain *getBlockchainService();
 	BrainCloudGroupFile *getGroupFileService();
+	BrainCloudCampaign *getCampaignService();
 
 	const FString &getAppId() { return _appId; };
 	const FString &getSessionId();
@@ -644,6 +646,7 @@ protected:
 	BrainCloudBlockchain *_blockchainService = nullptr;
 
 	BrainCloudGroupFile *_groupFileService = nullptr;
+	BrainCloudCampaign *_campaignService = nullptr;
 
 	static FString s_brainCloudClientVersion;
 
