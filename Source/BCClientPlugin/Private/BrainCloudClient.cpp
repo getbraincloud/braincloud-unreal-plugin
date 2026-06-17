@@ -26,7 +26,7 @@
 #endif
 
 // Define all static member variables.
-FString BrainCloudClient::s_brainCloudClientVersion = TEXT("5.9.0");
+FString BrainCloudClient::s_brainCloudClientVersion = TEXT("6.0.0");
 
 ////////////////////////////////////////////////////
 // (De)Constructors
