@@ -7,7 +7,7 @@
 #include "ServerCall.h"
 #include "JsonUtil.h"
 
-BrainCloudPlayerState::BrainCloudPlayerState(BrainCloudClient *client) : _client(client){};
+BrainCloudPlayerState::BrainCloudPlayerState(BrainCloudClient *client) : _client(client) {};
 
 void BrainCloudPlayerState::readUserState(IServerCallback *callback, const FString &entityTypeFilter)
 {
@@ -45,16 +45,16 @@ void BrainCloudPlayerState::logout(IServerCallback *callback)
     _client->sendRequest(sc);
 }
 
-void BrainCloudPlayerState::updateUserName(const FString &name, IServerCallback *callback)
+void BrainCloudPlayerState::updateUserName(const FString &userName, IServerCallback *callback)
 {
     TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
-    if (name.Len() > 0)
+    if (userName.Len() > 0)
     {
-        message->SetStringField(OperationParam::PlayerStateServiceUpdateNameData.getValue(), name);
+        message->SetStringField(OperationParam::PlayerStateServiceUpdateNameData.getValue(), userName);
     }
 
     ServerCall *sc = new ServerCall(ServiceName::PlayerState, ServiceOperation::UpdateName, message, callback);
-    _client->sendRequest(sc);   
+    _client->sendRequest(sc);
 }
 
 void BrainCloudPlayerState::updateSummaryFriendData(const FString &jsonSummaryData, IServerCallback *callback)
@@ -110,7 +110,6 @@ void BrainCloudPlayerState::updateContactEmail(const FString &contactEmail, ISer
     ServerCall *sc = new ServerCall(ServiceName::PlayerState, ServiceOperation::UpdateContactEmail, message, callback);
     _client->sendRequest(sc);
 }
-
 
 void BrainCloudPlayerState::clearUserStatus(const FString &statusName, IServerCallback *callback)
 {
