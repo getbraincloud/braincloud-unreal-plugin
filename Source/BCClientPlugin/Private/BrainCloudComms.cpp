@@ -212,22 +212,22 @@ void BrainCloudComms::DeregisterNetworkErrorCallback()
 	_networkErrorCallback = nullptr;
 }
 
-void BrainCloudComms::RegisterLongSessionCallback(UBCBlueprintRestCallProxyBase* callback)
+void BrainCloudComms::RegisterAutoReconnectCallback(UBCBlueprintRestCallProxyBase* callback)
 {
 	callback->AddToRoot();
-	m_registeredRestBluePrintCallbacks.Emplace("longSession", callback);
+	m_registeredRestBluePrintCallbacks.Emplace("autoReconnect", callback);
 }
 
-void BrainCloudComms::DeregisterLongSessionCallback()
+void BrainCloudComms::DeregisterAutoReconnectCallback()
 {
-	FString serviceName = TEXT("longSession");
+	FString serviceName = TEXT("autoReconnect");
 	if (m_registeredRestBluePrintCallbacks.Contains(serviceName))
 	{
 		m_registeredRestBluePrintCallbacks[serviceName]->RemoveFromRoot();
 		m_registeredRestBluePrintCallbacks.Remove(serviceName);
 	}
 
-	_networkErrorCallback = nullptr;
+	_autoReconnectCallback = nullptr;
 }
 
 BrainCloudComms::PacketRef BrainCloudComms::BuildPacket()
@@ -754,7 +754,7 @@ void BrainCloudComms::ReportResults(PacketRef requestPacket, TSharedRef<FJsonObj
 				ServiceOperation operation = sc->getOperation();
 
 				if (reasonCode == ReasonCodes::PLAYER_SESSION_EXPIRED && 
-					_longSessionEnabled &&
+					_autoReconnectEnabled &&
 					operation != ServiceOperation::Authenticate &&
 					_isAuthenticated) {
 					 
@@ -763,17 +763,17 @@ void BrainCloudComms::ReportResults(PacketRef requestPacket, TSharedRef<FJsonObj
 
 					auto curRequest = requestPacket;
 
-					UE_LOG(LogBrainCloudComms, Log, TEXT("Long session expired, will attempt re-authentication."));
+					UE_LOG(LogBrainCloudComms, Log, TEXT("Session expired, will attempt auto-reconnect re-authentication., will attempt re-authentication."));
 
-					ILongSessionCallback* longSessionCallback = _longSessionCallback != nullptr ? _longSessionCallback : m_registeredRestBluePrintCallbacks.Contains("longSession") ? m_registeredRestBluePrintCallbacks["longSession"] : nullptr;
+					IAutoReconnectCallback* autoReconnectCallback = _autoReconnectCallback != nullptr ? _autoReconnectCallback : m_registeredRestBluePrintCallbacks.Contains("autoReconnect") ? m_registeredRestBluePrintCallbacks["autoReconnect"] : nullptr;
 
-					AuthReconnectCallback* authCallback = new AuthReconnectCallback(this, longSessionCallback, curRequest);
+					AuthReconnectCallback* authCallback = new AuthReconnectCallback(this, autoReconnectCallback, curRequest);
 					_client->getAuthenticationService()->authenticateAnonymous(false, authCallback);
 
 					break;
 				}
 
-				if ((reasonCode == ReasonCodes::PLAYER_SESSION_EXPIRED && !_longSessionEnabled) || reasonCode == ReasonCodes::NO_SESSION || reasonCode == ReasonCodes::PLAYER_SESSION_LOGGED_OUT || sc->getOperation() == ServiceOperation::Logout || sc->getOperation() == ServiceOperation::FullReset)
+				if ((reasonCode == ReasonCodes::PLAYER_SESSION_EXPIRED && !_autoReconnectEnabled) || reasonCode == ReasonCodes::NO_SESSION || reasonCode == ReasonCodes::PLAYER_SESSION_LOGGED_OUT || sc->getOperation() == ServiceOperation::Logout || sc->getOperation() == ServiceOperation::FullReset)
 				{
 					_isAuthenticated = false;
 					_sessionId = TEXT("");
@@ -1100,7 +1100,7 @@ int16 BrainCloudComms::GetMaxRetryAttempts()
 
 AuthReconnectCallback::AuthReconnectCallback(
 	BrainCloudComms* commsRef,
-	ILongSessionCallback* callback,
+	IAutoReconnectCallback* callback,
 	TSharedRef<TArray<TSharedRef<ServerCall>>> lastPacket)
 	: _commsRef(commsRef)
 	, _callback(callback)
@@ -1116,22 +1116,22 @@ void AuthReconnectCallback::serverCallback(ServiceName serviceName, ServiceOpera
 {
 	if (serviceName == ServiceName::AuthenticateV2 && serviceOperation == ServiceOperation::Authenticate)
 	{
-		UE_LOG(LogBrainCloudComms, Log, TEXT("Long session re-authentication success. Retrying cached messages..."));
+		UE_LOG(LogBrainCloudComms, Log, TEXT("Auto-reconnect re-authentication success. Retrying cached messages..."));
 
 		const TArray<TSharedRef<ServerCall>>& packet = _lastPacket.Get();
 		for (int i = packet.Num() - 1; i >= 0; i--) {
 			_commsRef->AddToQueue(packet[i]);
 		}
 
-		if(_callback != nullptr) _callback->longSessionSuccess(jsonData);
+		if(_callback != nullptr) _callback->autoReconnectSuccess(jsonData);
 		delete this;
 	}
 }
 
 void AuthReconnectCallback::serverError(ServiceName serviceName, ServiceOperation serviceOperation, int32 statusCode, int32 reasonCode, const FString& jsonError)
 {
-	UE_LOG(LogBrainCloudComms, Error, TEXT("Long session re-authentication failed."));
-	_commsRef->SetLongSessionEnabled(false);
-	if (_callback != nullptr) _callback->longSessionFailed(jsonError);
+	UE_LOG(LogBrainCloudComms, Error, TEXT("Auto-reconnect re-authentication failed."));
+	_commsRef->SetAutoReconnectEnabled(false);
+	if (_callback != nullptr) _callback->autoReconnectFailed(jsonError);
 	delete this;
 }

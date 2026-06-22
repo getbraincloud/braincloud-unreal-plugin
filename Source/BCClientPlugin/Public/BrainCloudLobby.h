@@ -126,6 +126,46 @@ public:
 								 const FString &in_configJson, const TArray<FString> &in_otherUserCxIds, IServerCallback *in_callback);
 
 	/**
+	 * Creates a new lobby with server config overrides.
+	 *
+	 * Service Name - lobby
+	 * Service Operation - CREATE_LOBBY_WITH_CONFIG
+	 *
+	 * @param lobbyType The type of lobby to create
+	 * @param rating The skill rating used for matchmaking
+	 * @param otherUserCxIds Other users to add to the lobby
+	 * @param isReady Initial ready state of this user
+	 * @param extraJson Initial extra data for this user
+	 * @param teamCode Preferred team code, or empty for auto assignment
+	 * @param jsonSettings Configuration data for the lobby
+	 * @param jsonConfigOverrides Server config overrides for the lobby
+	 * @param callback The method to be invoked when the server response is received
+	 */
+	void createLobbyWithConfig(const FString &in_roomType, int32 in_rating, const TArray<FString> &in_otherUserCxIds,
+							   bool in_isReady, const FString &in_extraJson, const FString &in_teamCode,
+							   const FString &in_configJson, const FString &in_configOverridesJson, IServerCallback *in_callback);
+
+	/**
+	 * Creates a new lobby with server config overrides using collected ping data to select the best region.
+	 *
+	 * Service Name - lobby
+	 * Service Operation - CREATE_LOBBY_WITH_CONFIG_AND_PING_DATA
+	 *
+	 * @param lobbyType The type of lobby to create
+	 * @param rating The skill rating used for matchmaking
+	 * @param otherUserCxIds Other users to add to the lobby
+	 * @param isReady Initial ready state of this user
+	 * @param extraJson Initial extra data for this user
+	 * @param teamCode Preferred team code, or empty for auto assignment
+	 * @param jsonSettings Configuration data for the lobby
+	 * @param jsonConfigOverrides Server config overrides for the lobby
+	 * @param callback The method to be invoked when the server response is received
+	 */
+	void createLobbyWithConfigAndPingData(const FString &in_roomType, int32 in_rating, const TArray<FString> &in_otherUserCxIds,
+										  bool in_isReady, const FString &in_extraJson, const FString &in_teamCode,
+										  const FString &in_configJson, const FString &in_configOverridesJson, IServerCallback *in_callback);
+
+	/**
 	 * Finds or creates a lobby if none are available.
 	 *
 	 * Service Name - lobby

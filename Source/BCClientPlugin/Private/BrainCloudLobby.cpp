@@ -119,6 +119,41 @@ void BrainCloudLobby::createLobbyWithPingData(const FString &in_roomType, int32 
     attachPingDataAndSend(message, ServiceOperation::CreateLobbyWithPingData, in_callback);
 }
 
+void BrainCloudLobby::createLobbyWithConfig(const FString &in_roomType, int32 in_rating, const TArray<FString> &in_otherUserCxIds,
+                                            bool in_isReady, const FString &in_extraJson, const FString &in_teamCode,
+                                            const FString &in_configJson, const FString &in_configOverridesJson, IServerCallback *in_callback)
+{
+    TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
+    message->SetStringField(OperationParam::LobbyRoomType.getValue(), in_roomType);
+    message->SetNumberField(OperationParam::LobbyRating.getValue(), in_rating);
+    message->SetArrayField(OperationParam::LobbyOtherUserCxIds.getValue(), JsonUtil::arrayToJsonArray(in_otherUserCxIds));
+    message->SetBoolField(OperationParam::LobbyIsReady.getValue(), in_isReady);
+    message->SetObjectField(OperationParam::LobbyExtraJson.getValue(), JsonUtil::jsonStringToValue(in_extraJson));
+    message->SetStringField(OperationParam::LobbyTeamCode.getValue(), in_teamCode);
+    message->SetObjectField(OperationParam::LobbySettings.getValue(), JsonUtil::jsonStringToValue(in_configJson));
+    message->SetObjectField(OperationParam::LobbyConfigOverrides.getValue(), JsonUtil::jsonStringToValue(in_configOverridesJson));
+
+    ServerCall *sc = new ServerCall(ServiceName::Lobby, ServiceOperation::CreateLobbyWithConfig, message, in_callback);
+    _client->sendRequest(sc);
+}
+
+void BrainCloudLobby::createLobbyWithConfigAndPingData(const FString &in_roomType, int32 in_rating, const TArray<FString> &in_otherUserCxIds,
+                                                       bool in_isReady, const FString &in_extraJson, const FString &in_teamCode,
+                                                       const FString &in_configJson, const FString &in_configOverridesJson, IServerCallback *in_callback)
+{
+    TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
+    message->SetStringField(OperationParam::LobbyRoomType.getValue(), in_roomType);
+    message->SetNumberField(OperationParam::LobbyRating.getValue(), in_rating);
+    message->SetArrayField(OperationParam::LobbyOtherUserCxIds.getValue(), JsonUtil::arrayToJsonArray(in_otherUserCxIds));
+    message->SetBoolField(OperationParam::LobbyIsReady.getValue(), in_isReady);
+    message->SetObjectField(OperationParam::LobbyExtraJson.getValue(), JsonUtil::jsonStringToValue(in_extraJson));
+    message->SetStringField(OperationParam::LobbyTeamCode.getValue(), in_teamCode);
+    message->SetObjectField(OperationParam::LobbySettings.getValue(), JsonUtil::jsonStringToValue(in_configJson));
+    message->SetObjectField(OperationParam::LobbyConfigOverrides.getValue(), JsonUtil::jsonStringToValue(in_configOverridesJson));
+
+    attachPingDataAndSend(message, ServiceOperation::CreateLobbyWithConfigAndPingData, in_callback);
+}
+
 void BrainCloudLobby::findOrCreateLobby(const FString &in_roomType, int32 in_rating, int32 in_maxSteps,
                                         const FString &in_algoJson, const FString &in_filterJson, int32 in_timeoutSecs,
                                         bool in_isReady, const FString &in_extraJson, const FString &in_teamCode,

@@ -56,11 +56,11 @@ public:
 
   /**
   * Maintains the user's session alive by calling the reconnect method upon detecting the expiration of the user's session.
-  * 
-  * @param enabled True if long-sesson should be enabled
+  *
+  * @param enabled True if auto-reconnect should be enabled
   */
   UFUNCTION(BlueprintCallable, Category = "BrainCloud|Wrapper")
-  static void EnableLongSession(UBrainCloudWrapper* brainCloudWrapper, bool enabled);
+  static void EnableAutoReconnect(UBrainCloudWrapper* brainCloudWrapper, bool enabled);
 
   /**
      * Method initializes the BrainCloudClient.
@@ -195,18 +195,40 @@ public:
 
 
   /*
-     * Authenticate the user using their Game Center id
+     * Authenticate the user using their Game Center id (legacy support only, not recommended).
+     * Requires the Game Center legacy authentication compatibility flag to be enabled on brainCloud.
+     * Use AuthenticateGameCenterWithVerification instead.
      *
      * Service Name - Authenticate
      * Service Operation - Authenticate
      *
-     * @param gameCenterId The player's game center id  (use the playerID property from the local GKPlayer object)
+     * @param gameCenterId The player's game center id
      * @param forceCreate Should a new profile be created for this user if the account does not exist?
-     * @param success The method to call in event of successful login
-     * @param failure The method to call in the event of an error during authentication
+     */
+  UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", DeprecatedFunction,
+      DeprecationMessage = "Use AuthenticateGameCenterWithVerification instead. This version requires a legacy compatibility flag on brainCloud."),
+      Category = "BrainCloud|Wrapper")
+  static UBCWrapperProxy *AuthenticateGameCenter(UBrainCloudWrapper *brainCloudWrapper, FString gameCenterId, bool forceCreate);
+
+  /*
+     * Authenticate the user using their Game Center id and identity verification signature.
+     *
+     * Service Name - Authenticate
+     * Service Operation - Authenticate
+     *
+     * @param gameCenterId The player's Game Center id (PlayerId, GamePlayerId, or TeamPlayerId)
+     * @param forceCreate Should a new profile be created for this user if the account does not exist?
+     * @param timestamp Unix timestamp in milliseconds from the Game Center signature fetch
+     * @param publicKeyUrl Apple's public key certificate URL from the Game Center signature fetch
+     * @param signature Raw signature bytes from the Game Center signature fetch
+     * @param salt Raw salt bytes from the Game Center signature fetch
+     * @param teamPlayerId Optional; only required when gameCenterId is not the TeamPlayerId
      */
   UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Wrapper")
-  static UBCWrapperProxy *AuthenticateGameCenter(UBrainCloudWrapper *brainCloudWrapper, FString gameCenterId, bool forceCreate);
+  static UBCWrapperProxy *AuthenticateGameCenterWithVerification(UBrainCloudWrapper *brainCloudWrapper, FString gameCenterId, bool forceCreate,
+                                                                  int64 timestamp, FString publicKeyUrl,
+                                                                  TArray<uint8> signature, TArray<uint8> salt,
+                                                                  FString teamPlayerId);
 
   /*
      * Authenticate the user using a google userid(email address) and google authentication token.
@@ -435,18 +457,44 @@ public:
   /*
      * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
      * In event the current session was previously an anonymous account, the smart switch will delete that profile.
-     * Use this function to keep a clean designflow from anonymous to signed profiles
      *
-     * Authenticate the user using their Game Center id
+     * Authenticate the user using their Game Center id (legacy support only, not recommended).
+     * Requires the Game Center legacy authentication compatibility flag to be enabled on brainCloud.
+     * Use SmartSwitchAuthenticateGameCenterWithVerification instead.
      *
      * Service Name - Authenticate
      * Service Operation - Authenticate
      *
-     * @param gameCenterId The player's game center id  (use the playerID property from the local GKPlayer object)
+     * @param gameCenterId The player's game center id
      * @param forceCreate Should a new profile be created for this user if the account does not exist?
      */
-  UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Wrapper")
+  UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", DeprecatedFunction,
+      DeprecationMessage = "Use SmartSwitchAuthenticateGameCenterWithVerification instead. This version requires a legacy compatibility flag on brainCloud."),
+      Category = "BrainCloud|Wrapper")
   static UBCWrapperProxy *SmartSwitchAuthenticateGameCenter(UBrainCloudWrapper *brainCloudWrapper, const FString &gameCenterId, bool forceCreate);
+
+  /*
+     * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
+     * In event the current session was previously an anonymous account, the smart switch will delete that profile.
+     *
+     * Authenticate the user using their Game Center id and identity verification signature.
+     *
+     * Service Name - Authenticate
+     * Service Operation - Authenticate
+     *
+     * @param gameCenterId The player's Game Center id (PlayerId, GamePlayerId, or TeamPlayerId)
+     * @param forceCreate Should a new profile be created for this user if the account does not exist?
+     * @param timestamp Unix timestamp in milliseconds from the Game Center signature fetch
+     * @param publicKeyUrl Apple's public key certificate URL from the Game Center signature fetch
+     * @param signature Raw signature bytes from the Game Center signature fetch
+     * @param salt Raw salt bytes from the Game Center signature fetch
+     * @param teamPlayerId Optional; only required when gameCenterId is not the TeamPlayerId
+     */
+  UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Wrapper")
+  static UBCWrapperProxy *SmartSwitchAuthenticateGameCenterWithVerification(UBrainCloudWrapper *brainCloudWrapper, const FString &gameCenterId, bool forceCreate,
+                                                                              int64 timestamp, const FString &publicKeyUrl,
+                                                                              const TArray<uint8> &signature, const TArray<uint8> &salt,
+                                                                              const FString &teamPlayerId);
 
   /*
      * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.

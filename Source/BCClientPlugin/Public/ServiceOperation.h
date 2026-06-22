@@ -493,6 +493,8 @@ public:
 	static const ServiceOperation FindLobbyWithPingData;
 	static const ServiceOperation CreateLobby;
 	static const ServiceOperation CreateLobbyWithPingData;
+	static const ServiceOperation CreateLobbyWithConfig;
+	static const ServiceOperation CreateLobbyWithConfigAndPingData;
 	static const ServiceOperation FindOrCreateLobby;
 	static const ServiceOperation FindOrCreateLobbyWithPingData;
 	static const ServiceOperation GetLobbyData;
@@ -536,6 +538,9 @@ public:
 
 	static const ServiceOperation GetBlockchainItems;
 	static const ServiceOperation GetUniqs;
+
+	// campaign
+	static const ServiceOperation GetMyCampaigns;
 
 	FString getValue() const { return _value; }
 

@@ -8,7 +8,9 @@
 #include "HAL/PlatformApplicationMisc.h"
 #include "Internationalization/Culture.h"
 #include "Internationalization/Internationalization.h"
+#if PLATFORM_ANDROID
 #include "AndroidNativeLibrary.h"
+#endif
 #include <iostream>
 #include "Misc/FileHelper.h"
 

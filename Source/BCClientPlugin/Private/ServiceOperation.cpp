@@ -476,6 +476,8 @@ const ServiceOperation ServiceOperation::FindLobby = ServiceOperation("FIND_LOBB
 const ServiceOperation ServiceOperation::FindLobbyWithPingData = ServiceOperation("FIND_LOBBY_WITH_PING_DATA");
 const ServiceOperation ServiceOperation::CreateLobby = ServiceOperation("CREATE_LOBBY");
 const ServiceOperation ServiceOperation::CreateLobbyWithPingData = ServiceOperation("CREATE_LOBBY_WITH_PING_DATA");
+const ServiceOperation ServiceOperation::CreateLobbyWithConfig = ServiceOperation("CREATE_LOBBY_WITH_CONFIG");
+const ServiceOperation ServiceOperation::CreateLobbyWithConfigAndPingData = ServiceOperation("CREATE_LOBBY_WITH_CONFIG_AND_PING_DATA");
 const ServiceOperation ServiceOperation::FindOrCreateLobby = ServiceOperation("FIND_OR_CREATE_LOBBY");
 const ServiceOperation ServiceOperation::FindOrCreateLobbyWithPingData = ServiceOperation("FIND_OR_CREATE_LOBBY_WITH_PING_DATA");
 const ServiceOperation ServiceOperation::GetLobbyData = ServiceOperation("GET_LOBBY_DATA");
@@ -536,6 +538,9 @@ const ServiceOperation ServiceOperation::UpdateSingletonFields = ServiceOperatio
 
 const ServiceOperation ServiceOperation::GetBlockchainItems = ServiceOperation("GET_BLOCKCHAIN_ITEMS");
 const ServiceOperation ServiceOperation::GetUniqs = ServiceOperation("GET_UNIQS");
+
+// campaign
+const ServiceOperation ServiceOperation::GetMyCampaigns = ServiceOperation(TEXT("GET_MY_CAMPAIGNS"));
 
 bool ServiceOperation::operator==(const ServiceOperation &s) const
 {

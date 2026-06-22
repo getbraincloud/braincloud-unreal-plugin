@@ -7,6 +7,7 @@
 #include "BrainCloudAsyncMatch.h"
 #include "BrainCloudAuthentication.h"
 #include "BrainCloudBlockchain.h"
+#include "BrainCloudCampaign.h"
 #include "BrainCloudChat.h"
 #include "BrainCloudCustomEntity.h"
 #include "BrainCloudDataStream.h"
@@ -62,7 +63,7 @@ class IFileUploadCallback;
 class IGlobalErrorCallback;
 class INetworkErrorCallback;
 class IRTTCallback;
-class ILongSessionCallback;
+class IAutoReconnectCallback;
 class UBCBlueprintRTTCallProxyBase;
 class UBCBlueprintRestCallProxyBase;
 
@@ -276,15 +277,15 @@ public:
 	/**
 	* Registers a callback that is invoked when long sessions are enabled and a re-authentication has just happened
 	* 
-	* @param longSessionCallback The long session callback handler
+	* @param autoReconnectCallback The auto reconnect callback handler
 	*/
-	void registerLongSessionCallback(ILongSessionCallback *longSessionCallback);
-	void registerLongSessionCallback(UBCBlueprintRestCallProxyBase *longSessionCallback); // blueprint support
-	
+	void registerAutoReconnectCallback(IAutoReconnectCallback *autoReconnectCallback);
+	void registerAutoReconnectCallback(UBCBlueprintRestCallProxyBase *autoReconnectCallback); // blueprint support
+
 	/**
 	 * Deregisters the reconnect callback
 	 */
-	void deregisterLongSessionCallback();
+	void deregisterAutoReconnectCallback();
 
 	
 
@@ -386,6 +387,7 @@ public:
 	BrainCloudTimeUtils *getUtil();
 	BrainCloudBlockchain *getBlockchainService();
 	BrainCloudGroupFile *getGroupFileService();
+	BrainCloudCampaign *getCampaignService();
 
 	const FString &getAppId() { return _appId; };
 	const FString &getSessionId();
@@ -644,6 +646,7 @@ protected:
 	BrainCloudBlockchain *_blockchainService = nullptr;
 
 	BrainCloudGroupFile *_groupFileService = nullptr;
+	BrainCloudCampaign *_campaignService = nullptr;
 
 	static FString s_brainCloudClientVersion;
 

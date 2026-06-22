@@ -6,6 +6,7 @@
 #include "BrainCloudClient.h"
 #include "ServerCall.h"
 #include "JsonUtil.h"
+#include "Misc/Base64.h"
 
 BrainCloudAuthentication::BrainCloudAuthentication(BrainCloudClient *client) : _client(client){};
 
@@ -90,6 +91,38 @@ void BrainCloudAuthentication::authenticatePlaystation5(const FString& psnAccoun
 void BrainCloudAuthentication::authenticateGameCenter(const FString &gameCenterId, bool forceCreate, IServerCallback *callback)
 {
 	authenticate(*gameCenterId, TEXT(""), EBCAuthType::GameCenter, "", forceCreate, "", callback);
+}
+
+void BrainCloudAuthentication::authenticateGameCenter(const FString &gameCenterId, const FString &authToken, bool forceCreate, IServerCallback *callback)
+{
+	authenticate(*gameCenterId, *authToken, EBCAuthType::GameCenter, "", forceCreate, "", callback);
+}
+
+void BrainCloudAuthentication::authenticateGameCenter(const FString &gameCenterId, bool forceCreate,
+                                                      int64 timestamp, const FString &publicKeyUrl,
+                                                      const TArray<uint8> &signature, const TArray<uint8> &salt,
+                                                      const FString &teamPlayerId, IServerCallback *callback)
+{
+	FString authToken = createGameCenterAuthenticationToken(timestamp, publicKeyUrl, signature, salt, teamPlayerId);
+	authenticate(*gameCenterId, *authToken, EBCAuthType::GameCenter, "", forceCreate, "", callback);
+}
+
+FString BrainCloudAuthentication::createGameCenterAuthenticationToken(int64 timestamp, const FString &publicKeyUrl,
+                                                                       const TArray<uint8> &signature, const TArray<uint8> &salt,
+                                                                       const FString &teamPlayerId)
+{
+	if (signature.Num() == 0 || salt.Num() == 0 || publicKeyUrl.IsEmpty() || timestamp == 0)
+		return FString();
+
+	FString signatureB64 = FBase64::Encode(signature);
+	FString saltB64 = FBase64::Encode(salt);
+	FString playerIdJson = teamPlayerId.IsEmpty() ? TEXT("null") : FString::Printf(TEXT("\"%s\""), *teamPlayerId);
+
+	FString json = FString::Printf(
+		TEXT("{\"playerId\":%s,\"timestamp\":%lld,\"publicKeyUrl\":\"%s\",\"signature\":\"%s\",\"salt\":\"%s\"}"),
+		*playerIdJson, (long long)timestamp, *publicKeyUrl, *signatureB64, *saltB64);
+
+	return FBase64::Encode(json);
 }
 
 void BrainCloudAuthentication::authenticateEmailPassword(const FString &email, const FString &password, bool forceCreate, IServerCallback *callback)

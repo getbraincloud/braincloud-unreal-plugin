@@ -26,7 +26,7 @@
 #endif
 
 // Define all static member variables.
-FString BrainCloudClient::s_brainCloudClientVersion = TEXT("5.9.0");
+FString BrainCloudClient::s_brainCloudClientVersion = TEXT("6.0.0");
 
 ////////////////////////////////////////////////////
 // (De)Constructors
@@ -91,6 +91,7 @@ BrainCloudClient::~BrainCloudClient()
 	destroyService(_lobbyService);
 	destroyService(_chatService);
 	destroyService(_messagingService);
+	destroyService(_campaignService);
 }
 
 
@@ -320,19 +321,19 @@ void BrainCloudClient::deregisterNetworkErrorCallback()
 	_brainCloudComms->DeregisterNetworkErrorCallback();
 }
 
-void BrainCloudClient::registerLongSessionCallback(ILongSessionCallback* longSessionCallback)
+void BrainCloudClient::registerAutoReconnectCallback(IAutoReconnectCallback* autoReconnectCallback)
 {
-	_brainCloudComms->RegisterLongSessionCallback(longSessionCallback);
+	_brainCloudComms->RegisterAutoReconnectCallback(autoReconnectCallback);
 }
 
-void BrainCloudClient::registerLongSessionCallback(UBCBlueprintRestCallProxyBase* longSessionCallback)
+void BrainCloudClient::registerAutoReconnectCallback(UBCBlueprintRestCallProxyBase* autoReconnectCallback)
 {
-	_brainCloudComms->RegisterLongSessionCallback(longSessionCallback);
+	_brainCloudComms->RegisterAutoReconnectCallback(autoReconnectCallback);
 }
 
-void BrainCloudClient::deregisterLongSessionCallback()
+void BrainCloudClient::deregisterAutoReconnectCallback()
 {
-	_brainCloudComms->DeregisterLongSessionCallback();
+	_brainCloudComms->DeregisterAutoReconnectCallback();
 }
 
 
@@ -487,6 +488,15 @@ BrainCloudGroupFile* BrainCloudClient::getGroupFileService()
 		_groupFileService = new BrainCloudGroupFile(this);
 	}
 	return _groupFileService;
+}
+
+BrainCloudCampaign* BrainCloudClient::getCampaignService()
+{
+	if (_campaignService == nullptr)
+	{
+		_campaignService = new BrainCloudCampaign(this);
+	}
+	return _campaignService;
 }
 
 BrainCloudAuthentication *BrainCloudClient::getAuthenticationService()

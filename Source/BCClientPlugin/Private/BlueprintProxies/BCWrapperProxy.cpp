@@ -59,9 +59,9 @@ void UBCWrapperProxy::SetAlwaysAllowProfileSwitch(UBrainCloudWrapper *brainCloud
 	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->setAlwaysAllowProfileSwitch(alwaysAllow);
 }
 
-void UBCWrapperProxy::EnableLongSession(UBrainCloudWrapper* brainCloudWrapper, bool enabled)
+void UBCWrapperProxy::EnableAutoReconnect(UBrainCloudWrapper* brainCloudWrapper, bool enabled)
 {
-	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->enableLongSession(enabled);
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->enableAutoReconnect(enabled);
 }
 
 void UBCWrapperProxy::Initialize(UBrainCloudWrapper *brainCloudWrapper, FString serverUrl, FString secretKey, FString appId, FString version)
@@ -135,6 +135,16 @@ UBCWrapperProxy *UBCWrapperProxy::AuthenticateGameCenter(UBrainCloudWrapper *bra
 {
 	UBCWrapperProxy *Proxy = NewObject<UBCWrapperProxy>();
 	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->authenticateGameCenter(gameCenterId, forceCreate, Proxy);
+	return Proxy;
+}
+
+UBCWrapperProxy *UBCWrapperProxy::AuthenticateGameCenterWithVerification(UBrainCloudWrapper *brainCloudWrapper, FString gameCenterId, bool forceCreate,
+                                                                          int64 timestamp, FString publicKeyUrl,
+                                                                          TArray<uint8> signature, TArray<uint8> salt,
+                                                                          FString teamPlayerId)
+{
+	UBCWrapperProxy *Proxy = NewObject<UBCWrapperProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->authenticateGameCenter(gameCenterId, forceCreate, timestamp, publicKeyUrl, signature, salt, teamPlayerId, Proxy);
 	return Proxy;
 }
 
@@ -240,6 +250,16 @@ UBCWrapperProxy *UBCWrapperProxy::SmartSwitchAuthenticateGameCenter(UBrainCloudW
 {
 	UBCWrapperProxy *Proxy = NewObject<UBCWrapperProxy>();
 	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->smartSwitchAuthenticateGameCenter(gameCenterId, forceCreate, Proxy);
+	return Proxy;
+}
+
+UBCWrapperProxy *UBCWrapperProxy::SmartSwitchAuthenticateGameCenterWithVerification(UBrainCloudWrapper *brainCloudWrapper, const FString &gameCenterId, bool forceCreate,
+                                                                                      int64 timestamp, const FString &publicKeyUrl,
+                                                                                      const TArray<uint8> &signature, const TArray<uint8> &salt,
+                                                                                      const FString &teamPlayerId)
+{
+	UBCWrapperProxy *Proxy = NewObject<UBCWrapperProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->smartSwitchAuthenticateGameCenter(gameCenterId, forceCreate, timestamp, publicKeyUrl, signature, salt, teamPlayerId, Proxy);
 	return Proxy;
 }
 
