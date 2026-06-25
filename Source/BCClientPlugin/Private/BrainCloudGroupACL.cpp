@@ -22,7 +22,7 @@ FString UBrainCloudGroupACL::toJsonString()
 TSharedRef<FJsonObject> UBrainCloudGroupACL::toJsonObject()
 {
     TSharedPtr<FJsonObject> object = MakeShareable(new FJsonObject());
-    object->SetNumberField("other", (uint8)Other);
-    object->SetNumberField("member", (uint8)Member);
+    object->SetNumberField(TEXT("other"), (uint8)Other);
+    object->SetNumberField(TEXT("member"), (uint8)Member);
     return object.ToSharedRef();
 }
