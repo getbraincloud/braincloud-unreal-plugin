@@ -452,10 +452,10 @@ TSharedRef<FJsonObject> BrainCloudRelayComms::buildConnectionRequest()
 
     m_cxId = m_client->getRTTService()->getRTTConnectionId();
 
-	request->SetStringField("lobbyId", m_connectOptions.lobbyId);
-	request->SetStringField("cxId", m_cxId);
-	request->SetStringField("passcode", m_connectOptions.passcode);
-	request->SetStringField("version", m_client->getBrainCloudClientVersion());
+	request->SetStringField(TEXT("lobbyId"), m_connectOptions.lobbyId);
+	request->SetStringField(TEXT("cxId"), m_cxId);
+	request->SetStringField(TEXT("passcode"), m_connectOptions.passcode);
+	request->SetStringField(TEXT("version"), m_client->getBrainCloudClientVersion());
 
     return request;
 }
@@ -751,12 +751,12 @@ void BrainCloudRelayComms::onRSMG(const uint8* in_data, int in_size)
         return;
     }
 
-    auto op = json->Values["op"]->AsString();
-    if (op == "CONNECT")
+    auto op = json->Values[TEXT("op")]->AsString();
+    if (op == TEXT("CONNECT"))
     {
         int32 netId;
-        json->Values["netId"]->TryGetNumber(netId);
-        auto cxId = json->Values["cxId"]->AsString();
+        json->Values[TEXT("netId")]->TryGetNumber(netId);
+        auto cxId = json->Values[TEXT("cxId")]->AsString();
         auto profileId = extractProfileIdFromCxId(cxId);
         UE_LOG(LogBrainCloudRelayComms, Log, TEXT("m_netIdToCxId.Add(%i, %s)"), netId, *cxId);
         m_netIdToCxId.Add(netId, cxId);
@@ -766,7 +766,7 @@ void BrainCloudRelayComms::onRSMG(const uint8* in_data, int in_size)
         if (cxId == m_cxId)
         {
             m_netId = netId;
-            m_ownerCxId = json->Values["ownerCxId"]->AsString();
+            m_ownerCxId = json->Values[TEXT("ownerCxId")]->AsString();
             m_ownerProfileId = extractProfileIdFromCxId(m_ownerCxId);
             m_lastPingTime = FPlatformTime::Seconds();
             m_isConnected = true;
@@ -774,11 +774,11 @@ void BrainCloudRelayComms::onRSMG(const uint8* in_data, int in_size)
             queueConnectSuccessEvent(jsonString);
         }
     }
-    else if (op == "NET_ID")
+    else if (op == TEXT("NET_ID"))
     {
         int32 netId;
-        json->Values["netId"]->TryGetNumber(netId);
-        auto cxId = json->Values["cxId"]->AsString();
+        json->Values[TEXT("netId")]->TryGetNumber(netId);
+        auto cxId = json->Values[TEXT("cxId")]->AsString();
         auto profileId = extractProfileIdFromCxId(cxId);
         
         TArray<TSharedPtr<FJsonValue>> PacketIdsArray = json->GetArrayField(TEXT("orderedPacketIds"));
@@ -800,13 +800,13 @@ void BrainCloudRelayComms::onRSMG(const uint8* in_data, int in_size)
     }
     else if (op == "MIGRATE_OWNER")
     {
-        auto cxId = json->Values["cxId"]->AsString();
+        auto cxId = json->Values[TEXT("cxId")]->AsString();
         m_ownerCxId = cxId;
         m_ownerProfileId = extractProfileIdFromCxId(m_ownerCxId);
     }
-    else if (op == "DISCONNECT")
+    else if (op == TEXT("DISCONNECT"))
     {
-        auto cxId = json->Values["cxId"]->AsString();
+        auto cxId = json->Values[TEXT("cxId")]->AsString();
         if (m_cxId == cxId)
         {
             // We are the one that got disconnected!
@@ -815,7 +815,7 @@ void BrainCloudRelayComms::onRSMG(const uint8* in_data, int in_size)
             return;
         }
     }
-    else if(op == "END_MATCH")
+    else if(op == TEXT("END_MATCH"))
     {
         m_endMatchRequested = true;
         socketCleanup();
