@@ -279,20 +279,20 @@ void BrainCloudRTTComms::disconnect()
 FString BrainCloudRTTComms::buildConnectionRequest()
 {
 	TSharedRef<FJsonObject> sysJson = MakeShareable(new FJsonObject());
-	sysJson->SetStringField("platform", m_client->getReleasePlatform());
-	sysJson->SetStringField("protocol", "ws");
+	sysJson->SetStringField(TEXT("platform"), m_client->getReleasePlatform());
+	sysJson->SetStringField(TEXT("protocol"), TEXT("ws"));
 
 	TSharedRef<FJsonObject> jsonData = MakeShareable(new FJsonObject());
-	jsonData->SetStringField("appId", m_client->getAppId());
-	jsonData->SetStringField("sessionId", m_client->getSessionId());
-	jsonData->SetStringField("profileId", m_client->getProfileId());
-	jsonData->SetObjectField("system", sysJson);
-	jsonData->SetObjectField("auth", m_rttHeaders);
+	jsonData->SetStringField(TEXT("appId"), m_client->getAppId());
+	jsonData->SetStringField(TEXT("sessionId"), m_client->getSessionId());
+	jsonData->SetStringField(TEXT("profileId"), m_client->getProfileId());
+	jsonData->SetObjectField(TEXT("system"), sysJson);
+	jsonData->SetObjectField(TEXT("auth"), m_rttHeaders);
 
 	TSharedRef<FJsonObject> json = MakeShareable(new FJsonObject());
-	json->SetStringField("service", ServiceName::RTT.getValue());
-	json->SetStringField("operation", "CONNECT");
-	json->SetObjectField("data", jsonData);
+	json->SetStringField(TEXT("service"), ServiceName::RTT.getValue());
+	json->SetStringField(TEXT("operation"), TEXT("CONNECT"));
+	json->SetObjectField(TEXT("data"), jsonData);
 
 	return JsonUtil::jsonValueToString(json);
 }
@@ -300,9 +300,9 @@ FString BrainCloudRTTComms::buildConnectionRequest()
 FString BrainCloudRTTComms::buildHeartbeatRequest()
 {
 	TSharedRef<FJsonObject> json = MakeShareable(new FJsonObject());
-	json->SetStringField("service", ServiceName::RTT.getValue());
-	json->SetStringField("operation", "HEARTBEAT");
-	json->SetObjectField("data", nullptr);
+	json->SetStringField(TEXT("service"), ServiceName::RTT.getValue());
+	json->SetStringField(TEXT("operation"), TEXT("HEARTBEAT"));
+	json->SetObjectField(TEXT("data"), nullptr);
 
 	return JsonUtil::jsonValueToString(json);
 }
@@ -440,7 +440,7 @@ void BrainCloudRTTComms::webSocket_OnClose()
 		{
 			FString response;
 			TSharedRef<TJsonWriter<>> disconnectJson = TJsonWriterFactory<>::Create(&response);
-			UE_LOG(LogBrainCloudComms, Log, TEXT("RTT: Disconnect "), *response);
+			UE_LOG(LogBrainCloudComms, Log, TEXT("RTT: Disconnect %s"), *response);
 		}
 	}
 	
@@ -514,9 +514,9 @@ void BrainCloudRTTComms::onRecv(FString in_message)
 	{
 		m_disconnectedWithReason = true;
 		if (ensureAlways(innerData != nullptr)) {
-			m_disconnectJson->SetStringField("reason", innerData->GetStringField(TEXT("reason")));
-			m_disconnectJson->SetNumberField("reasonCode", innerData->GetNumberField(TEXT("reasonCode")));
-			m_disconnectJson->SetStringField("severity", "ERROR");
+			m_disconnectJson->SetStringField(TEXT("reason"), innerData->GetStringField(TEXT("reason")));
+			m_disconnectJson->SetNumberField(TEXT("reasonCode"), innerData->GetNumberField(TEXT("reasonCode")));
+			m_disconnectJson->SetStringField(TEXT("severity"), TEXT("ERROR"));
 		}
 	}
 
@@ -540,10 +540,10 @@ FString BrainCloudRTTComms::buildRTTRequestError(FString in_statusMessage)
 {
 	TSharedRef<FJsonObject> json = MakeShareable(new FJsonObject());
 	
-    json->SetNumberField("status", 403);
-	json->SetNumberField("reason_code", ReasonCodes::RTT_CLIENT_ERROR);
-	json->SetStringField("status_message", in_statusMessage);
-	json->SetStringField("severity", "ERROR");
+    json->SetNumberField(TEXT("status"), 403);
+	json->SetNumberField(TEXT("reason_code"), ReasonCodes::RTT_CLIENT_ERROR);
+	json->SetStringField(TEXT("status_message"), in_statusMessage);
+	json->SetStringField(TEXT("severity"), TEXT("ERROR"));
 
 	FString response;
     TSharedRef<TJsonWriter<>> writer = TJsonWriterFactory<>::Create(&response);
@@ -594,7 +594,7 @@ FString BrainCloudRTTComms::getUrlQueryParameters()
 		TSharedPtr<FJsonValue> Value = (*currJsonValue).Value;
 		toReturn += Value->AsString();
 
-		m_rttHeadersMap.Add((*currJsonValue).Key, Value->AsString());
+		m_rttHeadersMap.Add(FString((*currJsonValue).Key), Value->AsString());
 
 		++count;
 	}

@@ -21,6 +21,6 @@ FString UBrainCloudACL::toJsonString()
 TSharedRef<FJsonObject> UBrainCloudACL::toJsonObject()
 {
     TSharedPtr<FJsonObject> object = MakeShareable(new FJsonObject());
-    object->SetNumberField("other", (uint8)Other);
+    object->SetNumberField(TEXT("other"), (uint8)Other);
     return object.ToSharedRef();
 }
