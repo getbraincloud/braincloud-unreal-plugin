@@ -15,7 +15,8 @@ void BrainCloudCustomEntity::createEntity(const FString &entityType, const FStri
     TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
     message->SetStringField(OperationParam::CustomEntityServiceEntityType.getValue(), entityType);
     message->SetObjectField(OperationParam::CustomEntityServiceJsonEntityData.getValue(), JsonUtil::jsonStringToValue(jsonEntityData));
-    message->SetObjectField(OperationParam::CustomEntityServiceAcl.getValue(), jsonEntityAcl->toJsonObject());
+    if (jsonEntityAcl != nullptr)
+        message->SetObjectField(OperationParam::CustomEntityServiceAcl.getValue(), jsonEntityAcl->toJsonObject());
     message->SetNumberField(OperationParam::CustomEntityServiceTimeToLive.getValue(), timeToLive);
     message->SetBoolField(OperationParam::CustomEntityServiceIsOwned.getValue(), isOwned);
 
@@ -114,7 +115,8 @@ void BrainCloudCustomEntity::updateEntity(const FString &entityType, const FStri
     message->SetStringField(OperationParam::CustomEntityServiceEntityId.getValue(), entityId);
     message->SetNumberField(OperationParam::CustomEntityServiceVersion.getValue(), version);
     message->SetObjectField(OperationParam::CustomEntityServiceDataJson.getValue(), JsonUtil::jsonStringToValue(dataJson));
-    message->SetObjectField(OperationParam::CustomEntityServiceAcl.getValue(), jsonEntityAcl->toJsonObject());
+    if (jsonEntityAcl != nullptr)
+        message->SetObjectField(OperationParam::CustomEntityServiceAcl.getValue(), jsonEntityAcl->toJsonObject());
     message->SetNumberField(OperationParam::CustomEntityServiceTimeToLive.getValue(), timeToLive);
 
     ServerCall *sc = new ServerCall(ServiceName::CustomEntity, ServiceOperation::UpdateEntity, message, callback);
@@ -182,7 +184,8 @@ void BrainCloudCustomEntity::updateSingleton(const FString &entityType, int vers
     message->SetStringField(OperationParam::CustomEntityServiceEntityType.getValue(), entityType);
     message->SetNumberField(OperationParam::CustomEntityServiceEntityId.getValue(), version);
     message->SetObjectField(OperationParam::CustomEntityServiceDataJson.getValue(), JsonUtil::jsonStringToValue(dataJson));
-    message->SetObjectField(OperationParam::CustomEntityServiceAcl.getValue(), jsonEntityAcl->toJsonObject());
+    if (jsonEntityAcl != nullptr)
+        message->SetObjectField(OperationParam::CustomEntityServiceAcl.getValue(), jsonEntityAcl->toJsonObject());
     message->SetNumberField(OperationParam::CustomEntityServiceTimeToLive.getValue(), timeToLive);
 
     ServerCall *sc = new ServerCall(ServiceName::CustomEntity, ServiceOperation::UpdateSingleton, message, callback);

@@ -17,7 +17,8 @@ void BrainCloudGlobalEntity::createEntity(const FString &entityType, int64 timeT
     message->SetStringField(OperationParam::GlobalEntityServiceEntityType.getValue(), entityType);
     message->SetNumberField(OperationParam::GlobalEntityServiceTimeToLive.getValue(), timeToLive);
     message->SetObjectField(OperationParam::GlobalEntityServiceData.getValue(), JsonUtil::jsonStringToValue(jsonEntityData));
-    message->SetObjectField(OperationParam::GlobalEntityServiceAcl.getValue(), jsonEntityAcl->toJsonObject());
+    if (jsonEntityAcl != nullptr)
+        message->SetObjectField(OperationParam::GlobalEntityServiceAcl.getValue(), jsonEntityAcl->toJsonObject());
 
     ServerCall *sc = new ServerCall(ServiceName::GlobalEntity, ServiceOperation::Create, message, callback);
     _client->sendRequest(sc);
@@ -31,7 +32,8 @@ void BrainCloudGlobalEntity::createEntityWithIndexedId(const FString &entityType
     message->SetStringField(OperationParam::GlobalEntityServiceIndexedId.getValue(), indexedId);
     message->SetNumberField(OperationParam::GlobalEntityServiceTimeToLive.getValue(), timeToLive);
     message->SetObjectField(OperationParam::GlobalEntityServiceData.getValue(), JsonUtil::jsonStringToValue(jsonEntityData));
-    message->SetObjectField(OperationParam::GlobalEntityServiceAcl.getValue(), jsonEntityAcl->toJsonObject());
+    if (jsonEntityAcl != nullptr)
+        message->SetObjectField(OperationParam::GlobalEntityServiceAcl.getValue(), jsonEntityAcl->toJsonObject());
 
     ServerCall *sc = new ServerCall(ServiceName::GlobalEntity, ServiceOperation::CreateWithIndexedId, message, callback);
     _client->sendRequest(sc);
@@ -53,7 +55,8 @@ void BrainCloudGlobalEntity::updateEntityAcl(const FString &entityId, int32 vers
     TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
     message->SetStringField(OperationParam::GlobalEntityServiceEntityId.getValue(), entityId);
     message->SetNumberField(OperationParam::GlobalEntityServiceVersion.getValue(), version);
-    message->SetObjectField(OperationParam::GlobalEntityServiceAcl.getValue(), jsonEntityAcl->toJsonObject());
+    if (jsonEntityAcl != nullptr)
+        message->SetObjectField(OperationParam::GlobalEntityServiceAcl.getValue(), jsonEntityAcl->toJsonObject());
 
     ServerCall *sc = new ServerCall(ServiceName::GlobalEntity, ServiceOperation::UpdateAcl, message, callback);
     _client->sendRequest(sc);
@@ -180,7 +183,8 @@ void BrainCloudGlobalEntity::updateEntityOwnerAndAcl(const FString &entityId, in
     message->SetStringField(OperationParam::GlobalEntityServiceEntityId.getValue(), entityId);
     message->SetStringField(OperationParam::OwnerId.getValue(), ownerId);
     message->SetNumberField(OperationParam::GlobalEntityServiceVersion.getValue(), version);
-    message->SetObjectField(OperationParam::GlobalEntityServiceAcl.getValue(), jsonEntityAcl->toJsonObject());
+    if (jsonEntityAcl != nullptr)
+        message->SetObjectField(OperationParam::GlobalEntityServiceAcl.getValue(), jsonEntityAcl->toJsonObject());
 
     ServerCall *sc = new ServerCall(ServiceName::GlobalEntity, ServiceOperation::UpdateEntityOwnerAndAcl, message, callback);
     _client->sendRequest(sc);
@@ -191,7 +195,8 @@ void BrainCloudGlobalEntity::makeSystemEntity(const FString &entityId, int32 ver
     TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
     message->SetStringField(OperationParam::GlobalEntityServiceEntityId.getValue(), entityId);
     message->SetNumberField(OperationParam::GlobalEntityServiceVersion.getValue(), version);
-    message->SetObjectField(OperationParam::GlobalEntityServiceAcl.getValue(), jsonEntityAcl->toJsonObject());
+    if (jsonEntityAcl != nullptr)
+        message->SetObjectField(OperationParam::GlobalEntityServiceAcl.getValue(), jsonEntityAcl->toJsonObject());
 
     ServerCall *sc = new ServerCall(ServiceName::GlobalEntity, ServiceOperation::MakeSystemEntity, message, callback);
     _client->sendRequest(sc);
