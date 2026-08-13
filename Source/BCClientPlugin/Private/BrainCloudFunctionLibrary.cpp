@@ -24,9 +24,12 @@
 #endif
 
 #if PLATFORM_IOS || PLATFORM_MAC
-
+// CarbonCore's NumberFormatting.h (reached via Foundation→NSURLError→CoreServices→CarbonCore)
+// defines struct FVector, which conflicts with UE5's FVector type alias on newer macOS SDKs.
+// Remap the symbol during Apple system includes so the two definitions don't collide.
+#define FVector __AppleCarbonFVector
 #include <Foundation/Foundation.h>
-
+#undef FVector
 #endif
 
 FBrainCloudAppDataStruct UBrainCloudFunctionLibrary::GetBCAppData()
