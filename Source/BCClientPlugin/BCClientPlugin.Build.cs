@@ -33,9 +33,13 @@ public class BCClientPlugin : ModuleRules
             new string[]
                 {
                     "JsonUtilities",
-                    "HTTP",
-                    "AndroidNative"
+                    "HTTP"
                 });
+
+        if (Target.Platform == UnrealTargetPlatform.Android)
+        {
+            PrivateDependencyModuleNames.Add("AndroidNative");
+        }
 
         PublicDependencyModuleNames.AddRange(
             new string[]
