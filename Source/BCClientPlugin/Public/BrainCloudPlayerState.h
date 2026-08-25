@@ -73,7 +73,7 @@ public:
      * @param userName The name of the user
      * @param callback The method to be invoked when the server response is received
      */
-    void updateUserName(const FString &name, IServerCallback *callback);
+    void updateUserName(const FString &userName, IServerCallback *callback);
 
     /**
      * Updates the "friend summary data" associated with the logged in user.

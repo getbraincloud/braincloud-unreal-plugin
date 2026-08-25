@@ -48,11 +48,6 @@ UBCPlayerStateProxy *UBCPlayerStateProxy::UpdateUserName(UBrainCloudWrapper *bra
     return Proxy;
 }
 
-UBCPlayerStateProxy *UBCPlayerStateProxy::UpdateName(UBrainCloudWrapper *brainCloudWrapper, FString name)
-{
-    return UpdateUserName(brainCloudWrapper, name);
-}
-
 UBCPlayerStateProxy *UBCPlayerStateProxy::UpdateSummaryFriendData(UBrainCloudWrapper *brainCloudWrapper, const FString &jsonSummaryData)
 {
     UBCPlayerStateProxy *Proxy = NewObject<UBCPlayerStateProxy>();
