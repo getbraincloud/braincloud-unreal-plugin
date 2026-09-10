@@ -1,6 +1,25 @@
 // Copyright 2026 bitHeads, Inc. All Rights Reserved.
 
+// UBT requires this file's own header to be the first include, so the Apple guard below (which
+// must run before HAL/PlatformApplicationMisc.h, included further down) can't come first in the
+// file - it just needs to come before that one.
 #include "BrainCloudFunctionLibrary.h"
+
+// CarbonCore's NumberFormatting.h defines "struct FVector", which conflicts with UE5's FVector
+// type alias on newer macOS SDKs. It's reached transitively from more than one place below
+// (both HAL/PlatformApplicationMisc.h's Mac platform layer and Foundation.h itself), and some of
+// those paths - PlatformApplicationMisc.h in particular - also contain legitimate engine code
+// that uses the real FVector, so the remap can't just wrap those includes directly without
+// mangling that code too. Instead, pre-include Foundation.h here, first, with the symbol
+// remapped: its own header guard then makes every later transitive include of it a no-op, so
+// nothing downstream (including PlatformApplicationMisc.h) needs its own guard, and UE's real
+// FVector stays untouched everywhere else in this file.
+#if PLATFORM_IOS || PLATFORM_MAC
+#define FVector __AppleCarbonFVector
+#include <Foundation/Foundation.h>
+#undef FVector
+#endif
+
 #include "BCClientPluginPrivatePCH.h"
 #include "CoreMinimal.h"
 #include "Misc/ConfigCacheIni.h"
@@ -21,15 +40,6 @@
 #include "Windows/HideWindowsPlatformTypes.h" // Include this to hide Windows API usa
 #include "Developer/DesktopPlatform/Public/IDesktopPlatform.h"
 #include "Developer/DesktopPlatform/Public/DesktopPlatformModule.h"
-#endif
-
-#if PLATFORM_IOS || PLATFORM_MAC
-// CarbonCore's NumberFormatting.h (reached via Foundation→NSURLError→CoreServices→CarbonCore)
-// defines struct FVector, which conflicts with UE5's FVector type alias on newer macOS SDKs.
-// Remap the symbol during Apple system includes so the two definitions don't collide.
-#define FVector __AppleCarbonFVector
-#include <Foundation/Foundation.h>
-#undef FVector
 #endif
 
 FBrainCloudAppDataStruct UBrainCloudFunctionLibrary::GetBCAppData()
