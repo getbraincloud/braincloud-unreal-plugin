@@ -22,6 +22,23 @@
 namespace
 {
     const TCHAR* GOAuthScope = TEXT("openid email builder_api team_info app_info team_read app_read app_create utility_read");
+
+#if BC_WIDGET_OAUTH_SUPPORTED
+    // FHttpRequestHandler has been either a TFunction (constructible directly from a lambda)
+    // or a TDelegate (needs ::CreateLambda) depending on engine version - pick whichever the
+    // installed engine's type actually supports.
+    template <typename LambdaType>
+    auto MakeHttpRequestHandler(LambdaType&& InLambda, int) -> decltype(FHttpRequestHandler::CreateLambda(Forward<LambdaType>(InLambda)))
+    {
+        return FHttpRequestHandler::CreateLambda(Forward<LambdaType>(InLambda));
+    }
+
+    template <typename LambdaType>
+    FHttpRequestHandler MakeHttpRequestHandler(LambdaType&& InLambda, ...)
+    {
+        return FHttpRequestHandler(Forward<LambdaType>(InLambda));
+    }
+#endif
 }
 
 BCPortalOAuthClient::~BCPortalOAuthClient()
@@ -58,11 +75,11 @@ void BCPortalOAuthClient::StartLogin(const FString& InServerUrl, const FString& 
     }
 
     RouteHandle = Router->BindRoute(FHttpPath(TEXT("/oauth/callback")), EHttpServerRequestVerbs::VERB_GET,
-        FHttpRequestHandler::CreateLambda(
+        MakeHttpRequestHandler(
             [this](const FHttpServerRequest& Request, const FHttpResultCallback& OnComplete)
             {
                 return HandleOAuthCallback(Request, OnComplete);
-            }));
+            }, 0));
     HttpServerModule.StartAllListeners();
 
     const FString AuthorizeUrl = FString::Printf(
