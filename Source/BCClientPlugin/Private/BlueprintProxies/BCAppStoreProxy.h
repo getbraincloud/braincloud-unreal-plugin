@@ -29,6 +29,9 @@ public:
     * - windows
     * - windowsPhone
     * - googlePlay
+	* - metaHorizon
+	* - epicGames
+	* - xsolla
     * @param receiptData the specific store data required
     * @param in_callback The method to be invoked when the server response is received
     */
@@ -61,6 +64,9 @@ public:
     * - windows
     * - windowsPhone
     * - googlePlay
+	* - metaHorizon
+	* - epicGames
+	* - xsolla
     * @param userCurrency The currency type to retrieve the sales inventory for.
     * @param in_callback The method to be invoked when the server response is received
     */
@@ -82,6 +88,9 @@ public:
     * - windows
     * - windowsPhone
     * - googlePlay
+	* - metaHorizon
+	* - epicGames
+	* - xsolla
     * @param userCurrency The currency type to retrieve the sales inventory for.
     * @param category The product category
     * @param in_callback The method to be invoked when the server response is received
@@ -95,14 +104,7 @@ public:
     * Service Name - AppStore
     * Service Operation - StartPurchase
     *
-    * @param storeId The store platform. Valid stores are:
-    * - itunes
-    * - facebook
-    * - appworld
-    * - steam
-    * - windows
-    * - windowsPhone
-    * - googlePlay
+    * @param storeId The store id. Currently only accepts "steam".
     * @param purchaseData specific data for purchasing 2 staged purchases
     * @param in_callback The method to be invoked when the server response is received
     */
@@ -127,6 +129,9 @@ public:
     * - windows
     * - windowsPhone
     * - googlePlay
+	* - metaHorizon
+	* - epicGames
+	* - xsolla
     * @param iapId The IAP product Id as configured for the product on brainCloud.
     * @param payload The payload retrieved for the IAP product after the GetSalesInventory method.
     * @param in_callback The method to be invoked when the server response is received
@@ -140,14 +145,7 @@ public:
     * Service Name - AppStore
     * Service Operation - FinalizePurchase
     *
-    * @param storeId The store platform. Valid stores are:
-    * - itunes
-    * - facebook
-    * - appworld
-    * - steam
-    * - windows
-    * - windowsPhone
-    * - googlePlay
+    * @param storeId The store id. Currently only accepts "steam".
     * @param transactionId the transactionId returned from start Purchase
     * @param transactionData specific data for purchasing 2 staged purchases
     * @param in_callback The method to be invoked when the server response is received

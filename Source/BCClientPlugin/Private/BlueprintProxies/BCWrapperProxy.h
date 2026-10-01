@@ -257,19 +257,33 @@ public:
    UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Wrapper")
    static UBCWrapperProxy *AuthenticateGoogleOpenId(UBrainCloudWrapper *brainCloudWrapper, FString googleUserAccountEmail, FString IdToken, bool forceCreate);
 
-    /*
-    * Authenticate the user using a google userId and google server authentication code.
-    *
-    * Service Name - Authenticate
-    * Service Operation - Authenticate
-    *
-    * @param appleUserId this can be user id OR the email of the user account
-    * @param identityToken  the token confirming the user's identity
-    * @param forceCreate Should a new profile be created for this user if the account does not exist?
-    * @param callback The method to be invoked when the server response is received
-    */
+  /**
+  * Authenticate the user using their Apple account and identityToken.
+  *
+  * Service Name - Authenticate
+  * Service Operation - Authenticate
+  *
+  * @param appleUserId String of the apple accounts user Id OR email
+  * @param identityToken The identityToken confirming users identity
+  * @param forceCreate Should a new profile be created for this user if the account does not exist?
+  * @param callback The method to be invoked when the server response is received
+  */
   UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Wrapper")
   static UBCWrapperProxy *AuthenticateApple(UBrainCloudWrapper *brainCloudWrapper, FString appleUserId, FString identityToken, bool forceCreate);
+
+  /**
+  * Authenticate the user using an epicAccountId and their authIdToken.
+  *
+  * Service Name - Authenticate
+  * Service Operation - Authenticate
+  *
+  * @param epicAccountId LocalUserId retrieved from the EOS AuthInterface's Login method.
+  * @param authIdToken IdToken string from the EOS AuthInterface's CopyIdToken method.
+  * @param forceCreate Should a new profile be created for this user if the account does not exist?
+  * @param callback The method to be invoked when the server response is received
+  */
+  UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Wrapper")
+  static UBCWrapperProxy* AuthenticateEpicGames(UBrainCloudWrapper* brainCloudWrapper, FString epicAccountId, FString authIdToken, bool forceCreate);
 
   /*
      * Authenticate the user using a steam userid and session ticket (without any validation on the userid).
@@ -531,22 +545,41 @@ public:
   UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Wrapper")
   static UBCWrapperProxy *SmartSwitchAuthenticateGoogleOpenId(UBrainCloudWrapper *brainCloudWrapper, const FString &googleUserAccountEmail, const FString &IdToken, bool forceCreate);
 
-    /*
-    * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
-    * In event the current session was previously an anonymous account, the smart switch will delete that profile.
-    * Use this function to keep a clean designflow from anonymous to signed profiles
-    * Authenticate the user using a google userId and google server authentication code.
-    *
-    * Service Name - Authenticate
-    * Service Operation - Authenticate
-    *
-    * @param appleUserId this can be user id OR the email of the user account
-    * @param identityToken  the token confirming the user's identity
-    * @param forceCreate Should a new profile be created for this user if the account does not exist?
-    * @param callback The method to be invoked when the server response is received
-    */
+  /**
+  * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
+  * In event the current session was previously an anonymous account, the smart switch will delete that profile.
+  * Use this function to keep a clean designflow from anonymous to signed profiles
+  *
+  * Authenticate the user using their Apple account and identityToken.
+  *
+  * Service Name - Authenticate
+  * Service Operation - Authenticate
+  *
+  * @param appleUserId String of the apple accounts user Id OR email
+  * @param identityToken The identityToken confirming users identity
+  * @param forceCreate Should a new profile be created for this user if the account does not exist?
+  * @param callback The method to be invoked when the server response is received
+  */
   UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Wrapper")
   static UBCWrapperProxy *SmartSwitchAuthenticateApple(UBrainCloudWrapper *brainCloudWrapper, const FString &appleUserId, const FString &identityToken, bool forceCreate);
+
+  /**
+  * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
+  * In event the current session was previously an anonymous account, the smart switch will delete that profile.
+  * Use this function to keep a clean designflow from anonymous to signed profiles
+  *
+  * Authenticate the user using an epicAccountId and their authIdToken.
+  *
+  * Service Name - Authenticate
+  * Service Operation - Authenticate
+  *
+  * @param epicAccountId LocalUserId retrieved from the EOS AuthInterface's Login method.
+  * @param authIdToken IdToken string from the EOS AuthInterface's CopyIdToken method.
+  * @param forceCreate Should a new profile be created for this user if the account does not exist?
+  * @param callback The method to be invoked when the server response is received
+  */
+  UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Wrapper")
+  static UBCWrapperProxy* SmartSwitchAuthenticateEpicGames(UBrainCloudWrapper* brainCloudWrapper, const FString& epicAccountId, const FString& authIdToken, bool forceCreate);
 
   /*
      * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
