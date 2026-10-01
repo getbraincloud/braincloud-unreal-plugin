@@ -155,6 +155,11 @@ void BrainCloudAuthentication::authenticateApple(const FString &appleUserId, con
 	authenticate(appleUserId, identityToken, EBCAuthType::Apple, "", forceCreate, "", callback);
 }
 
+void BrainCloudAuthentication::authenticateEpicGames(const FString& epicAccountId, const FString& authIdToken, bool forceCreate, IServerCallback* callback)
+{
+	authenticate(epicAccountId, authIdToken, EBCAuthType::EpicGames, "", forceCreate, "", callback);
+}
+
 void BrainCloudAuthentication::authenticateTwitter(const FString &userid, const FString &token, const FString &secret, bool forceCreate, IServerCallback *callback)
 {
 	FString buffer(token);

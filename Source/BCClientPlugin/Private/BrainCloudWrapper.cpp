@@ -214,6 +214,13 @@ void UBrainCloudWrapper::authenticateApple(FString appleUserId, FString identity
 	_client->getAuthenticationService()->authenticateApple(appleUserId, identityToken, forceCreate, this);
 }
 
+void UBrainCloudWrapper::authenticateEpicGames(FString epicAccountId, FString authIdToken, bool forceCreate, IServerCallback* callback)
+{
+	_authenticateCallback = callback;
+	initializeIdentity();
+	_client->getAuthenticationService()->authenticateEpicGames(epicAccountId, authIdToken, forceCreate, this);
+}
+
 void UBrainCloudWrapper::authenticateSteam(FString userid, FString sessionticket, bool forceCreate, IServerCallback *callback)
 {
     _authenticateCallback = callback;
@@ -346,6 +353,12 @@ void UBrainCloudWrapper::smartSwitchAuthenticateApple(const FString &appleUserId
 {
     SmartSwitchAuthenticateCallback *smartCallback = new SmartSwitchAuthenticateCallback(this, EBCAuthType::Apple, appleUserId, identityToken, in_forceCreate, in_callback);
     getIdentitiesCallback(smartCallback);
+}
+
+void UBrainCloudWrapper::smartSwitchAuthenticateEpicGames(const FString& epicAccountId, const FString& authIdToken, bool in_forceCreate, IServerCallback* in_callback)
+{
+	SmartSwitchAuthenticateCallback* smartCallback = new SmartSwitchAuthenticateCallback(this, EBCAuthType::EpicGames, epicAccountId, authIdToken, in_forceCreate, in_callback);
+	getIdentitiesCallback(smartCallback);
 }
 
 void UBrainCloudWrapper::smartSwitchAuthenticateSteam(const FString &userid, const FString &sessionticket, bool in_forceCreate, IServerCallback *in_callback)

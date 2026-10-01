@@ -270,17 +270,36 @@ public:
 	 void authenticateGoogleOpenId(FString googleUserAccountEmail, FString IdToken, bool forceCreate, IServerCallback *callback = nullptr);
 
 	 /*
-	  * Authenticate the user using a google userid(email address) and google authentication token.
+	  * Authenticate the user using their Apple account and identityToken.
 	  *
 	  * Service Name - Authenticate
 	  * Service Operation - Authenticate
 	  *
-	  * @param in_appleUserId  String of the apple accounts user Id OR email
-	  * @param in_identityToken  The authentication token confirming users identity
-	  * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
-	  * @param in_callback The method to be invoked when the server response is received
+	  * @param appleUserId String of the apple accounts user Id OR email
+	  * @param identityToken The authentication token confirming users identity
+	  * @param forceCreate Should a new profile be created for this user if the account does not exist?
+	  * @param callback The method to be invoked when the server response is received
+	  * 
+	  * @returns Performs the in_success callback on success, in_failure callback on failure
+	  * 
 	  */
 	 void authenticateApple(FString appleUserId, FString identityToken, bool forceCreate, IServerCallback *callback = nullptr);
+
+	 /*
+	  * Authenticate the user using an epicAccountId and their authIdToken.
+	  *
+	  * Service Name - Authenticate
+	  * Service Operation - Authenticate
+	  *
+	  * @param epicAccountId LocalUserId retrieved from the EOS AuthInterface's Login method.
+	  * @param authIdToken IdToken string from the EOS AuthInterface's CopyIdToken method.
+	  * @param forceCreate Should a new profile be created for this user if the account does not exist?
+	  * @param callback The method to be invoked when the server response is received
+	  * 
+	  * @returns Performs the in_success callback on success, in_failure callback on failure
+	  * 
+	  */
+	 void authenticateEpicGames(FString epicAccountId, FString authIdToken, bool forceCreate, IServerCallback* callback = nullptr);
 
 	 /*
 	  * Authenticate the user using a steam userid and session ticket (without any validation on the userid).
@@ -637,20 +656,40 @@ public:
 	  * In event the current session was previously an anonymous account, the smart switch will delete that profile.
 	  * Use this function to keep a clean designflow from anonymous to signed profiles
 	  *
-	  * Authenticate the user using a google userid(email address) and google authentication token.
+	  * Authenticate the user using their Apple account and identityToken.
 	  *
 	  * Service Name - Authenticate
 	  * Service Operation - Authenticate
 	  *
-	  * @param in_userid  String representation of apple+ userid (email)
-	  * @param in_token  The authentication token derived via the apple apis.
-	  * @param in_forceCreate Should a new profile be created for this user if the account does not exist?
-	  * @param in_callback The method to be invoked when the server response is received
+	  * @param appleUserId String of the apple accounts user Id OR email
+	  * @param identityToken The identityToken confirming users identity
+	  * @param forceCreate Should a new profile be created for this user if the account does not exist?
+	  * @param callback The method to be invoked when the server response is received
 	  *
-	  * @returns   performs the in_success callback on success, in_failure callback on failure
+	  * @returns Performs the in_success callback on success, in_failure callback on failure
 	  *
 	  */
 	 void smartSwitchAuthenticateApple(const FString &appleUserId, const FString &identityToken, bool forceCreate, IServerCallback *callback = NULL);
+
+	 /*
+	  * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.
+	  * In event the current session was previously an anonymous account, the smart switch will delete that profile.
+	  * Use this function to keep a clean designflow from anonymous to signed profiles
+	  *
+	  * Authenticate the user using an epicAccountId and their authIdToken.
+	  *
+	  * Service Name - Authenticate
+	  * Service Operation - Authenticate
+	  *
+	  * @param epicAccountId LocalUserId retrieved from the EOS AuthInterface's Login method.
+	  * @param authIdToken IdToken string from the EOS AuthInterface's CopyIdToken method.
+	  * @param forceCreate Should a new profile be created for this user if the account does not exist?
+	  * @param callback The method to be invoked when the server response is received
+	  *
+	  * @returns Performs the in_success callback on success, in_failure callback on failure
+	  *
+	  */
+	 void smartSwitchAuthenticateEpicGames(const FString& epicAccountId, const FString& authIdToken, bool forceCreate, IServerCallback* callback = NULL);
 
 	 /*
 	  * Smart Switch Authenticate will logout of the current profile, and switch to the new authentication type.

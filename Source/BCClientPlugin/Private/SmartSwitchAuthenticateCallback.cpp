@@ -128,6 +128,18 @@ void SmartSwitchAuthenticateCallback::serverCallback(ServiceName serviceName, Se
     }
     break;
 
+	case EBCAuthType::Apple:
+	{
+		m_wrapper->getBCClient()->getAuthenticationService()->authenticateApple(m_userId, m_token, m_forceCreate, m_callback);
+	}
+	break;
+
+	case EBCAuthType::EpicGames:
+	{
+		m_wrapper->getBCClient()->getAuthenticationService()->authenticateEpicGames(m_userId, m_token, m_forceCreate, m_callback);
+	}
+	break;
+
     case EBCAuthType::Twitter:
     {
         m_wrapper->getBCClient()->getAuthenticationService()->authenticateTwitter(m_userId, m_token, m_extraStringDetail, m_forceCreate, m_callback);
@@ -139,11 +151,18 @@ void SmartSwitchAuthenticateCallback::serverCallback(ServiceName serviceName, Se
         m_wrapper->getBCClient()->getAuthenticationService()->authenticateUniversal(m_userId, m_token, m_forceCreate, m_callback);
     }
     break;
+
     case EBCAuthType::Ultra:
     {
         m_wrapper->getBCClient()->getAuthenticationService()->authenticateUltra(m_userId, m_token, m_forceCreate, m_callback);        
     }
     break;
+
+	case EBCAuthType::Nintendo:
+	{
+		m_wrapper->getBCClient()->getAuthenticationService()->authenticateNintendo(m_userId, m_token, m_forceCreate, m_callback);
+	}
+	break;
     }
 
     delete this;

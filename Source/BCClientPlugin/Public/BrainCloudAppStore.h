@@ -25,6 +25,8 @@ public:
    * - windowsPhone
    * - googlePlay
    * - metaHorizon
+   * - epicGames
+   * - xsolla
    * @param jsonReceiptData The specific store data required
    * @param callback The method to be invoked when the server response is received
    */
@@ -56,6 +58,8 @@ public:
    * - windowsPhone
    * - googlePlay
    * - metaHorizon
+   * - epicGames
+   * - xsolla
    * @param userCurrency The currency type to retrieve the sales inventory for.
    * @param callback The method to be invoked when the server response is received
    */
@@ -77,6 +81,8 @@ public:
    * - windowsPhone
    * - googlePlay
    * - metaHorizon
+   * - epicGames
+   * - xsolla
    * @param userCurrency The currency type to retrieve the sales inventory for.
    * @param category The product category
    * @param callback The method to be invoked when the server response is received
@@ -89,15 +95,7 @@ public:
    * Service Name - appStore
    * Service Operation - START_PURCHASE
    *
-   * @param storeId The store platform. Valid stores are:
-   * - itunes
-   * - facebook
-   * - appworld
-   * - steam
-   * - windows
-   * - windowsPhone
-   * - googlePlay
-   * - metaHorizon
+   * @param storeId The store id. Currently only accepts "steam".
    * @param jsonPurchaseData Specific data for starting a two-stage purchase
    * @param callback The method to be invoked when the server response is received
    */
@@ -121,6 +119,8 @@ public:
    * - windowsPhone
    * - googlePlay
    * - metaHorizon
+   * - epicGames
+   * - xsolla
    * @param iapId The IAP product id as configured on brainCloud
    * @param payload The payload retrieved for the IAP product
    * @param callback The method to be invoked when the server response is received
@@ -133,15 +133,7 @@ public:
    * Service Name - appStore
    * Service Operation - FINALIZE_PURCHASE
    *
-   * @param storeId The store platform. Valid stores are:
-   * - itunes
-   * - facebook
-   * - appworld
-   * - steam
-   * - windows
-   * - windowsPhone
-   * - googlePlay
-   * - metaHorizon
+   * @param storeId The store id. Currently only accepts "steam".
    * @param transactionId The transaction id returned from startPurchase
    * @param jsonTransactionData Specific transaction data for finalizing purchase
    * @param callback The method to be invoked when the server response is received
