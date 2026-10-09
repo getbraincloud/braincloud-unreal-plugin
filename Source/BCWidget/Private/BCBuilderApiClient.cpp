@@ -21,8 +21,6 @@ void BCBuilderApiClient::Configure(const FString& InPortalUrl, const FString& In
 
 FString BCBuilderApiClient::GetApiHost() const
 {
-    // The portal's Builder API is served from the "api." host, not "portal." - same swap the
-    // reference Unity plugin's BuilderAPI.cs performs.
     if (PortalUrl.Contains(TEXT("portal.")))
     {
         FString Result = PortalUrl;
@@ -77,7 +75,6 @@ void BCBuilderApiClient::CreateApp(const FString& TeamId, const FString& AppName
 
 void BCBuilderApiClient::GetTemplateApps(FBCApiResponseDelegate OnComplete)
 {
-    // Hardcoded v1 - matches the reference Unity plugin, which does not key this one off config.Version either.
     SendRequest(TEXT("/builder/v1/utility/templateapps?liveOnly=true"), TEXT("GET"), FString(), OnComplete);
 }
 
@@ -135,9 +132,6 @@ void BCBuilderApiClient::SendRequest(const FString& Path, const FString& Verb, c
 
             UE_LOG(LogBCWidget, Log, TEXT("[BuilderAPI] <- %d %s -- body: %s"), StatusCode, *LoggedUrl, *RawContent);
 
-            // Every Builder API response wraps its payload in a top-level "response" object
-            // (confirmed against the reference Unity plugin for team/app/appsecret/create/template -
-            // all five endpoints). Unwrap it once here so every call site gets the inner payload directly.
             const TSharedPtr<FJsonObject>* InnerResponse = nullptr;
             if (Json.IsValid() && Json->TryGetObjectField(TEXT("response"), InnerResponse) && InnerResponse)
             {

@@ -3,6 +3,9 @@
 #include "BrainCloudWrapper.h"
 #include "BCClientPluginPrivatePCH.h"
 
+#include "BCSecureStore.h"
+#include "BrainCloudFunctionLibrary.h"
+
 #include "BCAuthType.h"
 #include "BrainCloudClient.h"
 #include "ServiceName.h"
@@ -42,6 +45,98 @@ void UBrainCloudWrapper::BeginDestroy()
         _client = nullptr;
     else
         delete _client;
+}
+
+bool UBrainCloudWrapper::init()
+{
+    return initFromStoredCredentials(false, FString());
+}
+
+bool UBrainCloudWrapper::initChild(const FString& childAppId)
+{
+    return initFromStoredCredentials(true, childAppId);
+}
+
+bool UBrainCloudWrapper::initFromStoredCredentials(bool bAsChildApp, const FString& childAppId)
+{
+    FBCStoredCredentials Credentials;
+    if (!FBCSecureStore::Resolve(Credentials))
+    {
+        UE_LOG(LogBrainCloud, Error, TEXT("brainCloud: no credentials found in Config/BrainCloudSettings.ini. ")
+            TEXT("Open Tools > brainCloud in the editor and sign in to pick your app. The client has NOT been initialized."));
+        return false;
+    }
+
+    const FBCStoredChildApp* Child = nullptr;
+    if (bAsChildApp)
+    {
+        Child = childAppId.IsEmpty() ? (Credentials.ChildApps.Num() > 0 ? &Credentials.ChildApps[0] : nullptr)
+                                     : Credentials.FindChild(childAppId);
+        if (!Child || Child->AppSecret.IsEmpty())
+        {
+            UE_LOG(LogBrainCloud, Error, TEXT("brainCloud: child app '%s' is not stored. Tick Parent App in Tools > brainCloud and add it. The client has NOT been initialized."),
+                childAppId.IsEmpty() ? TEXT("(first)") : *childAppId);
+            return false;
+        }
+    }
+
+    FString Url = Credentials.ServerUrl;
+    if (Url.IsEmpty())
+    {
+        Url = TEXT("https://api.braincloudservers.com/dispatcherv2");
+    }
+
+    FString Version = Credentials.Version;
+    if (Version.IsEmpty())
+    {
+        Version = UBrainCloudFunctionLibrary::GetProjectVersion();
+    }
+
+    if (Child)
+    {
+        initialize(Url, Child->AppSecret, Child->AppId, Version);
+    }
+    else if (Credentials.ChildApps.Num() > 0)
+    {
+        TMap<FString, FString> SecretMap;
+        SecretMap.Add(Credentials.AppId, Credentials.AppSecret);
+        for (const FBCStoredChildApp& Stored : Credentials.ChildApps)
+        {
+            SecretMap.Add(Stored.AppId, Stored.AppSecret);
+        }
+        initializeWithApps(Url, Credentials.AppId, SecretMap, Version, _company, _appName);
+    }
+    else
+    {
+        initialize(Url, Credentials.AppSecret, Credentials.AppId, Version);
+    }
+
+    if (FBCSecureStore::ResolveDebugLogging())
+    {
+        _client->enableLogging(true);
+    }
+
+    if (_client->isLoggingEnabled())
+    {
+        const FString Environment = UBrainCloudFunctionLibrary::GetEnvironmentFromUrl(Url);
+        if (Child)
+        {
+            UE_LOG(LogBrainCloud, Log, TEXT("brainCloud: initialized as child app %s (parent %s) on %s, version %s. ")
+                TEXT("Authentication goes straight into the child app; to reach it from a parent profile, use init + switchToChildProfile instead."),
+                *Child->AppId, *Credentials.AppId, *Environment, *Version);
+        }
+        else
+        {
+            TArray<FString> ChildIds;
+            for (const FBCStoredChildApp& Stored : Credentials.ChildApps)
+            {
+                ChildIds.Add(Stored.AppId);
+            }
+            UE_LOG(LogBrainCloud, Log, TEXT("brainCloud: initialized app %s on %s, version %s. Child apps for switchToChildProfile: %s"),
+                *Credentials.AppId, *Environment, *Version, ChildIds.Num() > 0 ? *FString::Join(ChildIds, TEXT(", ")) : TEXT("none"));
+        }
+    }
+    return true;
 }
 
 void UBrainCloudWrapper::initialize(FString url, FString secretKey, FString appId, FString appVersion)

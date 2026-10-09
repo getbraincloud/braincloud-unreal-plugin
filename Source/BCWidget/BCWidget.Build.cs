@@ -42,10 +42,6 @@ public class BCWidget : ModuleRules
             PrivateDependencyModuleNames.AddRange(new string[] { "UnrealEd", "EditorStyle" });
         }
 
-        // Loopback OAuth redirect listener - HTTPServer module landed in UE 4.24.
-        // Below that floor the Login button is disabled rather than pulling in a fallback listener.
-        // (Target.Version, not ENGINE_MAJOR_VERSION/ENGINE_MINOR_VERSION - those are C++ macros
-        // from Version.h and aren't available here, this file is compiled as a C# UBT script.)
         bool bOAuthSupported = Target.Version.MajorVersion == 5 ||
             (Target.Version.MajorVersion == 4 && Target.Version.MinorVersion >= 24);
 

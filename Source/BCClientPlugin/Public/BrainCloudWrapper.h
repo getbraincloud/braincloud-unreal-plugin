@@ -34,7 +34,27 @@ public:
 	 virtual void BeginDestroy() override;
 
 	 /**
+	  * Method initializes the BrainCloudClient with the app credentials set in the
+	  * brainCloud editor panel (Tools > brainCloud). Stored child apps are also registered
+	  * so switchToChildProfile can be used.
+	  *
+	  * @return True if stored credentials were found and the client was initialized
+	  */
+	 bool init();
+
+	 /**
+	  * Method initializes the BrainCloudClient as one of the child apps set in the
+	  * brainCloud editor panel (Tools > brainCloud).
+	  *
+	  * @param childAppId The child app's id. If empty, the first stored child app is used
+	  * @return True if the child app was found and the client was initialized
+	  */
+	 bool initChild(const FString& childAppId = TEXT(""));
+
+	 /**
 	  * Method initializes the BrainCloudClient.
+	  *
+	  * Deprecated, use init() instead.
 	  *
 	  * @param serverURL The url to the brainCloud server
 	  * @param secretKey The secret key for your app
@@ -1059,6 +1079,8 @@ protected:
 
 	 void loadData();
 	 void saveData();
+
+	 bool initFromStoredCredentials(bool bAsChildApp, const FString& childAppId);
 
 	 BrainCloudClient *_client = nullptr;
 

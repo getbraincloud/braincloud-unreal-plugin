@@ -1,120 +1,82 @@
 // Copyright 2026 bitHeads, Inc. All Rights Reserved.
 
 #include "BCEditorCredentialsStore.h"
-#include "Containers/StringConv.h"
-#include "Misc/Base64.h"
-#include "Misc/ConfigCacheIni.h"
+#include "BCSecureStore.h"
+#include "HAL/FileManager.h"
 #include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
-#include "Runtime/Launch/Resources/Version.h"
 
 namespace
 {
-    const TCHAR* GSectionName = TEXT("EditorCredentials");
-    const TCHAR* GFilename = TEXT("BCEditorSettings.ini");
+    FString GetSessionPath()
+    {
+        return FPaths::Combine(FPaths::ProjectSavedDir(), TEXT("BrainCloud"), TEXT("EditorSession.ini"));
+    }
 
-    FString GetConfigPath()
+    FString GetLegacyPath()
     {
-        FString ConfigPath = FPaths::ProjectConfigDir() + GFilename;
-#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION > 1
-        ConfigPath = FConfigCacheIni::NormalizeConfigIniPath(FPaths::ProjectConfigDir() + FString(GFilename));
-#endif
-        return ConfigPath;
+        return FPaths::Combine(FPaths::ProjectConfigDir(), TEXT("BCEditorSettings.ini"));
     }
-}
 
-FString BCEditorCredentialsStore::Obfuscate(const FString& PlainText)
-{
-    FTCHARToUTF8 Utf8(*PlainText);
-    TArray<uint8> Bytes;
-    Bytes.Append(reinterpret_cast<const uint8*>(Utf8.Get()), Utf8.Length());
-    for (uint8& Byte : Bytes)
+    void DeleteLegacyFile()
     {
-        // Rotate right 5 bits - cosmetic only, reversed by Deobfuscate's rotate-left-5.
-        Byte = uint8(((Byte >> 5) & 0x07) | ((Byte << 3) & 0xF8));
+        const FString Legacy = GetLegacyPath();
+        if (FPaths::FileExists(Legacy))
+        {
+            IFileManager::Get().Delete(*Legacy);
+        }
     }
-    return FBase64::Encode(Bytes);
-}
-
-FString BCEditorCredentialsStore::Deobfuscate(const FString& Obfuscated)
-{
-    TArray<uint8> Bytes;
-    if (Obfuscated.IsEmpty() || !FBase64::Decode(Obfuscated, Bytes))
-    {
-        return FString();
-    }
-    for (uint8& Byte : Bytes)
-    {
-        Byte = uint8(((Byte << 5) & 0xE0) | ((Byte >> 3) & 0x1F));
-    }
-    Bytes.Add(0);
-    return FString(UTF8_TO_TCHAR(reinterpret_cast<const ANSICHAR*>(Bytes.GetData())));
 }
 
 FBCEditorCredentials BCEditorCredentialsStore::Load()
 {
-    FBCEditorCredentials Result;
+    DeleteLegacyFile();
 
-    const FString ConfigPath = GetConfigPath();
-    if (!FPaths::FileExists(ConfigPath))
+    FBCEditorCredentials Result;
+    TArray<FString> Lines;
+    if (!FFileHelper::LoadFileToStringArray(Lines, *GetSessionPath()))
     {
         return Result;
     }
 
-    GConfig->LoadFile(ConfigPath);
-#if (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 4)
-    const FConfigSection* ConfigSection = GConfig->GetSection(GSectionName, false, ConfigPath);
-#else
-    FConfigSection* ConfigSection = GConfig->GetSectionPrivate(GSectionName, false, true, ConfigPath);
-#endif
-
-    if (ConfigSection)
+    for (const FString& Line : Lines)
     {
-        TArray<FName> Keys;
-        ConfigSection->GenerateKeyArray(Keys);
-
-        if (Keys.Contains(TEXT("AdminEmail")))
+        FString Key, Value;
+        if (!Line.Split(TEXT("="), &Key, &Value))
         {
-            Result.AdminEmail = Deobfuscate(ConfigSection->Find(TEXT("AdminEmail"))->GetValue());
+            continue;
         }
-        if (Keys.Contains(TEXT("TeamId")))
-        {
-            Result.TeamId = Deobfuscate(ConfigSection->Find(TEXT("TeamId"))->GetValue());
-        }
-        if (Keys.Contains(TEXT("ApiKey")))
-        {
-            Result.ApiKey = Deobfuscate(ConfigSection->Find(TEXT("ApiKey"))->GetValue());
-        }
+        const FString Decoded = FBCSecureStore::DecodeValue(Value);
+        if (Key == TEXT("AdminEmail")) Result.AdminEmail = Decoded;
+        else if (Key == TEXT("TeamId")) Result.TeamId = Decoded;
+        else if (Key == TEXT("ApiKey")) Result.ApiKey = Decoded;
+        else if (Key == TEXT("AccessToken")) Result.AccessToken = Decoded;
+        else if (Key == TEXT("ExpiresAt")) LexFromString(Result.AccessTokenExpiresAt, *Decoded);
     }
-
-    GConfig->Flush(false, ConfigPath);
     return Result;
 }
 
 void BCEditorCredentialsStore::Save(const FBCEditorCredentials& Credentials)
 {
-    const FString ConfigPath = GetConfigPath();
+    DeleteLegacyFile();
 
-    if (!FPaths::FileExists(ConfigPath))
+    auto Line = [](const TCHAR* Key, const FString& Value)
     {
-        FFileHelper::SaveStringToFile(TEXT(""), *ConfigPath);
-    }
+        return FString::Printf(TEXT("%s=%s\n"), Key, *FBCSecureStore::EncodeValue(Value));
+    };
 
-    GConfig->LoadFile(ConfigPath);
+    FString Contents = TEXT("[Session]\n");
+    Contents += Line(TEXT("AdminEmail"), Credentials.AdminEmail);
+    Contents += Line(TEXT("TeamId"), Credentials.TeamId);
+    Contents += Line(TEXT("ApiKey"), Credentials.ApiKey);
+    Contents += Line(TEXT("AccessToken"), Credentials.AccessToken);
+    Contents += Line(TEXT("ExpiresAt"), LexToString(Credentials.AccessTokenExpiresAt));
 
-    if (GConfig->DoesSectionExist(GSectionName, ConfigPath))
-    {
-        GConfig->EmptySection(GSectionName, ConfigPath);
-    }
-
-    GConfig->SetString(GSectionName, TEXT("AdminEmail"), *Obfuscate(Credentials.AdminEmail), ConfigPath);
-    GConfig->SetString(GSectionName, TEXT("TeamId"), *Obfuscate(Credentials.TeamId), ConfigPath);
-    GConfig->SetString(GSectionName, TEXT("ApiKey"), *Obfuscate(Credentials.ApiKey), ConfigPath);
-
-    GConfig->Flush(false, ConfigPath);
+    FFileHelper::SaveStringToFile(Contents, *GetSessionPath());
 }
 
 void BCEditorCredentialsStore::Clear()
 {
-    Save(FBCEditorCredentials());
+    DeleteLegacyFile();
+    IFileManager::Get().Delete(*GetSessionPath(), false, false, true);
 }

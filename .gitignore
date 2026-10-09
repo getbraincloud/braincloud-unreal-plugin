@@ -74,3 +74,6 @@ DerivedDataCache/*
 .vs/
 
 /.idea/*
+
+# Prebuilt brainCloud native libraries
+!Source/BCClientPlugin/ThirdParty/BrainCloudNative/lib/**

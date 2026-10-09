@@ -63,6 +63,26 @@ public:
   static void EnableAutoReconnect(UBrainCloudWrapper* brainCloudWrapper, bool enabled);
 
   /**
+     * Method initializes the BrainCloudClient with the app credentials set in the
+     * brainCloud editor panel (Tools > brainCloud). Stored child apps are also registered
+     * so SwitchToChildProfile can be used.
+     *
+     * @return True if stored credentials were found and the client was initialized
+     */
+  UFUNCTION(BlueprintCallable, Category = "BrainCloud|Wrapper")
+  static bool Init(UBrainCloudWrapper *brainCloudWrapper);
+
+  /**
+     * Method initializes the BrainCloudClient as one of the child apps set in the
+     * brainCloud editor panel (Tools > brainCloud).
+     *
+     * @param childAppId The child app's id. If empty, the first stored child app is used
+     * @return True if the child app was found and the client was initialized
+     */
+  UFUNCTION(BlueprintCallable, Category = "BrainCloud|Wrapper")
+  static bool InitChild(UBrainCloudWrapper *brainCloudWrapper, const FString &childAppId);
+
+  /**
      * Method initializes the BrainCloudClient.
      *
      * @param serverURL The url to the brainCloud server
@@ -70,7 +90,8 @@ public:
      * @param appId The app's id
      * @param version The app's version
      */
-  UFUNCTION(BlueprintCallable, Category = "BrainCloud|Wrapper")
+  UFUNCTION(BlueprintCallable, Category = "BrainCloud|Wrapper",
+      meta = (DeprecatedFunction, DeprecationMessage = "Use Init instead. Set your app credentials in the editor with Tools > brainCloud."))
   static void Initialize(UBrainCloudWrapper *brainCloudWrapper, FString serverUrl, FString secretKey, FString appId, FString version);
 
   /**

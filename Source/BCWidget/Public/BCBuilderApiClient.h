@@ -5,12 +5,11 @@
 #include "CoreMinimal.h"
 #include "Dom/JsonObject.h"
 
-// bSuccess, ResponseJson (may be null on transport failure), ErrorMessage (empty on success)
 DECLARE_DELEGATE_ThreeParams(FBCApiResponseDelegate, bool, TSharedPtr<FJsonObject>, FString);
 
-// Thin wrapper over the brainCloud portal's Builder API (team/app browsing + app creation).
-// Mirrors the reference Unity plugin's BuilderAPI.cs - Basic auth (AdminEmail:ApiKey), the
-// api./portal. host swap, and one method per endpoint.
+/**
+ * Requests teams and apps from the brainCloud portal.
+ */
 class BCBuilderApiClient
 {
 public:

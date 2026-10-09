@@ -23,7 +23,6 @@ namespace
         0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2
     };
 
-    // FIPS 180-4 single-block compression - processes one 64-byte chunk, updates the running hash state.
     void Sha256ProcessBlock(uint32 H[8], const uint8* Block)
     {
         uint32 W[64];
@@ -106,7 +105,6 @@ FString BCOAuthPkce::Base64UrlEncode(const uint8* Data, int32 Length)
 
 FString BCOAuthPkce::GenerateCodeVerifier()
 {
-    // 64 hex chars, matching the reference portal client's Guid("N")+Guid("N") verifier shape.
     return FGuid::NewGuid().ToString(EGuidFormats::Digits) + FGuid::NewGuid().ToString(EGuidFormats::Digits);
 }
 

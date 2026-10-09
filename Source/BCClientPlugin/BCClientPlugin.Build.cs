@@ -56,7 +56,38 @@ public class BCClientPlugin : ModuleRules
                 });
 
         PublicDefinitions.Add("PLATFORM_UWP=0");
-      
+
+        string SecureRoot = Path.Combine(ModulePath, "ThirdParty", "BrainCloudNative");
+        string SecureLib = null;
+        if (Target.Platform == UnrealTargetPlatform.Win64)
+        {
+            SecureLib = Path.Combine(SecureRoot, "lib", "Win64", "BrainCloudNative.lib");
+        }
+        else if (Target.Platform == UnrealTargetPlatform.Mac)
+        {
+            SecureLib = Path.Combine(SecureRoot, "lib", "Mac", "libBrainCloudNative.a");
+        }
+        else if (Target.Platform == UnrealTargetPlatform.Linux)
+        {
+            SecureLib = Path.Combine(SecureRoot, "lib", "Linux", "libBrainCloudNative.a");
+        }
+
+        bool bHasSecureLib = SecureLib != null && File.Exists(SecureLib);
+        if (bHasSecureLib)
+        {
+            PrivateIncludePaths.Add(Path.Combine(SecureRoot, "include"));
+            PublicAdditionalLibraries.Add(SecureLib);
+            if (Target.Platform == UnrealTargetPlatform.Win64)
+            {
+                PublicSystemLibraries.Add("bcrypt.lib");
+            }
+            else if (Target.Platform == UnrealTargetPlatform.Mac)
+            {
+                PublicFrameworks.Add("Security");
+            }
+        }
+        PublicDefinitions.Add("BC_SECURE_NATIVE=" + (bHasSecureLib ? "1" : "0"));
+
         if (Target.Platform == UnrealTargetPlatform.Win64)
         {
             PrivateDependencyModuleNames.Add("zlib");

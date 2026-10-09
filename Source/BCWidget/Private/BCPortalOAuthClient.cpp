@@ -2,6 +2,7 @@
 
 #include "BCPortalOAuthClient.h"
 #include "BCOAuthPkce.h"
+#include "BCWidgetPrivatePCH.h"
 #include "GenericPlatform/GenericPlatformHttp.h"
 #include "HAL/PlatformProcess.h"
 #include "HttpModule.h"
@@ -24,9 +25,6 @@ namespace
     const TCHAR* GOAuthScope = TEXT("openid email builder_api team_info app_info team_read app_read app_create utility_read");
 
 #if BC_WIDGET_OAUTH_SUPPORTED
-    // FHttpRequestHandler has been either a TFunction (constructible directly from a lambda)
-    // or a TDelegate (needs ::CreateLambda) depending on engine version - pick whichever the
-    // installed engine's type actually supports.
     template <typename LambdaType>
     auto MakeHttpRequestHandler(LambdaType&& InLambda, int) -> decltype(FHttpRequestHandler::CreateLambda(Forward<LambdaType>(InLambda)))
     {
@@ -64,10 +62,13 @@ void BCPortalOAuthClient::StartLogin(const FString& InServerUrl, const FString& 
     ExpectedState = BCOAuthPkce::GenerateState();
     const FString CodeChallenge = BCOAuthPkce::GenerateCodeChallenge(CodeVerifier);
     PendingResult = FBCLoginResult();
+    PreferredTeamId.Empty();
     AccessToken.Empty();
 
+    StopListening();
+
     FHttpServerModule& HttpServerModule = FHttpServerModule::Get();
-    Router = HttpServerModule.GetHttpRouter(ListenPort, /*bFailOnBindFailure=*/false);
+    Router = HttpServerModule.GetHttpRouter(ListenPort, false);
     if (!Router.IsValid())
     {
         Fail(FString::Printf(TEXT("Could not open the OAuth redirect listener on port %d - is another Unreal Editor already logging in?"), ListenPort));
@@ -76,10 +77,17 @@ void BCPortalOAuthClient::StartLogin(const FString& InServerUrl, const FString& 
 
     RouteHandle = Router->BindRoute(FHttpPath(TEXT("/oauth/callback")), EHttpServerRequestVerbs::VERB_GET,
         MakeHttpRequestHandler(
-            [this](const FHttpServerRequest& Request, const FHttpResultCallback& OnComplete)
+            [WeakThis = TWeakPtr<BCPortalOAuthClient>(AsShared())](const FHttpServerRequest& Request, const FHttpResultCallback& OnComplete)
             {
-                return HandleOAuthCallback(Request, OnComplete);
+                TSharedPtr<BCPortalOAuthClient> This = WeakThis.Pin();
+                return This.IsValid() && This->HandleOAuthCallback(Request, OnComplete);
             }, 0));
+    if (!RouteHandle.IsValid())
+    {
+        Fail(FString::Printf(TEXT("Could not register the OAuth redirect on port %d - is another Unreal Editor already logging in?"), ListenPort));
+        return;
+    }
+    bAwaitingCallback = true;
     HttpServerModule.StartAllListeners();
 
     const FString AuthorizeUrl = FString::Printf(
@@ -154,6 +162,19 @@ void BCPortalOAuthClient::RefreshApiKeyForTeam(const FString& TeamId, FBCApiKeyR
     Request->ProcessRequest();
 }
 
+void BCPortalOAuthClient::ResumeLogin(const FString& InServerUrl, const FString& InAccessToken, int64 InExpiresAt,
+    const FString& InPreferredTeamId, FBCLoginSuccessDelegate OnSuccess, FBCLoginFailureDelegate OnFailure)
+{
+    OnSuccessDelegate = OnSuccess;
+    OnFailureDelegate = OnFailure;
+    ServerUrl = InServerUrl;
+    AccessToken = InAccessToken;
+    AccessTokenExpiresAt = InExpiresAt;
+    PreferredTeamId = InPreferredTeamId;
+    PendingResult = FBCLoginResult();
+    FetchUserInfo();
+}
+
 void BCPortalOAuthClient::Fail(const FString& Message)
 {
 #if BC_WIDGET_OAUTH_SUPPORTED
@@ -168,6 +189,7 @@ bool BCPortalOAuthClient::HandleOAuthCallback(const FHttpServerRequest& Request,
 {
     const FString Code = Request.QueryParams.FindRef(TEXT("code"));
     const FString State = Request.QueryParams.FindRef(TEXT("state"));
+    UE_LOG(LogBCWidget, Log, TEXT("[OAuth] redirect received (%s)"), bAwaitingCallback ? TEXT("first") : TEXT("repeat, ignored"));
 
     const FString HtmlBody =
         TEXT("<html><body style=\"font-family:sans-serif;text-align:center;padding-top:4em;\">")
@@ -176,34 +198,73 @@ bool BCPortalOAuthClient::HandleOAuthCallback(const FHttpServerRequest& Request,
         TEXT("</body></html>");
     OnComplete(FHttpServerResponse::Create(HtmlBody, TEXT("text/html")));
 
-    // Don't unbind the route / touch router state synchronously from inside its own dispatch -
-    // defer to the next game thread tick.
-    AsyncTask(ENamedThreads::GameThread, [this, Code, State]()
+    if (!bAwaitingCallback)
     {
-        StopListening();
+        return true;
+    }
+    bAwaitingCallback = false;
 
-        if (State.IsEmpty() || State != ExpectedState)
+    AsyncTask(ENamedThreads::GameThread, [WeakThis = TWeakPtr<BCPortalOAuthClient>(AsShared()), Code, State]()
+    {
+        TSharedPtr<BCPortalOAuthClient> This = WeakThis.Pin();
+        if (This.IsValid())
         {
-            Fail(TEXT("OAuth state mismatch - login was not initiated by this editor session."));
-            return;
+            This->CompleteCallback(Code, State);
         }
-        if (Code.IsEmpty())
-        {
-            Fail(TEXT("Login was cancelled or the portal did not return an authorization code."));
-            return;
-        }
-
-        ExchangeToken(Code);
     });
 
     return true;
 }
 
+void BCPortalOAuthClient::CompleteCallback(const FString& Code, const FString& State)
+{
+    StopListeningAfterGrace();
+
+    if (State.IsEmpty() || State != ExpectedState)
+    {
+        Fail(TEXT("OAuth state mismatch - login was not initiated by this editor session."));
+        return;
+    }
+    if (Code.IsEmpty())
+    {
+        Fail(TEXT("Login was cancelled or the portal did not return an authorization code."));
+        return;
+    }
+
+    ExchangeToken(Code);
+}
+
+void BCPortalOAuthClient::StopListeningAfterGrace()
+{
+    TWeakPtr<BCPortalOAuthClient> WeakSelf(AsShared());
+    auto Tick = [WeakSelf](float)
+    {
+        if (TSharedPtr<BCPortalOAuthClient> This = WeakSelf.Pin())
+        {
+            This->StopListening();
+        }
+        return false;
+    };
+#if ENGINE_MAJOR_VERSION >= 5
+    GraceTickerHandle = FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateLambda(Tick), 30.0f);
+#else
+    GraceTickerHandle = FTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateLambda(Tick), 30.0f);
+#endif
+}
+
 void BCPortalOAuthClient::StopListening()
 {
-    // Only unbind our own route - HTTPServer's Start/StopAllListeners is process-global, and
-    // other systems in the same editor may be using it, so we deliberately never call
-    // StopAllListeners() here. An idle router with no bound routes is harmless.
+    bAwaitingCallback = false;
+    if (GraceTickerHandle.IsValid())
+    {
+#if ENGINE_MAJOR_VERSION >= 5
+        FTSTicker::GetCoreTicker().RemoveTicker(GraceTickerHandle);
+#else
+        FTicker::GetCoreTicker().RemoveTicker(GraceTickerHandle);
+#endif
+        GraceTickerHandle.Reset();
+    }
+
     if (Router.IsValid() && RouteHandle.IsValid())
     {
         Router->UnbindRoute(RouteHandle);
@@ -212,7 +273,7 @@ void BCPortalOAuthClient::StopListening()
     RouteHandle.Reset();
 }
 
-#endif // BC_WIDGET_OAUTH_SUPPORTED
+#endif
 
 void BCPortalOAuthClient::ExchangeToken(const FString& AuthCode)
 {
@@ -235,11 +296,16 @@ void BCPortalOAuthClient::ExchangeToken(const FString& AuthCode)
     Request->SetContentAsString(Body);
 
     Request->OnProcessRequestComplete().BindLambda(
-        [this](FHttpRequestPtr, FHttpResponsePtr Response, bool bConnectedSuccessfully)
+        [WeakThis = TWeakPtr<BCPortalOAuthClient>(AsShared())](FHttpRequestPtr, FHttpResponsePtr Response, bool bConnectedSuccessfully)
         {
+            TSharedPtr<BCPortalOAuthClient> This = WeakThis.Pin();
+            if (!This.IsValid())
+            {
+                return;
+            }
             if (!bConnectedSuccessfully || !Response.IsValid() || Response->GetResponseCode() < 200 || Response->GetResponseCode() >= 300)
             {
-                Fail(TEXT("Could not exchange the authorization code for an access token."));
+                This->Fail(TEXT("Could not exchange the authorization code for an access token."));
                 return;
             }
 
@@ -247,12 +313,15 @@ void BCPortalOAuthClient::ExchangeToken(const FString& AuthCode)
             FString Token;
             if (!Json.IsValid() || !Json->TryGetStringField(TEXT("access_token"), Token))
             {
-                Fail(TEXT("Portal token response did not contain an access_token."));
+                This->Fail(TEXT("Portal token response did not contain an access_token."));
                 return;
             }
 
-            AccessToken = Token;
-            FetchUserInfo();
+            int32 ExpiresIn = 3600;
+            Json->TryGetNumberField(TEXT("expires_in"), ExpiresIn);
+            This->AccessToken = Token;
+            This->AccessTokenExpiresAt = FDateTime::UtcNow().ToUnixTimestamp() + ExpiresIn;
+            This->FetchUserInfo();
         });
     Request->ProcessRequest();
 }
@@ -270,25 +339,30 @@ void BCPortalOAuthClient::FetchUserInfo()
     Request->SetHeader(TEXT("Accept"), TEXT("application/json"));
 
     Request->OnProcessRequestComplete().BindLambda(
-        [this](FHttpRequestPtr, FHttpResponsePtr Response, bool bConnectedSuccessfully)
+        [WeakThis = TWeakPtr<BCPortalOAuthClient>(AsShared())](FHttpRequestPtr, FHttpResponsePtr Response, bool bConnectedSuccessfully)
         {
+            TSharedPtr<BCPortalOAuthClient> This = WeakThis.Pin();
+            if (!This.IsValid())
+            {
+                return;
+            }
             if (!bConnectedSuccessfully || !Response.IsValid() || Response->GetResponseCode() < 200 || Response->GetResponseCode() >= 300)
             {
-                Fail(TEXT("Could not fetch account info from the brainCloud portal."));
+                This->Fail(TEXT("Could not fetch account info from the brainCloud portal."));
                 return;
             }
 
             const TSharedPtr<FJsonObject> Json = JsonUtil::jsonStringToValue(Response->GetContentAsString());
             if (!Json.IsValid())
             {
-                Fail(TEXT("Portal /user/me response was not valid JSON."));
+                This->Fail(TEXT("Portal /user/me response was not valid JSON."));
                 return;
             }
 
-            Json->TryGetStringField(TEXT("email"), PendingResult.Email);
-            if (!Json->TryGetStringField(TEXT("id"), PendingResult.AdminId))
+            Json->TryGetStringField(TEXT("email"), This->PendingResult.Email);
+            if (!Json->TryGetStringField(TEXT("id"), This->PendingResult.AdminId))
             {
-                Json->TryGetStringField(TEXT("sub"), PendingResult.AdminId);
+                Json->TryGetStringField(TEXT("sub"), This->PendingResult.AdminId);
             }
 
             const TSharedPtr<FJsonObject>* TeamInfo = nullptr;
@@ -297,7 +371,7 @@ void BCPortalOAuthClient::FetchUserInfo()
                 const TSharedPtr<FJsonObject>* CurrentTeam = nullptr;
                 if ((*TeamInfo)->TryGetObjectField(TEXT("current_team"), CurrentTeam) && CurrentTeam)
                 {
-                    (*CurrentTeam)->TryGetStringField(TEXT("teamId"), PendingResult.CurrentTeamId);
+                    (*CurrentTeam)->TryGetStringField(TEXT("teamId"), This->PendingResult.CurrentTeamId);
                 }
 
                 const TArray<TSharedPtr<FJsonValue>>* AvailableTeams = nullptr;
@@ -312,24 +386,31 @@ void BCPortalOAuthClient::FetchUserInfo()
                             (*TeamObj)->TryGetStringField(TEXT("teamId"), Team.TeamId);
                             (*TeamObj)->TryGetStringField(TEXT("teamName"), Team.TeamName);
                             (*TeamObj)->TryGetBoolField(TEXT("apiEnabled"), Team.bApiEnabled);
-                            PendingResult.Teams.Add(Team);
+                            This->PendingResult.Teams.Add(Team);
                         }
                     }
                 }
             }
 
-            if (PendingResult.CurrentTeamId.IsEmpty() && PendingResult.Teams.Num() > 0)
+            const FString Preferred = This->PreferredTeamId;
+            if (!Preferred.IsEmpty() && This->PendingResult.Teams.ContainsByPredicate(
+                [&Preferred](const FBCPortalTeam& Team) { return Team.TeamId == Preferred; }))
             {
-                PendingResult.CurrentTeamId = PendingResult.Teams[0].TeamId;
+                This->PendingResult.CurrentTeamId = Preferred;
             }
 
-            if (PendingResult.CurrentTeamId.IsEmpty())
+            if (This->PendingResult.CurrentTeamId.IsEmpty() && This->PendingResult.Teams.Num() > 0)
             {
-                Fail(TEXT("Your brainCloud account has no teams to select from."));
+                This->PendingResult.CurrentTeamId = This->PendingResult.Teams[0].TeamId;
+            }
+
+            if (This->PendingResult.CurrentTeamId.IsEmpty())
+            {
+                This->Fail(TEXT("Your brainCloud account has no teams to select from."));
                 return;
             }
 
-            AddTempApiKey();
+            This->AddTempApiKey();
         });
     Request->ProcessRequest();
 }
@@ -348,11 +429,16 @@ void BCPortalOAuthClient::AddTempApiKey()
     Request->SetContentAsString(TEXT(""));
 
     Request->OnProcessRequestComplete().BindLambda(
-        [this](FHttpRequestPtr, FHttpResponsePtr Response, bool bConnectedSuccessfully)
+        [WeakThis = TWeakPtr<BCPortalOAuthClient>(AsShared())](FHttpRequestPtr, FHttpResponsePtr Response, bool bConnectedSuccessfully)
         {
+            TSharedPtr<BCPortalOAuthClient> This = WeakThis.Pin();
+            if (!This.IsValid())
+            {
+                return;
+            }
             if (!bConnectedSuccessfully || !Response.IsValid() || Response->GetResponseCode() < 200 || Response->GetResponseCode() >= 300)
             {
-                Fail(TEXT("Could not enable the Builder API for this team - check that it's enabled in Team Setup on the portal."));
+                This->Fail(TEXT("Could not enable the Builder API for this team - check that it's enabled in Team Setup on the portal."));
                 return;
             }
 
@@ -364,17 +450,19 @@ void BCPortalOAuthClient::AddTempApiKey()
                 const TSharedPtr<FJsonObject>* InnerObj;
                 if (It->Value.IsValid() && It->Value->TryGetObject(InnerObj))
                 {
-                    (*InnerObj)->TryGetStringField(TEXT("apiKey"), PendingResult.ApiKey);
+                    (*InnerObj)->TryGetStringField(TEXT("apiKey"), This->PendingResult.ApiKey);
                 }
             }
 
-            if (PendingResult.ApiKey.IsEmpty())
+            if (This->PendingResult.ApiKey.IsEmpty())
             {
-                Fail(TEXT("Portal did not return a Builder API key for this team."));
+                This->Fail(TEXT("Portal did not return a Builder API key for this team."));
                 return;
             }
 
-            OnSuccessDelegate.ExecuteIfBound(PendingResult);
+            This->PendingResult.AccessToken = This->AccessToken;
+            This->PendingResult.AccessTokenExpiresAt = This->AccessTokenExpiresAt;
+            This->OnSuccessDelegate.ExecuteIfBound(This->PendingResult);
         });
     Request->ProcessRequest();
 }
