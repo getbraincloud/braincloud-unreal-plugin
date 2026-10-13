@@ -525,10 +525,15 @@ void UBCUtilityWidgetBase::HandleTemplateAppsResponse(bool bSuccess, TSharedPtr<
 {
     if (!bSuccess)
     {
-        ReportRequestFailure(ErrorMessage);
+        UE_LOG(LogBCWidget, Warning, TEXT("[Panel] template apps request failed: %s"), *ErrorMessage);
+        ReportRequestFailure(TEXT("Unreal template apps are not available on this server."));
         return;
     }
     const TArray<FBCPortalTemplateApp> Templates = ParseAppArray<FBCPortalTemplateApp>(Json);
+    if (Templates.Num() == 0)
+    {
+        Notify(TEXT("No Unreal template apps are available on this server."), true);
+    }
     PopulateTemplates(Templates);
     OnTemplateAppsReceived(Templates);
 }
@@ -881,6 +886,7 @@ void UBCUtilityWidgetBase::LoadFieldsFromStore()
 
     bCreateOptionSelected = false;
     UpdateCreateAppView();
+    UpdateChildAppsDisplay();
 
     const FString StoredBase = StripDispatcher(GetConfiguredServerUrl());
     const bool bDefault = StoredBase.IsEmpty() || StoredBase == StripDispatcher(DefaultServerUrl);
@@ -1345,22 +1351,20 @@ void UBCUtilityWidgetBase::UpdateChildVisibility()
             AddChildRow(FBCStoredChildApp());
         }
     }
-    UpdateChildAppsDisplay();
 }
 
 void UBCUtilityWidgetBase::UpdateChildAppsDisplay()
 {
+    FBCStoredCredentials Stored;
+    FBCSecureStore::Resolve(Stored);
+
     TArray<FString> Lines;
-    if (IsParentAppChecked())
+    for (int32 i = 0; i < Stored.ChildApps.Num(); ++i)
     {
-        for (const UBCChildAppRowWidget* Row : ChildRows)
-        {
-            const FBCStoredChildApp& Child = Row->GetChild();
-            if (!Child.AppId.IsEmpty())
-            {
-                Lines.Add(Child.AppName.IsEmpty() ? Child.AppId : FString::Printf(TEXT("%s (%s)"), *Child.AppName, *Child.AppId));
-            }
-        }
+        const FBCStoredChildApp& Child = Stored.ChildApps[i];
+        Lines.Add(Child.AppName.IsEmpty()
+            ? FString::Printf(TEXT("%d. %s"), i, *Child.AppId)
+            : FString::Printf(TEXT("%d. %s (%s)"), i, *Child.AppName, *Child.AppId));
     }
     SetPanelText(ChildAppsTextW, FString::Join(Lines, TEXT("\n")));
     SetPanelShown(ChildAppsCredentialsSectionW, Lines.Num() > 0);
@@ -1435,7 +1439,6 @@ void UBCUtilityWidgetBase::RefreshChildRows(const UBCChildAppRowWidget* Skip)
         Row->SetRemovable(RowIndex > 0);
     }
     UpdateChildControls();
-    UpdateChildAppsDisplay();
 }
 
 TArray<FBCPortalApp> UBCUtilityWidgetBase::GetChildAppsOf(const FString& ParentAppId) const
@@ -1727,6 +1730,7 @@ void UBCUtilityWidgetBase::FinishCreatedApp(const FString& AppId, const FString&
         return;
     }
     FBCSecureStore::ClearChildren();
+    UpdateChildAppsDisplay();
     Notify(FString::Printf(TEXT("Created and saved brainCloud app %s."), *AppName), false);
 }
 

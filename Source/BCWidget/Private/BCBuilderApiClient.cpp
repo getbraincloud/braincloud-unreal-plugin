@@ -75,7 +75,7 @@ void BCBuilderApiClient::CreateApp(const FString& TeamId, const FString& AppName
 
 void BCBuilderApiClient::GetTemplateApps(FBCApiResponseDelegate OnComplete)
 {
-    SendRequest(TEXT("/builder/v1/utility/templateapps?liveOnly=true"), TEXT("GET"), FString(), OnComplete);
+    SendRequest(TEXT("/builder/v1/utility/templateapps?liveOnly=true&engine=unreal"), TEXT("GET"), FString(), OnComplete);
 }
 
 void BCBuilderApiClient::SendRequest(const FString& Path, const FString& Verb, const FString& Body, FBCApiResponseDelegate OnComplete)
