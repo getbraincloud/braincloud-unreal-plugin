@@ -67,11 +67,11 @@ public class BCClientPlugin : ModuleRules
         }
         else if (Target.Platform == UnrealTargetPlatform.Mac)
         {
-            SecureLibs.Add(Path.Combine(SecureLibRoot, "Mac", "libBrainCloudNative.a"));
+            SecureLibs.Add(Path.Combine(SecureLibRoot, "Mac", "BrainCloudNative-Mac.a"));
         }
         else if (Target.Platform == UnrealTargetPlatform.IOS)
         {
-            SecureLibs.Add(Path.Combine(SecureLibRoot, "IOS", "libBrainCloudNative.a"));
+            SecureLibs.Add(Path.Combine(SecureLibRoot, "iOS", "BrainCloudNative-iOS.a"));
         }
         else if (Target.Platform == UnrealTargetPlatform.Android)
         {
