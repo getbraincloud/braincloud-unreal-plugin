@@ -2,6 +2,9 @@
 
 #include "BrainCloudNative.h"
 
+#include <string>
+#include <vector>
+
 namespace braincloud {
 
 /**

@@ -69,6 +69,10 @@ public class BCClientPlugin : ModuleRules
         {
             NativeLibs.Add(Path.Combine(NativeLibRoot, "Mac", "BrainCloudNative-Mac.a"));
         }
+        else if (Target.Platform == UnrealTargetPlatform.IOS && Target.Architecture.ToString().ToLowerInvariant().Contains("simulator"))
+        {
+            NativeLibs.Add(Path.Combine(NativeLibRoot, "iOSSimulator", "BrainCloudNative-iOSSimulator.a"));
+        }
         else if (Target.Platform == UnrealTargetPlatform.IOS)
         {
             NativeLibs.Add(Path.Combine(NativeLibRoot, "iOS", "BrainCloudNative-iOS.a"));

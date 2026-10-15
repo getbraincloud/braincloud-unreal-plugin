@@ -46,33 +46,28 @@ namespace
 	}
 
 #if BC_NATIVE_CONFIG
-	std::string ToStd(const FString& Value)
+	FString FromNative(const char* Value)
 	{
-		FTCHARToUTF8 Converted(*Value);
-		return std::string(Converted.Get(), Converted.Length());
-	}
-
-	FString FromStd(const std::string& Value)
-	{
-		return FString(UTF8_TO_TCHAR(Value.c_str()));
+		return FString(UTF8_TO_TCHAR(Value));
 	}
 
 	TSharedPtr<braincloud::NativeConfig> LoadNativeConfig(const FString& Contents)
 	{
 		TSharedPtr<braincloud::NativeConfig> Config = MakeShared<braincloud::NativeConfig>();
-		return Config->ResolveContents(ToStd(Contents)) ? Config : nullptr;
+		FTCHARToUTF8 Utf8(*Contents);
+		return Config->ResolveContents(Utf8.Get(), Utf8.Length()) ? Config : nullptr;
 	}
 
 	void ReadNativeConfig(const braincloud::NativeConfig& Config, FBCStoredCredentials& Out)
 	{
 		Out = FBCStoredCredentials();
-		Out.AppId = FromStd(Config.GetAppId());
-		Out.ServerUrl = FromStd(Config.GetServerUrl());
-		Out.Version = FromStd(Config.GetAppVersion());
-		for (const std::string& ChildAppId : Config.GetChildAppIds())
+		Out.AppId = FromNative(Config.GetAppId());
+		Out.ServerUrl = FromNative(Config.GetServerUrl());
+		Out.Version = FromNative(Config.GetAppVersion());
+		for (size_t i = 0; i < Config.GetChildAppCount(); ++i)
 		{
 			FBCStoredChildApp Child;
-			Child.AppId = FromStd(ChildAppId);
+			Child.AppId = FromNative(Config.GetChildAppId(i));
 			Out.ChildApps.Add(Child);
 		}
 	}
@@ -189,10 +184,11 @@ bool FBCConfigStore::ResolveAppProfiles(FBCStoredCredentials& OutCredentials, TM
 	}
 	for (const FString& AppId : AppIds)
 	{
-		const std::string NativeAppId = ToStd(AppId);
-		OutAppProfiles.Add(AppId, [Config, NativeAppId](const TArray<uint8>& Payload)
+		OutAppProfiles.Add(AppId, [Config, AppId](const TArray<uint8>& Payload)
 		{
-			return FromStd(Config->Sign(NativeAppId, std::vector<uint8_t>(Payload.GetData(), Payload.GetData() + Payload.Num())));
+			char Signature[braincloud::NativeConfig::kSignatureLength + 1];
+			FTCHARToUTF8 NativeAppId(*AppId);
+			return Config->Sign(NativeAppId.Get(), Payload.GetData(), Payload.Num(), Signature) ? FromNative(Signature) : FString();
 		});
 	}
 	return true;

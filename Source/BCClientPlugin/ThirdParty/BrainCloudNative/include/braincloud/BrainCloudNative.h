@@ -1,8 +1,7 @@
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
-#include <string>
-#include <vector>
 
 #if defined(_WIN32) && defined(BCNATIVE_SHARED)
 #if defined(BCNATIVE_BUILDING)
@@ -34,9 +33,15 @@ enum class ConfigState {
 
 /**
  * Reads an app configuration and signs requests with it.
+ *
+ * Strings are UTF-8 and owned by this object; no standard library types cross this
+ * interface, so it links into any engine regardless of the C++ runtime it uses.
  */
 class BCNATIVE_API NativeConfig {
 public:
+    /** The number of characters in a signature, not counting the terminating null. */
+    static const size_t kSignatureLength = 32;
+
     NativeConfig();
     ~NativeConfig();
 
@@ -49,15 +54,16 @@ public:
      * @param path The file to read
      * @return True if the configuration was read
      */
-    bool Resolve(const std::string& path);
+    bool Resolve(const char* path);
 
     /**
      * Reads the configuration from the contents of a file.
      *
      * @param contents The file's contents
+     * @param length The length of the contents in bytes
      * @return True if the configuration was read
      */
-    bool ResolveContents(const std::string& contents);
+    bool ResolveContents(const char* contents, size_t length);
 
     /**
      * Returns true if Resolve or ResolveContents succeeded.
@@ -67,56 +73,66 @@ public:
     /**
      * Returns the app id, or an empty string if the configuration has not been read.
      */
-    const std::string& GetAppId() const;
+    const char* GetAppId() const;
 
     /**
-     * Returns the ids of the child apps in the configuration.
+     * Returns the number of child apps in the configuration.
      */
-    const std::vector<std::string>& GetChildAppIds() const;
+    size_t GetChildAppCount() const;
+
+    /**
+     * Returns the id of a child app.
+     *
+     * @param index The child app's index, less than GetChildAppCount()
+     * @return The child app's id, or an empty string if the index is out of range
+     */
+    const char* GetChildAppId(size_t index) const;
 
     /**
      * Returns the server url, or an empty string if none is stored.
      */
-    const std::string& GetServerUrl() const;
+    const char* GetServerUrl() const;
 
     /**
      * Returns the app version, or an empty string if none is stored.
      */
-    const std::string& GetAppVersion() const;
+    const char* GetAppVersion() const;
 
     /**
      * Returns true if the configuration can sign for an app.
      *
      * @param appId The app id or a child app id
      */
-    bool HasApp(const std::string& appId) const;
+    bool HasApp(const char* appId) const;
 
     /**
      * Signs a request payload for the app.
      *
      * @param payload The request payload
-     * @return The signature, or an empty string if the configuration has not been read
+     * @param length The length of the payload in bytes
+     * @param signatureOut Receives kSignatureLength hex characters and a terminating null
+     * @return True if the payload was signed
      */
-    std::string Sign(const std::vector<uint8_t>& payload) const;
-    std::string Sign(const std::string& payload) const;
+    bool Sign(const uint8_t* payload, size_t length, char* signatureOut) const;
 
     /**
      * Signs a request payload for the app or one of its child apps.
      *
      * @param appId The app id or a child app id
      * @param payload The request payload
-     * @return The signature, or an empty string if the app is not in the configuration
+     * @param length The length of the payload in bytes
+     * @param signatureOut Receives kSignatureLength hex characters and a terminating null
+     * @return True if the payload was signed, false if the app is not in the configuration
      */
-    std::string Sign(const std::string& appId, const std::vector<uint8_t>& payload) const;
+    bool Sign(const char* appId, const uint8_t* payload, size_t length, char* signatureOut) const;
 
     /**
      * Returns the state of the stored configuration.
      *
-     * @param configPath The configuration file, or empty to skip it
-     * @param legacyIniPath The plain text credentials file, or empty to skip it
+     * @param configPath The configuration file, or null to skip it
+     * @param legacyIniPath The plain text credentials file, or null to skip it
      */
-    static ConfigState DetectState(const std::string& configPath,
-                                   const std::string& legacyIniPath);
+    static ConfigState DetectState(const char* configPath, const char* legacyIniPath);
 
     /**
      * Returns this library's version.
