@@ -7,7 +7,8 @@
 #include "BCPortalTypes.h"
 #include "BCPortalOAuthClient.h"
 #include "BCBuilderApiClient.h"
-#include "BCSecureStore.h"
+#include "BCConfigStore.h"
+#include "BCEditorConfigStore.h"
 #include "Components/SlateWrapperTypes.h"
 #include "BCUtilityWidgetBase.generated.h"
 
@@ -173,7 +174,7 @@ public:
      * Returns the state of the stored credentials.
      */
     UFUNCTION(BlueprintPure, Category = "BrainCloud|Credentials")
-    EBCCredentialState GetCredentialState() const { return CredentialState; }
+    EBCConfigState GetCredentialState() const { return CredentialState; }
 
     /**
      * Returns the stored app id.
@@ -200,16 +201,6 @@ public:
     TArray<FString> GetConfiguredChildAppIds() const;
 
     /**
-     * Returns the stored app id and app secret.
-     *
-     * @param OutAppId The app's id
-     * @param OutAppSecret The app's secret
-     * @return True if credentials are stored
-     */
-    UFUNCTION(BlueprintCallable, Category = "BrainCloud|Credentials")
-    bool RevealStoredCredentials(FString& OutAppId, FString& OutAppSecret);
-
-    /**
      * Stores credentials that are in plain text in the current format.
      *
      * @param OutError The reason the credentials could not be stored
@@ -219,11 +210,11 @@ public:
     bool MigrateLegacyCredentials(FString& OutError);
 
     /**
-     * Stores the credentials of an app.
+     * Stores the credentials of an app. Its stored child apps are kept if the app does not change.
      *
      * @param AppId The app's id
      * @param AppName The app's name
-     * @param AppSecret The app's secret
+     * @param AppSecret The app's secret. If empty, the secret loaded from the portal or already stored is used
      * @param ServerUrl The url to the brainCloud server
      * @param OutError The reason the credentials could not be stored
      * @return True if the credentials were stored
@@ -268,7 +259,7 @@ public:
      * Called when the state of the stored credentials changes.
      */
     UFUNCTION(BlueprintImplementableEvent, Category = "BrainCloud|Credentials")
-    void OnCredentialStateChanged(EBCCredentialState State, const FString& AppId, const FString& AppName);
+    void OnCredentialStateChanged(EBCConfigState State, const FString& AppId, const FString& AppName);
 
     /**
      * Called when credentials in plain text were stored in the current format.
@@ -313,10 +304,10 @@ public:
     void OnAppsReceived(const TArray<FBCPortalApp>& Apps);
 
     /**
-     * Called with the secret of an app.
+     * Called when the secret of an app was loaded from the portal.
      */
     UFUNCTION(BlueprintImplementableEvent, Category = "BrainCloud")
-    void OnAppSecretReceived(const FString& AppId, const FString& AppSecret);
+    void OnAppSecretReceived(const FString& AppId);
 
     /**
      * Called with the available template apps.
@@ -328,7 +319,7 @@ public:
      * Called when a new app was created.
      */
     UFUNCTION(BlueprintImplementableEvent, Category = "BrainCloud")
-    void OnAppCreated(const FString& AppId, const FString& AppName, const FString& AppSecret);
+    void OnAppCreated(const FString& AppId, const FString& AppName);
 
     /**
      * Called when a request to the brainCloud portal fails.
@@ -370,7 +361,12 @@ private:
     void UpdateCreateAppView();
     void BuildPlatformCheckboxes();
     void PopulateTemplates(const TArray<FBCPortalTemplateApp>& InTemplates);
-    void FinishCreatedApp(const FString& AppId, const FString& AppName, const FString& AppSecret);
+    void FinishCreatedApp(const FString& AppId, const FString& AppName);
+    bool SaveConfiguration(const FBCEditorAppCredentials& App, const TArray<FBCEditorAppCredentials>& ChildApps,
+        const FString& ServerUrl, FString& OutError);
+    void ShowSecretState(const FString& AppId);
+    FString LookupAppName(const FString& AppId, const FString& StoredName) const;
+    void RecoverMissingAppNames();
     void SetCreateInFlight(bool bInFlight);
 
     UFUNCTION() void HandleLoginClicked();
@@ -445,7 +441,6 @@ private:
     TArray<FString> PlatformIds;
     TArray<FBCPortalTemplateApp> CachedTemplates;
     bool bLoginInFlight = false;
-    bool bSecretVisible = false;
     FText LoginLabel;
     FText ChangeAppLabel;
 
@@ -474,9 +469,11 @@ private:
     FString CurrentApiKey;
 
     FString PendingAppSecretAppId;
+    TMap<FString, FString> FetchedSecrets;
+    bool bSecretVisible = false;
     FString PendingSwitchTeamId;
     FString PendingCreateAppId;
     FString PendingCreateAppName;
 
-    EBCCredentialState CredentialState = EBCCredentialState::None;
+    EBCConfigState CredentialState = EBCConfigState::None;
 };

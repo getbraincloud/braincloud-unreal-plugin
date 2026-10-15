@@ -51,6 +51,28 @@ public class BCWidget : ModuleRules
         }
         PublicDefinitions.Add("BC_WIDGET_OAUTH_SUPPORTED=" + (bOAuthSupported ? "1" : "0"));
 
+        // Writing the app configuration is editor only: games link the read-only library alone.
+        string NativeRoot = Path.Combine(ModulePath, "..", "BCClientPlugin", "ThirdParty", "BrainCloudNative");
+        string WriterLib = null;
+        if (Target.Platform == UnrealTargetPlatform.Win64)
+        {
+            WriterLib = Path.Combine(NativeRoot, "lib", "Win64", "BrainCloudNativeWriter.lib");
+        }
+        else if (Target.Platform == UnrealTargetPlatform.Mac)
+        {
+            WriterLib = Path.Combine(NativeRoot, "lib", "Mac", "BrainCloudNativeWriter-Mac.a");
+        }
+        else if (Target.Platform == UnrealTargetPlatform.Linux)
+        {
+            WriterLib = Path.Combine(NativeRoot, "lib", "Linux", "libBrainCloudNativeWriter.a");
+        }
+        if (WriterLib == null || !File.Exists(WriterLib))
+        {
+            throw new BuildException("brainCloud: missing native writer library for " + Target.Platform.ToString() + ": " + (WriterLib ?? "unsupported platform"));
+        }
+        PrivateIncludePaths.Add(Path.Combine(NativeRoot, "include"));
+        PublicAdditionalLibraries.Add(WriterLib);
+
         // win64
         PublicDefinitions.Add("PLATFORM_UWP=0");
     }

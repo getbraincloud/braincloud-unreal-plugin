@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "EditorUtilityWidget.h"
 #include "BCPortalTypes.h"
-#include "BCSecureStore.h"
+#include "BCConfigStore.h"
 #include "Components/SlateWrapperTypes.h"
 #include "BCChildAppRowWidget.generated.h"
 
@@ -48,7 +48,6 @@ public:
     void Clear();
 
     const FBCStoredChildApp& GetChild() const { return Child; }
-    void SetSecret(const FString& AppId, const FString& AppSecret);
 
 private:
     UFUNCTION() void HandleSelectionChanged(FString SelectedItem, ESelectInfo::Type SelectionType);

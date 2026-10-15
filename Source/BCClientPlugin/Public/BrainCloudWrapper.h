@@ -43,18 +43,7 @@ public:
 	 bool init();
 
 	 /**
-	  * Method initializes the BrainCloudClient as one of the child apps set in the
-	  * brainCloud editor panel (Tools > brainCloud).
-	  *
-	  * @param childAppId The child app's id. If empty, the first stored child app is used
-	  * @return True if the child app was found and the client was initialized
-	  */
-	 bool initChild(const FString& childAppId = TEXT(""));
-
-	 /**
 	  * Method initializes the BrainCloudClient.
-	  *
-	  * Deprecated, use init() instead.
 	  *
 	  * @param serverURL The url to the brainCloud server
 	  * @param secretKey The secret key for your app
@@ -62,6 +51,16 @@ public:
 	  * @param version The app's version
 	  */
 	 void initialize(FString serverUrl, FString secretKey, FString appId, FString version);
+
+	 /**
+	  * Method initializes the BrainCloudClient with an app profile instead of a secret key.
+	  *
+	  * @param serverURL The url to the brainCloud server
+	  * @param appProfile Signs request payloads for the app
+	  * @param appId The app's id
+	  * @param version The app's version
+	  */
+	 void initialize(FString serverUrl, const FBCAppProfile& appProfile, FString appId, FString version);
 
 	 /**
 	  * Method initializes the BrainCloudClient with multiple app/secret.
@@ -78,6 +77,19 @@ public:
 	  * You are free to pick anything you want.
 	  */
 	 void initializeWithApps(FString serverUrl, FString appId, TMap<FString, FString> secretMap, FString appVersion, FString companyName, FString appName);
+
+	 /**
+	  * Method initializes the BrainCloudClient with an app profile for each app.
+	  * Used when needed to switch between child and parent apps.
+	  *
+	  * @param in_serverURL The url to the brainCloud server
+	  * @param in_defaultAppId The default app id that we start with
+	  * @param in_appProfiles A map of <appId, appProfile>
+	  * @param in_version The app version
+	  * @param in_companyName The company name used in the keychain for storing anonymous and profile ids.
+	  * @param in_appName The app name used in the keychain for storing anonymous and profile ids.
+	  */
+	 void initializeWithApps(FString serverUrl, FString appId, TMap<FString, FBCAppProfile> appProfiles, FString appVersion, FString companyName, FString appName);
 
 	 /**
 	  * Maintains the user's session alive by calling the reconnect method upon detecting the expiration of the user's session.
@@ -1079,8 +1091,6 @@ protected:
 
 	 void loadData();
 	 void saveData();
-
-	 bool initFromStoredCredentials(bool bAsChildApp, const FString& childAppId);
 
 	 BrainCloudClient *_client = nullptr;
 

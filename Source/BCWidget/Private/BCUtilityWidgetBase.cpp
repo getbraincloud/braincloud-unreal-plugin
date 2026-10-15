@@ -3,6 +3,7 @@
 #include "BCUtilityWidgetBase.h"
 #include "BCChildAppRowWidget.h"
 #include "BCEditorCredentialsStore.h"
+#include "BCEditorConfigStore.h"
 #include "BCWidgetPrivatePCH.h"
 #include "Blueprint/WidgetTree.h"
 #include "Components/Button.h"
@@ -69,6 +70,12 @@ namespace
     {
         if (UEditableText* Edit = Cast<UEditableText>(Widget)) Edit->SetIsPassword(bIsPassword);
         else if (UEditableTextBox* Box = Cast<UEditableTextBox>(Widget)) Box->SetIsPassword(bIsPassword);
+    }
+
+    void SetPanelHint(UWidget* Widget, const FString& Hint)
+    {
+        if (UEditableText* Edit = Cast<UEditableText>(Widget)) Edit->SetHintText(FText::FromString(Hint));
+        else if (UEditableTextBox* Box = Cast<UEditableTextBox>(Widget)) Box->SetHintText(FText::FromString(Hint));
     }
 
     void SetPanelShown(UWidget* Widget, bool bShown)
@@ -495,6 +502,15 @@ void UBCUtilityWidgetBase::HandleAppsResponse(bool bSuccess, TSharedPtr<FJsonObj
     ReceivedApps.Sort([](const FBCPortalApp& A, const FBCPortalApp& B) { return A.AppName < B.AppName; });
     bAppsLoaded = true;
     PopulateApps(ReceivedApps);
+    if (SelectedAppName.IsEmpty() && !SelectedAppId.IsEmpty())
+    {
+        SelectedAppName = LookupAppName(SelectedAppId, FString());
+        if (!SelectedAppName.IsEmpty())
+        {
+            SetPanelText(AppNameTextW, SelectedAppName);
+        }
+    }
+    UpdateChildAppsDisplay();
     OnAppsReceived(ReceivedApps);
 }
 
@@ -510,15 +526,17 @@ void UBCUtilityWidgetBase::HandleAppSecretResponse(bool bSuccess, TSharedPtr<FJs
     if (AppSecret.IsEmpty())
     {
         Notify(TEXT("The portal did not return a secret for this app."), true);
+        return;
     }
-    else if (PendingAppSecretAppId == SelectedAppId)
+    FetchedSecrets.Add(PendingAppSecretAppId, AppSecret);
+    if (PendingAppSecretAppId == SelectedAppId)
     {
         SetPanelText(AppIdTextW, SelectedAppId);
         SetPanelText(AppNameTextW, SelectedAppName);
-        SetPanelText(AppSecretTextW, AppSecret);
+        ShowSecretState(SelectedAppId);
         Notify(FString::Printf(TEXT("Loaded %s - press SAVE to use it in this project."), *SelectedAppName), false);
     }
-    OnAppSecretReceived(PendingAppSecretAppId, AppSecret);
+    OnAppSecretReceived(PendingAppSecretAppId);
 }
 
 void UBCUtilityWidgetBase::HandleTemplateAppsResponse(bool bSuccess, TSharedPtr<FJsonObject> Json, FString ErrorMessage)
@@ -582,21 +600,22 @@ void UBCUtilityWidgetBase::HandleCreateAppSecretResponse(bool bSuccess, TSharedP
     }
     else
     {
-        FinishCreatedApp(PendingCreateAppId, PendingCreateAppName, AppSecret);
+        FetchedSecrets.Add(PendingCreateAppId, AppSecret);
+        FinishCreatedApp(PendingCreateAppId, PendingCreateAppName);
     }
-    OnAppCreated(PendingCreateAppId, PendingCreateAppName, AppSecret);
+    OnAppCreated(PendingCreateAppId, PendingCreateAppName);
 }
 
 void UBCUtilityWidgetBase::RefreshCredentialState()
 {
-    CredentialState = FBCSecureStore::DetectState();
+    CredentialState = FBCConfigStore::DetectState();
 
-    if (CredentialState == EBCCredentialState::Legacy)
+    if (CredentialState == EBCConfigState::Legacy)
     {
         FString Error;
-        if (FBCSecureStore::MigrateLegacy(Error))
+        if (FBCEditorConfigStore::MigrateLegacy(Error))
         {
-            CredentialState = FBCSecureStore::DetectState();
+            CredentialState = FBCConfigStore::DetectState();
             OnCredentialsMigrated(GetConfiguredAppId());
         }
         else
@@ -610,39 +629,27 @@ void UBCUtilityWidgetBase::RefreshCredentialState()
 
 FString UBCUtilityWidgetBase::GetConfiguredAppId() const
 {
-    return FBCSecureStore::ResolveAppId();
+    return FBCConfigStore::ResolveAppId();
 }
 
 FString UBCUtilityWidgetBase::GetConfiguredAppName() const
 {
-    return FBCSecureStore::ResolveAppName();
+    FBCStoredCredentials Stored;
+    FBCEditorConfigStore::Resolve(Stored);
+    return Stored.AppName;
 }
 
 FString UBCUtilityWidgetBase::GetConfiguredServerUrl() const
 {
-    return FBCSecureStore::ResolveServerUrl();
-}
-
-bool UBCUtilityWidgetBase::RevealStoredCredentials(FString& OutAppId, FString& OutAppSecret)
-{
-    FBCStoredCredentials Credentials;
-    if (!FBCSecureStore::Resolve(Credentials))
-    {
-        OutAppId.Empty();
-        OutAppSecret.Empty();
-        return false;
-    }
-    OutAppId = Credentials.AppId;
-    OutAppSecret = Credentials.AppSecret;
-    return true;
+    return FBCConfigStore::ResolveServerUrl();
 }
 
 bool UBCUtilityWidgetBase::MigrateLegacyCredentials(FString& OutError)
 {
-    const bool bMigrated = FBCSecureStore::MigrateLegacy(OutError);
+    const bool bMigrated = FBCEditorConfigStore::MigrateLegacy(OutError);
     if (bMigrated)
     {
-        CredentialState = FBCSecureStore::DetectState();
+        CredentialState = FBCConfigStore::DetectState();
         OnCredentialsMigrated(GetConfiguredAppId());
         OnCredentialStateChanged(CredentialState, GetConfiguredAppId(), GetConfiguredAppName());
     }
@@ -652,23 +659,74 @@ bool UBCUtilityWidgetBase::MigrateLegacyCredentials(FString& OutError)
 bool UBCUtilityWidgetBase::ApplySelectedApp(const FString& AppId, const FString& AppName,
     const FString& AppSecret, const FString& ServerUrl, FString& OutError)
 {
-    const FString EffectiveUrl = ServerUrl.IsEmpty() ? FBCSecureStore::ResolveServerUrl() : ServerUrl;
+    FBCEditorAppCredentials App;
+    App.AppId = AppId;
+    App.AppName = AppName;
+    App.AppSecret = AppSecret.IsEmpty() ? FetchedSecrets.FindRef(AppId) : AppSecret;
 
-    if (!FBCSecureStore::Store(AppId, AppSecret, AppName, EffectiveUrl, OutError))
+    TArray<FBCEditorAppCredentials> ChildApps;
+    FBCStoredCredentials Stored;
+    if (FBCEditorConfigStore::Resolve(Stored) && Stored.AppId == AppId)
+    {
+        for (const FBCStoredChildApp& Child : Stored.ChildApps)
+        {
+            FBCEditorAppCredentials Kept;
+            Kept.AppId = Child.AppId;
+            Kept.AppName = Child.AppName;
+            ChildApps.Add(Kept);
+        }
+    }
+    return SaveConfiguration(App, ChildApps, ServerUrl.IsEmpty() ? FBCConfigStore::ResolveServerUrl() : ServerUrl, OutError);
+}
+
+bool UBCUtilityWidgetBase::SaveConfiguration(const FBCEditorAppCredentials& App, const TArray<FBCEditorAppCredentials>& ChildApps,
+    const FString& ServerUrl, FString& OutError)
+{
+    if (!FBCEditorConfigStore::Save(App, ChildApps, ServerUrl, OutError))
     {
         return false;
     }
 
-    CredentialState = FBCSecureStore::DetectState();
-    OnCredentialsSaved(AppId, AppName);
-    OnCredentialStateChanged(CredentialState, AppId, AppName);
+    CredentialState = FBCConfigStore::DetectState();
+    OnCredentialsSaved(App.AppId, App.AppName);
+    OnCredentialStateChanged(CredentialState, App.AppId, App.AppName);
     return true;
+}
+
+FString UBCUtilityWidgetBase::LookupAppName(const FString& AppId, const FString& StoredName) const
+{
+    if (!StoredName.IsEmpty())
+    {
+        return StoredName;
+    }
+    const FBCPortalApp* App = CachedApps.FindByPredicate([&AppId](const FBCPortalApp& A) { return A.AppId == AppId; });
+    return App ? App->AppName : FString();
+}
+
+void UBCUtilityWidgetBase::ShowSecretState(const FString& AppId)
+{
+    SetPanelText(AppSecretTextW, FString());
+    bSecretVisible = false;
+    SetPanelPassword(AppSecretTextW, true);
+    SetPanelText(AppSecretToggleTextW, TEXT("Show"));
+    if (FetchedSecrets.Contains(AppId))
+    {
+        SetPanelHint(AppSecretTextW, TEXT("Loaded from the portal"));
+    }
+    else if (!AppId.IsEmpty() && AppId == GetConfiguredAppId() && CredentialState == EBCConfigState::Ready)
+    {
+        SetPanelHint(AppSecretTextW, TEXT("Saved"));
+    }
+    else
+    {
+        SetPanelHint(AppSecretTextW, TEXT("Not set"));
+    }
 }
 
 void UBCUtilityWidgetBase::ClearStoredCredentials()
 {
-    FBCSecureStore::Clear();
-    CredentialState = FBCSecureStore::DetectState();
+    FBCEditorConfigStore::Clear();
+    CredentialState = FBCConfigStore::DetectState();
     OnCredentialStateChanged(CredentialState, FString(), FString());
 }
 
@@ -710,6 +768,71 @@ void UBCUtilityWidgetBase::NativeConstruct()
     RefreshCredentialState();
     LoadFieldsFromStore();
     ShowAccountView();
+    RecoverMissingAppNames();
+}
+
+void UBCUtilityWidgetBase::RecoverMissingAppNames()
+{
+    FBCStoredCredentials Stored;
+    if (CredentialState != EBCConfigState::Ready || CurrentTeamId.IsEmpty() || !HasBuilderApiKey() ||
+        !FBCEditorConfigStore::Resolve(Stored))
+    {
+        return;
+    }
+    const bool bMissing = Stored.AppName.IsEmpty() ||
+        Stored.ChildApps.ContainsByPredicate([](const FBCStoredChildApp& Child) { return Child.AppName.IsEmpty(); });
+    if (!bMissing)
+    {
+        return;
+    }
+
+    // Saved apps without names (written outside this panel) get them from the portal; empty secrets keep the saved ones.
+    BuilderApiClient->GetApps(CurrentTeamId, FBCApiResponseDelegate::CreateWeakLambda(this,
+        [this](bool bSuccess, TSharedPtr<FJsonObject> Json, FString ErrorMessage)
+        {
+            FBCStoredCredentials Current;
+            if (!bSuccess || !FBCEditorConfigStore::Resolve(Current))
+            {
+                UE_LOG(LogBCWidget, Warning, TEXT("[Panel] could not load app names: %s"), *ErrorMessage);
+                return;
+            }
+            const TArray<FBCPortalApp> Apps = ParseAppArray<FBCPortalApp>(Json);
+            auto NameOf = [&Apps](const FString& AppId, const FString& Name)
+            {
+                const FBCPortalApp* App = Apps.FindByPredicate([&AppId](const FBCPortalApp& A) { return A.AppId == AppId; });
+                return Name.IsEmpty() && App ? App->AppName : Name;
+            };
+
+            bool bChanged = false;
+            FBCEditorAppCredentials App;
+            App.AppId = Current.AppId;
+            App.AppName = NameOf(Current.AppId, Current.AppName);
+            bChanged |= App.AppName != Current.AppName;
+
+            TArray<FBCEditorAppCredentials> Children;
+            for (const FBCStoredChildApp& Child : Current.ChildApps)
+            {
+                FBCEditorAppCredentials Entry;
+                Entry.AppId = Child.AppId;
+                Entry.AppName = NameOf(Child.AppId, Child.AppName);
+                bChanged |= Entry.AppName != Child.AppName;
+                Children.Add(Entry);
+            }
+            if (!bChanged)
+            {
+                return;
+            }
+
+            FString Error;
+            if (FBCEditorConfigStore::Save(App, Children, Current.ServerUrl, Error))
+            {
+                LoadFieldsFromStore();
+            }
+            else
+            {
+                UE_LOG(LogBCWidget, Warning, TEXT("[Panel] could not save app names: %s"), *Error);
+            }
+        }));
 }
 
 void UBCUtilityWidgetBase::NativeDestruct()
@@ -852,22 +975,17 @@ void UBCUtilityWidgetBase::TryResumeSession()
 
 void UBCUtilityWidgetBase::LoadFieldsFromStore()
 {
-    FString AppId, AppSecret;
-    if (!RevealStoredCredentials(AppId, AppSecret))
-    {
-        AppId = GetConfiguredAppId();
-    }
-    const FString AppName = GetConfiguredAppName();
+    FBCStoredCredentials Stored;
+    FBCEditorConfigStore::Resolve(Stored);
+    const FString AppId = Stored.AppId;
+    const FString AppName = LookupAppName(Stored.AppId, Stored.AppName);
 
     SetPanelText(AppIdTextW, AppId);
-    SetPanelText(AppSecretTextW, AppSecret);
-    SetPanelPassword(AppSecretTextW, !bSecretVisible);
+    ShowSecretState(AppId);
     SetPanelText(AppNameTextW, AppName.IsEmpty() ? (AppId.IsEmpty() ? TEXT("No app selected") : TEXT("(unnamed)")) : *AppName);
     SelectedAppId = AppId;
     SelectedAppName = AppName;
 
-    FBCStoredCredentials Stored;
-    FBCSecureStore::Resolve(Stored);
     ClearChildRows();
     for (const FBCStoredChildApp& Child : Stored.ChildApps)
     {
@@ -881,7 +999,7 @@ void UBCUtilityWidgetBase::LoadFieldsFromStore()
 
     if (DebugLoggingCheckboxW)
     {
-        DebugLoggingCheckboxW->SetIsChecked(FBCSecureStore::ResolveDebugLogging());
+        DebugLoggingCheckboxW->SetIsChecked(FBCConfigStore::ResolveDebugLogging());
     }
 
     bCreateOptionSelected = false;
@@ -900,7 +1018,7 @@ void UBCUtilityWidgetBase::LoadFieldsFromStore()
 
 void UBCUtilityWidgetBase::ShowAccountView()
 {
-    const bool bConfigured = CredentialState == EBCCredentialState::Secure || CredentialState == EBCCredentialState::Legacy;
+    const bool bConfigured = CredentialState == EBCConfigState::Ready || CredentialState == EBCConfigState::Legacy;
     const bool bAuthenticated = HasAuthenticatedSession();
     const bool bShowChangeApp = bConfigured || bAuthenticated;
 
@@ -918,9 +1036,9 @@ void UBCUtilityWidgetBase::ShowAccountView()
     {
         Help = FString::Printf(TEXT("Signed in as %s. Choose CHANGE APP to pick an app for this project."), *CurrentAdminEmail);
     }
-    else if (CredentialState == EBCCredentialState::Invalid)
+    else if (CredentialState == EBCConfigState::Invalid)
     {
-        Help = TEXT("The stored credentials can't be read. They were copied from another project or edited. Log in to pick the app again.");
+        Help = FString::Printf(TEXT("The app configuration in %s can't be read. It was edited, copied from another project, or saved by an older version of this panel. Log in to pick the app again."), *FBCConfigStore::GetConfigPath());
     }
     else
     {
@@ -1136,7 +1254,18 @@ void UBCUtilityWidgetBase::HandleAppRefreshClicked()
 void UBCUtilityWidgetBase::HandleSaveClicked()
 {
     const FString AppId = GetPanelText(AppIdTextW).TrimStartAndEnd();
-    const FString AppSecret = GetPanelText(AppSecretTextW).TrimStartAndEnd();
+    const FString TypedSecret = GetPanelText(AppSecretTextW).TrimStartAndEnd();
+    const bool bSameApp = AppId == GetConfiguredAppId() && CredentialState == EBCConfigState::Ready;
+    const TArray<FString> StoredChildIds = bSameApp ? FBCConfigStore::ResolveChildAppIds() : TArray<FString>();
+
+    FBCEditorAppCredentials App;
+    App.AppId = AppId;
+    App.AppSecret = TypedSecret.IsEmpty() ? FetchedSecrets.FindRef(AppId) : TypedSecret;
+    if (App.AppSecret.IsEmpty() && !bSameApp)
+    {
+        Notify(TEXT("Pick the app from the list to load its secret, or enter the secret."), true);
+        return;
+    }
 
     FString AppName;
     if (AppId == SelectedAppId)
@@ -1148,8 +1277,10 @@ void UBCUtilityWidgetBase::HandleSaveClicked()
         AppName = GetConfiguredAppName();
     }
 
+    App.AppName = LookupAppName(AppId, AppName);
+
     const bool bSaveChildren = IsParentAppChecked();
-    TArray<FBCStoredChildApp> Children;
+    TArray<FBCEditorAppCredentials> Children;
     if (bSaveChildren)
     {
         for (const UBCChildAppRowWidget* Row : ChildRows)
@@ -1160,17 +1291,21 @@ void UBCUtilityWidgetBase::HandleSaveClicked()
                 Notify(TEXT("Pick an app in every child row, remove the empty rows, or untick Parent App."), true);
                 return;
             }
-            if (Child.AppSecret.IsEmpty())
+            FBCEditorAppCredentials ChildApp;
+            ChildApp.AppId = Child.AppId;
+            ChildApp.AppName = LookupAppName(Child.AppId, Child.AppName);
+            ChildApp.AppSecret = FetchedSecrets.FindRef(Child.AppId);
+            if (ChildApp.AppSecret.IsEmpty() && !StoredChildIds.Contains(Child.AppId))
             {
                 Notify(FString::Printf(TEXT("Still loading the secret for child app %s - try again in a moment."), *Child.AppId), true);
                 return;
             }
-            if (Child.AppId == AppId || Children.ContainsByPredicate([&Child](const FBCStoredChildApp& C) { return C.AppId == Child.AppId; }))
+            if (Child.AppId == AppId || Children.ContainsByPredicate([&Child](const FBCEditorAppCredentials& C) { return C.AppId == Child.AppId; }))
             {
                 Notify(FString::Printf(TEXT("Child app %s is the parent or listed twice."), *Child.AppId), true);
                 return;
             }
-            Children.Add(Child);
+            Children.Add(ChildApp);
         }
         if (Children.Num() == 0)
         {
@@ -1180,23 +1315,10 @@ void UBCUtilityWidgetBase::HandleSaveClicked()
     }
 
     FString Error;
-    if (!ApplySelectedApp(AppId, AppName, AppSecret, GetRuntimeServerUrl(), Error))
+    if (!SaveConfiguration(App, Children, GetRuntimeServerUrl(), Error))
     {
         Notify(Error, true);
         return;
-    }
-
-    if (bSaveChildren)
-    {
-        if (!FBCSecureStore::StoreChildren(Children, Error))
-        {
-            Notify(Error, true);
-            return;
-        }
-    }
-    else
-    {
-        FBCSecureStore::ClearChildren();
     }
 
     Notify(FString::Printf(TEXT("Saved brainCloud app %s."), *(AppName.IsEmpty() ? AppId : AppName)), false);
@@ -1217,6 +1339,16 @@ void UBCUtilityWidgetBase::HandleAppSecretClearClicked()
 void UBCUtilityWidgetBase::HandleSecretToggleClicked()
 {
     bSecretVisible = !bSecretVisible;
+    if (bSecretVisible && GetPanelText(AppSecretTextW).IsEmpty())
+    {
+        const FString AppId = GetPanelText(AppIdTextW).TrimStartAndEnd();
+        FString Secret = FetchedSecrets.FindRef(AppId);
+        if (Secret.IsEmpty() && AppId == GetConfiguredAppId())
+        {
+            Secret = FBCEditorConfigStore::ReadSecret(AppId);
+        }
+        SetPanelText(AppSecretTextW, Secret);
+    }
     SetPanelPassword(AppSecretTextW, !bSecretVisible);
     SetPanelText(AppSecretToggleTextW, bSecretVisible ? TEXT("Hide") : TEXT("Show"));
 }
@@ -1294,7 +1426,7 @@ void UBCUtilityWidgetBase::HandleUseDefaultServerChanged(bool bIsChecked)
 
 TArray<FString> UBCUtilityWidgetBase::GetConfiguredChildAppIds() const
 {
-    return FBCSecureStore::ResolveChildAppIds();
+    return FBCConfigStore::ResolveChildAppIds();
 }
 
 bool UBCUtilityWidgetBase::IsParentApp() const
@@ -1356,15 +1488,16 @@ void UBCUtilityWidgetBase::UpdateChildVisibility()
 void UBCUtilityWidgetBase::UpdateChildAppsDisplay()
 {
     FBCStoredCredentials Stored;
-    FBCSecureStore::Resolve(Stored);
+    FBCEditorConfigStore::Resolve(Stored);
 
     TArray<FString> Lines;
     for (int32 i = 0; i < Stored.ChildApps.Num(); ++i)
     {
         const FBCStoredChildApp& Child = Stored.ChildApps[i];
-        Lines.Add(Child.AppName.IsEmpty()
+        const FString ChildName = LookupAppName(Child.AppId, Child.AppName);
+        Lines.Add(ChildName.IsEmpty()
             ? FString::Printf(TEXT("%d. %s"), i, *Child.AppId)
-            : FString::Printf(TEXT("%d. %s (%s)"), i, *Child.AppName, *Child.AppId));
+            : FString::Printf(TEXT("%d. %s (%s)"), i, *ChildName, *Child.AppId));
     }
     SetPanelText(ChildAppsTextW, FString::Join(Lines, TEXT("\n")));
     SetPanelShown(ChildAppsCredentialsSectionW, Lines.Num() > 0);
@@ -1506,7 +1639,7 @@ void UBCUtilityWidgetBase::HandleParentAppChanged(bool bIsChecked)
 
 void UBCUtilityWidgetBase::HandleDebugLoggingChanged(bool bIsChecked)
 {
-    FBCSecureStore::StoreDebugLogging(bIsChecked);
+    FBCConfigStore::StoreDebugLogging(bIsChecked);
 }
 
 void UBCUtilityWidgetBase::HandleAddChildAppClicked()
@@ -1528,10 +1661,8 @@ void UBCUtilityWidgetBase::FetchChildSecret(UBCChildAppRowWidget* Row)
     }
 
     const FString AppId = Row->GetChild().AppId;
-    const FString AppName = Row->GetChild().AppName;
-    TWeakObjectPtr<UBCChildAppRowWidget> WeakRow(Row);
     BuilderApiClient->GetAppSecret(CurrentTeamId, AppId, FBCApiResponseDelegate::CreateWeakLambda(this,
-        [this, WeakRow, AppId, AppName](bool bSuccess, TSharedPtr<FJsonObject> Json, FString ErrorMessage)
+        [this, AppId](bool bSuccess, TSharedPtr<FJsonObject> Json, FString ErrorMessage)
         {
             if (!bSuccess)
             {
@@ -1544,10 +1675,7 @@ void UBCUtilityWidgetBase::FetchChildSecret(UBCChildAppRowWidget* Row)
                 Notify(FString::Printf(TEXT("The portal did not return a secret for child app %s."), *AppId), true);
                 return;
             }
-            if (WeakRow.IsValid())
-            {
-                WeakRow->SetSecret(AppId, Secret);
-            }
+            FetchedSecrets.Add(AppId, Secret);
         }));
 }
 
@@ -1699,7 +1827,7 @@ void UBCUtilityWidgetBase::HandleCreateAppClicked()
     CreateApp(CurrentTeamId, AppName, TemplateAppId, Platforms, true);
 }
 
-void UBCUtilityWidgetBase::FinishCreatedApp(const FString& AppId, const FString& AppName, const FString& AppSecret)
+void UBCUtilityWidgetBase::FinishCreatedApp(const FString& AppId, const FString& AppName)
 {
     FBCPortalApp NewApp;
     NewApp.AppId = AppId;
@@ -1721,15 +1849,18 @@ void UBCUtilityWidgetBase::FinishCreatedApp(const FString& AppId, const FString&
 
     SetPanelText(AppIdTextW, AppId);
     SetPanelText(AppNameTextW, AppName);
-    SetPanelText(AppSecretTextW, AppSecret);
+    ShowSecretState(AppId);
 
+    FBCEditorAppCredentials App;
+    App.AppId = AppId;
+    App.AppName = AppName;
+    App.AppSecret = FetchedSecrets.FindRef(AppId);
     FString Error;
-    if (!ApplySelectedApp(AppId, AppName, AppSecret, GetRuntimeServerUrl(), Error))
+    if (!SaveConfiguration(App, {}, GetRuntimeServerUrl(), Error))
     {
         Notify(Error, true);
         return;
     }
-    FBCSecureStore::ClearChildren();
     UpdateChildAppsDisplay();
     Notify(FString::Printf(TEXT("Created and saved brainCloud app %s."), *AppName), false);
 }

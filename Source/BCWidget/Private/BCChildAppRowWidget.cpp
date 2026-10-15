@@ -31,8 +31,13 @@ void UBCChildAppRowWidget::SetOptions(const TArray<FBCPortalApp>& Apps, bool bAp
 {
     Options = Apps;
     const bool bHasSelection = !Child.AppId.IsEmpty();
-    const bool bSelectionListed = Options.ContainsByPredicate(
+    const FBCPortalApp* Listed = Options.FindByPredicate(
         [this](const FBCPortalApp& App) { return App.AppId == Child.AppId; });
+    const bool bSelectionListed = Listed != nullptr;
+    if (Listed && Child.AppName.IsEmpty())
+    {
+        Child.AppName = Listed->AppName;
+    }
 
     if (bHasSelection && !bSelectionListed)
     {
@@ -89,14 +94,6 @@ void UBCChildAppRowWidget::Clear()
     }
 }
 
-void UBCChildAppRowWidget::SetSecret(const FString& AppId, const FString& AppSecret)
-{
-    if (Child.AppId == AppId)
-    {
-        Child.AppSecret = AppSecret;
-    }
-}
-
 void UBCChildAppRowWidget::HandleSelectionChanged(FString SelectedItem, ESelectInfo::Type SelectionType)
 {
     if (SelectionType == ESelectInfo::Direct || !ChildAppSelectBox)
@@ -110,7 +107,6 @@ void UBCChildAppRowWidget::HandleSelectionChanged(FString SelectedItem, ESelectI
     }
     Child.AppId = Options[Index].AppId;
     Child.AppName = Options[Index].AppName;
-    Child.AppSecret.Empty();
     if (Owner.IsValid())
     {
         Owner->OnChildRowSelected(this);

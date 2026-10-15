@@ -2,6 +2,7 @@
 
 #pragma once
 #include "BrainCloudACL.h"
+#include "BCAppProfile.h"
 #include "BrainCloudAppDataStruct.h"
 #include "BrainCloudAppStore.h"
 #include "BrainCloudAsyncMatch.h"
@@ -163,6 +164,20 @@ public:
 					const FString &secretKey,
 					const FString &appId,
 					const FString &appVersion);
+
+	/**
+	 * Method initializes the BrainCloudClient with an app profile instead of a secret key.
+	 *
+	 * @param serverURL The url to the brainCloud server
+	 *     Currently this should be:  https://api.braincloudservers.com/dispatcherv2
+	 * @param appProfile Signs request payloads for the app
+	 * @param appId The app id
+	 * @param appVersion The version
+	 */
+	void initialize(const FString &serverUrl,
+					const FBCAppProfile &appProfile,
+					const FString &appId,
+					const FString &appVersion);
 	/**
 	 * Method initializes the BrainCloudClient with multiple app/secret.
 	 * Used when needed to switch between child and parent apps.
@@ -176,6 +191,21 @@ public:
 	void initializeWithApps(const FString &serverUrl,
 							const FString &appId,
 							const TMap<FString, FString> &secretMap,
+							const FString &appVersion);
+
+	/**
+	 * Method initializes the BrainCloudClient with an app profile for each app.
+	 * Used when needed to switch between child and parent apps.
+	 *
+	 * @param serverURL The url to the brainCloud server
+	 *     Currently this should be:  https://api.braincloudservers.com/dispatcherv2
+	 * @param defaultAppId The default app id that we start with
+	 * @param appProfiles A map of <appId, appProfile>
+	 * @param appVersion The version
+	 */
+	void initializeWithApps(const FString &serverUrl,
+							const FString &appId,
+							const TMap<FString, FBCAppProfile> &appProfiles,
 							const FString &appVersion);
 
 	/**

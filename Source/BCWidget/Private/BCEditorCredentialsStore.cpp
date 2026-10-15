@@ -1,16 +1,19 @@
 // Copyright 2026 bitHeads, Inc. All Rights Reserved.
 
 #include "BCEditorCredentialsStore.h"
-#include "BCSecureStore.h"
+#include "BCEditorConfigStore.h"
 #include "HAL/FileManager.h"
-#include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
+
+THIRD_PARTY_INCLUDES_START
+#include "braincloud/BrainCloudNativeWriter.h"
+THIRD_PARTY_INCLUDES_END
 
 namespace
 {
     FString GetSessionPath()
     {
-        return FPaths::Combine(FPaths::ProjectSavedDir(), TEXT("BrainCloud"), TEXT("EditorSession.ini"));
+        return FPaths::ConvertRelativePathToFull(FPaths::Combine(FPaths::ProjectSavedDir(), TEXT("BrainCloud"), TEXT("EditorSession.ini")));
     }
 
     FString GetLegacyPath()
@@ -32,27 +35,15 @@ FBCEditorCredentials BCEditorCredentialsStore::Load()
 {
     DeleteLegacyFile();
 
-    FBCEditorCredentials Result;
-    TArray<FString> Lines;
-    if (!FFileHelper::LoadFileToStringArray(Lines, *GetSessionPath()))
-    {
-        return Result;
-    }
+    braincloud::PortalSession Session;
+    braincloud::ConfigWriter::ResolveSession(FBCEditorConfigStore::ToNative(GetSessionPath()), Session);
 
-    for (const FString& Line : Lines)
-    {
-        FString Key, Value;
-        if (!Line.Split(TEXT("="), &Key, &Value))
-        {
-            continue;
-        }
-        const FString Decoded = FBCSecureStore::DecodeValue(Value);
-        if (Key == TEXT("AdminEmail")) Result.AdminEmail = Decoded;
-        else if (Key == TEXT("TeamId")) Result.TeamId = Decoded;
-        else if (Key == TEXT("ApiKey")) Result.ApiKey = Decoded;
-        else if (Key == TEXT("AccessToken")) Result.AccessToken = Decoded;
-        else if (Key == TEXT("ExpiresAt")) LexFromString(Result.AccessTokenExpiresAt, *Decoded);
-    }
+    FBCEditorCredentials Result;
+    Result.AdminEmail = FBCEditorConfigStore::FromNative(Session.email);
+    Result.TeamId = FBCEditorConfigStore::FromNative(Session.teamId);
+    Result.ApiKey = FBCEditorConfigStore::FromNative(Session.apiKey);
+    Result.AccessToken = FBCEditorConfigStore::FromNative(Session.accessToken);
+    Result.AccessTokenExpiresAt = Session.expiresAtUnix;
     return Result;
 }
 
@@ -60,19 +51,16 @@ void BCEditorCredentialsStore::Save(const FBCEditorCredentials& Credentials)
 {
     DeleteLegacyFile();
 
-    auto Line = [](const TCHAR* Key, const FString& Value)
-    {
-        return FString::Printf(TEXT("%s=%s\n"), Key, *FBCSecureStore::EncodeValue(Value));
-    };
+    const FString SessionPath = GetSessionPath();
+    IFileManager::Get().MakeDirectory(*FPaths::GetPath(SessionPath), true);
 
-    FString Contents = TEXT("[Session]\n");
-    Contents += Line(TEXT("AdminEmail"), Credentials.AdminEmail);
-    Contents += Line(TEXT("TeamId"), Credentials.TeamId);
-    Contents += Line(TEXT("ApiKey"), Credentials.ApiKey);
-    Contents += Line(TEXT("AccessToken"), Credentials.AccessToken);
-    Contents += Line(TEXT("ExpiresAt"), LexToString(Credentials.AccessTokenExpiresAt));
-
-    FFileHelper::SaveStringToFile(Contents, *GetSessionPath());
+    braincloud::PortalSession Session;
+    Session.email = FBCEditorConfigStore::ToNative(Credentials.AdminEmail);
+    Session.teamId = FBCEditorConfigStore::ToNative(Credentials.TeamId);
+    Session.apiKey = FBCEditorConfigStore::ToNative(Credentials.ApiKey);
+    Session.accessToken = FBCEditorConfigStore::ToNative(Credentials.AccessToken);
+    Session.expiresAtUnix = Credentials.AccessTokenExpiresAt;
+    braincloud::ConfigWriter::SaveSession(FBCEditorConfigStore::ToNative(SessionPath), Session);
 }
 
 void BCEditorCredentialsStore::Clear()
