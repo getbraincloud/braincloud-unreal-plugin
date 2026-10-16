@@ -880,12 +880,20 @@ void BrainCloudClient::determineReleasePlatform()
 {
 	FString platform = UGameplayStatics::GetPlatformName();
 
+#if defined(PLATFORM_VISIONOS) && PLATFORM_VISIONOS
+	// visionOS also sets PLATFORM_IOS, so check it before the platform name
+	_releasePlatform = BCPlatform::EnumToString(EBCPlatform::VISION_OS);
+	return;
+#endif
+
 	if (platform == TEXT("Windows"))
 		_releasePlatform = BCPlatform::EnumToString(EBCPlatform::WINDOWS);
 	else if (platform == TEXT("Mac"))
 		_releasePlatform = BCPlatform::EnumToString(EBCPlatform::MAC);
 	else if (platform == TEXT("IOS"))
 		_releasePlatform = BCPlatform::EnumToString(EBCPlatform::IOS);
+	else if (platform == TEXT("VisionOS"))
+		_releasePlatform = BCPlatform::EnumToString(EBCPlatform::VISION_OS);
 	else if (platform == TEXT("Android"))
 	{
 		#if PLATFORM_ANDROID
