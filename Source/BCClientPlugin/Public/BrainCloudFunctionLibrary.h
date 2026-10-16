@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/EngineBaseTypes.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include <BrainCloudAppDataStruct.h>
+#include "BrainCloudAppDataStruct.h"
 #include "BrainCloudFunctionLibrary.generated.h"
 
 UCLASS()
@@ -15,15 +15,53 @@ class BCCLIENTPLUGIN_API UBrainCloudFunctionLibrary : public UBlueprintFunctionL
 public:
 	/**
 		read the appdata from BrainCloudSettings.ini (call before initialize)
+		Deprecated, will be removed in a future release.
 	*/
-	UFUNCTION(BlueprintCallable, Category = "BrainCloud Utility")
+	UFUNCTION(BlueprintCallable, Category = "BrainCloud Utility",
+		meta = (DeprecatedFunction, DeprecationMessage = "Use Init to initialize brainCloud, and Get App Id, Get Child App Ids and Get Environment to read the stored settings. App credentials are set in the editor with Tools > brainCloud."))
 	static FBrainCloudAppDataStruct GetBCAppData();
 
 	/**
-		write given appdata to BrainCloudSettings.ini (used internally by BC widget)
+		write given appdata to BrainCloudSettings.ini
+		Deprecated, will be removed in a future release.
 	*/
-	UFUNCTION(BlueprintCallable, Category = "BrainCloud Utility")
+	UFUNCTION(BlueprintCallable, Category = "BrainCloud Utility",
+		meta = (DeprecatedFunction, DeprecationMessage = "Use Init to initialize brainCloud, and Get App Id, Get Child App Ids and Get Environment to read the stored settings. App credentials are set in the editor with Tools > brainCloud."))
 	static void SetBCAppData(FBrainCloudAppDataStruct appData);
+
+	/**
+		returns the app id set in the brainCloud editor panel (Tools > brainCloud)
+		empty if none is set
+	*/
+	UFUNCTION(BlueprintPure, Category = "BrainCloud Utility")
+	static FString GetAppId();
+
+	/**
+		returns the first child app id set in the brainCloud editor panel
+		empty if none is set
+	*/
+	UFUNCTION(BlueprintPure, Category = "BrainCloud Utility")
+	static FString GetChildAppId();
+
+	/**
+		returns every child app id set in the brainCloud editor panel
+	*/
+	UFUNCTION(BlueprintPure, Category = "BrainCloud Utility")
+	static TArray<FString> GetChildAppIds();
+
+	/**
+		returns the brainCloud environment of the server url set in the brainCloud editor panel
+		For example, "prod" for https://api.braincloudservers.com and "internal" for
+		https://api.internal.braincloudservers.com. Other domains return the full server url.
+	*/
+	UFUNCTION(BlueprintPure, Category = "BrainCloud Utility")
+	static FString GetEnvironment();
+
+	/**
+		returns the brainCloud environment of the given server url, see GetEnvironment
+	*/
+	UFUNCTION(BlueprintPure, Category = "BrainCloud Utility")
+	static FString GetEnvironmentFromUrl(const FString& ServerUrl);
 
 	/**
 		utility to copy string to system clipboard
@@ -77,6 +115,7 @@ public:
 	UFUNCTION(BlueprintPure, Category = "BrainCloud Utility")
 	static FString GetProjectVersion();
 
-	UFUNCTION(BlueprintPure, Category = "BrainCloud Utility")
+	UFUNCTION(BlueprintPure, Category = "BrainCloud Utility",
+		meta = (DeprecatedFunction, DeprecationMessage = "Use Get Environment instead."))
 	static FString GetProjectEnvironment();
 };

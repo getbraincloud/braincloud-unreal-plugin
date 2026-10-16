@@ -64,6 +64,11 @@ void UBCWrapperProxy::EnableAutoReconnect(UBrainCloudWrapper* brainCloudWrapper,
 	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->enableAutoReconnect(enabled);
 }
 
+bool UBCWrapperProxy::Init(UBrainCloudWrapper *brainCloudWrapper)
+{
+	return UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->init();
+}
+
 void UBCWrapperProxy::Initialize(UBrainCloudWrapper *brainCloudWrapper, FString serverUrl, FString secretKey, FString appId, FString version)
 {
 	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->initialize(serverUrl, secretKey, appId, version);

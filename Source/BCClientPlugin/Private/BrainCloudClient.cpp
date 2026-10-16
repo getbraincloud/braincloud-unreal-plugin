@@ -20,6 +20,7 @@
 #include "BCPlatform.h"
 #include "BrainCloudFunctionLibrary.h"
 #include "Internationalization/Culture.h"
+#include "Misc/SecureHash.h"
 
 #if PLATFORM_ANDROID
 #include "Android/AndroidPlatformMisc.h"
@@ -119,9 +120,38 @@ void BrainCloudClient::EnableCompressedResponses(bool isEnabled)
 	_authenticationService->CompressResponses = isEnabled;
 }
 
+namespace
+{
+	FBCAppProfile MakeSecretKeyProfile(const FString &secretKey)
+	{
+		return [secretKey](const TArray<uint8> &payload)
+		{
+			FTCHARToUTF8 secretUtf8(*secretKey);
+			TArray<uint8> bytes = payload;
+			bytes.Append((const uint8 *)secretUtf8.Get(), secretUtf8.Length());
+			return FMD5::HashBytes(bytes.GetData(), bytes.Num());
+		};
+	}
+}
+
 void BrainCloudClient::initialize(
 	const FString &serverUrl,
 	const FString &secretKey,
+	const FString &appId,
+	const FString &appVersion)
+{
+	if (secretKey.IsEmpty())
+	{
+		resetCommunication();
+		UE_LOG(LogTemp, Error, TEXT("ERROR | Failed to initialize brainCloud - secretKey was null or empty"));
+		return;
+	}
+	initialize(serverUrl, MakeSecretKeyProfile(secretKey), appId, appVersion);
+}
+
+void BrainCloudClient::initialize(
+	const FString &serverUrl,
+	const FBCAppProfile &appProfile,
 	const FString &appId,
 	const FString &appVersion)
 {
@@ -129,8 +159,8 @@ void BrainCloudClient::initialize(
 	FString error = "";
 	if (serverUrl.IsEmpty())
 		error = "serverURL was null or empty";
-	else if (secretKey.IsEmpty())
-		error = "secretKey was null or empty";
+	else if (!appProfile)
+		error = "appProfile was null";
 	else if (appId.IsEmpty())
 		error = "appId was null or empty";
 	else if (appVersion.IsEmpty())
@@ -145,7 +175,7 @@ void BrainCloudClient::initialize(
 	if (!_brainCloudComms)
 		_brainCloudComms = new BrainCloudComms(this);
 
-	_brainCloudComms->Initialize(serverUrl, secretKey, appId);
+	_brainCloudComms->Initialize(serverUrl, appProfile, appId);
 	determineReleasePlatform();
 
 	_appId = appId;
@@ -160,15 +190,32 @@ void BrainCloudClient::initializeWithApps(
 	const TMap<FString, FString> &secretMap,
 	const FString &appVersion)
 {
+	TMap<FString, FBCAppProfile> appProfiles;
+	for (const TPair<FString, FString> &entry : secretMap)
+	{
+		if (!entry.Value.IsEmpty())
+		{
+			appProfiles.Add(entry.Key, MakeSecretKeyProfile(entry.Value));
+		}
+	}
+	initializeWithApps(serverUrl, appId, appProfiles, appVersion);
+}
+
+void BrainCloudClient::initializeWithApps(
+	const FString &serverUrl,
+	const FString &appId,
+	const TMap<FString, FBCAppProfile> &appProfiles,
+	const FString &appVersion)
+{
 	resetCommunication();
-	const FString &newAppId = secretMap[appId];
+	const FBCAppProfile *appProfile = appProfiles.Find(appId);
 	FString error = "";
 	if (serverUrl.IsEmpty())
 		error = "serverURL was null or empty";
 	else if (appId.IsEmpty())
 		error = "appId was null or empty";
-	else if (newAppId.IsEmpty())
-		error = "no matching secret for appId";
+	else if (!appProfile || !*appProfile)
+		error = "no matching app profile for appId";
 	else if (appVersion.IsEmpty())
 		error = "appVersion was null or empty";
 
@@ -181,7 +228,7 @@ void BrainCloudClient::initializeWithApps(
 	if (!_brainCloudComms)
 		_brainCloudComms = new BrainCloudComms(this);
 
-	_brainCloudComms->InitializeWithApps(serverUrl, secretMap, appId);
+	_brainCloudComms->InitializeWithApps(serverUrl, appProfiles, appId);
 	determineReleasePlatform();
 
 	_appId = appId;

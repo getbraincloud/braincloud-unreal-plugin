@@ -63,6 +63,16 @@ public:
   static void EnableAutoReconnect(UBrainCloudWrapper* brainCloudWrapper, bool enabled);
 
   /**
+     * Method initializes the BrainCloudClient with the app credentials set in the
+     * brainCloud editor panel (Tools > brainCloud). Stored child apps are also registered
+     * so SwitchToChildProfile can be used.
+     *
+     * @return True if stored credentials were found and the client was initialized
+     */
+  UFUNCTION(BlueprintCallable, Category = "BrainCloud|Wrapper")
+  static bool Init(UBrainCloudWrapper *brainCloudWrapper);
+
+  /**
      * Method initializes the BrainCloudClient.
      *
      * @param serverURL The url to the brainCloud server
