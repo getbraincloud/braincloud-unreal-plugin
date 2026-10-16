@@ -39,6 +39,8 @@ FString BCPlatform::EnumToString(EBCPlatform platform)
         return TEXT("PS4");
     case EBCPlatform::WATCH_OS:
         return TEXT("WATCH_OS");
+    case EBCPlatform::VISION_OS:
+        return TEXT("VISION_OS");
     case EBCPlatform::WII:
         return TEXT("WII");
     case EBCPlatform::PS_VITA:
