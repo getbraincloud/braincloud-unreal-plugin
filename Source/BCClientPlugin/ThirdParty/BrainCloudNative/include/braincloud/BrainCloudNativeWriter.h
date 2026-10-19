@@ -45,7 +45,7 @@ struct PortalSession {
  *
  * For editor tools only. Do not link this library into a game.
  */
-class ConfigWriter {
+class BCNATIVE_API ConfigWriter {
 public:
     /**
      * Writes an app configuration, replacing the file. An app with an empty secret keeps

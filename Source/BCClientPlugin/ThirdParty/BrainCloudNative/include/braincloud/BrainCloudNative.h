@@ -9,7 +9,7 @@
 #else
 #define BCNATIVE_API __declspec(dllimport)
 #endif
-#elif defined(BCNATIVE_SHARED)
+#elif !defined(_WIN32) && (defined(BCNATIVE_SHARED) || defined(BCNATIVE_BUILDING))
 #define BCNATIVE_API __attribute__((visibility("default")))
 #else
 #define BCNATIVE_API
