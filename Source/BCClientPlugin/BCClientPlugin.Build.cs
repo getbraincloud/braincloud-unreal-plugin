@@ -56,7 +56,63 @@ public class BCClientPlugin : ModuleRules
                 });
 
         PublicDefinitions.Add("PLATFORM_UWP=0");
-      
+
+        string NativeRoot = Path.Combine(ModulePath, "ThirdParty", "BrainCloudNative");
+        string NativeLibRoot = Path.Combine(NativeRoot, "lib");
+        string PlatformName = Target.Platform.ToString();
+        List<string> NativeLibs = new List<string>();
+        if (Target.Platform == UnrealTargetPlatform.Win64)
+        {
+            NativeLibs.Add(Path.Combine(NativeLibRoot, "Win64", "BrainCloudNative.lib"));
+        }
+        else if (Target.Platform == UnrealTargetPlatform.Mac)
+        {
+            NativeLibs.Add(Path.Combine(NativeLibRoot, "Mac", "BrainCloudNative-Mac.a"));
+        }
+        else if (Target.Platform == UnrealTargetPlatform.IOS && Target.Architecture.ToString().ToLowerInvariant().Contains("simulator"))
+        {
+            NativeLibs.Add(Path.Combine(NativeLibRoot, "iOSSimulator", "BrainCloudNative-iOSSimulator.a"));
+        }
+        else if (Target.Platform == UnrealTargetPlatform.IOS)
+        {
+            NativeLibs.Add(Path.Combine(NativeLibRoot, "iOS", "BrainCloudNative-iOS.a"));
+        }
+        else if (Target.Platform == UnrealTargetPlatform.Android)
+        {
+            NativeLibs.Add(Path.Combine(NativeLibRoot, "Android", "arm64-v8a", "libBrainCloudNative.a"));
+            NativeLibs.Add(Path.Combine(NativeLibRoot, "Android", "x86_64", "libBrainCloudNative.a"));
+        }
+        else if (Target.Platform == UnrealTargetPlatform.Linux)
+        {
+            NativeLibs.Add(Path.Combine(NativeLibRoot, "Linux", "libBrainCloudNative.a"));
+        }
+        else if (PlatformName == "LinuxArm64" || PlatformName == "LinuxAArch64")
+        {
+            NativeLibs.Add(Path.Combine(NativeLibRoot, "LinuxArm64", "libBrainCloudNative.a"));
+        }
+
+        List<string> MissingLibs = NativeLibs.FindAll(Lib => !File.Exists(Lib));
+        if (MissingLibs.Count > 0)
+        {
+            throw new BuildException("brainCloud: missing native library for " + PlatformName + ": " + string.Join(", ", MissingLibs));
+        }
+
+        bool bHasNativeConfig = NativeLibs.Count > 0;
+        if (bHasNativeConfig)
+        {
+            PrivateIncludePaths.Add(Path.Combine(NativeRoot, "include"));
+            PublicAdditionalLibraries.AddRange(NativeLibs);
+            if (Target.Platform == UnrealTargetPlatform.Win64)
+            {
+                PublicSystemLibraries.Add("bcrypt.lib");
+            }
+            else if (Target.Platform == UnrealTargetPlatform.Mac || Target.Platform == UnrealTargetPlatform.IOS)
+            {
+                PublicFrameworks.Add("Security");
+            }
+        }
+        PublicDefinitions.Add("BC_NATIVE_CONFIG=" + (bHasNativeConfig ? "1" : "0"));
+
         if (Target.Platform == UnrealTargetPlatform.Win64)
         {
             PrivateDependencyModuleNames.Add("zlib");
