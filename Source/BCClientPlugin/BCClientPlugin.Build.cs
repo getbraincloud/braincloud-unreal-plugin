@@ -71,7 +71,7 @@ public class BCClientPlugin : ModuleRules
         }
         else if (Target.Platform == UnrealTargetPlatform.IOS && Target.Architecture.ToString().ToLowerInvariant().Contains("simulator"))
         {
-            NativeLibs.Add(Path.Combine(NativeLibRoot, "iOSSimulator", "BrainCloudNative-iOSSimulator.a"));
+            throw new BuildException("brainCloud: the iOS Simulator is not supported. Build for an iOS device.");
         }
         else if (Target.Platform == UnrealTargetPlatform.IOS)
         {
