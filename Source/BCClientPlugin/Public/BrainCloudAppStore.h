@@ -149,6 +149,30 @@ public:
    */
   void refreshPromotions(IServerCallback *callback = nullptr);
 
+  /**
+   * Returns the store's client-side configuration for the given store.
+   *
+   * Service Name - appStore
+   * Service Operation - GET_STORE_INFO
+   *
+   * @param storeId The platform's storeId. Valid stores are:
+   * - xsolla
+   * @param callback The method to be invoked when the server response is received
+   */
+  void getStoreInfo(const FString &in_storeId, IServerCallback *callback = nullptr);
+
+  /**
+   * Returns a store user token (JWT) for the current user, generated server-side.
+   *
+   * Service Name - appStore
+   * Service Operation - GET_USER_TOKEN
+   *
+   * @param storeId The platform's storeId. Valid stores are:
+   * - xsolla
+   * @param callback The method to be invoked when the server response is received
+   */
+  void getUserToken(const FString &in_storeId, IServerCallback *callback = nullptr);
+
 private:
   BrainCloudClient *_client = nullptr;
 };

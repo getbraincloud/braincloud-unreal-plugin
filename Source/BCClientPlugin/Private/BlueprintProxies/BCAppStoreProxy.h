@@ -161,4 +161,28 @@ public:
   */
   UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|AppStore")
   static UBCAppStoreProxy *RefreshPromotions(UBrainCloudWrapper *brainCloudWrapper);
+
+  /**
+  * Returns the store's client-side configuration for the given store.
+  *
+  * Service Name - appStore
+  * Service Operation - GET_STORE_INFO
+  *
+  * @param storeId The platform's storeId. Valid stores are:
+  * - xsolla
+  */
+  UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|AppStore")
+  static UBCAppStoreProxy *GetStoreInfo(UBrainCloudWrapper *brainCloudWrapper, const FString &storeId);
+
+  /**
+  * Returns a store user token (JWT) for the current user, generated server-side.
+  *
+  * Service Name - appStore
+  * Service Operation - GET_USER_TOKEN
+  *
+  * @param storeId The platform's storeId. Valid stores are:
+  * - xsolla
+  */
+  UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|AppStore")
+  static UBCAppStoreProxy *GetUserToken(UBrainCloudWrapper *brainCloudWrapper, const FString &storeId);
 };

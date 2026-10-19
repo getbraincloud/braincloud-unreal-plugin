@@ -91,3 +91,21 @@ void BrainCloudAppStore::refreshPromotions(IServerCallback* callback)
     ServerCall *sc = new ServerCall(ServiceName::AppStore, ServiceOperation::RefreshPromotions, message, callback);
     _client->sendRequest(sc);
 }
+
+void BrainCloudAppStore::getStoreInfo(const FString &in_storeId, IServerCallback *callback)
+{
+    TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
+    message->SetStringField(OperationParam::AppStoreId.getValue(), in_storeId);
+
+    ServerCall *sc = new ServerCall(ServiceName::AppStore, ServiceOperation::GetStoreInfo, message, callback);
+    _client->sendRequest(sc);
+}
+
+void BrainCloudAppStore::getUserToken(const FString &in_storeId, IServerCallback *callback)
+{
+    TSharedRef<FJsonObject> message = MakeShareable(new FJsonObject());
+    message->SetStringField(OperationParam::AppStoreId.getValue(), in_storeId);
+
+    ServerCall *sc = new ServerCall(ServiceName::AppStore, ServiceOperation::GetUserToken, message, callback);
+    _client->sendRequest(sc);
+}
