@@ -13,6 +13,11 @@ class IHttpRouter;
 struct FHttpServerRequest;
 #endif
 
+namespace braincloud
+{
+    class PortalAuth;
+}
+
 /**
  * The result of a login to the brainCloud portal.
  */
@@ -37,6 +42,7 @@ DECLARE_DELEGATE_OneParam(FBCApiKeyRefreshSuccessDelegate, const FString&);
 class BCPortalOAuthClient : public TSharedFromThis<BCPortalOAuthClient>
 {
 public:
+    BCPortalOAuthClient();
     ~BCPortalOAuthClient();
 
     static bool IsOAuthSupported() { return BC_WIDGET_OAUTH_SUPPORTED != 0; }
@@ -46,10 +52,7 @@ public:
 
     void CancelLogin();
 
-    bool HasAccessToken() const
-    {
-        return !AccessToken.IsEmpty() && AccessTokenExpiresAt > FDateTime::UtcNow().ToUnixTimestamp();
-    }
+    bool HasAccessToken() const;
 
     void ResumeLogin(const FString& InServerUrl, const FString& InAccessToken, int64 InExpiresAt,
         const FString& PreferredTeamId, FBCLoginSuccessDelegate OnSuccess, FBCLoginFailureDelegate OnFailure);
@@ -73,24 +76,12 @@ private:
 #endif
 #endif
 
-    void ExchangeToken(const FString& AuthCode);
-    void FetchUserInfo();
-    void AddTempApiKey();
+    void SendNextRequest();
     void Fail(const FString& Message);
 
     FString ServerUrl;
-    FString ClientId;
-    FString RedirectUri;
-    FString CodeVerifier;
-    FString ExpectedState;
-    FString AccessToken;
-    int64 AccessTokenExpiresAt = 0;
-
-    FBCLoginResult PendingResult;
-    FString PreferredTeamId;
+    TUniquePtr<braincloud::PortalAuth> Auth;
 
     FBCLoginSuccessDelegate OnSuccessDelegate;
     FBCLoginFailureDelegate OnFailureDelegate;
-
-    static constexpr int32 ListenPort = 45678;
 };

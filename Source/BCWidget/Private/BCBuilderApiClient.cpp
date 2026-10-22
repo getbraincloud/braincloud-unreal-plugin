@@ -130,7 +130,7 @@ void BCBuilderApiClient::SendRequest(const FString& Path, const FString& Verb, c
                 return;
             }
 
-            UE_LOG(LogBCWidget, Log, TEXT("[BuilderAPI] <- %d %s -- body: %s"), StatusCode, *LoggedUrl, *RawContent);
+            UE_LOG(LogBCWidget, Log, TEXT("[BuilderAPI] <- %d %s"), StatusCode, *LoggedUrl);
 
             const TSharedPtr<FJsonObject>* InnerResponse = nullptr;
             if (Json.IsValid() && Json->TryGetObjectField(TEXT("response"), InnerResponse) && InnerResponse)
