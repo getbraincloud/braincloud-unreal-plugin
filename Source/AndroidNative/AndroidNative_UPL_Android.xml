@@ -30,24 +30,13 @@
   </prebuildCopies>
 
 
-  <gradleProperties>
-    <insert>
-      android.useAndroidX=true
-      android.enableJetifier=true
-    </insert>
-  </gradleProperties>
-
-
   <proguardAdditions>
     <insert>
-      -dontwarn com.Plugins.**
-      -keep class com.Plugins.** { *; }
-      -keep interface com.Plugins.** { *; }
-      -keep public class com.Plugins.AndroidNative.** { public protected *; }
-
-      -dontwarn androidx.**
-      -keep class androidx.** { *; }
-      -keep interface androidx.** { *; }
+      # DeviceInfo is looked up by name at runtime (FindJavaClass + FindStaticMethod), so R8 must not rename or strip it.
+      # Everything the plugin calls through JNI is a public static method on this one class.
+      -keep class com.Plugins.AndroidNative.DeviceInfo {
+          public static &lt;methods&gt;;
+      }
 
     </insert>
   </proguardAdditions>
@@ -55,7 +44,8 @@
 
   <androidManifestUpdates>
   
-    <!-- For target SDK 31 update the SplashActivity activity -->
+    <!-- UE4 emits SplashActivity without android:exported, which target SDK 31+ rejects. No-op on UE5: the class is
+         com.epicgames.unreal.SplashActivity there and the engine already sets exported itself. -->
     <loopElements tag="activity">
       <setStringFromAttribute result="activityName" tag="$" name="android:name"/>
       <setBoolIsEqual result="bSplashActivity" arg1="$S(activityName)" arg2="com.epicgames.ue4.SplashActivity"/>
@@ -66,70 +56,7 @@
       </if>
     </loopElements>
 
-    <addPermission android:name="com.android.permission.READ_EXTERNAL_STORAGE"/>
-    <addPermission android:name="com.android.permission.WRITE_EXTERNAL_STORAGE"/>
-
   </androidManifestUpdates>
-
-
-  <buildGradleAdditions>
-    <insert>
-
-      ext {
-          android {
-              buildTypes {
-                  release {
-                      minifyEnabled false
-                  }
-              }
-          }
-      }
-
-      repositories {
-        mavenCentral()
-        jcenter()
-      }
-
-      <!-- Here you can specify your own dependencies for downloading *.AAR libraries over the Internet. -->
-      dependencies {
-        implementation 'com.google.guava:guava:28.2-android'
-      }
-
-    </insert>
-  </buildGradleAdditions>
-
-
-  <baseBuildGradleAdditions>
-    <insert>
-      allprojects {
-        def mappings = [
-          'android.support.annotation': 'androidx.annotation',
-          'android.arch.lifecycle': 'androidx.lifecycle',
-          'android.support.v4.app.NotificationCompat': 'androidx.core.app.NotificationCompat',
-          'android.support.v4.app.ActivityCompat': 'androidx.core.app.ActivityCompat',
-          'android.support.v4.content.ContextCompat': 'androidx.core.content.ContextCompat',
-          'android.support.v4.app.NotificationManagerCompat': 'androidx.core.app.NotificationManagerCompat',
-          'android.support.v4.content.FileProvider': 'androidx.core.content.FileProvider',
-          'android.support.v13.app.FragmentCompat': 'androidx.legacy.app.FragmentCompat',
-          'android.arch.lifecycle.Lifecycle': 'androidx.lifecycle.Lifecycle',
-          'android.arch.lifecycle.LifecycleObserver': 'androidx.lifecycle.LifecycleObserver',
-          'android.arch.lifecycle.OnLifecycleEvent': 'androidx.lifecycle.OnLifecycleEvent',
-          'android.arch.lifecycle.ProcessLifecycleOwner': 'androidx.lifecycle.ProcessLifecycleOwner',
-        ]
-
-      beforeEvaluate { project ->
-        project.rootProject.projectDir.traverse(type: groovy.io.FileType.FILES, nameFilter: ~/.*\.java$/) { f ->
-            mappings.each { entry ->
-              if (f.getText('UTF-8').contains(entry.key)) {
-                println "Updating ${entry.key} to ${entry.value} in file ${f}"
-                ant.replace(file: f, token: entry.key, value: entry.value)
-              }
-            }
-          }
-        }
-      }
-    </insert>
-  </baseBuildGradleAdditions>
 
 
 </root>
