@@ -64,6 +64,11 @@ void UBCWrapperProxy::EnableAutoReconnect(UBrainCloudWrapper* brainCloudWrapper,
 	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->enableAutoReconnect(enabled);
 }
 
+bool UBCWrapperProxy::Init(UBrainCloudWrapper *brainCloudWrapper)
+{
+	return UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->init();
+}
+
 void UBCWrapperProxy::Initialize(UBrainCloudWrapper *brainCloudWrapper, FString serverUrl, FString secretKey, FString appId, FString version)
 {
 	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->initialize(serverUrl, secretKey, appId, version);
@@ -158,15 +163,22 @@ UBCWrapperProxy *UBCWrapperProxy::AuthenticateGoogle(UBrainCloudWrapper *brainCl
 UBCWrapperProxy *UBCWrapperProxy::AuthenticateGoogleOpenId(UBrainCloudWrapper *brainCloudWrapper, FString googleUserAccountEmail, FString IdToken, bool forceCreate)
 {
     UBCWrapperProxy *Proxy = NewObject<UBCWrapperProxy>();
-    UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getClient()->getAuthenticationService()->authenticateGoogleOpenId(googleUserAccountEmail, IdToken, forceCreate, Proxy);
+    UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->authenticateGoogleOpenId(googleUserAccountEmail, IdToken, forceCreate, Proxy);
     return Proxy;
 }
 
 UBCWrapperProxy *UBCWrapperProxy::AuthenticateApple(UBrainCloudWrapper *brainCloudWrapper, FString appleUserId, FString identityToken, bool forceCreate)
 {
     UBCWrapperProxy *Proxy = NewObject<UBCWrapperProxy>();
-    UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getClient()->getAuthenticationService()->authenticateApple(appleUserId, identityToken, forceCreate, Proxy);
+    UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->authenticateApple(appleUserId, identityToken, forceCreate, Proxy);
     return Proxy;
+}
+
+UBCWrapperProxy* UBCWrapperProxy::AuthenticateEpicGames(UBrainCloudWrapper* brainCloudWrapper, FString epicAccountId, FString authIdToken, bool forceCreate)
+{
+	UBCWrapperProxy* Proxy = NewObject<UBCWrapperProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->authenticateEpicGames(epicAccountId, authIdToken, forceCreate, Proxy);
+	return Proxy;
 }
 
 UBCWrapperProxy *UBCWrapperProxy::AuthenticateSteam(UBrainCloudWrapper *brainCloudWrapper, FString userid, FString sessionticket, bool forceCreate)
@@ -280,7 +292,14 @@ UBCWrapperProxy *UBCWrapperProxy::SmartSwitchAuthenticateGoogleOpenId(UBrainClou
 UBCWrapperProxy *UBCWrapperProxy::SmartSwitchAuthenticateApple(UBrainCloudWrapper *brainCloudWrapper, const FString &appleUserId, const FString &identityToken, bool forceCreate)
 {
 	UBCWrapperProxy *Proxy = NewObject<UBCWrapperProxy>();
-	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->smartSwitchAuthenticateGoogleOpenId(appleUserId, identityToken, forceCreate, Proxy);
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->smartSwitchAuthenticateApple(appleUserId, identityToken, forceCreate, Proxy);
+	return Proxy;
+}
+
+UBCWrapperProxy* UBCWrapperProxy::SmartSwitchAuthenticateEpicGames(UBrainCloudWrapper* brainCloudWrapper, const FString& epicAccountId, const FString& authIdToken, bool forceCreate)
+{
+	UBCWrapperProxy* Proxy = NewObject<UBCWrapperProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->smartSwitchAuthenticateEpicGames(epicAccountId, authIdToken, forceCreate, Proxy);
 	return Proxy;
 }
 

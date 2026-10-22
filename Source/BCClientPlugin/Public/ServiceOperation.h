@@ -461,6 +461,8 @@ public:
 	static const ServiceOperation CachePurchasePayloadContext;
 	static const ServiceOperation FinalizePurchase;
 	static const ServiceOperation RefreshPromotions;
+	static const ServiceOperation GetStoreInfo;
+	static const ServiceOperation GetUserToken;
 
 	// rtt
 	static const ServiceOperation RequestClientConnection;

@@ -3,6 +3,9 @@
 #include "BrainCloudWrapper.h"
 #include "BCClientPluginPrivatePCH.h"
 
+#include "BCConfigStore.h"
+#include "BrainCloudFunctionLibrary.h"
+
 #include "BCAuthType.h"
 #include "BrainCloudClient.h"
 #include "ServiceName.h"
@@ -44,10 +47,72 @@ void UBrainCloudWrapper::BeginDestroy()
         delete _client;
 }
 
+bool UBrainCloudWrapper::init()
+{
+    FBCStoredCredentials Credentials;
+    TMap<FString, FBCAppProfile> AppProfiles;
+    if (!FBCConfigStore::ResolveAppProfiles(Credentials, AppProfiles))
+    {
+        if (!FBCConfigStore::IsSupported())
+        {
+            UE_LOG(LogBrainCloud, Error, TEXT("brainCloud: the app configuration cannot be read on this platform. ")
+                TEXT("Use initialize with your app's id and secret instead. The client has NOT been initialized."));
+        }
+        else if (FBCConfigStore::DetectState() == EBCConfigState::Legacy)
+        {
+            UE_LOG(LogBrainCloud, Error, TEXT("brainCloud: Config/BrainCloudSettings.ini still holds the app secret in plain text. ")
+                TEXT("Open Tools > brainCloud in the editor to update it. The client has NOT been initialized."));
+        }
+        else
+        {
+            UE_LOG(LogBrainCloud, Error, TEXT("brainCloud: no app configured in %s. ")
+                TEXT("Open Tools > brainCloud in the editor and sign in to pick your app. The client has NOT been initialized."),
+                *FBCConfigStore::GetConfigPath());
+        }
+        return false;
+    }
+
+    const FString Url = Credentials.ServerUrl.IsEmpty() ? TEXT("https://api.braincloudservers.com/dispatcherv2") : Credentials.ServerUrl;
+    const FString Version = Credentials.Version.IsEmpty() ? UBrainCloudFunctionLibrary::GetProjectVersion() : Credentials.Version;
+
+    if (Credentials.ChildApps.Num() > 0)
+    {
+        initializeWithApps(Url, Credentials.AppId, AppProfiles, Version, _company, _appName);
+    }
+    else
+    {
+        initialize(Url, AppProfiles[Credentials.AppId], Credentials.AppId, Version);
+    }
+
+    if (FBCConfigStore::ResolveDebugLogging())
+    {
+        _client->enableLogging(true);
+    }
+
+    if (_client->isLoggingEnabled())
+    {
+        TArray<FString> ChildIds;
+        for (const FBCStoredChildApp& Child : Credentials.ChildApps)
+        {
+            ChildIds.Add(Child.AppId);
+        }
+        UE_LOG(LogBrainCloud, Log, TEXT("brainCloud: initialized app %s on %s, version %s. Child apps for switchToChildProfile: %s"),
+            *Credentials.AppId, *UBrainCloudFunctionLibrary::GetEnvironmentFromUrl(Url), *Version,
+            ChildIds.Num() > 0 ? *FString::Join(ChildIds, TEXT(", ")) : TEXT("none"));
+    }
+    return true;
+}
+
 void UBrainCloudWrapper::initialize(FString url, FString secretKey, FString appId, FString appVersion)
 {
     // initialize the client with our app info
     _client->initialize(url, secretKey, appId, appVersion);
+    loadData();
+}
+
+void UBrainCloudWrapper::initialize(FString url, const FBCAppProfile& appProfile, FString appId, FString appVersion)
+{
+    _client->initialize(url, appProfile, appId, appVersion);
     loadData();
 }
 
@@ -73,6 +138,24 @@ void UBrainCloudWrapper::initializeWithApps(FString url, FString appId, TMap<FSt
 
     // initialize the client with our app info
     _client->initializeWithApps(url, appId, secretMap, appVersion);
+
+    loadData();
+}
+
+void UBrainCloudWrapper::initializeWithApps(FString url, FString appId, TMap<FString, FBCAppProfile> appProfiles, FString appVersion, FString company, FString appName)
+{
+    if (_client == nullptr)
+    {
+        _client = new BrainCloudClient();
+    }
+
+    _lastUrl = url;
+    _lastGameId = appId;
+    _lastGameVersion = appVersion;
+    _company = company;
+    _appName = appName;
+
+    _client->initializeWithApps(url, appId, appProfiles, appVersion);
 
     loadData();
 }
@@ -110,12 +193,12 @@ void UBrainCloudWrapper::reauthenticate()
 {
     // send our saved game info to brainCloud
     // company and game name can be nullptr since they are already set
-    const FString &serverURL = _client->getBrainCloudComms()->GetServerUrl();
-    const FString &secretKey = _client->getBrainCloudComms()->GetSecretKey();
-    const FString &appId = _client->getAppId();
-    const FString &appVersion = _client->getAppVersion();
+    const FString serverURL = _client->getBrainCloudComms()->GetServerUrl();
+    const FBCAppProfile appProfile = _client->getBrainCloudComms()->GetAppProfile();
+    const FString appId = _client->getAppId();
+    const FString appVersion = _client->getAppVersion();
 
-    initialize(serverURL, secretKey, appId, appVersion);
+    initialize(serverURL, appProfile, appId, appVersion);
     authenticateAnonymous();
 }
 
@@ -212,6 +295,13 @@ void UBrainCloudWrapper::authenticateApple(FString appleUserId, FString identity
     _authenticateCallback = callback;
     initializeIdentity();
 	_client->getAuthenticationService()->authenticateApple(appleUserId, identityToken, forceCreate, this);
+}
+
+void UBrainCloudWrapper::authenticateEpicGames(FString epicAccountId, FString authIdToken, bool forceCreate, IServerCallback* callback)
+{
+	_authenticateCallback = callback;
+	initializeIdentity();
+	_client->getAuthenticationService()->authenticateEpicGames(epicAccountId, authIdToken, forceCreate, this);
 }
 
 void UBrainCloudWrapper::authenticateSteam(FString userid, FString sessionticket, bool forceCreate, IServerCallback *callback)
@@ -346,6 +436,12 @@ void UBrainCloudWrapper::smartSwitchAuthenticateApple(const FString &appleUserId
 {
     SmartSwitchAuthenticateCallback *smartCallback = new SmartSwitchAuthenticateCallback(this, EBCAuthType::Apple, appleUserId, identityToken, in_forceCreate, in_callback);
     getIdentitiesCallback(smartCallback);
+}
+
+void UBrainCloudWrapper::smartSwitchAuthenticateEpicGames(const FString& epicAccountId, const FString& authIdToken, bool in_forceCreate, IServerCallback* in_callback)
+{
+	SmartSwitchAuthenticateCallback* smartCallback = new SmartSwitchAuthenticateCallback(this, EBCAuthType::EpicGames, epicAccountId, authIdToken, in_forceCreate, in_callback);
+	getIdentitiesCallback(smartCallback);
 }
 
 void UBrainCloudWrapper::smartSwitchAuthenticateSteam(const FString &userid, const FString &sessionticket, bool in_forceCreate, IServerCallback *in_callback)

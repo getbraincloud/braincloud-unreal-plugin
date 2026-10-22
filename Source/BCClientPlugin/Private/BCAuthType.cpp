@@ -45,6 +45,8 @@ FString BCAuthType::EnumToString(EBCAuthType type)
         return TEXT("External");
     case EBCAuthType::Ultra:
         return TEXT("Ultra");
+	case EBCAuthType::EpicGames:
+		return TEXT("EpicGames");
     case EBCAuthType::Unknown:
         return TEXT("Unknown");
     default:

@@ -241,7 +241,7 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *AuthenticateGoogle(UBrainCloudWrapper *brainCloudWrapper, FString googleId, FString token, bool forceCreate);
 
-        /**
+    /**
     * Authenticate the user using a google userid(email address) and google authentication token.
     *
     * Service Name - Authenticate
@@ -256,20 +256,35 @@ class UBCAuthenticationProxy : public UBCBlueprintCallProxyBase
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *AuthenticateGoogleOpenId(UBrainCloudWrapper *brainCloudWrapper, FString googleUserAccountEmail, FString IdToken, bool forceCreate);
 
-        /**
-    * Authenticate the user using a google userid(email address) and google authentication token.
+    /**
+    * Authenticate the user using their Apple account and identityToken.
     *
     * Service Name - Authenticate
     * Service Operation - Authenticate
     *
-    * @param appleUserId this can be user id OR the email of the user account
-    * @param identityToken  the token confirming the user's identity
-    * Param - forceCreate Should a new profile be created for this user if the account does not exist?
+    * @param appleUserId String of the apple accounts user Id OR email
+    * @param identityToken The identityToken confirming users identity
+    * @param forceCreate Should a new profile be created for this user if the account does not exist?
     *
     * (Note: recommend using BCWrapper method instead.)
     */
     UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
     static UBCAuthenticationProxy *AuthenticateApple(UBrainCloudWrapper *brainCloudWrapper, FString appleUserId, FString identityToken, bool forceCreate);
+
+	/**
+	* Authenticate the user using an epicAccountId and their authIdToken.
+	*
+	* Service Name - Authenticate
+	* Service Operation - Authenticate
+	*
+	* @param epicAccountId LocalUserId retrieved from the EOS AuthInterface's Login method.
+	* @param authIdToken IdToken string from the EOS AuthInterface's CopyIdToken method.
+	* @param forceCreate Should a new profile be created for this user if the account does not exist?
+	*
+	* (Note: recommend using BCWrapper method instead.)
+	*/
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Authentication")
+	static UBCAuthenticationProxy* AuthenticateEpicGames(UBrainCloudWrapper* brainCloudWrapper, FString epicAccountId, FString authIdToken, bool forceCreate);
 
     /**
     * Authenticate the user using a Twitter userid, authentication token, and secret from Twitter.

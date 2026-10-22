@@ -365,6 +365,27 @@ UBCIdentityProxy *UBCIdentityProxy::DetachAppleIdentity(UBrainCloudWrapper *brai
 	return Proxy;
 }
 
+UBCIdentityProxy* UBCIdentityProxy::AttachEpicGamesIdentity(UBrainCloudWrapper* brainCloudWrapper, const FString& epicAccountId, const FString& authIdToken)
+{
+	UBCIdentityProxy* Proxy = NewObject<UBCIdentityProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getIdentityService()->attachEpicGamesIdentity(epicAccountId, authIdToken, Proxy);
+	return Proxy;
+}
+
+UBCIdentityProxy* UBCIdentityProxy::MergeEpicGamesIdentity(UBrainCloudWrapper* brainCloudWrapper, const FString& epicAccountId, const FString& authIdToken)
+{
+	UBCIdentityProxy* Proxy = NewObject<UBCIdentityProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getIdentityService()->mergeEpicGamesIdentity(epicAccountId, authIdToken, Proxy);
+	return Proxy;
+}
+
+UBCIdentityProxy* UBCIdentityProxy::DetachEpicGamesIdentity(UBrainCloudWrapper* brainCloudWrapper, const FString& epicAccountId, bool continueAnon)
+{
+	UBCIdentityProxy* Proxy = NewObject<UBCIdentityProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getIdentityService()->detachEpicGamesIdentity(epicAccountId, continueAnon, Proxy);
+	return Proxy;
+}
+
 UBCIdentityProxy *UBCIdentityProxy::AttachTwitterIdentity(UBrainCloudWrapper *brainCloudWrapper, const FString &twitterId, const FString &authenticationToken, const FString &secret)
 {
 	UBCIdentityProxy *Proxy = NewObject<UBCIdentityProxy>();

@@ -5,6 +5,7 @@
 #include "Runtime/Launch/Resources/Version.h"
 #include "IServerCallback.h"
 #include "IAutoReconnectCallback.h"
+#include "BCAppProfile.h"
 
 class IEventCallback;
 class IRewardCallback;
@@ -24,8 +25,8 @@ class BrainCloudComms
 	BrainCloudComms(BrainCloudClient *client);
 	~BrainCloudComms();
 
-	void Initialize(const FString &serverURL, const FString &secretKey, const FString &appId);
-	void InitializeWithApps(const FString &serverURL, const TMap<FString, FString> &secretMap, const FString &appId);
+	void Initialize(const FString &serverURL, const FBCAppProfile &appProfile, const FString &appId);
+	void InitializeWithApps(const FString &serverURL, const TMap<FString, FBCAppProfile> &appProfiles, const FString &appId);
 	void EnableLogging(bool shouldEnable) { _isLoggingEnabled = shouldEnable; };
 	bool IsLoggingEnabled() { return _isLoggingEnabled; };
 
@@ -72,7 +73,7 @@ class BrainCloudComms
 	bool IsKillSwitchEngaged() { return _killSwitchEngaged; }
 	const FString &GetSessionId() const { return _sessionId; }
 	const FString &GetServerUrl() { return _serverUrl; }
-	const FString &GetSecretKey() { return _secretKey; }
+	FBCAppProfile GetAppProfile() const;
 	const TArray<int32> &GetPacketTimeouts() { return _packetTimeouts; }
 	int32 GetAuthenticationPacketTimeout() { return _authenticationTimeout; }
 	int32 GetUploadLowTransferRateTimeout() { return _uploadLowTransferRateTimeout; }
@@ -155,8 +156,7 @@ class BrainCloudComms
 	FString _sessionId;
 
 	FString _serverUrl;
-	FString _secretKey;
-	TMap<FString, FString> _secretMap;
+	TMap<FString, FBCAppProfile> _appProfiles;
 	FString _appId;
 	FString _uploadUrl;
 

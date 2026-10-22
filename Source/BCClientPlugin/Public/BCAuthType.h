@@ -26,6 +26,7 @@ enum class EBCAuthType : uint8
 	External UMETA(DisplayName = "External"),
 	Ultra UMETA(DisplayName = "Ultra"),
 	Nintendo UMETA(DisplayName = "Nintendo"),
+	EpicGames UMETA(DisplayName = "EpicGames"),
 	Unknown UMETA(DisplayName = "Unknown")
 };
 

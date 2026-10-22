@@ -49,13 +49,12 @@ bool BrainCloudComms::IsCompressionEnabled()
 	return _supportsCompression;
 }
 
-void BrainCloudComms::Initialize(const FString &serverURL, const FString &secretKey, const FString &appId)
+void BrainCloudComms::Initialize(const FString &serverURL, const FBCAppProfile &appProfile, const FString &appId)
 {
 	_isInitialized = true;
 	_serverUrl = serverURL;
-	_secretKey = secretKey;
 	_appId = appId;
-	_secretMap.Emplace(appId, secretKey);
+	_appProfiles.Emplace(appId, appProfile);
 
 	_uploadUrl = _serverUrl;
 	FString suffix = "/dispatcherv2";
@@ -71,22 +70,19 @@ void BrainCloudComms::Initialize(const FString &serverURL, const FString &secret
 	_uploadUrl += TEXT("/uploader");
 }
 
-void BrainCloudComms::InitializeWithApps(const FString &serverURL, const TMap<FString, FString> &secretMap, const FString &appId)
+void BrainCloudComms::InitializeWithApps(const FString &serverURL, const TMap<FString, FBCAppProfile> &appProfiles, const FString &appId)
 {
 	//refresh the map
-	_secretMap.Empty();
-	for (auto It = secretMap.CreateConstIterator(); It; ++It)
-	{
-		_secretMap.Emplace(It.Key(), It.Value());
-	}
+	_appProfiles = appProfiles;
 
-	FString secretKey = "MISSING";
-	if (_secretMap.Contains(appId))
-	{
-		secretKey = secretMap[appId];
-	}
+	const FBCAppProfile *appProfile = _appProfiles.Find(appId);
+	Initialize(serverURL, appProfile ? *appProfile : FBCAppProfile(), appId);
+}
 
-	Initialize(serverURL, secretKey, appId);
+FBCAppProfile BrainCloudComms::GetAppProfile() const
+{
+	const FBCAppProfile *appProfile = _appProfiles.Find(_appId);
+	return appProfile ? *appProfile : FBCAppProfile();
 }
 
 void BrainCloudComms::SetPacketTimeoutsToDefault()
@@ -322,13 +318,16 @@ TSharedRef<IHttpRequest> BrainCloudComms::SendPacket(PacketRef packet)
 
 	httpRequest->SetContent(bytes);
 
-	if (_secretKey.Len() > 0)
+	const FBCAppProfile *appProfile = _appProfiles.Find(_appId);
+	if (appProfile && *appProfile)
 	{
-		FString secret = dataString + _secretKey;
-		FTCHARToUTF8 utf8_str(*secret);
-		int32 len = utf8_str.Length();
-		FString secretHeader = FMD5::HashBytes((const uint8 *)utf8_str.Get(),(uint64)len);
-		httpRequest->SetHeader(TEXT("X-SIG"), secretHeader);
+		FTCHARToUTF8 utf8_str(*dataString);
+		TArray<uint8> payload((const uint8 *)utf8_str.Get(), utf8_str.Length());
+		httpRequest->SetHeader(TEXT("X-SIG"), (*appProfile)(payload));
+	}
+	else
+	{
+		UE_LOG(LogBrainCloudComms, Error, TEXT("No app profile for app %s. The request is not signed."), *_appId);
 	}
 
 	httpRequest->SetHeader(TEXT("X-APPID"), _appId);
@@ -916,13 +915,6 @@ void BrainCloudComms::FilterIncomingMessages(TSharedRef<ServerCall> servercall, 
 		if (!appIdOut.IsEmpty())
 		{
 			_appId = (*data)->GetStringField(TEXT("switchToAppId"));
-
-			//update the secret key
-			_secretKey = "MISSING";
-			if (_secretMap.Contains(_appId))
-			{
-				_secretKey = _secretMap[_appId];
-			}
 		}
 	}
 
