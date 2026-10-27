@@ -1,7 +1,7 @@
 {
   "FileVersion": 3,
   "Version": 30,
-  "VersionName": "6.0.3",
+  "VersionName": "6.1.0",
   "FriendlyName": "brainCloud",
   "Description": "brainCloud is a ready-made back-end platform for the development of feature-rich mobile+social games. For more information, go to getbraincloud.com.",
   "Category": "Network",
@@ -18,7 +18,10 @@
     {
       "Name": "AndroidNative",
       "Type": "Runtime",
-      "LoadingPhase": "PreDefault"
+      "LoadingPhase": "PreDefault",
+      "PlatformAllowList": [
+        "Android"
+      ]
     },
     {
       "Name": "BCClientPlugin",

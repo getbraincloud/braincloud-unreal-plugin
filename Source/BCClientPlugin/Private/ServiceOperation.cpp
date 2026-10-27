@@ -442,6 +442,8 @@ const ServiceOperation ServiceOperation::StartPurchase = ServiceOperation(TEXT("
 const ServiceOperation ServiceOperation::CachePurchasePayloadContext = ServiceOperation(TEXT("CACHE_PURCHASE_PAYLOAD_CONTEXT"));
 const ServiceOperation ServiceOperation::FinalizePurchase = ServiceOperation(TEXT("FINALIZE_PURCHASE"));
 const ServiceOperation ServiceOperation::RefreshPromotions = ServiceOperation(TEXT("REFRESH_PROMOTIONS"));
+const ServiceOperation ServiceOperation::GetStoreInfo = ServiceOperation(TEXT("GET_STORE_INFO"));
+const ServiceOperation ServiceOperation::GetUserToken = ServiceOperation(TEXT("GET_USER_TOKEN"));
 
 // rtt
 const ServiceOperation ServiceOperation::RequestClientConnection = ServiceOperation(TEXT("REQUEST_CLIENT_CONNECTION"));

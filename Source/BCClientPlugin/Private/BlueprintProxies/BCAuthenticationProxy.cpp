@@ -135,6 +135,13 @@ UBCAuthenticationProxy *UBCAuthenticationProxy::AuthenticateApple(UBrainCloudWra
     return Proxy;
 }
 
+UBCAuthenticationProxy* UBCAuthenticationProxy::AuthenticateEpicGames(UBrainCloudWrapper* brainCloudWrapper, FString epicAccountId, FString authIdToken, bool forceCreate)
+{
+	UBCAuthenticationProxy* Proxy = NewObject<UBCAuthenticationProxy>();
+	UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getClient()->getAuthenticationService()->authenticateEpicGames(epicAccountId, authIdToken, forceCreate, Proxy);
+	return Proxy;
+}
+
 UBCAuthenticationProxy *UBCAuthenticationProxy::AuthenticateTwitter(UBrainCloudWrapper *brainCloudWrapper, FString twitterId, FString token, FString secret, bool forceCreate)
 {
     UBCAuthenticationProxy *Proxy = NewObject<UBCAuthenticationProxy>();

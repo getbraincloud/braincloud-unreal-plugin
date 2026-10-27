@@ -755,18 +755,18 @@ class UBCIdentityProxy : public UBCBlueprintCallProxyBase
 
 	/**
 	* Attach the user's Apple credentials to the current profile.
+	* 
     * Service Name - Identity
     * Service Operation - attach
     *
-    * @param appleUserId this can be user id OR the email of the user account
-    * @param identityToken  the token confirming the user's identity
-    * @param forceCreate Should a new profile be created for this user if the account does not exist?
-    * @param callback The method to be invoked when the server response is received
-	* Errors to watch for:  SWITCHING_PROFILES - this means that the Google identity you provided
+    * @param appleUserId String of the apple accounts user Id OR email
+    * @param identityToken The identityToken confirming users identity
+	* 
+	* Errors to watch for:  SWITCHING_PROFILES - this means that the Apple identity you provided
 	* already points to a different profile.  You will likely want to offer the player the
 	* choice to *SWITCH* to that profile, or *MERGE* the profiles.
 	*
-	* To switch profiles, call ClearSavedProfileID() and call AuthenticateGoogle().
+	* To switch profiles, call ClearSavedProfileID() and call AuthenticateApple().
 	*/
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Identity")
 	static UBCIdentityProxy *AttachAppleIdentity(UBrainCloudWrapper *brainCloudWrapper, const FString &appleUserId, const FString &identityToken);
@@ -774,28 +774,24 @@ class UBCIdentityProxy : public UBCBlueprintCallProxyBase
 	/**
 	* Merge the profile associated with the provided Apple credentials with the
 	* current profile.
+	* 
     * Service Name - Identity
     * Service Operation - merge
     *
-    * @param appleUserId this can be user id OR the email of the user account
-    * @param identityToken  the token confirming the user's identity
-    * @param forceCreate Should a new profile be created for this user if the account does not exist?
-    * @param callback The method to be invoked when the server response is received
-	*
+    * @param appleUserId String of the apple accounts user Id OR email
+    * @param identityToken The identityToken confirming users identity
 	*/
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Identity")
 	static UBCIdentityProxy *MergeAppleIdentity(UBrainCloudWrapper *brainCloudWrapper, const FString &appleUserId, const FString &identityToken);
 
-	/*
+	/**
 	* Detach the Apple identity from this profile.
 	*
     * Service Name - Identity
     * Service Operation - detach
     *
-    * @param appleUserId this can be user id OR the email of the user account
-    * @param identityToken  the token confirming the user's identity
-    * @param forceCreate Should a new profile be created for this user if the account does not exist?
-    * @param callback The method to be invoked when the server response is received
+    * @param appleUserId String of the apple accounts user Id OR email
+	* @param continueAnon Proceed even if the profile will revert to anonymous?
 	*
 	* Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set continueAnon to false, and
 	* disconnecting this identity would result in the profile being anonymous (which means that
@@ -803,6 +799,54 @@ class UBCIdentityProxy : public UBCBlueprintCallProxyBase
 	*/
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Identity")
 	static UBCIdentityProxy *DetachAppleIdentity(UBrainCloudWrapper *brainCloudWrapper, const FString &appleUserId, bool continueAnon);
+
+	/**
+	* Attach the user's EpicGames credentials to the current profile.
+	*
+	* Service Name - Identity
+	* Service Operation - attach
+	*
+	* @param epicAccountId LocalUserId retrieved from the EOS AuthInterface's Login method.
+	* @param authIdToken IdToken string from the EOS AuthInterface's CopyIdToken method.
+	*
+	* Errors to watch for:  SWITCHING_PROFILES - this means that the EpicGames identity you provided
+	* already points to a different profile.  You will likely want to offer the player the
+	* choice to *SWITCH* to that profile, or *MERGE* the profiles.
+	*
+	* To switch profiles, call ClearSavedProfileID() and call AuthenticateEpicGames().
+	*/
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Identity")
+	static UBCIdentityProxy* AttachEpicGamesIdentity(UBrainCloudWrapper* brainCloudWrapper, const FString& epicAccountId, const FString& authIdToken);
+
+	/**
+	* Merge the profile associated with the provided EpicGames credentials with the
+	* current profile.
+	*
+	* Service Name - Identity
+	* Service Operation - merge
+	*
+	* @param epicAccountId LocalUserId retrieved from the EOS AuthInterface's Login method.
+	* @param authIdToken IdToken string from the EOS AuthInterface's CopyIdToken method.
+	*/
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Identity")
+	static UBCIdentityProxy* MergeEpicGamesIdentity(UBrainCloudWrapper* brainCloudWrapper, const FString& epicAccountId, const FString& authIdToken);
+
+	/**
+	* Detach the EpicGames identity from this profile.
+	*
+	* Service Name - Identity
+	* Service Operation - detach
+	*
+	* @param epicAccountId LocalUserId retrieved from the EOS AuthInterface's Login method.
+	* @param forceCreate Should a new profile be created for this user if the account does not exist?
+	* @param continueAnon Proceed even if the profile will revert to anonymous?
+	*
+	* Watch for DOWNGRADING_TO_ANONYMOUS_ERROR - occurs if you set continueAnon to false, and
+	* disconnecting this identity would result in the profile being anonymous (which means that
+	* the profile wouldn't be retrievable if the user loses their device)
+	*/
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"), Category = "BrainCloud|Identity")
+	static UBCIdentityProxy* DetachEpicGamesIdentity(UBrainCloudWrapper* brainCloudWrapper, const FString& epicAccountId, bool continueAnon);
 
 	/**
 	* Attach the user's Twitter credentials to the current profile.

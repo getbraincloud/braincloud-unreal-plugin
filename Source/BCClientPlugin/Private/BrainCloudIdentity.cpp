@@ -318,6 +318,21 @@ void BrainCloudIdentity::detachAppleIdentity(const FString &appleUserId, bool co
 	detachIdentity(appleUserId, EBCAuthType::Apple, continueAnon, callback);
 }
 
+void BrainCloudIdentity::attachEpicGamesIdentity(const FString& epicAccountId, const FString& authIdToken, IServerCallback* callback)
+{
+	attachIdentity(epicAccountId, authIdToken, EBCAuthType::EpicGames, callback);
+}
+
+void BrainCloudIdentity::mergeEpicGamesIdentity(const FString& epicAccountId, const FString& authIdToken, IServerCallback* callback)
+{
+	mergeIdentity(epicAccountId, authIdToken, EBCAuthType::EpicGames, callback);
+}
+
+void BrainCloudIdentity::detachEpicGamesIdentity(const FString& epicAccountId, bool continueAnon, IServerCallback* callback)
+{
+	detachIdentity(epicAccountId, EBCAuthType::EpicGames, continueAnon, callback);
+}
+
 void BrainCloudIdentity::attachTwitterIdentity(const FString &twitterId, const FString &authenticationToken, const FString &secret, IServerCallback *callback)
 {
 	FString buffer = authenticationToken;

@@ -68,3 +68,17 @@ UBCAppStoreProxy* UBCAppStoreProxy::RefreshPromotions(UBrainCloudWrapper* brainC
     UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getAppStoreService()->refreshPromotions(Proxy);
     return Proxy;
 }
+
+UBCAppStoreProxy* UBCAppStoreProxy::GetStoreInfo(UBrainCloudWrapper* brainCloudWrapper, const FString& storeId)
+{
+    UBCAppStoreProxy *Proxy = NewObject<UBCAppStoreProxy>();
+    UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getAppStoreService()->getStoreInfo(storeId, Proxy);
+    return Proxy;
+}
+
+UBCAppStoreProxy* UBCAppStoreProxy::GetUserToken(UBrainCloudWrapper* brainCloudWrapper, const FString& storeId)
+{
+    UBCAppStoreProxy *Proxy = NewObject<UBCAppStoreProxy>();
+    UBCWrapperProxy::GetBrainCloudInstance(brainCloudWrapper)->getAppStoreService()->getUserToken(storeId, Proxy);
+    return Proxy;
+}

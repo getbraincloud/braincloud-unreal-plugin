@@ -1,7 +1,15 @@
 // Copyright 2026 bitHeads, Inc. All Rights Reserved.
 
 #include "BrainCloudFunctionLibrary.h"
+
+#if PLATFORM_IOS || PLATFORM_MAC
+#define FVector __AppleCarbonFVector
+#include <Foundation/Foundation.h>
+#undef FVector
+#endif
+
 #include "BCClientPluginPrivatePCH.h"
+#include "BCConfigStore.h"
 #include "CoreMinimal.h"
 #include "Misc/ConfigCacheIni.h"
 #include "Runtime/Launch/Resources/Version.h"
@@ -23,117 +31,137 @@
 #include "Developer/DesktopPlatform/Public/DesktopPlatformModule.h"
 #endif
 
-#if PLATFORM_IOS || PLATFORM_MAC
-
-#include <Foundation/Foundation.h>
-
-#endif
-
 FBrainCloudAppDataStruct UBrainCloudFunctionLibrary::GetBCAppData()
 {
     FBrainCloudAppDataStruct Result;
 
-    FString SectionName = TEXT("Credentials");
-    FString Filename = TEXT("BrainCloudSettings.ini");
-
-    FString AppIdKey = TEXT("AppId");
-    FString AppSecretKey = TEXT("AppSecret");
-    FString AppVersionKey = TEXT("Version");
-    FString ServerUrlKey = TEXT("ServerUrl");
-    FString S2SKeyKey = TEXT("S2SKey");
-    FString S2SUrlKey = TEXT("S2SUrl");
-    FString ChildAppIdKey = TEXT("ChildAppId");
-    FString ChildAppSecretKey = TEXT("ChildAppSecret");
-
-    FString ConfigPath = FPaths::ProjectConfigDir();
-    ConfigPath += Filename;
-
-#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION > 1
-
-    ConfigPath = FConfigCacheIni::NormalizeConfigIniPath(FPaths::ProjectConfigDir() + *Filename);
-
-#endif
-
-    if (GConfig) {
-#if (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 4)
-        const FConfigSection* ConfigSection = GConfig->GetSection(*SectionName, false, ConfigPath);
-#else
-        FConfigSection* ConfigSection = GConfig->GetSectionPrivate(*SectionName, false, true, ConfigPath);
-#endif
-
-        FConfigFile* ConfigFile = GConfig->FindConfigFile(*ConfigPath);
-
-        TArray<FName> configKeys;
-
-        if (ConfigFile && ConfigSection) {
-
-            ConfigSection->GenerateKeyArray(configKeys);
-
-            Result.AppId = configKeys.Contains(*AppIdKey) ? ConfigSection->Find(*AppIdKey)->GetValue() : TEXT("");
-            Result.AppSecret = configKeys.Contains(*AppSecretKey) ? ConfigSection->Find(*AppSecretKey)->GetValue() : TEXT("");
-            Result.Version = UBrainCloudFunctionLibrary::GetProjectVersion();
-            Result.ServerUrl = configKeys.Contains(*ServerUrlKey) ? ConfigSection->Find(*ServerUrlKey)->GetValue() : TEXT("");
-            Result.S2SKey = configKeys.Contains(*S2SKeyKey) ? ConfigSection->Find(*S2SKeyKey)->GetValue() : TEXT("");
-            Result.S2SUrl = configKeys.Contains(*S2SUrlKey) ? ConfigSection->Find(*S2SUrlKey)->GetValue() : TEXT("");
-            Result.ChildAppId = configKeys.Contains(*ChildAppIdKey) ? ConfigSection->Find(*ChildAppIdKey)->GetValue() : TEXT("");
-            Result.ChildAppSecret = configKeys.Contains(*ChildAppSecretKey) ? ConfigSection->Find(*ChildAppSecretKey)->GetValue() : TEXT("");
-        }
-        else {
-            UE_LOG(LogBrainCloud, Warning, TEXT("Couldn't find BrainCloudSettings.ini file in projects Config folder"));
+    const FString ConfigPath = FBCConfigStore::GetSettingsPath();
+    const bool bLegacy = FBCConfigStore::DetectState() == EBCConfigState::Legacy;
+    if (GConfig && FPaths::FileExists(ConfigPath))
+    {
+        GConfig->LoadFile(ConfigPath);
+        const TCHAR* Section = TEXT("Credentials");
+        GConfig->GetString(Section, TEXT("ServerUrl"), Result.ServerUrl, ConfigPath);
+        GConfig->GetString(Section, TEXT("S2SKey"), Result.S2SKey, ConfigPath);
+        GConfig->GetString(Section, TEXT("S2SUrl"), Result.S2SUrl, ConfigPath);
+        if (bLegacy)
+        {
+            GConfig->GetString(Section, TEXT("AppSecret"), Result.AppSecret, ConfigPath);
+            GConfig->GetString(Section, TEXT("ChildAppSecret"), Result.ChildAppSecret, ConfigPath);
         }
     }
+    else
+    {
+        UE_LOG(LogBrainCloud, Warning, TEXT("Couldn't find BrainCloudSettings.ini file in projects Config folder"));
+    }
+    Result.Version = UBrainCloudFunctionLibrary::GetProjectVersion();
 
-    GConfig->Flush(false, ConfigPath);
+    FBCStoredCredentials Stored;
+    FBCConfigStore::Resolve(Stored);
+    Result.AppId = Stored.AppId;
+    if (!Stored.ServerUrl.IsEmpty())
+    {
+        Result.ServerUrl = Stored.ServerUrl;
+    }
+    if (Stored.ChildApps.Num() > 0)
+    {
+        Result.ChildAppId = Stored.ChildApps[0].AppId;
+    }
 
+    if (!bLegacy && !Stored.AppId.IsEmpty())
+    {
+        UE_LOG(LogBrainCloud, Warning, TEXT("GetBCAppData does not return app secrets set with Tools > brainCloud. Use Init to initialize brainCloud."));
+    }
     return Result;
 }
 
 void UBrainCloudFunctionLibrary::SetBCAppData(FBrainCloudAppDataStruct appData)
 {
-    FString SectionName = TEXT("Credentials");
-    FString Filename = TEXT("BrainCloudSettings.ini");
-
-    FString ConfigPath = FPaths::ProjectConfigDir();
-    ConfigPath += Filename;
-
-
-#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION > 1
-    ConfigPath = FConfigCacheIni::NormalizeConfigIniPath(FPaths::ProjectConfigDir() + *Filename);
-#endif
-
-    //Make sure config file exists first
-    if (!FPaths::FileExists(ConfigPath)) {
+    const FString ConfigPath = FBCConfigStore::GetSettingsPath();
+    if (!FPaths::FileExists(ConfigPath))
+    {
         FFileHelper::SaveStringToFile(TEXT(""), *ConfigPath);
     }
-
     GConfig->LoadFile(ConfigPath);
 
-#if (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 4)
-    const FConfigSection* ConfigSection = GConfig->GetSection(*SectionName, false, ConfigPath);
-#else
-    FConfigSection* ConfigSection = GConfig->GetSectionPrivate(*SectionName, false, true, ConfigPath);
-#endif
-
-
-    if (GConfig->DoesSectionExist(*SectionName, ConfigPath))
+    const FString ServerFullUrl = appData.ServerUrl + "/dispatcherv2";
+    const FString S2SFullUrl = appData.ServerUrl + "/s2sdispatcher";
+    const TCHAR* Section = TEXT("Credentials");
+    GConfig->SetString(Section, TEXT("AppId"), *appData.AppId, ConfigPath);
+    GConfig->SetString(Section, TEXT("AppSecret"), *appData.AppSecret, ConfigPath);
+    GConfig->SetString(Section, TEXT("Version"), *UBrainCloudFunctionLibrary::GetProjectVersion(), ConfigPath);
+    GConfig->SetString(Section, TEXT("ServerUrl"), *ServerFullUrl, ConfigPath);
+    GConfig->SetString(Section, TEXT("S2SKey"), *appData.S2SKey, ConfigPath);
+    GConfig->SetString(Section, TEXT("S2SUrl"), *S2SFullUrl, ConfigPath);
+    if (!appData.ChildAppId.IsEmpty())
     {
-        GConfig->EmptySection(*SectionName, ConfigPath);
+        GConfig->SetString(Section, TEXT("ChildAppId"), *appData.ChildAppId, ConfigPath);
+        GConfig->SetString(Section, TEXT("ChildAppSecret"), *appData.ChildAppSecret, ConfigPath);
     }
-
-    FString ServerFullUrl = appData.ServerUrl + "/dispatcherv2";
-    FString S2SFullUrl = appData.ServerUrl + "/s2sdispatcher";
-    FString projectVersion = UBrainCloudFunctionLibrary::GetProjectVersion();
-
-    GConfig->SetString(*SectionName, TEXT("AppId"), *appData.AppId, ConfigPath);
-    GConfig->SetString(*SectionName, TEXT("AppSecret"), *appData.AppSecret, ConfigPath);
-    GConfig->SetString(*SectionName, TEXT("Version"), *projectVersion, ConfigPath);
-    GConfig->SetString(*SectionName, TEXT("ServerUrl"), *ServerFullUrl, ConfigPath);
-    GConfig->SetString(*SectionName, TEXT("S2SKey"), *appData.S2SKey, ConfigPath);
-    GConfig->SetString(*SectionName, TEXT("S2SUrl"), *S2SFullUrl, ConfigPath);
-
     GConfig->Flush(false, ConfigPath);
 
+    if (FPaths::FileExists(FBCConfigStore::GetConfigPath()))
+    {
+        UE_LOG(LogBrainCloud, Warning, TEXT("SetBCAppData: the app set with Tools > brainCloud is still used by Init. Set the app there instead."));
+    }
     UE_LOG(LogBrainCloud, Warning, TEXT("App Data saved to config file at %s, please restart Unreal Editor for changes to take effect"), *ConfigPath);
+}
+
+FString UBrainCloudFunctionLibrary::GetAppId()
+{
+    return FBCConfigStore::ResolveAppId();
+}
+
+FString UBrainCloudFunctionLibrary::GetChildAppId()
+{
+    const TArray<FString> Ids = FBCConfigStore::ResolveChildAppIds();
+    return Ids.Num() > 0 ? Ids[0] : FString();
+}
+
+TArray<FString> UBrainCloudFunctionLibrary::GetChildAppIds()
+{
+    return FBCConfigStore::ResolveChildAppIds();
+}
+
+FString UBrainCloudFunctionLibrary::GetEnvironment()
+{
+    const FString ServerUrl = FBCConfigStore::ResolveServerUrl();
+    return GetEnvironmentFromUrl(ServerUrl.IsEmpty() ? TEXT("https://api.braincloudservers.com/dispatcherv2") : ServerUrl);
+}
+
+FString UBrainCloudFunctionLibrary::GetEnvironmentFromUrl(const FString& ServerUrl)
+{
+    const FString Domain = TEXT("braincloudservers.com");
+
+    FString Host = ServerUrl.TrimStartAndEnd();
+    int32 SchemeEnd = Host.Find(TEXT("://"));
+    if (SchemeEnd != INDEX_NONE)
+    {
+        Host.RightChopInline(SchemeEnd + 3);
+    }
+    int32 HostEnd = INDEX_NONE;
+    if (Host.FindChar(TEXT('/'), HostEnd))
+    {
+        Host.LeftInline(HostEnd);
+    }
+    if (Host.FindChar(TEXT(':'), HostEnd))
+    {
+        Host.LeftInline(HostEnd);
+    }
+    Host.ToLowerInline();
+
+    if (Host != Domain && !Host.EndsWith(TEXT(".") + Domain))
+    {
+        return ServerUrl;
+    }
+    FString Env = Host.LeftChop(Domain.Len());
+    Env.RemoveFromEnd(TEXT("."));
+    Env.RemoveFromStart(TEXT("api."));
+    if (Env == TEXT("api"))
+    {
+        Env.Empty();
+    }
+    return Env.IsEmpty() ? TEXT("prod") : Env;
 }
 
 void UBrainCloudFunctionLibrary::CopyToClipboard(const FString& TextString)
@@ -291,14 +319,7 @@ FString UBrainCloudFunctionLibrary::GetProjectVersion()
 
 FString UBrainCloudFunctionLibrary::GetProjectEnvironment()
 {
-    FBrainCloudAppDataStruct appData = GetBCAppData();
-
-    if (appData.ServerUrl == "https://api.braincloudservers.com/dispatcherv2") {
-        return "Prod";
-    }
-    else {
-        return "Internal";
-    }
+    return GetEnvironment();
 }
 
 
